@@ -45,9 +45,9 @@
         "osmTags": "building~*",
         "maxCacheAge": 0
       },
-      "minzoom": 19,
+      "minzoom": 18,
       "calculatedTags": [
-        "_surface:strict:=feat(get)('_surface')"
+        "_surface:strict=feat(get)('_surface')"
       ],
       "mapRendering": [
         {
@@ -135,42 +135,7 @@
         }
       ]
     },
-    {
-      "id": "osm:adresses",
-      "name": "OSM Adresses",
-      "title": "OSM Adress",
-      "description": "Layer showing adresses that are in OpenStreetMap",
-      "source": {
-        "osmTags": {
-          "and": [
-            "source=BAG",
-            "addr:city~*",
-            "addr:housenumber~*",
-            "addr:postcode~*",
-            "addr:street~*"
-          ]
-        },
-        "maxCacheAge": 0
-      },
-      "minzoom": 19,
-      "mapRendering": [
-        {
-          "label": {
-            "render": "<div style='color: black' class='rounded-full p-1 font-bold relative'>{addr:housenumber}</div>",
-            "condition": "addr:housenumber~*"
-          },
-          "location": [
-            "point",
-            "centroid"
-          ]
-        },
-        {
-          "width": {
-            "render": 1
-          }
-        }
-      ]
-    },
+    "address",
     {
       "id": "bag:pand",
       "name": "BAG Buildings",
@@ -188,10 +153,11 @@
       "source": {
         "geoJson": "https://service.pdok.nl/lv/bag/wfs/v2_0?request=GetFeature&service=WFS&version=2.0.0&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&typeName=bag%3Apand&bbox={x_min}%2C{y_min}%2C{x_max}%2C{y_max}%2CCRS84&srsName=EPSG%3A4326",
         "geoJsonZoomLevel": 18,
-        "osmTags": "identificatie~*",
-        "maxCacheAge": 0
+        "osmTags": "rdf_seealso~.*pand.*",
+        "maxCacheAge": 0,
+        "isOsmCache": false
       },
-      "minzoom": 19,
+      "minzoom": 18,
       "calculatedTags": [
         "_overlaps_with_buildings=overlapWith(feat)('osm:buildings').filter(f => f.feat.properties.id.indexOf('-') < 0)",
         "_overlaps_with=feat(get)('_overlaps_with_buildings').find(f => f.overlap > 1 /* square meter */ )",
@@ -206,7 +172,7 @@
         "_bag_obj:start_date=feat.properties.bouwjaar",
         "_osm_obj:id=feat(get)('_overlaps_with_properties')?.id",
         "_osm_obj:building=feat(get)('_overlaps_with_properties')?.building",
-        "_imported_osm_object_found:=Number(feat.properties.identificatie)==Number(feat(get)('_overlaps_with_properties')['ref:bag'])"
+        "_imported_osm_object_found=Number(feat.properties.identificatie)==Number(feat(get)('_overlaps_with_properties')['ref:bag'])"
       ],
       "mapRendering": [
         {
@@ -369,30 +335,33 @@
       "description": "Address information from the BAG register",
       "source": {
         "geoJson": "https://service.pdok.nl/lv/bag/wfs/v2_0?request=GetFeature&service=WFS&version=2.0.0&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&typeName=bag%3Averblijfsobject&bbox={x_min}%2C{y_min}%2C{x_max}%2C{y_max}%2CCRS84&srsName=EPSG%3A4326",
-        "geoJsonZoomLevel": 19,
-        "osmTags": "identificatie~*",
-        "maxCacheAge": 0
+        "geoJsonZoomLevel": 18,
+        "osmTags": "rdf_seealso~.*verblijfsobject.*",
+        "maxCacheAge": 0,
+        "isOsmCache": false
       },
-      "minzoom": 19,
+      "minzoom": 18,
       "calculatedTags": [
-        "_closed_osm_addr:=closest(feat)('osm:adresses').properties",
+        "_closed_osm_addr=closest(feat)('address').properties",
         "_bag_obj:addr:housenumber=`${feat.properties.huisnummer}${feat.properties.huisletter}${(feat.properties.toevoeging != '') ? '-' : ''}${feat.properties.toevoeging}`",
         "_bag_obj:ref:bag=Number(feat.properties.identificatie)",
         "_bag_obj:source:date=new Date().toISOString().split('T')[0]",
-        "_osm_obj:addr:city:=feat(get)('_closed_osm_addr')['addr:city']",
-        "_osm_obj:addr:housenumber:=feat(get)('_closed_osm_addr')['addr:housenumber']",
-        "_osm_obj:addr:postcode:=feat(get)('_closed_osm_addr')['addr:postcode']",
-        "_osm_obj:addr:street:=feat(get)('_closed_osm_addr')['addr:street']",
-        "_imported_osm_object_found:=(feat.properties.woonplaats==feat(get)('_closed_osm_addr')['addr:city'])&&(feat(get)('_bag_obj:addr:housenumber')==feat(get)('_closed_osm_addr')['addr:housenumber'])&&(feat.properties.postcode==feat(get)('_closed_osm_addr')['addr:postcode'])&&(feat.properties.openbare_ruimte==feat(get)('_closed_osm_addr')['addr:street'])"
+        "_osm_obj:addr:city=feat(get)('_closed_osm_addr')['addr:city']",
+        "_osm_obj:addr:housenumber=feat(get)('_closed_osm_addr')['addr:housenumber']",
+        "_osm_obj:addr:postcode=feat(get)('_closed_osm_addr')['addr:postcode']",
+        "_osm_obj:addr:street=feat(get)('_closed_osm_addr')['addr:street']",
+        "_imported_osm_object_found=(feat.properties.woonplaats==feat(get)('_closed_osm_addr')['addr:city'])&&(feat(get)('_bag_obj:addr:housenumber')==feat(get)('_closed_osm_addr')['addr:housenumber'])&&(feat.properties.postcode==feat(get)('_closed_osm_addr')['addr:postcode'])&&(feat.properties.openbare_ruimte==feat(get)('_closed_osm_addr')['addr:street'])"
       ],
       "mapRendering": [
         {
+          "iconSize": "50,50",
+          "icon": "./assets/layers/crab_address/housenumber_blank.svg",
           "label": {
-            "render": "<div style='color: black' class='rounded-full p-1 font-bold relative'>{_bag_obj:addr:housenumber}</div>",
+            "render": "<div style='margin-top: -42px; color: white' class='rounded-full p-1 font-bold relative'>{_bag_obj:addr:housenumber}</div>",
             "mappings": [
               {
                 "if": "_imported_osm_object_found=true",
-                "then": "<div style='color: #107c10' class='rounded-full p-1 font-bold relative'>{_bag_obj:addr:housenumber}</div>"
+                "then": "<div style='margin-top: -42px; color: green' class='rounded-full p-1 font-bold relative'>{_bag_obj:addr:housenumber}</div>"
               }
             ]
           },
@@ -402,9 +371,7 @@
           ]
         },
         {
-          "width": {
-            "render": 1
-          }
+          "width": 1
         }
       ],
       "tagRenderings": [
