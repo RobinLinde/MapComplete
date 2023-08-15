@@ -13,6 +13,7 @@ export NODE_OPTIONS="--max-old-space-size=8192"
 
 # This script ends every line with '&&' to chain everything. A failure will thus stop the build
 npm run generate:editor-layer-index &&
+npm run generate:nsi &&
 npm run generate &&
 npm run generate:layouts
 

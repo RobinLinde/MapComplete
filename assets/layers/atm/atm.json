@@ -80,37 +80,39 @@
       "condition": "name~*"
     },
     {
-      "id": "brand",
-      "question": {
-        "en": "What brand is this ATM?",
-        "de": "Von welcher Marke ist dieser Geldautomat?",
-        "fr": "De quelle marque est ce DAB ?",
-        "nl": "Van welk merk is deze geldautomaat?",
-        "ca": "De quina marca és aquest caixer?",
-        "nb_NO": "Hvilet merke har denne minibanken?",
-        "cs": "Jaká je značka bankomatu?"
-      },
-      "freeform": {
-        "key": "brand",
-        "type": "string",
-        "placeholder": {
-          "en": "Brand name",
-          "de": "Markenname",
-          "fr": "Nom de marque",
-          "nl": "Merknaam",
-          "nb_NO": "Merkenavn",
-          "ca": "Nom de la marca",
-          "cs": "Obchodní značka"
+      "builtin": "nsi_items.brands_amenity_atm",
+      "override": {
+        "question": {
+          "en": "What brand is this ATM?",
+          "de": "Von welcher Marke ist dieser Geldautomat?",
+          "fr": "De quelle marque est ce DAB ?",
+          "nl": "Van welk merk is deze geldautomaat?",
+          "ca": "De quina marca és aquest caixer?",
+          "nb_NO": "Hvilet merke har denne minibanken?",
+          "cs": "Jaká je značka bankomatu?"
+        },
+        "freeform": {
+          "key": "brand",
+          "type": "string",
+          "placeholder": {
+            "en": "Brand name",
+            "de": "Markenname",
+            "fr": "Nom de marque",
+            "nl": "Merknaam",
+            "nb_NO": "Merkenavn",
+            "ca": "Nom de la marca",
+            "cs": "Obchodní značka"
+          }
+        },
+        "render": {
+          "en": "The brand of this ATM is {brand}",
+          "de": "Die Marke des Geldautomaten ist {brand}",
+          "fr": "La marque de ce DAB est {brand}",
+          "nl": "Het merk van deze geldautomaat is {brand}",
+          "nb_NO": "Merkenavnet for denne minibanken er {brand}",
+          "ca": "La marca d'aquest caixer és {brand}",
+          "cs": "Značka tohoto bankomatu je {brand}"
         }
-      },
-      "render": {
-        "en": "The brand of this ATM is {brand}",
-        "de": "Die Marke des Geldautomaten ist {brand}",
-        "fr": "La marque de ce DAB est {brand}",
-        "nl": "Het merk van deze geldautomaat is {brand}",
-        "nb_NO": "Merkenavnet for denne minibanken er {brand}",
-        "ca": "La marca d'aquest caixer és {brand}",
-        "cs": "Značka tohoto bankomatu je {brand}"
       }
     },
     {
