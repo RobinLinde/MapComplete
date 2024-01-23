@@ -4,19 +4,23 @@
   import Translations from "../i18n/Translations"
   import Loading from "../Base/Loading.svelte"
   import Hotkeys from "../Base/Hotkeys"
-  import { Geocoding } from "../../Logic/Osm/Geocoding"
+  import { PhotonGeocoding } from "../../Logic/Osm/Geocoding/PhotonGeocoding"
   import { BBox } from "../../Logic/BBox"
   import { GeoIndexedStoreForLayer } from "../../Logic/FeatureSource/Actors/GeoIndexedStore"
   import { createEventDispatcher, onDestroy } from "svelte"
   import { placeholder } from "../../Utils/placeholder"
   import { SearchIcon } from "@rgossiaux/svelte-heroicons/solid"
   import { ariaLabel } from "../../Utils/ariaLabel"
+  import type { GeoCodeResult } from "../../Logic/Osm/Geocoding/GeocodingProvider"
 
   export let perLayer: ReadonlyMap<string, GeoIndexedStoreForLayer> | undefined = undefined
   export let bounds: UIEventSource<BBox>
   export let selectedElement: UIEventSource<Feature> | undefined = undefined
 
   export let clearAfterView: boolean = true
+
+  export let autoComplete: boolean = true
+
   let searchContents: string = ""
   export let triggerSearch: UIEventSource<any> = new UIEventSource<any>(undefined)
   onDestroy(
@@ -29,7 +33,11 @@
 
   let inputElement: HTMLInputElement
 
+  let popupElement: HTMLDivElement
+
   let feedback: string = undefined
+
+  const photon = new PhotonGeocoding()
 
   function focusOnSearch() {
     requestAnimationFrame(() => {
@@ -37,6 +45,21 @@
       inputElement?.select()
     })
   }
+  // UIEventSource for autocomplete results
+  let autocompleteResultsStore = new UIEventSource<GeoCodeResult[]>([])
+
+  // Map UIEventSource items to normal array
+  let autocompleteResults: { name: string; value: string; id: string }[] = []
+  autocompleteResultsStore.subscribe((_) => {
+    console.log("Autocomplete results changed")
+    autocompleteResults = autocompleteResultsStore.data.map((r) => {
+      return {
+        name: r.name,
+        value: r.name,
+        id: `${r.osm_type}/${r.osm_id}`,
+      }
+    })
+  })
 
   Hotkeys.RegisterHotkey({ ctrl: "F" }, Translations.t.hotkeyDocumentation.selectSearch, () => {
     feedback = undefined
@@ -60,20 +83,18 @@
       if (searchContents === "") {
         return
       }
-      const result = await Geocoding.Search(searchContents, bounds.data)
+      // Determine center point from bbox
+      const bias = bounds.data.getCenter()
+      const result = await photon.Search(searchContents, undefined, bias)
       if (result.length == 0) {
         feedback = Translations.t.general.search.nothing.txt
         focusOnSearch()
         return
       }
       const poi = result[0]
-      const [lat0, lat1, lon0, lon1] = poi.boundingbox
-      bounds.set(
-        new BBox([
-          [lon0, lat0],
-          [lon1, lat1],
-        ]).pad(0.01)
-      )
+
+      bounds.set(getBoundingBox(poi))
+
       if (perLayer !== undefined) {
         const id = poi.osm_type + "/" + poi.osm_id
         const layers = Array.from(perLayer?.values() ?? [])
@@ -100,6 +121,40 @@
       isRunning = false
     }
   }
+
+  async function handleKeypress(keypr) {
+    feedback = undefined
+    if (keypr.key === "Enter") {
+      performSearch()
+    } else {
+      if (autoComplete && searchContents.length > 1) {
+        // Send search request to autocomplete function
+        photon.Autocomplete(
+          searchContents + keypr.key,
+          autocompleteResultsStore,
+          undefined,
+          bounds.data.getCenter()
+        )
+      }
+    }
+  }
+
+  function getBoundingBox(poi: GeoCodeResult): BBox {
+    if (poi.extent !== undefined) {
+      const extent = poi.extent
+
+      return new BBox([
+        [extent[0], extent[1]],
+        [extent[2], extent[3]],
+      ]).pad(0.01)
+    } else {
+      const [lon, lat] = poi.location
+      return new BBox([
+        [lon, lat],
+        [lon, lat],
+      ]).pad(0.01)
+    }
+  }
 </script>
 
 <div class="normal-background flex justify-between rounded-full pl-2">
@@ -109,15 +164,13 @@
     {:else}
       <input
         type="search"
-        class="w-full"
+        class="w-full border-none outline-none"
         bind:this={inputElement}
-        on:keypress={(keypr) => {
-          feedback = undefined
-          return keypr.key === "Enter" ? performSearch() : undefined
-        }}
+        on:keypress={handleKeypress}
         bind:value={searchContents}
         use:placeholder={Translations.t.general.search.search}
         use:ariaLabel={Translations.t.general.search.search}
+        list="autocompleteResults"
       />
       {#if feedback !== undefined}
         <!-- The feedback is _always_ shown for screenreaders and to make sure that the searchfield can still be selected by tabbing-->
@@ -126,6 +179,11 @@
         </div>
       {/if}
     {/if}
+    <datalist id="autocompleteResults">
+      {#each autocompleteResults as result}
+        <option value={result.value}>{result.name}</option>
+      {/each}
+    </datalist>
   </form>
   <SearchIcon aria-hidden="true" class="h-6 w-6 self-end" on:click={performSearch} />
 </div>

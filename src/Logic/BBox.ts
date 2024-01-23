@@ -193,6 +193,10 @@ export class BBox {
         return this.minLat
     }
 
+    getCenter(): [number, number] {
+        return [(this.minLon + this.maxLon) / 2, (this.minLat + this.maxLat) / 2]
+    }
+
     contains(lonLat: [number, number]) {
         return (
             this.minLat <= lonLat[1] &&

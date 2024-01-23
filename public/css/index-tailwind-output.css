@@ -777,6 +777,10 @@ video {
   float: left;
 }
 
+.m-8 {
+  margin: 2rem;
+}
+
 .m-4 {
   margin: 1rem;
 }
@@ -787,10 +791,6 @@ video {
 
 .m-0 {
   margin: 0px;
-}
-
-.m-8 {
-  margin: 2rem;
 }
 
 .m-2 {
@@ -891,6 +891,10 @@ video {
   margin-right: 3rem;
 }
 
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
 .mt-4 {
   margin-top: 1rem;
 }
@@ -921,10 +925,6 @@ video {
 
 .mr-1 {
   margin-right: 0.25rem;
-}
-
-.mb-4 {
-  margin-bottom: 1rem;
 }
 
 .ml-1 {
@@ -1242,10 +1242,6 @@ video {
 
 .w-11 {
   width: 2.75rem;
-}
-
-.w-64 {
-  width: 16rem;
 }
 
 .w-1\/2 {
@@ -2062,6 +2058,11 @@ video {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+.text-red-500 {
+  --tw-text-opacity: 1;
+  color: rgb(239 68 68 / var(--tw-text-opacity));
+}
+
 .underline {
   text-decoration-line: underline;
 }
@@ -2100,6 +2101,11 @@ video {
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.outline-none {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }
 
 .outline {
@@ -3023,20 +3029,12 @@ svg.apply-fill path {
     height: 2rem;
   }
 
-  .md\:h-16 {
-    height: 4rem;
-  }
-
   .md\:w-8 {
     width: 2rem;
   }
 
   .md\:w-6\/12 {
     width: 50%;
-  }
-
-  .md\:w-16 {
-    width: 4rem;
   }
 
   .md\:grid-flow-row {

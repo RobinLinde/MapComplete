@@ -23,7 +23,7 @@ Most (but not all) objects in MapComplete get all the state they need as a param
 the case with most graphical applications, there are quite some dynamical values.
 
 All values which change regularly are wrapped into
-a [`UIEventSource`](../Logic/UIEventSource.ts). A `UIEventSource` is a
+a [`UIEventSource`](../src/Logic/UIEventSource.ts). A `UIEventSource` is a
 wrapper containing a value and offers the possibility to add a callback function which is called every time the value is
 changed (with `setData`)
 
