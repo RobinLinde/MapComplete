@@ -278,6 +278,7 @@ async function generateCsp(
         "https://www.openstreetmap.org",
         "https://api.openstreetmap.org",
         "https://pietervdvn.goatcounter.com",
+        "https://photon.komoot.io",
     ].concat(...(await eliUrls()))
 
     SpecialVisualizations.specialVisualizations.forEach((sv) => {
