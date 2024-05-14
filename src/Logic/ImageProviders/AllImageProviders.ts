@@ -10,6 +10,8 @@ import { WikidataImageProvider } from "./WikidataImageProvider"
  * A generic 'from the interwebz' image picker, without attribution
  */
 export default class AllImageProviders {
+    private static dontLoadFromPrefixes = ["https://photos.app.goo.gl/"]
+
     public static ImageAttributionSource: ImageProvider[] = [
         Imgur.singleton,
         Mapillary.singleton,
@@ -19,30 +21,31 @@ export default class AllImageProviders {
             [].concat(
                 ...Imgur.defaultValuePrefix,
                 ...WikimediaImageProvider.commonsPrefixes,
-                ...Mapillary.valuePrefixes
+                ...Mapillary.valuePrefixes,
+                ...AllImageProviders.dontLoadFromPrefixes
             )
         ),
     ]
-
+    public static apiUrls: string[] = [].concat(
+        ...AllImageProviders.ImageAttributionSource.map((src) => src.apiUrls())
+    )
+    public static defaultKeys = [].concat(
+        AllImageProviders.ImageAttributionSource.map((provider) => provider.defaultKeyPrefixes)
+    )
     private static providersByName = {
         imgur: Imgur.singleton,
         mapillary: Mapillary.singleton,
         wikidata: WikidataImageProvider.singleton,
         wikimedia: WikimediaImageProvider.singleton,
     }
-
-    public static byName(name: string) {
-        return AllImageProviders.providersByName[name.toLowerCase()]
-    }
-
-    public static defaultKeys = [].concat(
-        AllImageProviders.ImageAttributionSource.map((provider) => provider.defaultKeyPrefixes)
-    )
-
     private static _cache: Map<string, UIEventSource<ProvidedImage[]>> = new Map<
         string,
         UIEventSource<ProvidedImage[]>
     >()
+
+    public static byName(name: string) {
+        return AllImageProviders.providersByName[name.toLowerCase()]
+    }
 
     public static LoadImagesFor(
         tags: Store<Record<string, string>>,

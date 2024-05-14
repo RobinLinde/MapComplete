@@ -22,17 +22,23 @@ export default class SvelteUIElement<
     private readonly _props: Props
     private readonly _events: Events
     private readonly _slots: Slots
+    private tag: "div" | "span" = "div"
 
-    constructor(svelteElement, props: Props, events?: Events, slots?: Slots) {
+    constructor(svelteElement, props?: Props, events?: Events, slots?: Slots) {
         super()
         this._svelteComponent = svelteElement
-        this._props = props
+        this._props = props ?? <Props>{}
         this._events = events
         this._slots = slots
     }
 
+    public setSpan() {
+        this.tag = "span"
+        return this
+    }
+
     protected InnerConstructElement(): HTMLElement {
-        const el = document.createElement("div")
+        const el = document.createElement(this.tag)
         new this._svelteComponent({
             target: el,
             props: this._props,

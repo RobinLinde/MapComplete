@@ -1,14 +1,19 @@
-import { Store, UIEventSource } from "../../Logic/UIEventSource"
-import type { Map as MLMap } from "maplibre-gl"
+import { ImmutableStore, Store, UIEventSource } from "../../Logic/UIEventSource"
+import { Map as MLMap } from "maplibre-gl"
 import { Map as MlMap, SourceSpecification } from "maplibre-gl"
-import { AvailableRasterLayers, RasterLayerPolygon } from "../../Models/RasterLayers"
+import maplibregl from "maplibre-gl"
+import { RasterLayerPolygon } from "../../Models/RasterLayers"
 import { Utils } from "../../Utils"
 import { BBox } from "../../Logic/BBox"
-import { ExportableMap, MapProperties } from "../../Models/MapProperties"
+import { ExportableMap, KeyNavigationEvent, MapProperties } from "../../Models/MapProperties"
 import SvelteUIElement from "../Base/SvelteUIElement"
 import MaplibreMap from "./MaplibreMap.svelte"
 import { RasterLayerProperties } from "../../Models/RasterLayerProperties"
 import * as htmltoimage from "html-to-image"
+import RasterLayerHandler from "./RasterLayerHandler"
+import Constants from "../../Models/Constants"
+import { Protocol } from "pmtiles"
+import { bool } from "sharp"
 
 /**
  * The 'MapLibreAdaptor' bridges 'MapLibre' with the various properties of the `MapProperties`
@@ -40,14 +45,25 @@ export class MapLibreAdaptor implements MapProperties, ExportableMap {
     readonly lastClickLocation: Store<undefined | { lon: number; lat: number }>
     readonly minzoom: UIEventSource<number>
     readonly maxzoom: UIEventSource<number>
-    private readonly _maplibreMap: Store<MLMap>
+    readonly rotation: UIEventSource<number>
+    readonly pitch: UIEventSource<number>
+    readonly useTerrain: Store<boolean>
+
+    private static pmtilesInited = false
     /**
-     * Used for internal bookkeeping (to remove a rasterLayer when done loading)
+     * Functions that are called when one of those actions has happened
      * @private
      */
-    private _currentRasterLayer: string
+    private _onKeyNavigation: ((event: KeyNavigationEvent) => void | boolean)[] = []
+
+    private readonly _maplibreMap: Store<MLMap>
 
     constructor(maplibreMap: Store<MLMap>, state?: Partial<MapProperties>) {
+        if (!MapLibreAdaptor.pmtilesInited) {
+            maplibregl.addProtocol("pmtiles", new Protocol().tile)
+            MapLibreAdaptor.pmtilesInited = true
+            console.log("PM-tiles protocol added" + "")
+        }
         this._maplibreMap = maplibreMap
 
         this.location = state?.location ?? new UIEventSource(undefined)
@@ -73,12 +89,17 @@ export class MapLibreAdaptor implements MapProperties, ExportableMap {
         this.allowRotating = state?.allowRotating ?? new UIEventSource<boolean>(true)
         this.allowZooming = state?.allowZooming ?? new UIEventSource(true)
         this.bounds = state?.bounds ?? new UIEventSource(undefined)
+        this.rotation = state?.rotation ?? new UIEventSource<number>(0)
+        this.pitch = state?.pitch ?? new UIEventSource<number>(0)
+        this.useTerrain = state?.useTerrain ?? new ImmutableStore<boolean>(false)
         this.rasterLayer =
             state?.rasterLayer ?? new UIEventSource<RasterLayerPolygon | undefined>(undefined)
 
         const lastClickLocation = new UIEventSource<{ lon: number; lat: number }>(undefined)
         this.lastClickLocation = lastClickLocation
         const self = this
+
+        new RasterLayerHandler(this._maplibreMap, this.rasterLayer)
 
         function handleClick(e) {
             if (e.originalEvent["consumed"]) {
@@ -92,7 +113,6 @@ export class MapLibreAdaptor implements MapProperties, ExportableMap {
 
         maplibreMap.addCallbackAndRunD((map) => {
             map.on("load", () => {
-                self.setBackground()
                 self.MoveMapToCurrentLoc(self.location.data)
                 self.SetZoom(self.zoom.data)
                 self.setMaxBounds(self.maxbounds.data)
@@ -102,6 +122,7 @@ export class MapLibreAdaptor implements MapProperties, ExportableMap {
                 self.setMinzoom(self.minzoom.data)
                 self.setMaxzoom(self.maxzoom.data)
                 self.setBounds(self.bounds.data)
+                self.setTerrain(self.useTerrain.data)
                 this.updateStores(true)
             })
             self.MoveMapToCurrentLoc(self.location.data)
@@ -113,6 +134,8 @@ export class MapLibreAdaptor implements MapProperties, ExportableMap {
             self.setMinzoom(self.minzoom.data)
             self.setMaxzoom(self.maxzoom.data)
             self.setBounds(self.bounds.data)
+            self.SetRotation(self.rotation.data)
+            self.setTerrain(self.useTerrain.data)
             this.updateStores(true)
             map.on("moveend", () => this.updateStores())
             map.on("click", (e) => {
@@ -124,25 +147,59 @@ export class MapLibreAdaptor implements MapProperties, ExportableMap {
             map.on("dblclick", (e) => {
                 handleClick(e)
             })
-        })
-
-        this.rasterLayer.addCallback((_) =>
-            self.setBackground().catch((_) => {
-                console.error("Could not set background")
+            map.on("rotateend", (_) => {
+                this.updateStores()
             })
-        )
+            map.on("pitchend", () => {
+                this.updateStores()
+            })
+            map.getContainer().addEventListener("keydown", (event) => {
+                let locked: "islocked" = undefined
+                if (!this.allowMoving.data) {
+                    locked = "islocked"
+                }
+                switch (event.key) {
+                    case "ArrowUp":
+                        this.pingKeycodeEvent(locked ?? "north")
+                        break
+                    case "ArrowRight":
+                        this.pingKeycodeEvent(locked ?? "east")
+                        break
+                    case "ArrowDown":
+                        this.pingKeycodeEvent(locked ?? "south")
+                        break
+                    case "ArrowLeft":
+                        this.pingKeycodeEvent(locked ?? "west")
+                        break
+                    case "+":
+                        this.pingKeycodeEvent("in")
+                        break
+                    case "=":
+                        this.pingKeycodeEvent("in")
+                        break
+                    case "-":
+                        this.pingKeycodeEvent("out")
+                        break
+                }
+            })
+        })
 
         this.location.addCallbackAndRunD((loc) => {
             self.MoveMapToCurrentLoc(loc)
         })
         this.zoom.addCallbackAndRunD((z) => self.SetZoom(z))
         this.maxbounds.addCallbackAndRun((bbox) => self.setMaxBounds(bbox))
-        this.allowMoving.addCallbackAndRun((allowMoving) => self.setAllowMoving(allowMoving))
+        this.rotation.addCallbackAndRunD((bearing) => self.SetRotation(bearing))
+        this.allowMoving.addCallbackAndRun((allowMoving) => {
+            self.setAllowMoving(allowMoving)
+            self.pingKeycodeEvent(allowMoving ? "unlocked" : "locked")
+        })
         this.allowRotating.addCallbackAndRunD((allowRotating) =>
             self.setAllowRotating(allowRotating)
         )
         this.allowZooming.addCallbackAndRun((allowZooming) => self.setAllowZooming(allowZooming))
         this.bounds.addCallbackAndRunD((bounds) => self.setBounds(bounds))
+        this.useTerrain?.addCallbackAndRun((useTerrain) => self.setTerrain(useTerrain))
     }
 
     /**
@@ -164,82 +221,80 @@ export class MapLibreAdaptor implements MapProperties, ExportableMap {
     }
 
     public static prepareWmsSource(layer: RasterLayerProperties): SourceSpecification {
-        return {
-            type: "raster",
-            // use the tiles option to specify a 256WMS tile source URL
-            // https://maplibre.org/maplibre-gl-js-docs/style-spec/sources/
-            tiles: [MapLibreAdaptor.prepareWmsURL(layer.url, layer["tile-size"] ?? 256)],
-            tileSize: layer["tile-size"] ?? 256,
-            minzoom: layer["min_zoom"] ?? 1,
-            maxzoom: layer["max_zoom"] ?? 25,
-            //  scheme: background["type"] === "tms" ? "tms" : "xyz",
-        }
-    }
-
-    public static setDpi(
-        drawOn: HTMLCanvasElement,
-        ctx: CanvasRenderingContext2D,
-        dpiFactor: number
-    ) {
-        drawOn.style.width = drawOn.style.width || drawOn.width + "px"
-        drawOn.style.height = drawOn.style.height || drawOn.height + "px"
-
-        // Resize canvas and scale future draws.
-        drawOn.width = Math.ceil(drawOn.width * dpiFactor)
-        drawOn.height = Math.ceil(drawOn.height * dpiFactor)
-        ctx.scale(dpiFactor, dpiFactor)
+        return RasterLayerHandler.prepareSource(layer)
     }
 
     /**
      * Prepares an ELI-URL to be compatible with mapbox
      */
-    private static prepareWmsURL(url: string, size: number = 256): string {
-        // ELI:  LAYERS=OGWRGB13_15VL&STYLES=&FORMAT=image/jpeg&CRS={proj}&WIDTH={width}&HEIGHT={height}&BBOX={bbox}&VERSION=1.3.0&SERVICE=WMS&REQUEST=GetMap
-        // PROD: SERVICE=WMS&REQUEST=GetMap&LAYERS=OGWRGB13_15VL&STYLES=&FORMAT=image/jpeg&TRANSPARENT=false&VERSION=1.3.0&WIDTH=256&HEIGHT=256&CRS=EPSG:3857&BBOX=488585.4847988467,6590094.830634755,489196.9810251281,6590706.32686104
 
-        const toReplace = {
-            "{bbox}": "{bbox-epsg-3857}",
-            "{proj}": "EPSG:3857",
-            "{width}": "" + size,
-            "{height}": "" + size,
-            "{zoom}": "{z}",
-        }
-
-        for (const key in toReplace) {
-            url = url.replace(new RegExp(key), toReplace[key])
-        }
-
-        const subdomains = url.match(/\{switch:([a-zA-Z0-9,]*)}/)
-        if (subdomains !== null) {
-            const options = subdomains[1].split(",")
-            const option = options[Math.floor(Math.random() * options.length)]
-            url = url.replace(subdomains[0], option)
-        }
-
-        return url
+    private static async toBlob(canvas: HTMLCanvasElement): Promise<Blob> {
+        return await new Promise<Blob>((resolve) => canvas.toBlob((blob) => resolve(blob)))
     }
 
-    public async exportAsPng(dpiFactor: number): Promise<Blob> {
+    private static async createImage(url: string): Promise<HTMLImageElement> {
+        return new Promise((resolve, reject) => {
+            const img = new Image()
+            img.decode = () => resolve(img) as any
+            img.onload = () => resolve(img)
+            img.onerror = reject
+            img.crossOrigin = "anonymous"
+            img.decoding = "async"
+            img.src = url
+        })
+    }
+
+    public onKeyNavigationEvent(f: (event: KeyNavigationEvent) => void | boolean) {
+        this._onKeyNavigation.push(f)
+        return () => {
+            this._onKeyNavigation.splice(this._onKeyNavigation.indexOf(f), 1)
+        }
+    }
+
+    public async exportAsPng(
+        rescaleIcons: number = 1,
+        progress: UIEventSource<{ current: number; total: number }> = undefined
+    ): Promise<Blob> {
         const map = this._maplibreMap.data
         if (!map) {
             return undefined
         }
-        const drawOn = document.createElement("canvas")
-        drawOn.width = map.getCanvas().width
-        drawOn.height = map.getCanvas().height
-
+        const drawOn = document.createElement("canvas", {})
         const ctx = drawOn.getContext("2d")
-        // Set up CSS size.
-        MapLibreAdaptor.setDpi(drawOn, ctx, dpiFactor / map.getPixelRatio())
+        // The width/height has been set in 'mm' on the parent element and converted to pixels by the browser
+        const w = map.getContainer().getBoundingClientRect().width
+        const h = map.getContainer().getBoundingClientRect().height
+
+        const dpi = map.getPixelRatio()
+        // The 'css'-size stays constant...
+        drawOn.style.width = w + "px"
+        drawOn.style.height = h + "px"
+
+        // ...but the number of pixels is increased
+        drawOn.width = Math.ceil(w * dpi)
+        drawOn.height = Math.ceil(h * dpi)
 
         await this.exportBackgroundOnCanvas(ctx)
+        await this.drawMarkers(ctx, rescaleIcons, progress)
+        return await MapLibreAdaptor.toBlob(drawOn)
+    }
 
-        // MapLibreAdaptor.setDpi(drawOn, ctx, 1)
-        const markers = await this.drawMarkers(dpiFactor)
-        ctx.drawImage(markers, 0, 0, drawOn.width, drawOn.height)
-        ctx.scale(dpiFactor, dpiFactor)
-        this._maplibreMap.data?.resize()
-        return await new Promise<Blob>((resolve) => drawOn.toBlob((blob) => resolve(blob)))
+    private pingKeycodeEvent(
+        key: "north" | "east" | "south" | "west" | "in" | "out" | "islocked" | "locked" | "unlocked"
+    ) {
+        const event = {
+            date: new Date(),
+            key: key,
+        }
+
+        for (let i = 0; i < this._onKeyNavigation.length; i++) {
+            const f = this._onKeyNavigation[i]
+            const unregister = f(event)
+            if (unregister === true) {
+                this._onKeyNavigation.splice(i, 1)
+                i--
+            }
+        }
     }
 
     /**
@@ -265,26 +320,137 @@ export class MapLibreAdaptor implements MapProperties, ExportableMap {
         }
         map.triggerRepaint()
         await promise
-        map.resize()
     }
 
-    private async drawMarkers(dpiFactor: number): Promise<HTMLCanvasElement> {
+    private async drawElement(
+        drawOn: CanvasRenderingContext2D,
+        element: HTMLElement,
+        rescaleIcons: number,
+        pixelRatio: number
+    ) {
+        {
+            const allimages = element.getElementsByTagName("img")
+            for (const img of Array.from(allimages)) {
+                let isLoaded: boolean = false
+                while (!isLoaded) {
+                    console.log(
+                        "Waiting for image",
+                        img.src,
+                        "to load",
+                        img.complete,
+                        img.naturalWidth,
+                        img
+                    )
+                    await Utils.waitFor(250)
+                    isLoaded = img.complete && img.width > 0
+                }
+            }
+        }
+
+        const style = element.style.transform
+        let x = element.getBoundingClientRect().x
+        let y = element.getBoundingClientRect().y
+        element.style.transform = ""
+        const offset = style.match(/translate\(([-0-9]+)%, ?([-0-9]+)%\)/)
+
+        let labels = <HTMLElement[]>Array.from(element.getElementsByClassName("marker-label"))
+        const origLabelTransforms = labels.map((l) => l.style.transform)
+        // We save the original width (`w`) and height (`h`) in order to restore them later on
+        const w = element.style.width
+        const h = Number(element.style.height)
+        const targetW = Math.max(
+            element.getBoundingClientRect().width * 4,
+            ...labels.map((l) => l.getBoundingClientRect().width)
+        )
+        const targetH =
+            element.getBoundingClientRect().height +
+            Math.max(
+                ...labels.map(
+                    (l) =>
+                        l.getBoundingClientRect().height *
+                        2 /* A bit of buffer to catch eventual 'margin-top'*/
+                )
+            )
+
+        // Force a wider view for icon badges
+        element.style.width = targetW + "px"
+        // Force more height to include labels
+        element.style.height = targetH + "px"
+        element.classList.add("w-full", "flex", "flex-col", "items-center")
+        labels.forEach((l) => {
+            l.style.transform = ""
+        })
+        await Utils.awaitAnimationFrame()
+        const svgSource = await htmltoimage.toSvg(element)
+        const img = await MapLibreAdaptor.createImage(svgSource)
+        for (let i = 0; i < labels.length; i++) {
+            labels[i].style.transform = origLabelTransforms[i]
+        }
+        element.style.width = "" + w
+        element.style.height = "" + h
+
+        if (offset && rescaleIcons !== 1) {
+            const [_, __, relYStr] = offset
+            const relY = Number(relYStr)
+            y += img.height * (relY / 100)
+        }
+
+        x *= pixelRatio
+        y *= pixelRatio
+
+        try {
+            const xdiff = (img.width * rescaleIcons) / 2
+            drawOn.drawImage(img, x - xdiff, y, img.width * rescaleIcons, img.height * rescaleIcons)
+        } catch (e) {
+            console.log("Could not draw image because of", e)
+        }
+        element.classList.remove("w-full", "flex", "flex-col", "items-center")
+    }
+
+    /**
+     * Draws the markers of the current map on the specified canvas.
+     * The DPIfactor is used to calculate the correct position, whereas 'rescaleIcons' can be used to make the icons smaller
+     */
+    private async drawMarkers(
+        drawOn: CanvasRenderingContext2D,
+        rescaleIcons: number = 1,
+        progress: UIEventSource<{ current: number; total: number }>
+    ): Promise<void> {
         const map = this._maplibreMap.data
         if (!map) {
+            console.error("There is no map to export from")
             return undefined
         }
-        const width = map.getCanvas().clientWidth
-        const height = map.getCanvas().clientHeight
-        map.getCanvas().style.display = "none"
-        const img = await htmltoimage.toCanvas(map.getCanvasContainer(), {
-            pixelRatio: dpiFactor,
-            canvasWidth: width,
-            canvasHeight: height,
-            width: width,
-            height: height,
-        })
-        map.getCanvas().style.display = "unset"
-        return img
+
+        const container = map.getContainer()
+        const pixelRatio = map.getPixelRatio()
+
+        function isDisplayed(el: Element) {
+            const r1 = el.getBoundingClientRect()
+            const r2 = container.getBoundingClientRect()
+            return !(
+                r2.left > r1.right ||
+                r2.right < r1.left ||
+                r2.top > r1.bottom ||
+                r2.bottom < r1.top
+            )
+        }
+
+        const markers = Array.from(container.getElementsByClassName("marker"))
+        for (let i = 0; i < markers.length; i++) {
+            const marker = <HTMLElement>markers[i]
+            const style = marker.style.transform
+
+            if (isDisplayed(marker)) {
+                await this.drawElement(drawOn, marker, rescaleIcons, pixelRatio)
+            }
+
+            if (progress) {
+                progress.setData({ current: i, total: markers.length })
+            }
+
+            marker.style.transform = style
+        }
     }
 
     private updateStores(isSetup: boolean = false): void {
@@ -312,6 +478,8 @@ export class MapLibreAdaptor implements MapProperties, ExportableMap {
         if (this.bounds.data === undefined || !isSetup) {
             this.bounds.setData(bbox)
         }
+        this.rotation.setData(map.getBearing())
+        this.pitch.setData(map.getPitch())
     }
 
     private SetZoom(z: number): void {
@@ -322,6 +490,14 @@ export class MapLibreAdaptor implements MapProperties, ExportableMap {
         if (Math.abs(map.getZoom() - z) > 0.01) {
             map.setZoom(z)
         }
+    }
+
+    private SetRotation(bearing: number): void {
+        const map = this._maplibreMap.data
+        if (!map || bearing === undefined) {
+            return
+        }
+        map.rotateTo(bearing, { duration: 0 })
     }
 
     private MoveMapToCurrentLoc(loc: { lat: number; lon: number }): void {
@@ -340,102 +516,28 @@ export class MapLibreAdaptor implements MapProperties, ExportableMap {
         }
     }
 
-    private async awaitStyleIsLoaded(): Promise<void> {
-        const map = this._maplibreMap.data
-        if (!map) {
-            return
-        }
-        while (!map?.isStyleLoaded()) {
-            await Utils.waitFor(250)
-        }
-    }
-
-    private removeCurrentLayer(map: MLMap): void {
-        if (this._currentRasterLayer) {
-            // hide the previous layer
-            try {
-                if (map.getLayer(this._currentRasterLayer)) {
-                    map.removeLayer(this._currentRasterLayer)
+    public installCustomKeyboardHandler(viewportStore: UIEventSource<HTMLDivElement>) {
+        viewportStore.mapD(
+            (viewport) => {
+                const map = this._maplibreMap.data
+                if (!map) {
+                    return
                 }
-                if (map.getSource(this._currentRasterLayer)) {
-                    map.removeSource(this._currentRasterLayer)
+                const oldKeyboard = map.keyboard
+                const w = viewport.getBoundingClientRect().width
+                if (w < 10) {
+                    /// this is weird, but definitively wrong!
+                    console.log("Got a very small bound", w, viewport)
+                    // We try again later on
+                    window.requestAnimationFrame(() => {
+                        viewportStore.ping()
+                    })
+                    return
                 }
-                this._currentRasterLayer = undefined
-            } catch (e) {
-                console.warn("Could not remove the previous layer")
-            }
-        }
-    }
-
-    private async setBackground(): Promise<void> {
-        const map = this._maplibreMap.data
-        if (!map) {
-            return
-        }
-        const background: RasterLayerProperties = this.rasterLayer?.data?.properties
-        if (!background) {
-            console.error(
-                "Attempting to 'setBackground', but the background is",
-                background,
-                "for",
-                map.getCanvas()
-            )
-            return
-        }
-        if (this._currentRasterLayer === background.id) {
-            // already the correct background layer, nothing to do
-            return
-        }
-
-        if (!background?.url) {
-            // no background to set
-            this.removeCurrentLayer(map)
-            return
-        }
-
-        if (background.type === "vector") {
-            this.removeCurrentLayer(map)
-            map.setStyle(background.url)
-            return
-        }
-
-        let addLayerBeforeId = "aeroway_fill" // this is the first non-landuse item in the stylesheet, we add the raster layer before the roads but above the landuse
-        if (background.category === "osmbasedmap" || background.category === "map") {
-            // The background layer is already an OSM-based map or another map, so we don't want anything from the baselayer
-            addLayerBeforeId = undefined
-            this.removeCurrentLayer(map)
-        } else {
-            // Make sure that the default maptiler style is loaded as it gives an overlay with roads
-            const maptiler = AvailableRasterLayers.maplibre.properties
-            if (!map.getSource(maptiler.id)) {
-                this.removeCurrentLayer(map)
-                map.addSource(maptiler.id, MapLibreAdaptor.prepareWmsSource(maptiler))
-                map.setStyle(maptiler.url)
-                await this.awaitStyleIsLoaded()
-            }
-        }
-
-        if (!map.getLayer(addLayerBeforeId)) {
-            addLayerBeforeId = undefined
-        }
-        if (!map.getSource(background.id)) {
-            map.addSource(background.id, MapLibreAdaptor.prepareWmsSource(background))
-        }
-        map.resize()
-        if (!map.getLayer(background.id)) {
-            map.addLayer(
-                {
-                    id: background.id,
-                    type: "raster",
-                    source: background.id,
-                    paint: {},
-                },
-                addLayerBeforeId
-            )
-        }
-        await this.awaitStyleIsLoaded()
-        this.removeCurrentLayer(map)
-        this._currentRasterLayer = background?.id
+                oldKeyboard._panStep = w
+            },
+            [this._maplibreMap]
+        )
     }
 
     private setMaxBounds(bbox: undefined | BBox) {
@@ -455,13 +557,16 @@ export class MapLibreAdaptor implements MapProperties, ExportableMap {
         if (!map) {
             return
         }
-        console.log("Rotation allowed:", allow)
         if (allow === false) {
             map.rotateTo(0, { duration: 0 })
             map.setPitch(0)
             map.dragRotate.disable()
+            map.keyboard.disableRotation()
+            map.touchZoomRotate.disableRotation()
         } else {
             map.dragRotate.enable()
+            map.keyboard.enableRotation()
+            map.touchZoomRotate.enableRotation()
         }
     }
 
@@ -530,5 +635,34 @@ export class MapLibreAdaptor implements MapProperties, ExportableMap {
             return
         }
         map.fitBounds(bounds.toLngLat())
+    }
+
+    private async setTerrain(useTerrain: boolean) {
+        const map = this._maplibreMap.data
+        if (!map) {
+            return
+        }
+        const id = "maptiler-terrain-data"
+        if (useTerrain) {
+            if (map.getTerrain()) {
+                return
+            }
+            map.addSource(id, {
+                type: "raster-dem",
+                url:
+                    "https://api.maptiler.com/tiles/terrain-rgb/tiles.json?key=" +
+                    Constants.maptilerApiKey,
+            })
+            try {
+                while (!map?.isStyleLoaded()) {
+                    await Utils.waitFor(250)
+                }
+                map.setTerrain({
+                    source: id,
+                })
+            } catch (e) {
+                console.error(e)
+            }
+        }
     }
 }

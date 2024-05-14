@@ -10,7 +10,9 @@
     "ca": "Interiors",
     "pa_PK": "اندروں",
     "cs": "Vnitřní prostory",
-    "es": "En interiores"
+    "es": "En interiores",
+    "eu": "Barnealdean",
+    "pl": "Wewnątrz"
   },
   "description": {
     "en": "On this map, publicly accessible indoor places are shown",
@@ -21,14 +23,13 @@
     "cs": "Na této mapě jsou zobrazeny veřejně přístupné vnitřní prostory",
     "nb_NO": "Viser offentlig tilgjenglige innendørssteder",
     "es": "En este mapa se muestran los lugares cubiertos de acceso público",
-    "ca": "En aquest mapa es mostren els llocs interiors accessibles al públic"
+    "ca": "En aquest mapa es mostren els llocs interiors accessibles al públic",
+    "pl": "Na tej mapie pokazane są publicznie dostępne miejsca w pomieszczeniach zamkniętych"
   },
   "icon": "./assets/layers/entrance/entrance.svg",
-  "startLat": 51.17181,
-  "defaultBackgroundId": "CartoDB.Voyager",
-  "startLon": 4.144383,
   "startZoom": 14,
-  "widenFactor": 2,
+  "startLat": 51.17181,
+  "startLon": 4.144383,
   "layers": [
     {
       "builtin": "indoors",
@@ -47,5 +48,6 @@
     "pedestrian_path",
     "elevator",
     "entrance"
-  ]
+  ],
+  "widenFactor": 2
 }

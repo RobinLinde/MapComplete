@@ -3,25 +3,19 @@ import Constants from "../../Models/Constants"
 import { UIEventSource } from "../UIEventSource"
 import { Utils } from "../../Utils"
 import { Feature } from "geojson"
+import { ImageUploadManager } from "../ImageProviders/ImageUploadManager"
 
 export default class PendingChangesUploader {
-    private lastChange: Date
+    constructor(
+        changes: Changes,
+        selectedFeature: UIEventSource<Feature>,
+        uploader: ImageUploadManager
+    ) {
+        changes.pendingChanges
+            .stabilized(Constants.updateTimeoutSec * 1000)
+            .addCallback(() => changes.flushChanges("Flushing changes due to timeout"))
 
-    constructor(changes: Changes, selectedFeature: UIEventSource<Feature>) {
-        const self = this
-        this.lastChange = new Date()
-        changes.pendingChanges.addCallback(() => {
-            self.lastChange = new Date()
-
-            window.setTimeout(() => {
-                const diff = (new Date().getTime() - self.lastChange.getTime()) / 1000
-                if (Constants.updateTimeoutSec >= diff - 1) {
-                    changes.flushChanges("Flushing changes due to timeout")
-                }
-            }, Constants.updateTimeoutSec * 1000)
-        })
-
-        selectedFeature.stabilized(10000).addCallback((feature) => {
+        selectedFeature.stabilized(1000).addCallback((feature) => {
             if (feature === undefined) {
                 // The popup got closed - we flush
                 changes.flushChanges("Flushing changes due to popup closed")
@@ -59,7 +53,9 @@ export default class PendingChangesUploader {
         }
 
         function onunload(e) {
-            if (changes.pendingChanges.data.length == 0) {
+            const pendingChanges = changes.pendingChanges.data.length
+            const uploadingImages = uploader.isUploading.data
+            if (pendingChanges == 0 && !uploadingImages) {
                 return
             }
             changes.flushChanges("onbeforeunload - probably closing or something similar")

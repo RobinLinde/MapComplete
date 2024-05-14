@@ -3,19 +3,19 @@
   "title": {
     "en": "Public toilets",
     "de": "Öffentliche Toiletten",
-    "fr": "Carte des WC et toilettes publiques",
+    "fr": "Toilettes publiques",
     "nl": "Publieke Toiletten",
     "ru": "Открытая карта туалетов",
     "ja": "オープントイレマップ",
     "zh_Hant": "公共廁所",
-    "pl": "Mapa otwartych toalet",
+    "pl": "Publiczne toalety",
     "it": "Mappa libera delle toilet",
     "nb_NO": "Åpent toalettkart",
     "hu": "WC-térkép",
-    "ca": "Mapa obert de lavabos",
+    "ca": "Lavabos públics",
     "da": "Åbn toiletkort",
-    "es": "Mapa Abierto de Baños Públicos",
-    "cs": "Open Toilet Map"
+    "es": "Baños públicos",
+    "cs": "Veřejné toalety"
   },
   "description": {
     "en": "A map of public toilets",
@@ -34,14 +34,14 @@
     "es": "Mapa de aseos públicos",
     "cs": "Mapa veřejných toalet"
   },
+  "icon": "./assets/themes/toilets/toilets.svg",
   "startZoom": 12,
   "startLat": 51.2095,
   "startLon": 3.2222,
-  "widenFactor": 3,
-  "icon": "./assets/themes/toilets/toilets.svg",
   "layers": [
     "toilet",
     "toilet_at_amenity",
     "shower"
-  ]
+  ],
+  "widenFactor": 3
 }

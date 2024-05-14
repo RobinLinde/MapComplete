@@ -60,18 +60,6 @@
                                 }
                             }
                         }
-                    },
-                    "units+": {
-                        "0": {
-                            "applicableUnits": {
-                                "0": {
-                                    "human": " ؜ میٹر"
-                                },
-                                "1": {
-                                    "human": " ؜ فوٹ"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -266,6 +254,13 @@
     },
     "trees": {
         "title": "رُکھ"
+    },
+    "walkingnodes": {
+        "layers": {
+            "1": {
+                "name": "نوڈ"
+            }
+        }
     },
     "waste_basket": {
         "title": "کوڑے دی ٹوکری"

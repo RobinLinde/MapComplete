@@ -28,15 +28,8 @@ class FeatureSwitchUtils {
 
 export class OsmConnectionFeatureSwitches {
     public readonly featureSwitchFakeUser: UIEventSource<boolean>
-    public readonly featureSwitchApiURL: UIEventSource<string>
 
     constructor() {
-        this.featureSwitchApiURL = QueryParameters.GetQueryParameter(
-            "backend",
-            "osm",
-            "The OSM backend to use - can be used to redirect mapcomplete to the testing backend when using 'osm-test'"
-        )
-
         this.featureSwitchFakeUser = QueryParameters.GetBooleanQueryParameter(
             "fake-user",
             false,
@@ -70,6 +63,7 @@ export default class FeatureSwitchState extends OsmConnectionFeatureSwitches {
     public readonly overpassMaxZoom: UIEventSource<number>
     public readonly osmApiTileSize: UIEventSource<number>
     public readonly backgroundLayerId: UIEventSource<string>
+    public readonly featureSwitchMorePrivacy: UIEventSource<boolean>
 
     public constructor(layoutToUse?: LayoutConfig) {
         super()
@@ -82,6 +76,16 @@ export default class FeatureSwitchState extends OsmConnectionFeatureSwitches {
             layoutToUse?.enableUserBadge ?? true,
             "Disables/Enables logging in and thus disables editing all together. This effectively puts MapComplete into read-only mode."
         )
+        {
+            if (QueryParameters.wasInitialized("fs-userbadge")) {
+                // userbadge is the legacy name for 'enable-login'
+                this.featureSwitchEnableLogin.setData(
+                    QueryParameters.GetBooleanQueryParameter("fs-userbadge", undefined, "Legacy")
+                        .data
+                )
+            }
+        }
+
         this.featureSwitchSearch = FeatureSwitchUtils.initSwitch(
             "fs-search",
             layoutToUse?.enableSearch ?? true,
@@ -106,7 +110,7 @@ export default class FeatureSwitchState extends OsmConnectionFeatureSwitches {
         )
         this.featureSwitchCommunityIndex = FeatureSwitchUtils.initSwitch(
             "fs-community-index",
-            true,
+            this.featureSwitchEnableLogin.data,
             "Disables/enables the button to get in touch with the community"
         )
         this.featureSwitchExtraLinkEnabled = FeatureSwitchUtils.initSwitch(
@@ -143,7 +147,6 @@ export default class FeatureSwitchState extends OsmConnectionFeatureSwitches {
 
         let testingDefaultValue = false
         if (
-            this.featureSwitchApiURL.data !== "osm-test" &&
             !Utils.runningFromConsole &&
             (location.hostname === "localhost" || location.hostname === "127.0.0.1")
         ) {
@@ -162,6 +165,14 @@ export default class FeatureSwitchState extends OsmConnectionFeatureSwitches {
             "If true, shows some extra debugging help such as all the available tags on every object"
         )
 
+
+        this.featureSwitchMorePrivacy = QueryParameters.GetBooleanQueryParameter(
+            "moreprivacy",
+            layoutToUse.enableMorePrivacy,
+            "If true, the location distance indication will not be written to the changeset and other privacy enhancing measures might be taken."
+        )
+
+
         this.overpassUrl = QueryParameters.GetQueryParameter(
             "overpassUrl",
             (layoutToUse?.overpassUrl ?? Constants.defaultOverpassUrls).join(","),
@@ -172,7 +183,7 @@ export default class FeatureSwitchState extends OsmConnectionFeatureSwitches {
             (urls) => urls?.join(",")
         )
 
-        this.overpassTimeout = UIEventSource.asFloat(
+        this.overpassTimeout = UIEventSource.asInt(
             QueryParameters.GetQueryParameter(
                 "overpassTimeout",
                 "" + layoutToUse?.overpassTimeout,
@@ -188,7 +199,7 @@ export default class FeatureSwitchState extends OsmConnectionFeatureSwitches {
             )
         )
 
-        this.osmApiTileSize = UIEventSource.asFloat(
+        this.osmApiTileSize = UIEventSource.asInt(
             QueryParameters.GetQueryParameter(
                 "osmApiTileSize",
                 "" + layoutToUse?.osmApiTileSize,
@@ -198,7 +209,7 @@ export default class FeatureSwitchState extends OsmConnectionFeatureSwitches {
 
         this.backgroundLayerId = QueryParameters.GetQueryParameter(
             "background",
-            layoutToUse?.defaultBackgroundId ?? "osm",
+            layoutToUse?.defaultBackgroundId,
             "The id of the background layer to start with"
         )
     }

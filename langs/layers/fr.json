@@ -36,37 +36,38 @@
             "2": {
                 "title": "un panneau à affiches monté sur un mur"
             },
-            "3": {
+            "4": {
                 "description": "Petit panneau pour l’affichage de proximité, généralement à destination des piétons",
                 "title": "un petit panneau"
             },
-            "4": {
+            "5": {
                 "description": "Une structure extérieure cylindrique qui affiche de la publicité",
                 "title": "une colonne"
             },
-            "5": {
+            "6": {
                 "title": "un drapeau"
             },
-            "6": {
+            "7": {
                 "title": "un écran"
             },
-            "7": {
+            "8": {
                 "title": "un écran fixé au mur"
             },
-            "8": {
+            "10": {
+                "description": "Une pièce de textile imperméable avec un message imprimé, ancrée de façon permanente sur un mur.",
                 "title": "une bâche"
             },
-            "9": {
+            "11": {
                 "title": "un totem"
             },
-            "10": {
+            "12": {
                 "description": "Désigne une enseigne publicitaire, une enseigne néon, les logos ou des indications d'entrées",
                 "title": "une enseigne"
             },
-            "11": {
+            "13": {
                 "title": "une sculpture"
             },
-            "12": {
+            "14": {
                 "title": "une peinture murale"
             }
         },
@@ -222,6 +223,13 @@
             }
         }
     },
+    "aerialway": {
+        "tagRenderings": {
+            "length": {
+                "render": "Cette voie aérienne fait {_length:km} kilomètre de long"
+            }
+        }
+    },
     "ambulancestation": {
         "description": "Une station d’ambulance est un lieu où sont stockés les véhicules d’urgence ainsi que de l’équipement médical.",
         "name": "Couche des ambulances",
@@ -277,6 +285,9 @@
         "presets": {
             "0": {
                 "title": "une œuvre d'art"
+            },
+            "1": {
+                "title": "une œuvre sur un mur"
             }
         },
         "tagRenderings": {
@@ -335,7 +346,11 @@
             },
             "artwork-website": {
                 "question": "Existe-t-il un site web où trouver plus d'informations sur cette œuvre d'art ?",
-                "render": "Plus d'info <a href='{website}' target='_blank'>sûr ce site web</a>"
+                "render": {
+                    "special": {
+                        "text": "Plus d'info sûr ce site web"
+                    }
+                }
             },
             "artwork_subject": {
                 "question": "Que représente cette oeuvre d'art ?",
@@ -396,6 +411,29 @@
                 "question": "Pouvez-vous déposer de l'argent liquide dans ce DAB ?"
             },
             "cash_out-denominations-notes": {
+                "mappings": {
+                    "0": {
+                        "then": "On peut retirer des billets de 5 euros"
+                    },
+                    "1": {
+                        "then": "On peut retirer des billets de 10 euros"
+                    },
+                    "2": {
+                        "then": "On peut retirer des billets de 20 euros"
+                    },
+                    "3": {
+                        "then": "On peut retirer des billets de 50 euros"
+                    },
+                    "4": {
+                        "then": "On peut retirer des billets de 100 euros"
+                    },
+                    "5": {
+                        "then": "On peut retirer des billets de 200 euros"
+                    },
+                    "6": {
+                        "then": "On peut retirer des billets de 500 euros"
+                    }
+                },
                 "question": "Quels billets pouvez-vous retirer ici ?"
             },
             "name": {
@@ -557,11 +595,19 @@
                     },
                     "1": {
                         "then": "Ce banc n'a pas d'oeuvre d'art intégrée"
+                    },
+                    "2": {
+                        "then": "Ce banc ne comporte <span class=\"subtle\">probablement</span> pas d'œuvre d'art"
                     }
-                }
+                },
+                "question": "Est-ce que ce banc inclut un élément artistique ?",
+                "questionHint": "Par ex. il intègre une peinture, statue ou autre élément non commune, travail cratif"
             },
             "bench-backrest": {
                 "mappings": {
+                    "0": {
+                        "then": "Ce banc a deux côtés avec un dossier partagé"
+                    },
                     "1": {
                         "then": "Dossier : Oui"
                     },
@@ -611,32 +657,32 @@
                         "then": "Ce banc n'a pas d'inscription"
                     },
                     "1": {
-                        "then": "Ce banc n'a<span class='subtle'>(probablement)</span> pas d'inscription"
+                        "then": "Ce banc n'a <span class='subtle'>(probablement)</span> pas d'inscription"
                     }
                 },
                 "question": "Est-ce que ce banc possède une inscription ?",
-                "questionHint": "Par exemple, sur une plaque accrochée, sur le dossier, ...",
+                "questionHint": "Par exemple, sur une plaque accrochée, sur le dossier, …",
                 "render": "Ce banc a l'inscription suivante :<br/><p><i>{inscription}</i></p>"
             },
             "bench-material": {
                 "mappings": {
                     "0": {
-                        "then": "Matériau du siège : bois"
+                        "then": "L'assise est en bois"
                     },
                     "1": {
-                        "then": "Matériau du siège : métal"
+                        "then": "L'assise est en métal"
                     },
                     "2": {
-                        "then": "Matériau : pierre"
+                        "then": "L'assise est en pierre"
                     },
                     "3": {
                         "then": "Matériau du siège : béton"
                     },
                     "4": {
-                        "then": "Matériau : plastique"
+                        "then": "L'assise est en plastique"
                     },
                     "5": {
-                        "then": "Matériau  du siège : acier"
+                        "then": "L'assise est en acier"
                     }
                 },
                 "question": "De quel matériau ce banc est-il fait ?",
@@ -1023,7 +1069,7 @@
         "name": "Parking à vélo",
         "presets": {
             "0": {
-                "title": "une parking à vélo"
+                "title": "un parking à vélo"
             }
         },
         "tagRenderings": {
@@ -1036,6 +1082,9 @@
                         "then": "Accès destiné principalement aux visiteurs d'un lieu"
                     },
                     "2": {
+                        "then": "Accès limité aux membres d'une école, entreprise ou organisation"
+                    },
+                    "3": {
                         "then": "Accès limité aux membres d'une école, entreprise ou organisation"
                     }
                 },
@@ -1270,7 +1319,7 @@
             "send_email_about_broken_pump": {
                 "render": {
                     "special": {
-                        "body": "Bonjour,\n\nCe mail pour vous informer que la pompe à vélo située à https://mapcomplete.osm.be/cyclofix?lat={_lat}&lon={_lon}&z=18#{id} est cassée.\n\nBien à vous.",
+                        "body": "Bonjour,\n\nCe mail pour vous informer que la pompe à vélo située à https://mapcomplete.org/cyclofix?lat={_lat}&lon={_lon}&z=18#{id} est cassée.\n\nBien à vous.",
                         "button_text": "Signaler cette pompe à vélo cassée",
                         "subject": "Pompe à vélo cassée"
                     }
@@ -1608,7 +1657,7 @@
             },
             "2": {
                 "description": "Un <b>café</b> pour prendre un thé, un café ou une boisson alcoolisée dans un environnement calme",
-                "title": "un café"
+                "title": "un café adama"
             },
             "3": {
                 "description": "Une <b>boîte de nuit</b> ou discothèque pour danser sur de la musique de DJ accompagnée de jeux de lumière et un bar pour prendre une boisson (alcoolisée)",
@@ -1678,87 +1727,6 @@
         },
         "title": {
             "render": "Société de location de véhicules"
-        }
-    },
-    "charging_station": {
-        "description": "Une station de recharge",
-        "filter": {
-            "0": {
-                "options": {
-                    "0": {
-                        "question": "Tout type de véhicule"
-                    },
-                    "1": {
-                        "question": "Station de charge pour vélos"
-                    },
-                    "2": {
-                        "question": "Station de charge pour automobiles"
-                    }
-                }
-            },
-            "1": {
-                "options": {
-                    "0": {
-                        "question": "Stations de recharge en service uniquement"
-                    }
-                }
-            },
-            "2": {
-                "options": {
-                    "0": {
-                        "question": "Tous types de prise"
-                    },
-                    "1": {
-                        "question": "Dispose d’une <div style='display: inline-block'><b><b>prise murale Schuko</b> sans terre (CEE7/4 type F)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/CEE7_4F.svg'/></div>"
-                    },
-                    "6": {
-                        "question": "A un connecteur de   <div style='display: inline-block'><b>Type 1 <i>sans</i> câble (J1772) càd  Type 1 Combo </b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div>"
-                    }
-                }
-            }
-        },
-        "tagRenderings": {
-            "Authentication": {
-                "mappings": {
-                    "0": {
-                        "then": "Authentification par carte de membre"
-                    },
-                    "1": {
-                        "then": "Authentification par une app"
-                    },
-                    "2": {
-                        "then": "Authentification par appel téléphonique est disponible"
-                    },
-                    "3": {
-                        "then": "Authentification par SMS est disponible"
-                    },
-                    "4": {
-                        "then": "Authentification par NFC est disponible"
-                    },
-                    "6": {
-                        "then": "Authentification par carte de débit est disponible"
-                    },
-                    "7": {
-                        "then": "Charger ici est (aussi) possible sans authentification"
-                    }
-                },
-                "question": "Quelle sorte d'authentification est disponible à cette station de charge ?"
-            },
-            "Parking:fee": {
-                "mappings": {
-                    "0": {
-                        "then": "Pas de frais de stationnement supplémentaires pendant la recharge"
-                    },
-                    "1": {
-                        "then": "Des frais de stationnement supplémentaires doivent être payés lors de la recharge"
-                    }
-                },
-                "question": "Doit-on payer des frais de stationnement pendant la recharge ?"
-            },
-            "phone": {
-                "question": "Quel numéro peut on appeler s'il y a un problème avec cette station de charge ?",
-                "render": "En cas de problèmes, appelez le <a href='tel:{phone}'>{phone}</a>"
-            }
         }
     },
     "climbing": {
@@ -2102,12 +2070,33 @@
         }
     },
     "clock": {
+        "description": "Couche avec les horloges publiques",
+        "name": "Horloges",
         "presets": {
+            "0": {
+                "description": "Une horloge visible de l'espace public",
+                "title": "une horloge"
+            },
             "1": {
-                "description": "Une horloge publique fixée sur un mur"
+                "description": "Une horloge publique fixée sur un mur",
+                "title": "une horloge fixée au mur"
             }
         },
         "tagRenderings": {
+            "barometer": {
+                "mappings": {
+                    "0": {
+                        "then": "Cette horloge affiche également la pression atmosphérique"
+                    },
+                    "1": {
+                        "then": "Cette horloge n'affiche pas la pression atmosphérique"
+                    },
+                    "2": {
+                        "then": "Cette horloge affiche probablement la pression atmosphérique"
+                    }
+                },
+                "question": "Est-ce que cette horloge affiche également la pression atmosphérique ?"
+            },
             "date": {
                 "mappings": {
                     "0": {
@@ -2115,6 +2104,9 @@
                     },
                     "1": {
                         "then": "Cette horloge n'indique pas la date"
+                    },
+                    "2": {
+                        "then": "Cette horloge n'affiche probablement pas la date"
                     }
                 },
                 "question": "Cette horloge indique-t-elle également la date ?"
@@ -2137,6 +2129,9 @@
                 "question": "Comment cette horloge indique-t-elle l'heure ?"
             },
             "faces": {
+                "freeform": {
+                    "placeholder": "Nombre de faces"
+                },
                 "mappings": {
                     "0": {
                         "then": "Cette horloge a une face"
@@ -2184,11 +2179,35 @@
             },
             "thermometer": {
                 "mappings": {
+                    "0": {
+                        "then": "Cette horloge affiche également la température"
+                    },
+                    "1": {
+                        "then": "Cette horloge n'affiche pas la température"
+                    },
                     "2": {
                         "then": "Cette horloge n'indique probablement pas la date"
                     }
-                }
+                },
+                "question": "Est-ce que cette horloge affiche également la température ?"
+            },
+            "visibility": {
+                "mappings": {
+                    "0": {
+                        "then": "Cette horloge est visible d'environ 5 mètres (petite horloge fixée au mur)"
+                    },
+                    "1": {
+                        "then": "Cette horloge est visible d'environ 20 mètres (horloge sur un panneau publicitaire)"
+                    },
+                    "2": {
+                        "then": "Cette horloge est visible de plus de 20 mètres (par ex. horloge d'église ou de gare)"
+                    }
+                },
+                "question": "Quelle est la visibilité de cette horloge ?"
             }
+        },
+        "title": {
+            "render": "Horloge"
         }
     },
     "crossings": {
@@ -2205,6 +2224,28 @@
             }
         },
         "tagRenderings": {
+            "crossing-bicycle-allowed": {
+                "mappings": {
+                    "0": {
+                        "then": "Un cycliste peut utiliser ce passage"
+                    },
+                    "1": {
+                        "then": "Un cycliste ne peut pas utiliser ce passage"
+                    }
+                },
+                "question": "Est-ce que ce passage est également pour les vélos ?"
+            },
+            "crossing-button": {
+                "mappings": {
+                    "0": {
+                        "then": "Ce feu a un bouton pour demander le vert"
+                    },
+                    "1": {
+                        "then": "Ce feu n'a pas de bouton pour demander le vert"
+                    }
+                },
+                "question": "Est-ce que ce feu a un bouton pour demander le passage au vert ?"
+            },
             "crossing-continue-through-red": {
                 "question": "Est-ce qu'un cycliste peut aller tout droit quand le feu est rouge ?"
             },
@@ -2251,6 +2292,12 @@
                     },
                     "1": {
                         "then": "Ce feu de signalisation n'a pas de signal sonore pour aider à traverser."
+                    },
+                    "2": {
+                        "then": "Ce feu a un signal sonore pour aider à situer les poteaux, mais pas de signal pour indiquer qu'on peut traverser en sécurité."
+                    },
+                    "3": {
+                        "then": "Cet feu a un signal sonore pour indiquer qu'on peut traverser en sécurité, mais pas de signal pour localiser les poteaux."
                     }
                 },
                 "question": "Est-ce que le feu de signalisation a une signalisation sonore pour aider à traverser ?"
@@ -2285,6 +2332,17 @@
                     }
                 },
                 "question": "Quel type de passage piéton est-ce ?"
+            },
+            "crossing-vibration": {
+                "mappings": {
+                    "0": {
+                        "then": "Le bouton de ce feu vibre pour indiquer qu'on peut traverser en sécurité."
+                    },
+                    "1": {
+                        "then": "Le bouton de ce feu ne vibre pas pour indiquer qu'on peut traverser en sécurité."
+                    }
+                },
+                "question": "Est-ce que ce feu a un signal vibrant pour aider à traverser ? (habituellement situé sous le bouton)"
             }
         },
         "title": {
@@ -2903,11 +2961,18 @@
             },
             "elevator-depth": {
                 "question": "Quelle est la profondeur de cet ascenseur ?",
-                "render": "Cet ascenseur a une profondeur de {canonical(elevator:depth)}"
+                "render": "Cet ascenseur a une profondeur de {canonical(length)}"
+            },
+            "elevator-shape": {
+                "mappings": {
+                    "0": {
+                        "then": "Cet ascenseur est de forme rectangulaire"
+                    }
+                }
             },
             "elevator-width": {
                 "question": "Quelle est la largeur de cet ascenseur ?",
-                "render": "Cet ascenseur a une largeur de {canonical(elevator:width)}"
+                "render": "Cet ascenseur a une largeur de {canonical(width)}"
             },
             "operational_status": {
                 "mappings": {
@@ -2929,16 +2994,13 @@
         },
         "title": {
             "render": "Ascenseur"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "mètre"
-                    },
-                    "1": {
-                        "human": "centimètre"
-                    }
+        }
+    },
+    "elongated_coin": {
+        "tagRenderings": {
+            "charge": {
+                "freeform": {
+                    "placeholder": "Coût (par ex. 0.50 EUR)"
                 }
             }
         }
@@ -3058,18 +3120,6 @@
         },
         "title": {
             "render": "Entrée"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "mètre"
-                    },
-                    "1": {
-                        "human": "centimètre"
-                    }
-                }
-            }
         }
     },
     "etymology": {
@@ -3154,14 +3204,14 @@
                     }
                 }
             },
-            "4": {
+            "6": {
                 "options": {
                     "0": {
                         "question": "Avec revêtement podotactile"
                     }
                 }
             },
-            "5": {
+            "7": {
                 "options": {
                     "0": {
                         "question": "Avec ou sans revêtement podotactile"
@@ -3177,7 +3227,7 @@
                     }
                 }
             },
-            "7": {
+            "9": {
                 "options": {
                     "0": {
                         "question": "Utilisation gratuite"
@@ -3240,6 +3290,13 @@
             "render": "Station de pompiers"
         }
     },
+    "fixme": {
+        "tagRenderings": {
+            "note": {
+                "render": "Texte de la note : {note}"
+            }
+        }
+    },
     "food": {
         "deletion": {
             "extraDeleteReasons": {
@@ -3258,24 +3315,27 @@
         },
         "description": "Un claque montrant les restaurants et les endroits de nourriture rapide (avec un rendu spécial pour les friteries)",
         "filter": {
-            "2": {
+            "1": {
                 "options": {
                     "0": {
-                        "question": "A un menu végétarien"
+                        "question": "Pas de réservation nécessaire"
                     }
                 }
             },
-            "3": {
+            "2": {
                 "options": {
-                    "0": {
-                        "question": "A un menu végétalien"
+                    "1": {
+                        "question": "Seulement les fastfood"
+                    },
+                    "2": {
+                        "question": "Seulement les restaurants"
                     }
                 }
             },
             "4": {
                 "options": {
                     "0": {
-                        "question": "A un menu halal"
+                        "question": "A un menu végétalien"
                     }
                 }
             },
@@ -3546,6 +3606,7 @@
         }
     },
     "ghost_bike": {
+        "description": "Une couche affichant les mémoriaux en l'hommage de cyclistes tuées lors d'accidents de la route",
         "name": "Vélos fantômes",
         "presets": {
             "0": {
@@ -3575,7 +3636,11 @@
             },
             "ghost_bike-source": {
                 "question": "Sur quelle page web peut-on trouver plus d'informations sur le Vélo fantôme ou l'accident ?",
-                "render": "<a href='{source}' target='_blank'>Plus d'informations sont disponibles</a>"
+                "render": {
+                    "special": {
+                        "text": "Plus d'informations sont disponibles"
+                    }
+                }
             },
             "ghost_bike-start_date": {
                 "question": "Quand ce vélo fantôme a-t-il été installée ?",
@@ -3600,6 +3665,35 @@
             "Privacy notice": {
                 "render": "C'est le chemin que vous avez parcouru depuis l'ouverture de ce site. Ne vous inquiétez pas - ceci n'est visible que pour vous et personne d'autre. Vos données de localisation ne sont jamais envoyées hors de l'appareil."
             }
+        },
+        "title": {
+            "render": "Votre chemin"
+        }
+    },
+    "hotel": {
+        "description": "Couche affichant les hôtels",
+        "name": "Hôtels",
+        "presets": {
+            "0": {
+                "title": "un hôtel"
+            }
+        },
+        "tagRenderings": {
+            "name": {
+                "freeform": {
+                    "placeholder": "Nom de l'hôtel"
+                },
+                "question": "Quel est le nom de cet hôtel ?",
+                "render": "Cet hôtel s'appelle {name}"
+            }
+        },
+        "title": {
+            "mappings": {
+                "0": {
+                    "then": "Hôtel {name}"
+                }
+            },
+            "render": "Hôtel"
         }
     },
     "hydrant": {
@@ -3667,6 +3761,13 @@
             "render": "Bornes incendie"
         }
     },
+    "ice_cream": {
+        "presets": {
+            "0": {
+                "title": "un glacier"
+            }
+        }
+    },
     "indoors": {
         "tagRenderings": {
             "name": {
@@ -3674,6 +3775,16 @@
             },
             "ref": {
                 "question": "Quel est le numéro de référence de cette pièce ?"
+            },
+            "room-type": {
+                "mappings": {
+                    "4": {
+                        "then": "C'est une salle de classe"
+                    },
+                    "14": {
+                        "then": "C'est un bureau"
+                    }
+                }
             }
         }
     },
@@ -3766,27 +3877,31 @@
         },
         "title": {
             "render": "Bordure"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "centimètres",
-                        "humanSingular": "centimètre"
-                    },
-                    "1": {
-                        "human": "mètres",
-                        "humanSingular": "mètre"
-                    }
-                }
-            }
         }
     },
     "last_click": {
-        "mapRendering": {
+        "pointRendering": {
             "0": {
                 "label": {
+                    "mappings": {
+                        "0": {
+                            "then": "Créer une nouvelle note de carte"
+                        }
+                    },
                     "render": "Cliquez ici pour ajouter un élément"
+                }
+            }
+        },
+        "title": {
+            "mappings": {
+                "0": {
+                    "then": "Ajouter un nouveau point ou ajouter une note"
+                },
+                "1": {
+                    "then": "Ajouter une nouvelle note"
+                },
+                "2": {
+                    "then": "Ajouter un nouveau point"
                 }
             }
         }
@@ -3836,10 +3951,31 @@
         }
     },
     "maxspeed": {
+        "description": "Affiche les vitesses autorisées sur toutes les routes",
+        "name": "Vitesse maximale",
         "tagRenderings": {
             "maxspeed-maxspeed": {
+                "mappings": {
+                    "0": {
+                        "then": "C'est une zone de rencontre, avec une vitesse maximale de 20 km/h"
+                    }
+                },
                 "question": "Quelle est la vitesse maximum autorisée sur cette route ?",
                 "render": "La vitesse maximum autorisée sur cette route est {canonical(maxspeed)}"
+            }
+        },
+        "title": {
+            "mappings": {
+                "0": {
+                    "then": "Route sans nom"
+                }
+            }
+        }
+    },
+    "memorial": {
+        "tagRenderings": {
+            "start_date": {
+                "render": "Placé le {start_date}"
             }
         }
     },
@@ -3866,8 +4002,7 @@
             },
             "Email": {
                 "question": "À quelle adresse courriel peut-on envoyer des questions et des problèmes concernant cette réserve naturelle ? ",
-                "questionHint": "Respecter la vie privée – renseignez une adresse électronique personnelle seulement si celle-ci est largement publiée",
-                "render": "<a href='mailto:{email}' target='_blank'>{email}</a>"
+                "questionHint": "Respecter la vie privée – renseignez une adresse électronique personnelle seulement si celle-ci est largement publiée"
             },
             "Surface area": {
                 "render": "Superficie : {_surface:ha}&nbsp;ha"
@@ -3876,6 +4011,134 @@
                 "question": "Quel numéro de téléphone peut-on appeler pour poser des questions et résoudre des problèmes concernant cette réserve naturelle ? ",
                 "questionHint": "Respecter la vie privée – renseignez un numéro de téléphone personnel seulement si celui-ci est largement publié"
             }
+        }
+    },
+    "note": {
+        "filter": {
+            "2": {
+                "options": {
+                    "0": {
+                        "question": "Ouverte par {search}"
+                    }
+                }
+            }
+        }
+    },
+    "osm_community_index": {
+        "description": "Une couche affichant les communautés OpenStreetMap",
+        "filter": {
+            "0": {
+                "options": {
+                    "0": {
+                        "question": "Pays"
+                    }
+                }
+            },
+            "2": {
+                "options": {
+                    "0": {
+                        "question": "Région"
+                    }
+                }
+            },
+            "4": {
+                "options": {
+                    "0": {
+                        "question": "Territoire"
+                    }
+                }
+            },
+            "5": {
+                "options": {
+                    "0": {
+                        "question": "Monde"
+                    }
+                }
+            },
+            "6": {
+                "options": {
+                    "0": {
+                        "question": "Autres communautés"
+                    }
+                }
+            }
+        },
+        "name": "Index des communautés OSM",
+        "title": {
+            "render": "Index des communautés OSM"
+        }
+    },
+    "parcel_lockers": {
+        "description": "Couche affichant les casiers pour récupérer ou envoyer des colis.",
+        "name": "Casiers à colis",
+        "presets": {
+            "0": {
+                "title": "un casier à colis"
+            }
+        },
+        "tagRenderings": {
+            "brand": {
+                "freeform": {
+                    "placeholder": "Marque"
+                },
+                "mappings": {
+                    "0": {
+                        "then": "C'est un Amazon Locker"
+                    },
+                    "2": {
+                        "then": "C'est une DPD Pickup Station"
+                    },
+                    "3": {
+                        "then": "C'est un PostNL Parcel Locker"
+                    }
+                },
+                "question": "Quelle est la marque de ce casier à colis ?",
+                "render": "C'est un casier à colis {brand}"
+            },
+            "mail-in": {
+                "mappings": {
+                    "0": {
+                        "then": "On peut envoyer des colis depuis ce casier"
+                    },
+                    "1": {
+                        "then": "On <b>ne peut pas</b> envoyer de colis depuis ce casier"
+                    }
+                },
+                "question": "Peut-on envoyer des colis depuis ce casier ?"
+            },
+            "operator": {
+                "freeform": {
+                    "placeholder": "Exploitant"
+                },
+                "question": "Quel est l'exploitant de ce casier à colis ?",
+                "render": "Ce casier à colis est exploité par {operator}"
+            },
+            "pickup": {
+                "mappings": {
+                    "0": {
+                        "then": "On peut retirer des colis depuis ce casier"
+                    },
+                    "1": {
+                        "then": "On <b>ne peut pas</b> retirer de colis depuis ce casier"
+                    }
+                },
+                "question": "Peut-on retirer des colis depuis ce casier ?"
+            },
+            "ref": {
+                "freeform": {
+                    "placeholder": "Référence"
+                },
+                "question": "Quel est le numéro de référence/d'identification de ce casier à colis ?",
+                "render": "Ce casier a colis porte la référence {ref}"
+            }
+        },
+        "title": {
+            "mappings": {
+                "0": {
+                    "then": "Casier à colis {brand}"
+                }
+            },
+            "render": "Casier à colis"
         }
     },
     "parking": {
@@ -3952,13 +4215,50 @@
             "render": "Lieu de stationnement"
         }
     },
+    "parking_ticket_machine": {
+        "description": "Couche avec les distributeurs de tickets pour payer le parking.",
+        "tagRenderings": {
+            "ref": {
+                "freeform": {
+                    "placeholder": "Numéro de référence"
+                }
+            }
+        }
+    },
     "pedestrian_path": {
         "description": "Sentiers piétonniers, particulièrement utilisés pour la navigation intérieure et les entrées d'accrochage à cette couche",
         "name": "Sentiers piétons"
     },
     "pharmacy": {
+        "description": "Une couche affichant les pharmacie qui (probablement) délivrent des médicaments",
+        "filter": {
+            "0": {
+                "options": {
+                    "0": {
+                        "question": "A une drive"
+                    }
+                }
+            },
+            "1": {
+                "options": {
+                    "0": {
+                        "question": "Pharmacie pouvant délivrer des médicaments sous prescription"
+                    }
+                }
+            }
+        },
+        "name": "Pharmacies",
+        "presets": {
+            "0": {
+                "title": "une pharmacie"
+            }
+        },
         "tagRenderings": {
             "name": {
+                "freeform": {
+                    "placeholder": "Nom de la pharmacie"
+                },
+                "question": "Quel est le nom de cette pharmacie ?",
                 "render": "Cette pharmacie s'appelle {name}"
             },
             "wheelchair": {
@@ -3975,6 +4275,14 @@
                 },
                 "question": "Cette pharmacie est-elle facilement accessible en chaise roulante ?"
             }
+        },
+        "title": {
+            "mappings": {
+                "0": {
+                    "then": "Pharmacie"
+                }
+            },
+            "render": "{name}"
         }
     },
     "physiotherapist": {
@@ -4256,7 +4564,11 @@
             },
             "public_bookcase-website": {
                 "question": "Y a-t-il un site web avec plus d'informations sur cette microbibliothèque ?",
-                "render": "Plus d'infos sur <a href='{website}' target='_blank'>le site web</a>"
+                "render": {
+                    "special": {
+                        "text": "Plus d'infos sur le site web"
+                    }
+                }
             }
         },
         "title": {
@@ -4408,27 +4720,6 @@
                     }
                 }
             },
-            "level": {
-                "mappings": {
-                    "0": {
-                        "then": "En sous-sol"
-                    },
-                    "1": {
-                        "then": "Rez-de-chaussée"
-                    },
-                    "2": {
-                        "then": "Rez-de-chaussée"
-                    },
-                    "3": {
-                        "then": "Premier étage"
-                    },
-                    "4": {
-                        "then": "Sous-sol"
-                    }
-                },
-                "question": "À quel étage se situe l’élément ?",
-                "render": "Étage {level}"
-            },
             "luminous_or_lit": {
                 "mappings": {
                     "0": {
@@ -4458,7 +4749,7 @@
             },
             "opening_hours_24_7": {
                 "override": {
-                    "mappings": {
+                    "+mappings": {
                         "0": {
                             "then": "Ouvert 24h/24 (jours fériés compris)"
                         }
@@ -4537,6 +4828,27 @@
                     }
                 },
                 "question": "Des prises sont elles à disposition des client·e·s en intérieur ?"
+            },
+            "single_level": {
+                "mappings": {
+                    "0": {
+                        "then": "En sous-sol"
+                    },
+                    "1": {
+                        "then": "Rez-de-chaussée"
+                    },
+                    "2": {
+                        "then": "Rez-de-chaussée"
+                    },
+                    "3": {
+                        "then": "Premier étage"
+                    },
+                    "4": {
+                        "then": "Sous-sol"
+                    }
+                },
+                "question": "À quel étage se situe l’élément ?",
+                "render": "Étage {level}"
             },
             "smoking": {
                 "mappings": {
@@ -4652,18 +4964,6 @@
         },
         "title": {
             "render": "Bureau d'accueil"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "mètre"
-                    },
-                    "1": {
-                        "human": "centimètre"
-                    }
-                }
-            }
         }
     },
     "recycling": {
@@ -4974,7 +5274,9 @@
                 "render": {
                     "special": {
                         "no_known_languages": "La langue principale de cette école est inconnue",
-                        "question": "Quelle est la langue principale de cette école ?<div class='subtle'>Quelle langue est parlée avec les élèves des cours non linguistiques et avec l'administration ?</div>"
+                        "question": "Quelle est la langue principale de cette école ?<div class='subtle'>Quelle langue est parlée avec les élèves des cours non linguistiques et avec l'administration ?</div>",
+                        "render_all": "Ces langues sont utilisées dans cette école :{list()}",
+                        "render_single_language": "{language()} est la langue principale dans cette école"
                     }
                 }
             },
@@ -5028,9 +5330,9 @@
     },
     "shops": {
         "deletion": {
-            "extraDeleteReasons": {
+            "nonDeleteMappings": {
                 "0": {
-                    "explanation": "{title()} a fermé définitivement"
+                    "then": "{title()} a fermé définitivement"
                 }
             }
         },
@@ -5085,8 +5387,23 @@
                     "render": "C'est une {shop}"
                 }
             },
+            "organic": {
+                "mappings": {
+                    "0": {
+                        "then": "Ce commerce propose des produits bio"
+                    },
+                    "1": {
+                        "then": "Ce commerce ne propose que des produits bio"
+                    },
+                    "2": {
+                        "then": "Ce commerce ne propose pas de produit bio"
+                    }
+                },
+                "question": "Ce commerce propose-t-il des produits bio ?"
+            },
             "shops-name": {
-                "question": "Qu'est-ce que le nom de ce magasin ?"
+                "question": "Qu'est-ce que le nom de ce magasin ?",
+                "render": "Ce commerce s'appelle <i>{name}</i>"
             }
         },
         "title": {
@@ -5099,6 +5416,76 @@
                 }
             },
             "render": "Magasin"
+        }
+    },
+    "shower": {
+        "description": "Une couche affichant les douches (publiques)",
+        "filter": {
+            "1": {
+                "options": {
+                    "0": {
+                        "question": "Eau chaude disponible"
+                    }
+                }
+            }
+        },
+        "name": "Douche",
+        "presets": {
+            "0": {
+                "description": "Une douche (publique)",
+                "title": "une douche"
+            }
+        },
+        "tagRenderings": {
+            "access": {
+                "mappings": {
+                    "0": {
+                        "then": "Tout le monde peut utiliser cette douche"
+                    },
+                    "1": {
+                        "then": "Seuls les clients peuvent utiliser cette douche"
+                    },
+                    "2": {
+                        "then": "Accessible, mais il faut demander une clé"
+                    }
+                },
+                "question": "Qui peut utiliser cette douche ?"
+            },
+            "charge": {
+                "freeform": {
+                    "placeholder": "par ex. 1,50 EUR"
+                },
+                "question": "Quel est le prix pour utiliser cette douche ?",
+                "render": "Le prix de cette douche est {charge}"
+            },
+            "fee": {
+                "mappings": {
+                    "0": {
+                        "then": "Il faut payer pour utiliser cette douche"
+                    },
+                    "1": {
+                        "then": "Cette douche est gratuite"
+                    }
+                },
+                "question": "Faut-il payer pour utiliser cette douche ?"
+            },
+            "hot_water": {
+                "mappings": {
+                    "0": {
+                        "then": "De l'eau chaud est disponible"
+                    },
+                    "1": {
+                        "then": "De l'eau chaud est disponible, mais il faut payer"
+                    },
+                    "2": {
+                        "then": "Il n'y a pas d'eau chaude disponible"
+                    }
+                },
+                "question": "Est-ce que cette douche propose de l'eau chaude ?"
+            }
+        },
+        "title": {
+            "render": "Douche"
         }
     },
     "slow_roads": {
@@ -5131,6 +5518,32 @@
                     }
                 },
                 "render": "La surface en <b>{surface}</b>"
+            }
+        }
+    },
+    "speed_camera": {
+        "tagRenderings": {
+            "camera_direction": {
+                "question": "Dans quelle direction géographique cette caméra filme-t-elle ?",
+                "render": "Filme dans une direction {direction}"
+            },
+            "maxspeed": {
+                "freeform": {
+                    "placeholder": "Vitesse maximale autorisée"
+                },
+                "question": "Quelle est la vitesse maximale autorisée au niveau de ce radar ?",
+                "render": "La vitesse maximale autorisée est {canonical(maxspeed)}"
+            }
+        }
+    },
+    "speed_display": {
+        "tagRenderings": {
+            "maxspeed": {
+                "freeform": {
+                    "placeholder": "Vitesse autorisée au niveau de ce radar pédagogique"
+                },
+                "question": "Quelle est la vitesse maximale autorisée au niveau de ce radar pédagogique ?",
+                "render": "La vitesse maximale autorisée au niveau de ce radar pédagogique est {canonical(maxspeed)}"
             }
         }
     },
@@ -5248,7 +5661,16 @@
         }
     },
     "surveillance_camera": {
+        "description": "Cette couche affiche les caméras de surveillance et permet au contributeur de mettre à jour les informations et ajouter de nouvelles caméras",
         "name": "Caméras de surveillance",
+        "presets": {
+            "0": {
+                "title": "une caméra de surveillance"
+            },
+            "1": {
+                "title": "une caméra de surveillance fixée au mur"
+            }
+        },
         "tagRenderings": {
             "Camera type: fixed; panning; dome": {
                 "mappings": {
@@ -5564,18 +5986,6 @@
         },
         "title": {
             "render": "Toilettes"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "mètre"
-                    },
-                    "1": {
-                        "human": "centimètre"
-                    }
-                }
-            }
         }
     },
     "toilet_at_amenity": {
@@ -5646,18 +6056,6 @@
             "wheelchair-door-width": {
                 "question": "Quelle est la largeur de la porte des toilettes accessibles aux fauteuils roulants ?",
                 "render": "La porte des toilettes accessibles aux fauteuils roulants a une large de {canonical(toilets:door:width)}"
-            }
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "mètre"
-                    },
-                    "1": {
-                        "human": "centimètre"
-                    }
-                }
             }
         }
     },
@@ -5740,8 +6138,12 @@
                     },
                     "1": {
                         "then": "Cet arrêt <b>n'a pas</b> de banc"
+                    },
+                    "2": {
+                        "then": "Cet arrêt a un banc, cartographié séparément"
                     }
-                }
+                },
+                "question": "Est-ce que cet arrêt a un banc ?"
             },
             "bin": {
                 "mappings": {
@@ -5924,6 +6326,69 @@
             "render": "Arbre"
         }
     },
+    "trolley_bay": {
+        "tagRenderings": {
+            "denominations": {
+                "mappings": {
+                    "0": {
+                        "then": "Les pièces de 50 cents sont acceptées"
+                    },
+                    "1": {
+                        "then": "Les pièces de 1 euro sont acceptées"
+                    },
+                    "2": {
+                        "then": "Les pièces de 2 euros sont acceptées"
+                    }
+                }
+            }
+        }
+    },
+    "unit": {
+        "units": {
+            "0": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} megawatts"
+                    },
+                    "1": {
+                        "human": "{quantity} kilowatts"
+                    },
+                    "2": {
+                        "human": "{quantity} watts"
+                    },
+                    "3": {
+                        "human": "{quantity} gigawatts"
+                    }
+                }
+            },
+            "3": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} mètres",
+                        "humanSingular": "un mètre"
+                    },
+                    "1": {
+                        "human": "{quantity} centimètres"
+                    },
+                    "3": {
+                        "human": "{quantity} pieds"
+                    }
+                }
+            },
+            "4": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} kilomètres/heure",
+                        "humanShort": "{quantity} km/h"
+                    },
+                    "1": {
+                        "human": "{quantity} miles/heure",
+                        "humanShort": "{quantity} mph"
+                    }
+                }
+            }
+        }
+    },
     "usersettings": {
         "tagRenderings": {
             "all-questions-at-once": {
@@ -5941,6 +6406,16 @@
                 "mappings": {
                     "0": {
                         "then": "Vous avez fait {_csCount} modifications ! C'est génial !"
+                    }
+                }
+            },
+            "fixate-north": {
+                "mappings": {
+                    "0": {
+                        "then": "Autoriser la rotation de la carte"
+                    },
+                    "1": {
+                        "then": "Toujours garder le nord en haut"
                     }
                 }
             },
@@ -5981,13 +6456,167 @@
             "verified-mastodon": {
                 "mappings": {
                     "0": {
-                        "then": "Un lien vers votre profil Mastodon a été trouvé : <a href='{_mastodon_link}' target='_blank'>{_mastodon_link}</a>"
+                        "then": "Un lien vers votre profil Mastodon a été trouvé : <a href='{_mastodon_link}' target='_blank' rel='noopener'>{_mastodon_link}</a>"
                     }
                 }
             }
         },
         "title": {
             "render": "Paramètres"
+        }
+    },
+    "vending_machine": {
+        "description": "Couche affichant les distributeurs",
+        "filter": {
+            "1": {
+                "options": {
+                    "0": {
+                        "question": "Tous les distributeurs"
+                    },
+                    "1": {
+                        "question": "Vente de boissons"
+                    },
+                    "2": {
+                        "question": "Ventre de confiseries"
+                    },
+                    "3": {
+                        "question": "Ventre de nourriture"
+                    },
+                    "4": {
+                        "question": "Vente de cigarettes"
+                    },
+                    "5": {
+                        "question": "Vente de préservatifs"
+                    },
+                    "6": {
+                        "question": "Vente de café"
+                    },
+                    "7": {
+                        "question": "Vente d'eau"
+                    },
+                    "8": {
+                        "question": "Vente de journaux"
+                    },
+                    "9": {
+                        "question": "Vente de chambres à air pour vélo"
+                    },
+                    "10": {
+                        "question": "Vente de lait"
+                    },
+                    "11": {
+                        "question": "Vente de pain"
+                    },
+                    "12": {
+                        "question": "Vente d'œufs"
+                    },
+                    "13": {
+                        "question": "Vente de fromage"
+                    },
+                    "14": {
+                        "question": "Vente de miel"
+                    },
+                    "15": {
+                        "question": "Vente de pommes de terre"
+                    },
+                    "19": {
+                        "question": "Vente de fleurs"
+                    }
+                }
+            }
+        },
+        "name": "Distributeurs",
+        "presets": {
+            "0": {
+                "title": "un distributeur"
+            }
+        },
+        "tagRenderings": {
+            "indoor": {
+                "mappings": {
+                    "0": {
+                        "then": "Ce distributeur est à l'extérieur"
+                    },
+                    "1": {
+                        "then": "Ce distributeur est à l'intérieur"
+                    },
+                    "2": {
+                        "then": "Ce distributeur est à l'extérieur"
+                    }
+                },
+                "question": "Est-ce que ce distributeur est en intérieur ?"
+            },
+            "operator": {
+                "freeform": {
+                    "placeholder": "Nom de l'exploitant"
+                },
+                "question": "Qui exploite ce distributeur ?",
+                "render": "Ce distributeur est exploité par {operator}"
+            },
+            "vending": {
+                "mappings": {
+                    "0": {
+                        "then": "Vent des boissons"
+                    },
+                    "1": {
+                        "then": "Vent des confiseries"
+                    },
+                    "2": {
+                        "then": "Vent de la nourriture"
+                    },
+                    "3": {
+                        "then": "Vent des cigarettes"
+                    },
+                    "4": {
+                        "then": "Vent des préservatifs"
+                    },
+                    "5": {
+                        "then": "Vent du café"
+                    },
+                    "6": {
+                        "then": "Vent de l'eau"
+                    },
+                    "7": {
+                        "then": "Vent des journaux"
+                    },
+                    "8": {
+                        "then": "Vent des chambres à air pour vélo"
+                    },
+                    "9": {
+                        "then": "Vent du lait"
+                    },
+                    "10": {
+                        "then": "Vent du pain"
+                    },
+                    "11": {
+                        "then": "Vent des œufs"
+                    },
+                    "12": {
+                        "then": "Vent du fromage"
+                    },
+                    "13": {
+                        "then": "Vent du miel"
+                    },
+                    "14": {
+                        "then": "Vent des pommes de terre"
+                    },
+                    "18": {
+                        "then": "Vent des fleurs"
+                    }
+                },
+                "question": "Que vent ce distributeur ?",
+                "render": "Ce distributeur vent {vending}"
+            }
+        },
+        "title": {
+            "mappings": {
+                "0": {
+                    "then": "Distributeur {name}"
+                },
+                "1": {
+                    "then": "Distributeur {brand}"
+                }
+            },
+            "render": "Distributeur"
         }
     },
     "veterinary": {
@@ -6036,18 +6665,6 @@
         "description": "Couche intégrée spéciale fournissant tous les murs et bâtiments. Cette couche est utile dans les préréglages pour les objets qui peuvent être placés contre les murs (par exemple, les DEA, les boîtes aux lettres, les entrées, les adresses, les caméras de surveillance, …). Ce calque est invisible par défaut et non inchangeable par l'utilisateur.",
         "title": {
             "render": "Mur ou bâtiment"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "mètre"
-                    },
-                    "1": {
-                        "human": "centimètre"
-                    }
-                }
-            }
         }
     },
     "waste_basket": {
@@ -6082,17 +6699,6 @@
                 "options": {
                     "0": {
                         "question": "Poubelle avec distributeur de sacs pour ramasser les déjections canines"
-                    }
-                }
-            }
-        },
-        "mapRendering": {
-            "0": {
-                "iconSize": {
-                    "mappings": {
-                        "0": {
-                            "then": "Poubelle"
-                        }
                     }
                 }
             }
@@ -6140,6 +6746,9 @@
                     },
                     "6": {
                         "then": "Une poubelle pour plastiques"
+                    },
+                    "7": {
+                        "then": "Une poubelle pour papier"
                     }
                 },
                 "question": "De quel type de poubelle s'agit-il ?"
@@ -6192,31 +6801,6 @@
                 }
             },
             "render": "éolienne"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " megawatts"
-                    },
-                    "1": {
-                        "human": " kilowatts"
-                    },
-                    "2": {
-                        "human": " watts"
-                    },
-                    "3": {
-                        "human": " gigawatts"
-                    }
-                }
-            },
-            "1": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " mètres"
-                    }
-                }
-            }
         }
     }
 }

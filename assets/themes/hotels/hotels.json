@@ -10,7 +10,9 @@
     "pa_PK": "ہوٹیل",
     "fr": "Hôtels",
     "cs": "Hotely",
-    "es": "Hoteles"
+    "es": "Hoteles",
+    "eu": "Hotelak",
+    "pl": "Hotele"
   },
   "description": {
     "en": "On this map, you'll find hotels in your area",
@@ -21,13 +23,22 @@
     "fr": "Sur cette carte, vous trouverez les hôtels dans votre zone",
     "cs": "Na této mapě najdete hotely ve vašem okolí",
     "es": "En este mapa encontrarás hoteles en tu zona",
-    "ca": "En aquest mapa trobareu hotels a la vostra zona"
+    "ca": "En aquest mapa trobareu hotels a la vostra zona",
+    "pl": "Na tej mapie znajdziesz hotele w Twojej okolicy"
   },
   "icon": "./assets/layers/hotel/hotel.svg",
+  "startZoom": 13,
   "startLat": 50.8552,
   "startLon": 4.3755,
-  "startZoom": 13,
   "layers": [
-    "hotel"
+    "hotel",
+    {
+      "builtin": [
+        "love_hotel"
+      ],
+      "override": {
+        "minzoom": 18
+      }
+    }
   ]
 }

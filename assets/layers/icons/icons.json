@@ -2,17 +2,22 @@
   "id": "icons",
   "description": {
     "en": "A layer acting as library for icon-tagrenderings, especially to show as badge next to a POI",
-    "de": "Eine Ebene, die als Bibliothek für Symbol-Tag-Renderings dient, insbesondere um als Abzeichen neben einem POI angezeigt zu werden"
+    "de": "Eine Ebene, die als Bibliothek für Symbol-Tag-Renderings dient, insbesondere um als Abzeichen neben einem POI angezeigt zu werden",
+    "ca": "Una capa que actua com a biblioteca per a les icones d'etiquetes, especialment per mostrar-se com a insígnia al costat d'un PDI",
+    "cs": "Vrstva sloužící jako knihovna pro ikony-značky, zejména pro zobrazení jako odznak vedle bodu zájmu"
   },
   "source": "special:library",
   "title": null,
+  "pointRendering": null,
+  "lineRendering": null,
   "tagRenderings": [
     {
       "id": "wikipedialink",
       "labels": [
-        "defaults"
+        "defaults",
+        "in_favourite"
       ],
-      "render": "<a href='https://wikipedia.org/wiki/{wikipedia}' target='_blank'><img src='./assets/svg/wikipedia.svg' textmode='📖' alt='Wikipedia'/></a>",
+      "render": "<a href='https://wikipedia.org/wiki/{wikipedia}' target='_blank' rel='noopener'><img src='./assets/svg/wikipedia.svg' textmode='📖' alt='Wikipedia'/></a>",
       "condition": {
         "or": [
           "wikipedia~*",
@@ -23,7 +28,7 @@
         {
           "#": "ignore-image-in-then",
           "if": "wikipedia=",
-          "then": "<a href='https://www.wikidata.org/wiki/{wikidata}' target='_blank'><img src='./assets/svg/wikidata.svg' alt='WD'/></a>"
+          "then": "<a class='h-8' href='https://www.wikidata.org/wiki/{wikidata}' target='_blank' rel='noopener'><img src='./assets/svg/wikidata.svg' alt='Wikidata'/></a>"
         }
       ]
     },
@@ -59,19 +64,88 @@
           },
           "then": "circle:#f0f;clock:#fff"
         }
-      ]
+      ],
+      "metacondition": "__showTimeSensitiveIcons!=no"
+    },
+    {
+      "id": "open_until",
+      "labels": [
+        "defaults",
+        "in_favourite"
+      ],
+      "#": "Titleicon showing e.g. 'open until 17:00'",
+      "icon": {
+        "class": "w-20 mx-1 flex items-center"
+      },
+      "render": "{opening_hours_state()}",
+      "condition": {
+        "or": [
+          "opening_hours~*",
+          {
+            "or": [
+              {
+                "and": [
+                  "seasonal~.*winter.*",
+                  "_now:date~....-(12|01|02)-.."
+                ]
+              },
+              {
+                "and": [
+                  "seasonal~.*spring.*",
+                  "_now:date~....-(03|04|05)-.."
+                ]
+              },
+              {
+                "and": [
+                  "seasonal~.*summer.*",
+                  "_now:date~....-(06|07|08)-.."
+                ]
+              },
+              {
+                "and": [
+                  "seasonal~.*autumn.*",
+                  "_now:date~....-(09|10|11)-.."
+                ]
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "id": "phonelink",
       "labels": [
-        "defaults"
+        "defaults",
+        "in_favourite"
       ],
-      "render": "<a href='tel:{phone}'><img textmode='📞' alt='phone' src='./assets/layers/questions/phone.svg'/></a>",
+      "render": {
+        "special": {
+          "type": "link",
+          "href": "tel:{phone}",
+          "text": "<img textmode='📞' alt='phone' src='./assets/layers/questions/phone.svg'/>",
+          "arialabel": {
+            "en": "phone",
+            "nl": "Telefoneer",
+            "de": "Telefon"
+          }
+        }
+      },
       "mappings": [
         {
           "#": "ignore-image-in-then",
           "if": "contact:phone~*",
-          "then": "<a href='tel:{contact:phone}'><img textmode='📞' alt='phone' src='./assets/layers/questions/phone.svg'/></a>"
+          "then": {
+            "special": {
+              "type": "link",
+              "href": "tel:{contact:phone}",
+              "text": "<img textmode='📞' alt='phone' src='./assets/layers/questions/phone.svg'/>",
+              "arialabel": {
+                "en": "phone",
+                "nl": "Telefoneer",
+                "de": "Telefon"
+              }
+            }
+          }
         }
       ],
       "condition": {
@@ -84,7 +158,8 @@
     {
       "id": "emaillink",
       "labels": [
-        "defaults"
+        "defaults",
+        "in_favourite"
       ],
       "render": "<a href='mailto:{email}'><img textmode='✉️' alt='email' src='./assets/layers/questions/send_email.svg'/></a>",
       "mappings": [
@@ -92,38 +167,90 @@
           "#": "ignore-image-in-then",
           "if": "contact:email~*",
           "then": "<a href='mailto:{contact:email}'><img textmode='✉️' alt='email' src='./assets/layers/questions/send_email.svg'/></a>"
+        },
+        {
+          "#": "ignore-image-in-then",
+          "if": "operator:email~*",
+          "then": "<a href='mailto:{operator:email}'><img textmode='✉️' alt='email' src='./assets/layers/questions/send_email.svg'/></a>"
         }
       ],
       "condition": {
         "or": [
           "email~*",
-          "contact:email~*"
+          "contact:email~*",
+          "operator:email~*"
         ]
       }
     },
     {
       "id": "websitelink",
       "labels": [
-        "defaults"
+        "defaults",
+        "in_favourite"
       ],
-      "render": "<a href='{website}' target='_blank'><img textmode='🌐' alt='website' src='./assets/layers/icons/website.svg'/></a>",
-      "condition": "website~*"
+      "mappings": [
+        {
+          "#": "ignore-image-in-then",
+          "if": "website~*",
+          "then": "<a href='{website}' target='_blank' rel='noopener'><img textmode='🌐' alt='website' src='./assets/layers/icons/website.svg'/></a>"
+        },
+        {
+          "#": "ignore-image-in-then",
+          "if": "operator:website~*",
+          "then": "<a href='{operator:website}' target='_blank' rel='noopener'><img textmode='🌐' alt='website' src='./assets/layers/icons/website.svg'/></a>"
+        },
+        {
+          "#": "ignore-image-in-then",
+          "if": "context:website~*",
+          "then": "<a href='{contact:website}' target='_blank' rel='noopener'><img textmode='🌐' alt='website' src='./assets/layers/icons/website.svg'/></a>"
+        }
+      ]
     },
     {
       "id": "smokingicon",
       "labels": [
-        "defaults"
+        "defaults",
+        "in_favourite"
       ],
       "mappings": [
         {
           "#": "ignore-image-in-then",
           "if": "smoking=no",
-          "then": "<img textmode='🚭️' alt='no-smoking' src='./assets/layers/questions/no_smoking.svg'/>"
+          "then": "<img textmode='🚭️' alt='no smoking' src='./assets/layers/questions/no_smoking.svg'/>"
         },
         {
           "#": "ignore-image-in-then",
           "if": "smoking=yes",
-          "then": "<img textmode='🚬️' alt='smoking-allowed' src='./assets/layers/questions/smoking.svg'/>"
+          "then": "<img textmode='🚬️' alt='smoking allowed' src='./assets/layers/questions/smoking.svg'/>"
+        }
+      ]
+    },
+    {
+      "id": "dogicon",
+      "labels": [
+        "defaults",
+        "in_favourite"
+      ],
+      "mappings": [
+        {
+          "if": "dog=no",
+          "#": "ignore-image-in-then",
+          "then": "<img textmode='🐕 ⃠' alt='no_dogs' src='./assets/layers/questions/no_dogs.svg'>"
+        },
+        {
+          "if": "dog=leashed",
+          "#": "ignore-image-in-then",
+          "then": "<img textmode='🐕' alt='dogs are allowed but leashed' src='./assets/layers/questions/dogs_leashed.svg'>"
+        },
+        {
+          "if": {
+            "or": [
+              "dog=yes",
+              "dog=unleashed"
+            ]
+          },
+          "#": "ignore-image-in-then",
+          "then": "<img textmode='🐕' alt='dogs are allowed' src='./assets/layers/questions/dogs_allowed.svg'>"
         }
       ]
     },
@@ -136,11 +263,32 @@
       "metacondition": "_supports_sharing=yes"
     },
     {
+      "id": "favourite_title_icon",
+      "labels": [
+        "defaults"
+      ],
+      "render": {
+        "*": "{favourite_icon()}"
+      },
+      "metacondition": "_loggedIn=true"
+    },
+    {
       "id": "osmlink",
       "labels": [
         "defaults"
       ],
-      "render": "<a href='https://openstreetmap.org/{id}' target='_blank'><img alt='on osm' textmode='🗺️' src='./assets/svg/osm-logo-us.svg'/></a>",
+      "render": {
+        "special": {
+          "type": "link",
+          "text": "<img alt='on osm' textmode='🗺️' src='./assets/svg/osm-logo-us.svg'/>",
+          "href": "https://openstreetmap.org/{id}",
+          "arialabel": {
+            "en": "Open on openstreetmap.org",
+            "nl": "Bekijk op openstreetmap.org",
+            "de": "Auf openstreetmap.org öffnen"
+          }
+        }
+      },
       "mappings": [
         {
           "if": "id~.*/-.*",
@@ -149,11 +297,43 @@
         {
           "#": "ignore-image-in-then",
           "if": "_backend~*",
-          "then": "<a href='{_backend}/{id}' target='_blank'><img src='./assets/svg/osm-logo-us.svg'/></a>"
+          "then": {
+            "special": {
+              "type": "link",
+              "text": "<img alt='on osm' textmode='🗺️' src='./assets/svg/osm-logo-us.svg'/>",
+              "href": "{_backend}/{id}",
+              "arialabel": {
+                "en": "Open on openstreetmap.org",
+                "nl": "Bekijk op openstreetmap.org",
+                "de": "Auf openstreetmap.org öffnen"
+              }
+            }
+          }
         }
       ],
       "condition": "id~(node|way|relation)/[0-9]*"
+    },
+    {
+      "id": "rating",
+      "icon": {
+        "class": "w-20 mx-1 flex items-center"
+      },
+      "render": "{rating()}"
+    },
+    {
+      "id": "favourite_icon",
+      "description": "Only for rendering",
+      "condition": "_favourite=yes",
+      "icon": "circle:white;heart:red",
+      "metacondition": "__showTimeSensitiveIcons!=no"
+    },
+    {
+      "id": "direction",
+      "labels": [
+        "defaults",
+        "in_favourite"
+      ],
+      "render": "{direction_indicator()}"
     }
-  ],
-  "mapRendering": null
+  ]
 }

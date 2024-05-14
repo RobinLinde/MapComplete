@@ -27,26 +27,29 @@
     "advertising": {
         "name": "Reclame",
         "presets": {
-            "3": {
+            "4": {
                 "description": "Een klein uithangbord voor buurtadvertenties, meestal gericht op voetgangers",
                 "title": "een uithangbord"
             },
-            "4": {
+            "5": {
                 "description": "Een cylindervormige structuur die buiten staat waarop advertenties staan",
                 "title": "een aanplakzuil"
             },
-            "5": {
+            "6": {
                 "title": "een vlag"
             },
-            "6": {
+            "7": {
                 "title": "een scherm"
             },
-            "7": {
+            "8": {
                 "title": "een scherm op een muur"
             },
-            "8": {
+            "10": {
                 "description": "Een stuk groot, weerbestendig textiel met opgedrukte reclameboodschap die permanent aan de muur hangt",
                 "title": "een spandoek"
+            },
+            "14": {
+                "title": "een muurschildering"
             }
         },
         "tagRenderings": {
@@ -61,6 +64,12 @@
             },
             "message_type": {
                 "mappings": {
+                    "0": {
+                        "then": "Commerciële boodschap"
+                    },
+                    "1": {
+                        "then": "Lokale informatie"
+                    },
                     "4": {
                         "then": "Informatie over cultuurevenementen zoals theaters, optredens, …"
                     },
@@ -238,7 +247,11 @@
             },
             "artwork-website": {
                 "question": "Is er een website met meer informatie over dit kunstwerk?",
-                "render": "Meer informatie op <a href='{website}' target='_blank'>deze website</a>"
+                "render": {
+                    "special": {
+                        "text": "Meer informatie op deze website"
+                    }
+                }
             },
             "artwork_subject": {
                 "question": "Wat beeldt dit kunstwerk af?",
@@ -372,8 +385,8 @@
                 "render": {
                     "special": {
                         "question": "In welke taal is de spraak van deze geldautomaat?",
-                        "render_list_item": "Deze geldautomaat heeft spraak in {language():font-bold}",
-                        "render_single_language": "Deze automaat heeft spraak in {language():font-bold}"
+                        "render_list_item": "Deze geldautomaat heeft spraak in {language()}",
+                        "render_single_language": "Deze automaat heeft spraak in {language()}"
                     }
                 }
             }
@@ -555,6 +568,9 @@
                     },
                     "1": {
                         "then": "Deze bank heeft geen geïntegreerd kunstwerk"
+                    },
+                    "2": {
+                        "then": "Deze bank heeft <span class=\"subtle\">waarschijnlijk</span> geen geïntegreerd kunstwerk"
                     }
                 },
                 "question": "Heeft deze bank een geïntegreerd kunstwerk?",
@@ -618,7 +634,7 @@
                     }
                 },
                 "question": "Heeft deze bank een inscriptie?",
-                "questionHint": "Bijvoorbeeld op een aangebracht plakkaat, ingesneden in de rugleuning, ...",
+                "questionHint": "Bijvoorbeeld op een aangebracht plakkaat, ingesneden in de rugleuning, …",
                 "render": "Deze bank heeft een inscriptie: <br/><p><i>{inscription}</i></p>"
             },
             "bench-material": {
@@ -914,10 +930,65 @@
                 },
                 "question": "Is deze verkoopsautomaat nog steeds werkende?",
                 "render": "Deze verkoopsautomaat is <i>{operational_status}</i>"
+            },
+            "bicycle_tube_vending_machine-brand": {
+                "mappings": {
+                    "0": {
+                        "then": "Continental banden worden hier verkocht"
+                    },
+                    "1": {
+                        "then": "Schwalbe banden worden hier verkocht"
+                    }
+                },
+                "question": "Welk merk banden wordt hier verkocht?",
+                "render": "{brand} banden worden hier verkocht"
+            },
+            "bicycle_tube_vending_machine-charge": {
+                "question": "Hoeveel kost een fietsband?",
+                "render": "Een fietsband kost {charge}"
+            },
+            "bicycle_tube_vending_machine-operator": {
+                "mappings": {
+                    "0": {
+                        "then": "Onderhouden door Schwalbe"
+                    },
+                    "1": {
+                        "then": "Onderhouden door Continental"
+                    }
+                },
+                "question": "Wie onderhoudt deze verkoopautomaat?"
+            },
+            "other-items-vending": {
+                "mappings": {
+                    "0": {
+                        "then": "Fietsbinnenbanden worden hier verkocht"
+                    },
+                    "1": {
+                        "then": "Fietslampjes worden hier verkocht"
+                    },
+                    "2": {
+                        "then": "Handschoenen worden hier verkocht"
+                    },
+                    "3": {
+                        "then": "Fietsreparatiesets worden hier verkocht"
+                    },
+                    "4": {
+                        "then": "Fietspompen worden hier verkocht"
+                    },
+                    "5": {
+                        "then": "Fietssloten worden hier verkocht"
+                    }
+                },
+                "question": "Worden hier andere fietsaccessoires verkocht?"
             }
         },
         "title": {
-            "render": "Fietsbanden-verkoopsautomaat"
+            "mappings": {
+                "0": {
+                    "then": "Fietsbanden-verkoopautomaat {name}"
+                }
+            },
+            "render": "Fietsbanden-verkoopautomaat"
         }
     },
     "bike_cafe": {
@@ -1043,6 +1114,9 @@
                     },
                     "2": {
                         "then": "Private fietsenstalling van een school, een bedrijf, ..."
+                    },
+                    "3": {
+                        "then": "Private fietsenstalling van een school, een bedrijf, ..."
                     }
                 },
                 "question": "Wie mag er deze fietsenstalling gebruiken?",
@@ -1073,16 +1147,25 @@
                     },
                     "7": {
                         "then": "Een oppervlakte die gemarkeerd is om fietsen te parkeren"
+                    },
+                    "8": {
+                        "then": "Een fietskluis waar één of enkele fietsen staan en op slot kan en die te klein is om in recht te staan."
                     }
                 },
                 "question": "Van welk type is deze fietsparking?",
                 "render": "Dit is een fietsparking van het type: {bicycle_parking}"
             },
             "Capacity": {
-                "question": "Hoeveel fietsen kunnen in deze fietsparking (inclusief potentiëel bakfietsen)?",
+                "question": "Hoeveel fietsen kunnen in deze fietsparking?",
+                "questionHint": "Dit is het totaal aantal gewone fietsen, bakfietsen, elektrische fietsen, ...",
                 "render": "Plaats voor {capacity} fietsen"
             },
             "Cargo bike capacity?": {
+                "mappings": {
+                    "0": {
+                        "then": "Hier zijn geen plaatsen voor bakfietsen voorzien of bakfietsen stallen is niet toegestaan "
+                    }
+                },
                 "question": "Voor hoeveel bakfietsen heeft deze fietsparking plaats?",
                 "render": "Deze parking heeft plaats voor {capacity:cargo_bike} bakfietsen"
             },
@@ -1127,6 +1210,33 @@
                     }
                 },
                 "question": "Wat is de relatieve locatie van deze parking??"
+            },
+            "charge": {
+                "question": "Hoeveel kost het om een fiets te stallen?",
+                "questionHint": "Dit is de kostprijs voor een enkele fiets",
+                "render": "Je fiets hier parkeren kost {charge}"
+            },
+            "fee": {
+                "mappings": {
+                    "0": {
+                        "then": "<b>Betalende</b> fietsparking"
+                    },
+                    "1": {
+                        "then": "Gratis te gebruiken"
+                    }
+                },
+                "question": "Is deze fietsenstalling gratis te gebruiken?"
+            },
+            "operator": {
+                "question": "Wie beheert deze fietsenstalling?",
+                "render": "Deze fietsenstalling wordt beheerd door {operator}"
+            },
+            "operator_phone": {
+                "question": "Wat is het telefoonnummer van de operator van deze fietsenstalling?",
+                "questionHint": "Men kan dit nummer bellen om bv. fietswrakken of defecten te melden"
+            },
+            "operator_website": {
+                "question": "Wat is de website van de operator van deze fietsenstalling?"
             }
         },
         "title": {
@@ -1276,7 +1386,7 @@
             "send_email_about_broken_pump": {
                 "render": {
                     "special": {
-                        "body": "Geachte\n\nGraag had ik u gemeld dat een fietspomp defect is. De fietspomp bevindt zich hier: https://mapcomplete.osm.be/cyclofix?lat={_lat}&lon={_lon}&z=18#{id}.\n\nMet vriendelijke groeten.",
+                        "body": "Geachte\n\nGraag had ik u gemeld dat een fietspomp defect is. De fietspomp bevindt zich hier: https://mapcomplete.org/cyclofix?lat={_lat}&lon={_lon}&z=18#{id}.\n\nMet vriendelijke groeten.",
                         "button_text": "Rapporteer deze fietspomp als kapot",
                         "subject": "Kapotte fietspomp"
                     }
@@ -1730,10 +1840,10 @@
                         "question": "Heeft een <div style='display: inline-block'><b><b>Type 1 met kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div>"
                     },
                     "5": {
-                        "question": "Heeft een <div style='display: inline-block'><b>Type 1 <i>zonder</i> kabel (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div>"
+                        "question": "Heeft een <div style='display: inline-block'><b><b>Type 1 <i>zonder</i> kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div>"
                     },
                     "6": {
-                        "question": "Heeft een <div style='display: inline-block'><b>Type 1 CCS (ook gekend als Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div>"
+                        "question": "Heeft een <div style='display: inline-block'><b><b>Type 1 CCS</b> (ook gekend als Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div>"
                     },
                     "7": {
                         "question": "Heeft een <div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div>"
@@ -1754,7 +1864,7 @@
                         "question": "Heeft een <div style='display: inline-block'><b><b>Tesla Supercharger (destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div>"
                     },
                     "13": {
-                        "question": "Heeft een <div style='display: inline-block'><b><b>Tesla supercharger (destination)</b> (Een Type 2 met kabel en Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div>"
+                        "question": "Heeft een <div style='display: inline-block'><b><b>Tesla supercharger (destination</b> (Een Type 2 met kabel en Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div>"
                     },
                     "14": {
                         "question": "Heeft een <div style='display: inline-block'><b><b>USB</b> om GSMs en kleine electronica op te laden</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div>"
@@ -1771,10 +1881,10 @@
         "name": "Oplaadpunten",
         "presets": {
             "0": {
-                "title": "een oplaadpunt voor elektrische fietsen met een gewoon Europees stopcontact <img src='./assets/layers/charging_station/typee.svg' style='width: 2rem; height: 2rem; float: left; background: white; border-radius: 1rem; margin-right: 0.5rem'/> (speciaal bedoeld voor fietsen)"
+                "title": "oplaadpunt voor elektrische fietsen"
             },
             "1": {
-                "title": "een oplaadstation voor elektrische auto's"
+                "title": "oplaadstation voor elektrische auto's"
             }
         },
         "tagRenderings": {
@@ -1910,7 +2020,7 @@
                         "then": "<b>Bosch Active Connect met 5 pinnen</b> aan een kabel"
                     }
                 },
-                "question": "Welke laadaansluitingen zijn hier beschikbaar?"
+                "question": "Welke aansluitingen zijn hier beschikbaar?"
             },
             "Network": {
                 "mappings": {
@@ -2004,7 +2114,7 @@
                         "then": "Een <b>sleutel</b> is nodig om dit oplaadpunt te gebruiken<br/><span class='subtle'>Bv. voor klanten van een hotel of een bar, die de sleutel aan de receptie kunnen krijgen</span>"
                     },
                     "4": {
-                        "then": "Niet toegankelijk voor het publiek <br/><span class='subtle'>Bv. enkel toegankelijk voor de eigenaar, medewerkers, ...</span>"
+                        "then": "Niet toegankelijk voor het publiek <br/><span class='subtle'>Bv. enkel toegankelijk voor de eigenaar, medewerkers ,...</span> "
                     },
                     "5": {
                         "then": "Dit oplaadstation is publiek toegankelijk onder voorwaarden (bv. enkel tijdens bepaalde uren). "
@@ -2020,167 +2130,6 @@
             "charge": {
                 "question": "Hoeveel moet men betalen om dit oplaadpunt te gebruiken?",
                 "render": "Dit oplaadpunt gebruiken kost <b>{charge}</b>"
-            },
-            "current-0": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Schuko stekker</b> zonder aardingspin (CEE7/4 type F) levert een stroom van maximaal 16 A"
-                    }
-                },
-                "question": "Welke stroom levert de stekker van type <div style='display: inline-block'><b><b>Schuko stekker</b> zonder aardingspin (CEE7/4 type F)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/CEE7_4F.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Schuko stekker</b> zonder aardingspin (CEE7/4 type F)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/CEE7_4F.svg'/></div> levert een stroom van maximaal {socket:schuko:current}A"
-            },
-            "current-1": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Europese stekker</b> met aardingspin (CEE7/4 type E) levert een stroom van maximaal 16 A"
-                    }
-                },
-                "question": "Welke stroom levert de stekker van type <div style='display: inline-block'><b><b>Europese stekker</b> met aardingspin (CEE7/4 type E)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/TypeE.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Europese stekker</b> met aardingspin (CEE7/4 type E)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/TypeE.svg'/></div> levert een stroom van maximaal {socket:typee:current}A"
-            },
-            "current-10": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger CCS</b> (een type2 CCS met Tesla-logo) levert een stroom van maximaal 125 A"
-                    },
-                    "1": {
-                        "then": "<b>Tesla Supercharger CCS</b> (een type2 CCS met Tesla-logo) levert een stroom van maximaal 350 A"
-                    }
-                },
-                "question": "Welke stroom levert de stekker van type <div style='display: inline-block'><b><b>Tesla Supercharger CCS</b> (een type2 CCS met Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger CCS</b> (een type2 CCS met Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> levert een stroom van maximaal {socket:tesla_supercharger_ccs:current}A"
-            },
-            "current-11": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger (destination)</b> levert een stroom van maximaal 125 A"
-                    },
-                    "1": {
-                        "then": "<b>Tesla Supercharger (destination)</b> levert een stroom van maximaal 350 A"
-                    }
-                },
-                "question": "Welke stroom levert de stekker van type <div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> levert een stroom van maximaal {socket:tesla_destination:current}A"
-            },
-            "current-12": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla supercharger (Destination</b> (Een Type 2 met kabel en Tesla-logo) levert een stroom van maximaal 16 A"
-                    },
-                    "1": {
-                        "then": "<b>Tesla Supercharger (Destination</b> (Een Type 2 met kabel en Tesla-logo) levert een stroom van maximaal 32 A"
-                    }
-                },
-                "question": "Welke stroom levert de stekker van type <div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b> (Een Type 2 met kabel en Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b> (Een Type 2 met kabel en Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> levert een stroom van maximaal {socket:tesla_destination:current}A"
-            },
-            "current-13": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>USB</b> om GSMs en kleine electronica op te laden levert een stroom van maximaal 1 A"
-                    },
-                    "1": {
-                        "then": "<b>USB</b> om GSMs en kleine electronica op te laden levert een stroom van maximaal 2 A"
-                    }
-                },
-                "question": "Welke stroom levert de stekker van type <div style='display: inline-block'><b><b>USB</b> om GSMs en kleine electronica op te laden</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>USB</b> om GSMs en kleine electronica op te laden</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div> levert een stroom van maximaal {socket:USB-A:current}A"
-            },
-            "current-14": {
-                "question": "Welke stroom levert de stekker van type <div style='display: inline-block'><b><b>Bosch Active Connect met 3 pinnen</b> aan een kabel</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-3pin.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Bosch Active Connect met 3 pinnen</b> aan een kabel</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-3pin.svg'/></div> levert een stroom van maximaal {socket:bosch_3pin:current}A"
-            },
-            "current-15": {
-                "question": "Welke stroom levert de stekker van type <div style='display: inline-block'><b><b>Bosch Active Connect met 5 pinnen</b> aan een kabel</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-5pin.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Bosch Active Connect met 5 pinnen</b> aan een kabel</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-5pin.svg'/></div> levert een stroom van maximaal {socket:bosch_5pin:current}A"
-            },
-            "current-2": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Chademo</b> levert een stroom van maximaal 120 A"
-                    }
-                },
-                "question": "Welke stroom levert de stekker van type <div style='display: inline-block'><b><b>Chademo</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Chademo_type4.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Chademo</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Chademo_type4.svg'/></div> levert een stroom van maximaal {socket:chademo:current}A"
-            },
-            "current-3": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 met kabel</b> (J1772) levert een stroom van maximaal 32 A"
-                    }
-                },
-                "question": "Welke stroom levert de stekker van type <div style='display: inline-block'><b><b>Type 1 met kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Type 1 met kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> levert een stroom van maximaal {socket:type1_cable:current}A"
-            },
-            "current-4": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 <i>zonder</i> kabel</b> (J1772) levert een stroom van maximaal 32 A"
-                    }
-                },
-                "question": "Welke stroom levert de stekker van type <div style='display: inline-block'><b><b>Type 1 <i>zonder</i> kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Type 1 <i>zonder</i> kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> levert een stroom van maximaal {socket:type1:current}A"
-            },
-            "current-5": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 CCS</b> (ook gekend als Type 1 Combo) levert een stroom van maximaal 50 A"
-                    },
-                    "1": {
-                        "then": "<b>Type 1 CCS</b> (ook gekend als Type 1 Combo) levert een stroom van maximaal 125 A"
-                    }
-                },
-                "question": "Welke stroom levert de stekker van type <div style='display: inline-block'><b><b>Type 1 CCS</b> (ook gekend als Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Type 1 CCS</b> (ook gekend als Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div> levert een stroom van maximaal {socket:type1_combo:current}A"
-            },
-            "current-6": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger</b> levert een stroom van maximaal 125 A"
-                    },
-                    "1": {
-                        "then": "<b>Tesla Supercharger</b> levert een stroom van maximaal 350 A"
-                    }
-                },
-                "question": "Welke stroom levert de stekker van type <div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> levert een stroom van maximaal {socket:tesla_supercharger:current}A"
-            },
-            "current-7": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2</b> (mennekes) levert een stroom van maximaal 16 A"
-                    },
-                    "1": {
-                        "then": "<b>Type 2</b> (mennekes) levert een stroom van maximaal 32 A"
-                    }
-                },
-                "question": "Welke stroom levert de stekker van type <div style='display: inline-block'><b><b>Type 2</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_socket.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Type 2</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_socket.svg'/></div> levert een stroom van maximaal {socket:type2:current}A"
-            },
-            "current-8": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2 CCS</b> (mennekes) levert een stroom van maximaal 125 A"
-                    },
-                    "1": {
-                        "then": "<b>Type 2 CCS</b> (mennekes) levert een stroom van maximaal 350 A"
-                    }
-                },
-                "question": "Welke stroom levert de stekker van type <div style='display: inline-block'><b><b>Type 2 CCS</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Type 2 CCS</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> levert een stroom van maximaal {socket:type2_combo:current}A"
-            },
-            "current-9": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2 met kabel</b> (J1772) levert een stroom van maximaal 16 A"
-                    },
-                    "1": {
-                        "then": "<b>Type 2 met kabel</b> (J1772) levert een stroom van maximaal 32 A"
-                    }
-                },
-                "question": "Welke stroom levert de stekker van type <div style='display: inline-block'><b><b>Type 2 met kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Type 2 met kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> levert een stroom van maximaal {socket:type2_cable:current}A"
             },
             "email": {
                 "question": "Wat is het email-adres van de operator?",
@@ -2198,7 +2147,7 @@
                         "then": "Gratis te gebruiken"
                     },
                     "3": {
-                        "then": "Betalend te gebruiken, maar gratis voor klanten van het bijhorende hotel/café/ziekenhuis/…"
+                        "then": "Betalend te gebruiken, maar gratis voor klanten van het bijhorende hotel/café/ziekenhuis/..."
                     },
                     "4": {
                         "then": "Betalend"
@@ -2219,252 +2168,6 @@
                 "question": "Wat is het telefoonnummer van de beheerder van dit oplaadpunt?",
                 "render": "Bij problemen, bel naar <a href='tel:{phone}'>{phone}</a>"
             },
-            "plugs-0": {
-                "question": "Hoeveel stekkers van type <div style='display: inline-block'><b><b>Schuko stekker</b> zonder aardingspin (CEE7/4 type F)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/CEE7_4F.svg'/></div> heeft dit oplaadpunt?",
-                "render": "Hier zijn <b class='text-xl'>{socket:schuko}</b> stekkers van het type <div style='display: inline-block'><b><b>Schuko stekker</b> zonder aardingspin (CEE7/4 type F)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/CEE7_4F.svg'/></div>"
-            },
-            "plugs-1": {
-                "question": "Hoeveel stekkers van type <div style='display: inline-block'><b><b>Europese stekker</b> met aardingspin (CEE7/4 type E)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/TypeE.svg'/></div> heeft dit oplaadpunt?",
-                "render": "Hier zijn <b class='text-xl'>{socket:typee}</b> stekkers van het type <div style='display: inline-block'><b><b>Europese stekker</b> met aardingspin (CEE7/4 type E)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/TypeE.svg'/></div>"
-            },
-            "plugs-10": {
-                "question": "Hoeveel stekkers van type <div style='display: inline-block'><b><b>Tesla Supercharger CCS</b> (een type2 CCS met Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> heeft dit oplaadpunt?",
-                "render": "Hier zijn <b class='text-xl'>{socket:tesla_supercharger_ccs}</b> stekkers van het type <div style='display: inline-block'><b><b>Tesla Supercharger CCS</b> (een type2 CCS met Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div>"
-            },
-            "plugs-11": {
-                "question": "Hoeveel stekkers van type <div style='display: inline-block'><b><b>Tesla Supercharger (destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> heeft dit oplaadpunt?",
-                "render": "Hier zijn <b class='text-xl'>{socket:tesla_destination}</b> stekkers van het type <div style='display: inline-block'><b><b>Tesla Supercharger (destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div>"
-            },
-            "plugs-12": {
-                "question": "Hoeveel stekkers van type <div style='display: inline-block'><b><b>Tesla supercharger (destination)</b> (Een Type 2 met kabel en Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> heeft dit oplaadpunt?",
-                "render": "Hier zijn <b class='text-xl'>{socket:tesla_destination}</b> stekkers van het type <div style='display: inline-block'><b><b>Tesla supercharger (destination)</b> (Een Type 2 met kabel en Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div>"
-            },
-            "plugs-13": {
-                "question": "Hoeveel stekkers van type <div style='display: inline-block'><b><b>USB</b> om GSMs en kleine electronica op te laden</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div> heeft dit oplaadpunt?",
-                "render": "Hier zijn <b class='text-xl'>{socket:USB-A}</b> stekkers van het type <div style='display: inline-block'><b><b>USB</b> om GSMs en kleine electronica op te laden</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div>"
-            },
-            "plugs-14": {
-                "question": "Hoeveel stekkers van type <div style='display: inline-block'><b><b>Bosch Active Connect met 3 pinnen</b> aan een kabel</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-3pin.svg'/></div> heeft dit oplaadpunt?",
-                "render": "Hier zijn <b class='text-xl'>{socket:bosch_3pin}</b> stekkers van het type <div style='display: inline-block'><b><b>Bosch Active Connect met 3 pinnen</b> aan een kabel</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-3pin.svg'/></div>"
-            },
-            "plugs-15": {
-                "question": "Hoeveel stekkers van type <div style='display: inline-block'><b><b>Bosch Active Connect met 5 pinnen</b> aan een kabel</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-5pin.svg'/></div> heeft dit oplaadpunt?",
-                "render": "Hier zijn <b class='text-xl'>{socket:bosch_5pin}</b> stekkers van het type <div style='display: inline-block'><b><b>Bosch Active Connect met 5 pinnen</b> aan een kabel</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-5pin.svg'/></div>"
-            },
-            "plugs-2": {
-                "question": "Hoeveel stekkers van type <div style='display: inline-block'><b><b>Chademo</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Chademo_type4.svg'/></div> heeft dit oplaadpunt?",
-                "render": "Hier zijn <b class='text-xl'>{socket:chademo}</b> stekkers van het type <div style='display: inline-block'><b><b>Chademo</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Chademo_type4.svg'/></div>"
-            },
-            "plugs-3": {
-                "question": "Hoeveel stekkers van type <div style='display: inline-block'><b><b>Type 1 met kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> heeft dit oplaadpunt?",
-                "render": "Hier zijn <b class='text-xl'>{socket:type1_cable}</b> stekkers van het type <div style='display: inline-block'><b><b>Type 1 met kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div>"
-            },
-            "plugs-4": {
-                "question": "Hoeveel stekkers van type <div style='display: inline-block'><b><b>Type 1 <i>zonder</i> kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> heeft dit oplaadpunt?",
-                "render": "Hier zijn <b class='text-xl'>{socket:type1}</b> stekkers van het type <div style='display: inline-block'><b><b>Type 1 <i>zonder</i> kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div>"
-            },
-            "plugs-5": {
-                "question": "Hoeveel stekkers van type <div style='display: inline-block'><b><b>Type 1 CCS</b> (ook gekend als Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div> heeft dit oplaadpunt?",
-                "render": "Hier zijn <b class='text-xl'>{socket:type1_combo}</b> stekkers van het type <div style='display: inline-block'><b><b>Type 1 CCS</b> (ook gekend als Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div>"
-            },
-            "plugs-6": {
-                "question": "Hoeveel stekkers van type <div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> heeft dit oplaadpunt?",
-                "render": "Hier zijn <b class='text-xl'>{socket:tesla_supercharger}</b> stekkers van het type <div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div>"
-            },
-            "plugs-7": {
-                "question": "Hoeveel stekkers van type <div style='display: inline-block'><b><b>Type 2</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_socket.svg'/></div> heeft dit oplaadpunt?",
-                "render": "Hier zijn <b class='text-xl'>{socket:type2}</b> stekkers van het type <div style='display: inline-block'><b><b>Type 2</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_socket.svg'/></div>"
-            },
-            "plugs-8": {
-                "question": "Hoeveel stekkers van type <div style='display: inline-block'><b><b>Type 2 CCS</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> heeft dit oplaadpunt?",
-                "render": "Hier zijn <b class='text-xl'>{socket:type2_combo}</b> stekkers van het type <div style='display: inline-block'><b><b>Type 2 CCS</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div>"
-            },
-            "plugs-9": {
-                "question": "Hoeveel stekkers van type <div style='display: inline-block'><b><b>Type 2 met kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> heeft dit oplaadpunt?",
-                "render": "Hier zijn <b class='text-xl'>{socket:type2_cable}</b> stekkers van het type <div style='display: inline-block'><b><b>Type 2 met kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div>"
-            },
-            "power-output-0": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Schuko stekker</b> zonder aardingspin (CEE7/4 type F) levert een vermogen van maximaal 3.6 kw A"
-                    }
-                },
-                "question": "Welk vermogen levert een enkele stekker van type <div style='display: inline-block'><b><b>Schuko stekker</b> zonder aardingspin (CEE7/4 type F)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/CEE7_4F.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Schuko stekker</b> zonder aardingspin (CEE7/4 type F)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/CEE7_4F.svg'/></div> levert een vermogen van maximaal {socket:schuko:output}"
-            },
-            "power-output-1": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Europese stekker</b> met aardingspin (CEE7/4 type E) levert een vermogen van maximaal 3 kw A"
-                    },
-                    "1": {
-                        "then": "<b>Europese stekker</b> met aardingspin (CEE7/4 type E) levert een vermogen van maximaal 22 kw A"
-                    }
-                },
-                "question": "Welk vermogen levert een enkele stekker van type <div style='display: inline-block'><b><b>Europese stekker</b> met aardingspin (CEE7/4 type E)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/TypeE.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Europese stekker</b> met aardingspin (CEE7/4 type E)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/TypeE.svg'/></div> levert een vermogen van maximaal {socket:typee:output}"
-            },
-            "power-output-10": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger CCS</b> (een type2 CCS met Tesla-logo) levert een vermogen van maximaal 50 kw A"
-                    }
-                },
-                "question": "Welk vermogen levert een enkele stekker van type <div style='display: inline-block'><b><b>Tesla Supercharger CCS</b> (een type2 CCS met Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div>?",
-                "render": "<div style='display: inline-block'><div style='display: inline-block'><b><b>Tesla Supercharger CCS</b> (een type2 CCS met Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> levert een vermogen van maximaal {socket:tesla_supercharger_ccs:output}"
-            },
-            "power-output-11": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger (destination)</b> levert een vermogen van maximaal 120 kw A"
-                    },
-                    "1": {
-                        "then": "<b>Tesla Supercharger (Destination)</b> levert een vermogen van maximaal 150 kw A"
-                    },
-                    "2": {
-                        "then": "<b>Tesla Supercharger (destination)</b> levert een vermogen van maximaal 250 kw A"
-                    }
-                },
-                "question": "Welk vermogen levert een enkele stekker van type <div style='display: inline-block'><b><b>Tesla Supercharger (destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger (destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> levert een vermogen van maximaal {socket:tesla_destination:output}"
-            },
-            "power-output-12": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla supercharger (destination</b> (Een Type 2 met kabel en Tesla-logo) levert een vermogen van maximaal 11 kw A"
-                    },
-                    "1": {
-                        "then": "<b>Tesla supercharger (destination</b> (Een Type 2 met kabel en Tesla-logo) levert een vermogen van maximaal 22 kw A"
-                    }
-                },
-                "question": "Welk vermogen levert een enkele stekker van type <div style='display: inline-block'><b><b>Tesla supercharger (destination)</b> (Een Type 2 met kabel en Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b> (Een Type 2 met kabel en Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> levert een vermogen van maximaal {socket:tesla_destination:output}"
-            },
-            "power-output-13": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>USB</b> om GSMs en kleine electronica op te laden levert een vermogen van maximaal 5w A"
-                    },
-                    "1": {
-                        "then": "<b>USB</b> om GSMs en kleine electronica op te laden levert een vermogen van maximaal 10w A"
-                    }
-                },
-                "question": "Welk vermogen levert een enkele stekker van type <div style='display: inline-block'><b><b>USB</b> om GSMs en kleine electronica op te laden</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>USB</b> om GSMs en kleine electronica op te laden</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div> levert een vermogen van maximaal {socket:USB-A:output}"
-            },
-            "power-output-14": {
-                "question": "Welk vermogen levert een enkele stekker van type <div style='display: inline-block'><b><b>Bosch Active Connect met 3 pinnen</b> aan een kabel</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-3pin.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Bosch Active Connect met 3 pinnen</b> aan een kabel</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-3pin.svg'/></div> levert een vermogen van maximaal {socket:bosch_3pin:output}"
-            },
-            "power-output-15": {
-                "question": "Welk vermogen levert een enkele stekker van type <div style='display: inline-block'><b><b>Bosch Active Connect met 5 pinnen</b> aan een kabel</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-5pin.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Bosch Active Connect met 5 pinnen</b> aan een kabel</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-5pin.svg'/></div> levert een vermogen van maximaal {socket:bosch_5pin:output}"
-            },
-            "power-output-2": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Chademo</b> levert een vermogen van maximaal 50 kw A"
-                    }
-                },
-                "question": "Welk vermogen levert een enkele stekker van type <div style='display: inline-block'><b><b>Chademo</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Chademo_type4.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Chademo</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Chademo_type4.svg'/></div> levert een vermogen van maximaal {socket:chademo:output}"
-            },
-            "power-output-3": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 met kabel</b> (J1772) levert een vermogen van maximaal 3.7 kw A"
-                    },
-                    "1": {
-                        "then": "<b>Type 1 met kabel</b> (J1772) levert een vermogen van maximaal 7 kw A"
-                    }
-                },
-                "question": "Welk vermogen levert een enkele stekker van type <div style='display: inline-block'><b><b>Type 1 met kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Type 1 met kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> levert een vermogen van maximaal {socket:type1_cable:output}"
-            },
-            "power-output-4": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 <i>zonder</i> kabel</b> (J1772) levert een vermogen van maximaal 3.7 kw A"
-                    },
-                    "1": {
-                        "then": "<b>Type 1 <i>zonder</i> kabel</b> (J1772) levert een vermogen van maximaal 6.6 kw A"
-                    },
-                    "2": {
-                        "then": "<b>Type 1 <i>zonder</i> kabel</b> (J1772) levert een vermogen van maximaal 7 kw A"
-                    },
-                    "3": {
-                        "then": "<b>Type 1 <i>zonder</i> kabel</b> (J1772) levert een vermogen van maximaal 7.2 kw A"
-                    }
-                },
-                "question": "Welk vermogen levert een enkele stekker van type <div style='display: inline-block'><b><b>Type 1 <i>zonder</i> kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Type 1 <i>zonder</i> kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> levert een vermogen van maximaal {socket:type1:output}"
-            },
-            "power-output-5": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 CCS</b> (ook gekend als Type 1 Combo) levert een vermogen van maximaal 50 kw A"
-                    },
-                    "1": {
-                        "then": "<b>Type 1 CCS</b> (ook gekend als Type 1 Combo) levert een vermogen van maximaal 62.5 kw A"
-                    },
-                    "2": {
-                        "then": "<b>Type 1 CCS</b> (ook gekend als Type 1 Combo) levert een vermogen van maximaal 150 kw A"
-                    },
-                    "3": {
-                        "then": "<b>Type 1 CCS</b> (ook gekend als Type 1 Combo) levert een vermogen van maximaal 350 kw A"
-                    }
-                },
-                "question": "Welk vermogen levert een enkele stekker van type <div style='display: inline-block'><b><b>Type 1 CCS</b> (ook gekend als Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Type 1 CCS</b> (ook gekend als Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div> levert een vermogen van maximaal {socket:type1_combo:output}"
-            },
-            "power-output-6": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger</b> levert een vermogen van maximaal 120 kw A"
-                    },
-                    "1": {
-                        "then": "<b>Tesla Supercharger</b> levert een vermogen van maximaal 150 kw A"
-                    },
-                    "2": {
-                        "then": "<b>Tesla Supercharger</b> levert een vermogen van maximaal 250 kw A"
-                    }
-                },
-                "question": "Welk vermogen levert een enkele stekker van type <div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> levert een vermogen van maximaal {socket:tesla_supercharger:output}"
-            },
-            "power-output-7": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2</b> (mennekes) levert een vermogen van maximaal 11 kw A"
-                    },
-                    "1": {
-                        "then": "<b>Type 2</b> (mennekes) levert een vermogen van maximaal 22 kw A"
-                    }
-                },
-                "question": "Welk vermogen levert een enkele stekker van type <div style='display: inline-block'><b><b>Type 2</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_socket.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Type 2</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_socket.svg'/></div> levert een vermogen van maximaal {socket:type2:output}"
-            },
-            "power-output-8": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2 CCS</b> (mennekes) levert een vermogen van maximaal 50 kw A"
-                    }
-                },
-                "question": "Welk vermogen levert een enkele stekker van type <div style='display: inline-block'><b><b>Type 2 CCS</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Type 2 CCS</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> levert een vermogen van maximaal {socket:type2_combo:output}"
-            },
-            "power-output-9": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2 met kabel</b> (J1772) levert een vermogen van maximaal 11 kw A"
-                    },
-                    "1": {
-                        "then": "<b>Type 2 met kabel</b> (J1772) levert een vermogen van maximaal 22 kw A"
-                    }
-                },
-                "question": "Welk vermogen levert een enkele stekker van type <div style='display: inline-block'><b><b>Type 2 met kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Type 2 met kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> levert een vermogen van maximaal {socket:type2_cable:output}"
-            },
             "questions-technical": {
                 "render": "<h3>Technische vragen</h3>De vragen hieronder zijn erg technisch - sla deze over indien je hier geen tijd voor hebt<br/>{questions(technical)}"
             },
@@ -2472,163 +2175,86 @@
                 "question": "Wat is het referentienummer van dit oplaadstation?",
                 "render": "Het referentienummer van dit oplaadpunt is <b>{ref}</b>"
             },
-            "voltage-0": {
-                "mappings": {
+            "rewritten-questions": {
+                "renderings": {
                     "0": {
-                        "then": "<b>Schuko stekker</b> zonder aardingspin (CEE7/4 type F) heeft een spanning van 230 volt"
-                    }
-                },
-                "question": "Welke spanning levert de stekker van type <div style='display: inline-block'><b><b>Schuko stekker</b> zonder aardingspin (CEE7/4 type F)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/CEE7_4F.svg'/></div>",
-                "render": "<div style='display: inline-block'><b><b>Schuko stekker</b> zonder aardingspin (CEE7/4 type F)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/CEE7_4F.svg'/></div> heeft een spanning van {socket:schuko:voltage} volt"
-            },
-            "voltage-1": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Europese stekker</b> met aardingspin (CEE7/4 type E) heeft een spanning van 230 volt"
-                    }
-                },
-                "question": "Welke spanning levert de stekker van type <div style='display: inline-block'><b><b>Europese stekker</b> met aardingspin (CEE7/4 type E)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/TypeE.svg'/></div>",
-                "render": "<div style='display: inline-block'><b><b>Europese stekker</b> met aardingspin (CEE7/4 type E)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/TypeE.svg'/></div> heeft een spanning van {socket:typee:voltage} volt"
-            },
-            "voltage-10": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger CCS</b> (een type2 CCS met Tesla-logo) heeft een spanning van 500 volt"
+                        "question": "Hoeveel stekkers van type {{description}} heeft dit oplaadpunt?",
+                        "render": "Hier zijn <b class='text-xl'>{{{key}}}</b> stekkers van het type {{description}}"
                     },
                     "1": {
-                        "then": "<b>Tesla Supercharger CCS</b> (een type2 CCS met Tesla-logo) heeft een spanning van 920 volt"
-                    }
-                },
-                "question": "Welke spanning levert de stekker van type <div style='display: inline-block'><b><b>Tesla Supercharger CCS</b> (een type2 CCS met Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div>",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger CCS</b> (een type2 CCS met Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> heeft een spanning van {socket:tesla_supercharger_ccs:voltage} volt"
-            },
-            "voltage-11": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger (Destination)</b> heeft een spanning van 480 volt"
-                    }
-                },
-                "question": "Welke spanning levert de stekker van type <div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div>",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> heeft een spanning van {socket:tesla_destination:voltage} volt"
-            },
-            "voltage-12": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger (Destination</b> (Een Type 2 met kabel en Tesla-logo) heeft een spanning van 230 volt"
+                        "mappings": {
+                            "then": "{{description}} heeft een spanning van {{commonVoltages}} volt"
+                        },
+                        "question": "Welke spanning levert de stekker van type {{description}}",
+                        "render": "{{description}} heeft een spanning van {canonical({{key}}:voltage)}"
                     },
-                    "1": {
-                        "then": "<b>Tesla Supercharger (Destination</b> (Een Type 2 met kabel en Tesla-logo) heeft een spanning van 400 volt"
-                    }
-                },
-                "question": "Welke spanning levert de stekker van type <div style='display: inline-block'><b><b>Tesla supercharger (destination).</b> (Een Type 2 met kabel en Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div>?",
-                "render": "<div style='display: inline-block'><b><b>Tesla supercharger (destination).</b> (Een Type 2 met kabel en Tesla-logo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> heeft een spanning van {socket:tesla_destination:voltage} volt"
-            },
-            "voltage-13": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>USB</b> om GSMs en kleine electronica op te laden heeft een spanning van 5 volt"
-                    }
-                },
-                "question": "Welke spanning levert de stekker van type <div style='display: inline-block'><b><b>USB</b> om GSMs en kleine electronica op te laden</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div>",
-                "render": "<div style='display: inline-block'><b><b>USB</b> om GSMs en kleine electronica op te laden</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div> heeft een spanning van {socket:USB-A:voltage} volt"
-            },
-            "voltage-14": {
-                "question": "Welke spanning levert de stekker van type <div style='display: inline-block'><b><b>Bosch Active Connect met 3 pinnen</b> aan een kabel</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-3pin.svg'/></div>",
-                "render": "<div style='display: inline-block'><b><b>Bosch Active Connect met 3 pinnen</b> aan een kabel</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-3pin.svg'/></div> heeft een spanning van {socket:bosch_3pin:voltage} volt"
-            },
-            "voltage-15": {
-                "question": "Welke spanning levert de stekker van type <div style='display: inline-block'><b><b>Bosch Active Connect met 5 pinnen</b> aan een kabel</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-5pin.svg'/></div>",
-                "render": "<div style='display: inline-block'><b><b>Bosch Active Connect met 5 pinnen</b> aan een kabel</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-5pin.svg'/></div> heeft een spanning van {socket:bosch_5pin:voltage} volt"
-            },
-            "voltage-2": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Chademo</b> heeft een spanning van 500 volt"
-                    }
-                },
-                "question": "Welke spanning levert de stekker van type <div style='display: inline-block'><b><b>Chademo</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Chademo_type4.svg'/></div>",
-                "render": "<div style='display: inline-block'><b><b>Chademo</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Chademo_type4.svg'/></div> heeft een spanning van {socket:chademo:voltage} volt"
-            },
-            "voltage-3": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 met kabel</b> (J1772) heeft een spanning van 200 volt"
+                    "2": {
+                        "mappings": {
+                            "then": "{{description}} levert een stroom van maximaal {{commonCurrent}} A"
+                        },
+                        "question": "Welke stroom levert de stekker van type {{description}}?",
+                        "render": "{{description}} levert een stroom van maximaal {canonical({{key}}:current)}"
                     },
-                    "1": {
-                        "then": "<b>Type 1 met kabel</b> (J1772) heeft een spanning van 240 volt"
+                    "3": {
+                        "mappings": {
+                            "then": "{{description}} levert een vermogen van maximaal {{commonOutput}} A"
+                        },
+                        "question": "Welk vermogen levert een enkele stekker van type {{description}}?",
+                        "render": "{{description}} levert een vermogen van maximaal {canonical({{key}}:output)}"
                     }
                 },
-                "question": "Welke spanning levert de stekker van type <div style='display: inline-block'><b><b>Type 1 met kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div>",
-                "render": "<div style='display: inline-block'><b><b>Type 1 met kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> heeft een spanning van {socket:type1_cable:voltage} volt"
-            },
-            "voltage-4": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 <i>zonder</i> kabel</b> (J1772) heeft een spanning van 200 volt"
-                    },
-                    "1": {
-                        "then": "<b>Type 1 <i>zonder</i> kabel</b> (J1772) heeft een spanning van 240 volt"
+                "rewrite": {
+                    "into": {
+                        "0": {
+                            "2": "<b>Schuko stekker</b> zonder aardingspin (CEE7/4 type F)"
+                        },
+                        "1": {
+                            "2": "<b>Europese stekker</b> met aardingspin (CEE7/4 type E)"
+                        },
+                        "2": {
+                            "2": "<b>Chademo</b>"
+                        },
+                        "3": {
+                            "2": "<b>Type 1 met kabel</b> (J1772)"
+                        },
+                        "4": {
+                            "2": "<b>Type 1 <i>zonder</i> kabel</b> (J1772)"
+                        },
+                        "5": {
+                            "2": "<b>Type 1 CCS</b> (ook gekend als Type 1 Combo)"
+                        },
+                        "6": {
+                            "2": "<b>Tesla Supercharger</b>"
+                        },
+                        "7": {
+                            "2": "<b>Type 2</b> (mennekes)"
+                        },
+                        "8": {
+                            "2": "<b>Type 2 CCS</b> (mennekes)"
+                        },
+                        "9": {
+                            "2": "<b>Type 2 met kabel</b> (J1772)"
+                        },
+                        "10": {
+                            "2": "<b>Tesla Supercharger CCS</b> (een type2 CCS met Tesla-logo)"
+                        },
+                        "11": {
+                            "2": "<b>Tesla Supercharger (destination)</b>"
+                        },
+                        "12": {
+                            "2": "<b>Tesla supercharger (destination</b> (Een Type 2 met kabel en Tesla-logo)"
+                        },
+                        "13": {
+                            "2": "<b>USB</b> om GSMs en kleine electronica op te laden"
+                        },
+                        "14": {
+                            "2": "<b>Bosch Active Connect met 3 pinnen</b> aan een kabel"
+                        },
+                        "15": {
+                            "2": "<b>Bosch Active Connect met 5 pinnen</b> aan een kabel"
+                        }
                     }
-                },
-                "question": "Welke spanning levert de stekker van type <div style='display: inline-block'><b><b>Type 1 <i>zonder</i> kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div>",
-                "render": "<div style='display: inline-block'><b><b>Type 1 <i>zonder</i> kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> heeft een spanning van {socket:type1:voltage} volt"
-            },
-            "voltage-5": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 CCS</b> (ook gekend als Type 1 Combo) heeft een spanning van 400 volt"
-                    },
-                    "1": {
-                        "then": "<b>Type 1 CCS</b> (ook gekend als Type 1 Combo) heeft een spanning van 1000 volt"
-                    }
-                },
-                "question": "Welke spanning levert de stekker van type <div style='display: inline-block'><b><b>Type 1 CCS</b> (ook gekend als Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div>",
-                "render": "<div style='display: inline-block'><b><b>Type 1 CCS</b> (ook gekend als Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div> heeft een spanning van {socket:type1_combo:voltage} volt"
-            },
-            "voltage-6": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger</b> heeft een spanning van 480 volt"
-                    }
-                },
-                "question": "Welke spanning levert de stekker van type <div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div>",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> heeft een spanning van {socket:tesla_supercharger:voltage} volt"
-            },
-            "voltage-7": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2</b> (mennekes) heeft een spanning van 230 volt"
-                    },
-                    "1": {
-                        "then": "<b>Type 2</b> (mennekes) heeft een spanning van 400 volt"
-                    }
-                },
-                "question": "Welke spanning levert de stekker van type <div style='display: inline-block'><b><b>Type 2</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_socket.svg'/></div>",
-                "render": "<div style='display: inline-block'><b><b>Type 2</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_socket.svg'/></div> heeft een spanning van {socket:type2:voltage} volt"
-            },
-            "voltage-8": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2 CCS</b> (mennekes) heeft een spanning van 500 volt"
-                    },
-                    "1": {
-                        "then": "<b>Type 2 CCS</b> (mennekes) heeft een spanning van 920 volt"
-                    }
-                },
-                "question": "Welke spanning levert de stekker van type <div style='display: inline-block'><b><b>Type 2 CCS</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div>",
-                "render": "<div style='display: inline-block'><b><b>Type 2 CCS</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> heeft een spanning van {socket:type2_combo:voltage} volt"
-            },
-            "voltage-9": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2 met kabel</b> (J1772) heeft een spanning van 230 volt"
-                    },
-                    "1": {
-                        "then": "<b>Type 2 met kabel</b> (J1772) heeft een spanning van 400 volt"
-                    }
-                },
-                "question": "Welke spanning levert de stekker van type <div style='display: inline-block'><b><b>Type 2 met kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div>",
-                "render": "<div style='display: inline-block'><b><b>Type 2 met kabel</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> heeft een spanning van {socket:type2_cable:voltage} volt"
+                }
             },
             "website": {
                 "question": "Wat is de website waar men meer info kan vinden over dit oplaadpunt?",
@@ -2645,48 +2271,6 @@
                 }
             },
             "render": "Oplaadpunt"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " minuten",
-                        "humanSingular": " minuut"
-                    },
-                    "1": {
-                        "human": " uren",
-                        "humanSingular": " uur"
-                    },
-                    "2": {
-                        "human": " day",
-                        "humanSingular": " dag"
-                    }
-                }
-            },
-            "1": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "volt"
-                    }
-                }
-            },
-            "2": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "A"
-                    }
-                }
-            },
-            "3": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "kilowatt"
-                    },
-                    "1": {
-                        "human": "megawatt"
-                    }
-                }
-            }
         }
     },
     "climbing": {
@@ -3199,13 +2783,6 @@
         },
         "title": {
             "render": "Klok"
-        }
-    },
-    "crab_address": {
-        "tagRenderings": {
-            "render_crab": {
-                "render": "Volgens het CRAB ligt hier <b>{STRAATNM}</b> {HUISNR} (label: {HNRLABEL})"
-            }
         }
     },
     "crossings": {
@@ -3991,6 +3568,9 @@
                 },
                 "1": {
                     "then": "Dit is een waterkraan of waterpomp met ondrinkbaar water.<div class='subtle'>Bijvoorbeeld een waterkraan met regenwater om planten water mee te geven</div"
+                },
+                "2": {
+                    "then": "Dit is een historische, manuele waterpomp waar geen drinkwater uitkomt"
                 }
             }
         },
@@ -3998,6 +3578,7 @@
         "name": "Drinkbaar water",
         "presets": {
             "0": {
+                "description": "Meestal een drinkwaterfonteintje, waterkraan, waterput of natuurlijke bron",
                 "title": "drinkbaar water"
             }
         },
@@ -4028,8 +3609,72 @@
                 "question": "Is deze drinkwaterkraan nog steeds werkende?",
                 "render": "Deze waterkraan-status is <i>{operational_status}</i>"
             },
+            "bench-artwork": {
+                "mappings": {
+                    "0": {
+                        "then": "Dit drinkwaterpunt heeft een geintegreerd kunstwerk"
+                    },
+                    "1": {
+                        "then": "Dit drinkwaterpunt heeft geen geïntegreerd kunstwerk"
+                    },
+                    "2": {
+                        "then": "Dit drinkwaterpunt heeft <span class=\"subtle\">waarschijnlijk</span> geen geïntegreerd kunstwerk"
+                    }
+                },
+                "question": "Heeft dit drinkwaterpunt een geintegreerd kunstwerk?",
+                "questionHint": "Bijvoorbeeld een standbeeld of ander, niet-triviaal kunstwerk"
+            },
+            "fee": {
+                "mappings": {
+                    "0": {
+                        "then": "Gratis te gebruiken"
+                    },
+                    "1": {
+                        "then": "Men moet betalen om dit drinkwaterpunt te gebruiken"
+                    }
+                },
+                "question": "Is dit drinkwaterpunt gratis te gebruiken?"
+            },
+            "opening_hours_24_7": {
+                "override": {
+                    "+mappings": {
+                        "0": {
+                            "then": "Dit drinkwaterpunt is dit seizoen gesloten. De openingsuren worden dus niet weergegeven."
+                        }
+                    },
+                    "questionHint": "Tijdens deze openingsuren is dit drinkwaterpunt bruikbaar."
+                }
+            },
             "render-closest-drinking-water": {
                 "render": "<a href='#{_closest_other_drinking_water_id}'>Er bevindt zich een ander drinkwaterpunt op {_closest_other_drinking_water_distance} meter</a>"
+            },
+            "seasonal": {
+                "mappings": {
+                    "0": {
+                        "then": "Dit drinkwaterpunt is heel het jaar door beschikbaar"
+                    },
+                    "1": {
+                        "then": "Dit drinkwaterpunt is enkel in de zomer beschikbaar"
+                    },
+                    "2": {
+                        "then": "Dit drinkwaterpunt is gesloten in de winter"
+                    }
+                },
+                "question": "Is dit drinkwaterpunt heel het jaar door beschikbaar?"
+            },
+            "type": {
+                "mappings": {
+                    "0": {
+                        "then": "Dit is een waterhappertje - een drinkwaterfonteintje waarbij een waterstraaltje omhoog spuit. Dit kan permanent werken of door op een drukknop te duwen."
+                    },
+                    "1": {
+                        "then": "Dit is een hervulpunt voor drinkwaterflessen. De waterstraal wordt omlaag gestuurd wanneer op een drukknop geduwd wordt of wanneer er beweging gedetecteerd wordt. Rechtstreeks van de waterstraal drinking kan moeilijk of zelfs onmogelijk zijn."
+                    },
+                    "2": {
+                        "then": "Dit is een waterkraan. Het water strooomt naar beneden en het volume wordt door een knop of draaimechanisme geregeld."
+                    }
+                },
+                "question": "Wat voor soort drinkwaterpunt is dit?"
             }
         },
         "title": {
@@ -4051,11 +3696,11 @@
             },
             "elevator-depth": {
                 "question": "Wat is de diepte van deze lift?",
-                "render": "Deze lift heeft een diepte van {canonical(elevator:depth)}"
+                "render": "Deze lift heeft een diepte van {canonical(length)}"
             },
             "elevator-width": {
                 "question": "Wat is de breedte van deze lift?",
-                "render": "Deze lift heeft een breedte van {canonical(elevator:width)}"
+                "render": "Deze lift heeft een breedte van {canonical(width)}"
             },
             "operational_status": {
                 "mappings": {
@@ -4078,8 +3723,8 @@
                 "render": {
                     "special": {
                         "question": "In welke talen heeft deze lift gesproken tekst?",
-                        "render_list_item": "Deze lift heeft gesproken tekst in het {language():font-bold}",
-                        "render_single_language": "Deze lift heeft gesproken tekst in het {language():font-bold}"
+                        "render_list_item": "Deze lift heeft gesproken tekst in het {language()}",
+                        "render_single_language": "Deze lift heeft gesproken tekst in het {language()}"
                     }
                 }
             },
@@ -4087,26 +3732,14 @@
                 "render": {
                     "special": {
                         "question": "In welke talen heeft deze lift voelbaar schrift (braille)?",
-                        "render_list_item": "Deze lift heeft voelbaar schrift in het {language():font-bold}",
-                        "render_single_language": "Deze lift heeft voelbaar schrift in het {language():font-bold}"
+                        "render_list_item": "Deze lift heeft voelbaar schrift in het {language()}",
+                        "render_single_language": "Deze lift heeft voelbaar schrift in het {language()}"
                     }
                 }
             }
         },
         "title": {
             "render": "Lift"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "meter"
-                    },
-                    "1": {
-                        "human": "centimeter"
-                    }
-                }
-            }
         }
     },
     "entrance": {
@@ -4227,18 +3860,6 @@
         },
         "title": {
             "render": "Ingang"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "meter"
-                    },
-                    "1": {
-                        "human": "centimeter"
-                    }
-                }
-            }
         }
     },
     "etymology": {
@@ -4266,7 +3887,7 @@
             },
             "wikipedia-etymology": {
                 "question": "Wat is het Wikidata-item van hetgeen dit object is naar vernoemd?",
-                "render": "<h3>Wikipedia artikel van de naamgever</h3>{wikipedia(name:etymology:wikidata):max-height:20rem}"
+                "render": "<h3>Wikipedia-artikel van de naamgever</h3>{wikipedia(name:etymology:wikidata):max-height:20rem}"
             },
             "zoeken op inventaris onroerend erfgoed": {
                 "render": "<a href='https://inventaris.onroerenderfgoed.be/erfgoedobjecten?tekst={name}' target='_blank'>Zoeken op inventaris onroerend erfgoed</a>"
@@ -4305,7 +3926,7 @@
             "0": {
                 "options": {
                     "0": {
-                        "question": "Nu geopened"
+                        "question": "Nu open"
                     }
                 }
             },
@@ -4323,7 +3944,7 @@
                     }
                 }
             },
-            "3": {
+            "5": {
                 "options": {
                     "0": {
                         "question": "Met en zonder afbeelding"
@@ -4336,14 +3957,14 @@
                     }
                 }
             },
-            "4": {
+            "6": {
                 "options": {
                     "0": {
                         "question": "Met voelbare bestrating"
                     }
                 }
             },
-            "5": {
+            "7": {
                 "options": {
                     "0": {
                         "question": "Met of zonder voelbare bestrating"
@@ -4359,14 +3980,14 @@
                     }
                 }
             },
-            "6": {
+            "8": {
                 "options": {
                     "0": {
                         "question": "Heeft biologische opties"
                     }
                 }
             },
-            "7": {
+            "9": {
                 "options": {
                     "0": {
                         "question": "Gratis toegankelijk"
@@ -4510,24 +4131,17 @@
                     }
                 }
             },
-            "2": {
+            "3": {
                 "options": {
                     "0": {
                         "question": "Heeft een vegetarisch menu"
                     }
                 }
             },
-            "3": {
-                "options": {
-                    "0": {
-                        "question": "Heeft een veganistisch menu"
-                    }
-                }
-            },
             "4": {
                 "options": {
                     "0": {
-                        "question": "Heeft een halal menu"
+                        "question": "Heeft een veganistisch menu"
                     }
                 }
             },
@@ -4665,6 +4279,9 @@
                     },
                     "3": {
                         "then": "Enkel veganistische opties zijn beschikbaar"
+                    },
+                    "4": {
+                        "then": "Op vraag kan een veganistische variant van een gerecht gemaakt worden"
                     }
                 },
                 "question": "Heeft deze eetgelegenheid een veganistische optie?"
@@ -4682,6 +4299,9 @@
                     },
                     "3": {
                         "then": "Enkel vegetarische opties zijn beschikbaar"
+                    },
+                    "4": {
+                        "then": "Sommige gerechten kunnen op vraag vegetarisch gemaakt worden"
                     }
                 },
                 "question": "Heeft deze eetgelegenheid een vegetarische optie?"
@@ -4842,7 +4462,11 @@
             },
             "ghost_bike-source": {
                 "question": "Op welke website kan men meer informatie vinden over de Witte fiets of over het ongeval?",
-                "render": "<a href='{source}' target='_blank'>Meer informatie</a>"
+                "render": {
+                    "special": {
+                        "text": "Meer informatie"
+                    }
+                }
             },
             "ghost_bike-start_date": {
                 "question": "Wanneer werd deze witte fiets geplaatst?",
@@ -4913,6 +4537,9 @@
                             },
                             "1": {
                                 "then": "Er is geen {negative-name} beschikbaar in deze hackerspace"
+                            },
+                            "2": {
+                                "then": "Er is een beperkte {negative-name} beschikbaar in deze hackerspace"
                             }
                         },
                         "question": "Is er {device-name} beschikbaar in deze hackerspace?"
@@ -4931,6 +4558,30 @@
                         "2": {
                             "1": "een CNC-boormachine",
                             "2": "CNC-boormachine"
+                        },
+                        "3": {
+                            "1": "een multimedia-studio",
+                            "2": "multimedia-studio"
+                        },
+                        "4": {
+                            "1": "een naaimachine",
+                            "2": "naaimachine"
+                        },
+                        "5": {
+                            "1": "een houtbewerkingsatelier",
+                            "2": "houtbewerkingsatelier"
+                        },
+                        "6": {
+                            "1": "een keramiekatelier",
+                            "2": "keramiekatelier"
+                        },
+                        "7": {
+                            "1": "een metaalatelier",
+                            "2": "metaalatelier"
+                        },
+                        "8": {
+                            "1": "een fietsherstelplaats",
+                            "2": "fietsherstelplaats"
                         }
                     }
                 }
@@ -5115,13 +4766,47 @@
         },
         "title": {
             "render": "Brandkraan"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
+        }
+    },
+    "ice_cream": {
+        "tagRenderings": {
+            "1": {
+                "question": "Wat is de naam van dit ijssalon?",
+                "render": "Dit ijssalon heet <b>{name}</b>"
+            }
+        }
+    },
+    "icons": {
+        "tagRenderings": {
+            "osmlink": {
+                "mappings": {
+                    "1": {
+                        "then": {
+                            "special": {
+                                "arialabel": "Bekijk op openstreetmap.org"
+                            }
+                        }
+                    }
+                },
+                "render": {
+                    "special": {
+                        "arialabel": "Bekijk op openstreetmap.org"
+                    }
+                }
+            },
+            "phonelink": {
+                "mappings": {
                     "0": {
-                        "human": "millimeter",
-                        "humanSingular": "millimeter"
+                        "then": {
+                            "special": {
+                                "arialabel": "Telefoneer"
+                            }
+                        }
+                    }
+                },
+                "render": {
+                    "special": {
+                        "arialabel": "Telefoneer"
                     }
                 }
             }
@@ -5265,20 +4950,6 @@
         },
         "title": {
             "render": "Stoeprand"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "centimeter",
-                        "humanSingular": "centimeter"
-                    },
-                    "1": {
-                        "human": "meter",
-                        "humanSingular": "meter"
-                    }
-                }
-            }
         }
     },
     "kindergarten_childcare": {
@@ -5329,7 +5000,7 @@
         }
     },
     "last_click": {
-        "mapRendering": {
+        "pointRendering": {
             "0": {
                 "label": {
                     "mappings": {
@@ -5572,19 +5243,12 @@
                     "then": "Weg zonder een naam"
                 }
             }
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "kilometers/uur",
-                        "humanShort": "km/u"
-                    },
-                    "1": {
-                        "human": "miles/uur",
-                        "humanShort": "mph"
-                    }
-                }
+        }
+    },
+    "memorial": {
+        "tagRenderings": {
+            "start_date": {
+                "render": "Geplaatst op {start_date}"
             }
         }
     },
@@ -5669,8 +5333,7 @@
             },
             "Email": {
                 "question": "Waar kan men naartoe emailen voor vragen en meldingen van dit natuurgebied?",
-                "questionHint": "Respecteer privacy - geef enkel persoonlijke emailadressen als deze elders zijn gepubliceerd",
-                "render": "<a href='mailto:{email}' target='_blank'>{email}</a>"
+                "questionHint": "Respecteer privacy - geef enkel persoonlijke emailadressen als deze elders zijn gepubliceerd"
             },
             "Name tag": {
                 "mappings": {
@@ -5823,6 +5486,11 @@
                 }
             },
             "render": "Note"
+        },
+        "titleIcons": {
+            "0": {
+                "ariaLabel": "Bekijk op OpenStreetMap.org"
+            }
         }
     },
     "observation_tower": {
@@ -5889,15 +5557,6 @@
                 }
             },
             "render": "Uitkijktoren"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " meter"
-                    }
-                }
-            }
         }
     },
     "osm_community_index": {
@@ -6099,39 +5758,36 @@
                         "then": "Dit is een gehandicaptenparkeerplaats."
                     },
                     "3": {
-                        "then": "Dit is een privéparkeerplek."
-                    },
-                    "4": {
                         "then": "Deze parkeerplek is gereserveerd voor het opladen van voertuigen."
                     },
-                    "5": {
+                    "4": {
                         "then": "Deze parkeerplek is gereserveerd voor leveringen."
                     },
-                    "6": {
+                    "5": {
                         "then": "Deze parkeerplek is gereserveerd voor vrachtwagens."
                     },
-                    "7": {
+                    "6": {
                         "then": "Deze parkeerplek is gereserveerd voor caravans of campers."
                     },
-                    "8": {
+                    "7": {
                         "then": "Deze parkeerplek is gereserveerd voor bussen."
                     },
-                    "9": {
+                    "8": {
                         "then": "Deze parkeerplek is gereserveerd voor motoren."
                     },
-                    "10": {
+                    "9": {
                         "then": "Deze parkeerplek is gereserveerd voor ouders met kinderen."
                     },
-                    "11": {
+                    "10": {
                         "then": "Deze parkeerplek is gereserveerd voor personeel."
                     },
-                    "12": {
+                    "11": {
                         "then": "Deze parkeerplek is gereserveerd voor taxis."
                     },
-                    "13": {
+                    "12": {
                         "then": "Deze parkeerplek is gereserveerd voor voertuigen met een aanhanger."
                     },
-                    "14": {
+                    "13": {
                         "then": "Deze parkeerplek is gereserveerd voor autodelen."
                     }
                 },
@@ -6142,6 +5798,9 @@
             "mappings": {
                 "0": {
                     "then": "Parkeerplek voor gehandicapten"
+                },
+                "1": {
+                    "then": "Parkeerplek voor opladen van elektrische voertuigen"
                 }
             },
             "render": "Parkeerplek"
@@ -6415,6 +6074,12 @@
                     },
                     "7": {
                         "then": "De ondergrond is <b>verhard</b>"
+                    },
+                    "8": {
+                        "then": "De ondergrond bestaat uit Tartan - een synthetisch, elastisch en poreus materiaal dat je ook vindt op atletiekpistes"
+                    },
+                    "9": {
+                        "then": "De ondergrond bestaat uit rubber, zoals rubberen tegels, rubber snippers of een groot rubberen oppervlak"
                     }
                 },
                 "question": "Wat is de ondergrond van deze speeltuin?",
@@ -6429,6 +6094,33 @@
                 }
             },
             "render": "Speeltuin"
+        }
+    },
+    "playground_equipment": {
+        "tagRenderings": {
+            "type": {
+                "mappings": {
+                    "0": {
+                        "then": "Dit is een schommel"
+                    },
+                    "3": {
+                        "then": "Dit is een zandbak"
+                    },
+                    "4": {
+                        "then": "Dit is een veertoestel"
+                    },
+                    "5": {
+                        "then": "Dit is een klimrek"
+                    },
+                    "6": {
+                        "then": "Dit is een wipwap"
+                    },
+                    "11": {
+                        "then": "Dit is een rekstok"
+                    }
+                },
+                "question": "Wat voor speeltoestel is dit?"
+            }
         }
     },
     "postboxes": {
@@ -6452,6 +6144,20 @@
             }
         },
         "tagRenderings": {
+            "has_atm": {
+                "mappings": {
+                    "0": {
+                        "then": "Dit postkantoor heeft een bankautomaat"
+                    },
+                    "1": {
+                        "then": "Dit postkantoor heeft <b>geen</b> bankautomaaat"
+                    },
+                    "2": {
+                        "then": "Dit postkantoor heeft een bankautomaat, maar deze staat apart op de kaart aangeduid"
+                    }
+                },
+                "question": "Heeft dit postkantoor een bankautomaat?"
+            },
             "letter-from": {
                 "mappings": {
                     "0": {
@@ -6644,7 +6350,11 @@
             },
             "public_bookcase-website": {
                 "question": "Is er een website over dit boekenruilkastje?",
-                "render": "Meer info op <a href='{website}' target='_blank'>de website</a>"
+                "render": {
+                    "special": {
+                        "text": "Meer info op de website"
+                    }
+                }
             }
         },
         "title": {
@@ -6658,6 +6368,15 @@
     },
     "questions": {
         "tagRenderings": {
+            "check_date": {
+                "mappings": {
+                    "0": {
+                        "then": "Dit object is vandaag voor het laatst gecontroleerd"
+                    }
+                },
+                "question": "Wanneer is dit object voor het laatst gecontroleerd?",
+                "render": "Dit object is voor het laatst gecontroleerd op <b>{check_date}</b>"
+            },
             "denominations-coins": {
                 "mappings": {
                     "0": {
@@ -6683,6 +6402,27 @@
                     },
                     "7": {
                         "then": "Munten van 2 euro worden geaccepteerd"
+                    },
+                    "8": {
+                        "then": "Munten van 5 rappen worden geaccepteerd"
+                    },
+                    "9": {
+                        "then": "Munten van 10 rappen worden geaccepteerd"
+                    },
+                    "10": {
+                        "then": "Munten van 20 rappen worden geaccepteerd"
+                    },
+                    "11": {
+                        "then": "Munten van ½ frank worden geaccepteerd"
+                    },
+                    "12": {
+                        "then": "Munten van 1 frank worden geaccepteerd"
+                    },
+                    "13": {
+                        "then": "Munten van 2 frank worden geaccepteerd"
+                    },
+                    "14": {
+                        "then": "Munten van 5 frank worden geaccepteerd"
                     }
                 },
                 "question": "Met welke munten kan je hier betalen?"
@@ -6709,6 +6449,24 @@
                     },
                     "6": {
                         "then": "Biljetten van 500 euro worden geaccepteerd"
+                    },
+                    "7": {
+                        "then": "Biljetten van 10 frank worden geaccepteerd"
+                    },
+                    "8": {
+                        "then": "Biljetten van 20 frank worden geaccepteerd"
+                    },
+                    "9": {
+                        "then": "Biljetten van 50 frank worden geaccepteerd"
+                    },
+                    "10": {
+                        "then": "Biljetten van 100 frank worden geaccepteerd"
+                    },
+                    "11": {
+                        "then": "Biljetten van 200 frank worden geaccepteerd"
+                    },
+                    "12": {
+                        "then": "Biljetten van 1000 frank worden geaccepteerd"
                     }
                 },
                 "question": "Met welke bankbiljetten kan je hier betalen?"
@@ -6735,6 +6493,7 @@
                 "question": "Zijn honden toegelaten in deze zaak?"
             },
             "email": {
+                "editButtonAriaLabel": "Pas emailadres aan",
                 "question": "Wat is het e-mailadres van {title()}?"
             },
             "induction-loop": {
@@ -6803,27 +6562,6 @@
                     }
                 }
             },
-            "level": {
-                "mappings": {
-                    "0": {
-                        "then": "Bevindt zich ondergronds"
-                    },
-                    "1": {
-                        "then": "Bevindt zich op de begane grond"
-                    },
-                    "2": {
-                        "then": "Bevindt zich gelijkvloers"
-                    },
-                    "3": {
-                        "then": "Bevindt zich op de eerste verdieping"
-                    },
-                    "4": {
-                        "then": "Bevindt zich in de eerste kelderverdieping"
-                    }
-                },
-                "question": "Op welke verdieping bevindt dit punt zich?",
-                "render": "Bevindt zich op de {level}de verdieping"
-            },
             "multilevels": {
                 "override": {
                     "question": "Naar welke verdiepingen gaat deze lift?",
@@ -6831,12 +6569,17 @@
                 }
             },
             "opening_hours": {
+                "mappings": {
+                    "0": {
+                        "then": "Gesloten voor onbepaalde duur"
+                    }
+                },
                 "question": "Wat zijn de openingstijden van {title()}?",
                 "render": "<h3>Openingstijden</h3>{opening_hours_table(opening_hours)}"
             },
             "opening_hours_24_7": {
                 "override": {
-                    "mappings": {
+                    "+mappings": {
                         "0": {
                             "then": "24/7 open (ook tijdens feestdagen)"
                         }
@@ -6900,7 +6643,16 @@
                 }
             },
             "phone": {
+                "editButtonAriaLabel": "Pas telefoonnummer aan",
                 "question": "Wat is het telefoonnummer van {title()}?"
+            },
+            "qr_code": {
+                "render": {
+                    "after": "Scan deze code om deze locatie op een ander apparaat te zien"
+                }
+            },
+            "repeated": {
+                "render": "Er zijn verschillende, identieke objecten op verdiepingen {repeat_on}."
             },
             "service:electricity": {
                 "mappings": {
@@ -6919,6 +6671,34 @@
                 },
                 "question": "Zijn er stekkers beschikbaar voor klanten die binnen zitten?"
             },
+            "share": {
+                "render": {
+                    "special": {
+                        "text": "Deel deze locatie"
+                    }
+                }
+            },
+            "single_level": {
+                "mappings": {
+                    "0": {
+                        "then": "Bevindt zich ondergronds"
+                    },
+                    "1": {
+                        "then": "Bevindt zich op de begane grond"
+                    },
+                    "2": {
+                        "then": "Bevindt zich gelijkvloers"
+                    },
+                    "3": {
+                        "then": "Bevindt zich op de eerste verdieping"
+                    },
+                    "4": {
+                        "then": "Bevindt zich in de eerste kelderverdieping"
+                    }
+                },
+                "question": "Op welke verdieping bevindt dit punt zich?",
+                "render": "Bevindt zich op de {level}de verdieping"
+            },
             "smoking": {
                 "mappings": {
                     "0": {
@@ -6934,6 +6714,7 @@
                 "question": "Is roken toegestaan bij {title()}?"
             },
             "website": {
+                "editButtonAriaLabel": "Pas website aan",
                 "question": "Wat is de website van {title()}?"
             },
             "wheelchair-access": {
@@ -6996,20 +6777,6 @@
         },
         "title": {
             "render": "Oversteekplaats"
-        }
-    },
-    "reception_desk": {
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "meter"
-                    },
-                    "1": {
-                        "human": "centimeter"
-                    }
-                }
-            }
         }
     },
     "recycling": {
@@ -7393,9 +7160,9 @@
     },
     "shops": {
         "deletion": {
-            "extraDeleteReasons": {
+            "nonDeleteMappings": {
                 "0": {
-                    "explanation": "{title()} is permanent gestopt"
+                    "then": "{title()} is permanent gestopt"
                 }
             }
         },
@@ -7487,6 +7254,9 @@
         "tagRenderings": {
             "explanation": {
                 "mappings": {
+                    "0": {
+                        "then": "<div> Dit is een woonerf: <ul><li>Voetgangers mogen hier de volledige breedte van de straat gebruiken</li><li>Gemotoriseerd verkeer mag maximaal <b>20km/h</b> rijden</li></ul></div>"
+                    },
                     "1": {
                         "then": "Dit is een brede, autovrije straat"
                     },
@@ -7503,6 +7273,14 @@
                         "then": "Dit is een tractorspoor of weg om landbouwgrond te bereikken"
                     }
                 }
+            },
+            "slow_road_is_lit": {
+                "mappings": {
+                    "1": {
+                        "then": "Niet verlicht"
+                    }
+                },
+                "question": "Is deze weg 's nachts verlicht?"
             },
             "slow_roads-surface": {
                 "mappings": {
@@ -7551,6 +7329,9 @@
                 },
                 "4": {
                     "then": "Woonerf"
+                },
+                "5": {
+                    "then": "Klein pad"
                 }
             },
             "render": "Trage weg"
@@ -7578,20 +7359,6 @@
         },
         "title": {
             "render": "Flitspaal"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "kilometers/uur",
-                        "humanShort": "km/u"
-                    },
-                    "1": {
-                        "human": "miles/uur",
-                        "humanShort": "mph"
-                    }
-                }
-            }
         }
     },
     "speed_display": {
@@ -7620,20 +7387,6 @@
         },
         "title": {
             "render": "Snelheidsdisplay"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "kilometers/uur",
-                        "humanShort": "km/u"
-                    },
-                    "1": {
-                        "human": "miles/uur",
-                        "humanShort": "mph"
-                    }
-                }
-            }
         }
     },
     "sport_pitch": {
@@ -7662,6 +7415,9 @@
                     },
                     "4": {
                         "question": "Tennisveld"
+                    },
+                    "5": {
+                        "question": "Badmintonveld"
                     }
                 }
             }
@@ -7773,6 +7529,12 @@
                     },
                     "4": {
                         "then": "De ondergrond is <b>beton</b>"
+                    },
+                    "5": {
+                        "then": "De ondergrond bestaat uit <b>grind</b>"
+                    },
+                    "6": {
+                        "then": "De ondergrond is Tartan, een synthetisch, licht verende en poreuze ondergrond"
                     }
                 },
                 "question": "Wat is de ondergrond van dit sportveld?",
@@ -7852,8 +7614,8 @@
                 "render": {
                     "special": {
                         "question": "In welke talen is er voelbaar schrift (braille) voor navigatie? <img src='./assets/layers/stairs/Braille_stairs.jpg' style='height: 300px; width: auto; display: block;' />",
-                        "render_list_item": "Deze trap heeft voelbaar schrijft in {language():font-bold}",
-                        "render_single_language": "Deze trap heeft voelbaar schrijft in {language():font-bold}"
+                        "render_list_item": "Deze trap heeft voelbaar schrijft in {language()}",
+                        "render_single_language": "Deze trap heeft voelbaar schrijft in {language()}"
                     }
                 }
             }
@@ -8053,7 +7815,7 @@
             "Surveillance type: public, outdoor, indoor": {
                 "mappings": {
                     "0": {
-                        "then": "Bewaking van de publieke ruilmte, dus een straat, een brug, een park, een plein, een stationsgebouw, een publiek toegankelijke gang of tunnel…"
+                        "then": "Bewaking van de publieke ruimte, dus een straat, een brug, een park, een plein, een stationsgebouw, een publiek toegankelijke gang of tunnel…"
                     },
                     "1": {
                         "then": "Een buitenruimte met privaat karakter (zoals een privé-oprit, een parking, tankstation, …)"
@@ -8255,6 +8017,48 @@
             }
         },
         "tagRenderings": {
+            "gender_segregated": {
+                "mappings": {
+                    "0": {
+                        "then": "Er zijn aparte ruimtes of toiletten voor mannen en vrouwen"
+                    },
+                    "1": {
+                        "then": "Mannen en vrouwen gebruiken dezelfde ruimtes en toiletten"
+                    }
+                },
+                "question": "Zijn deze toiletten gescheiden op basis van geslacht?",
+                "questionHint": "Is er een aparte ruimte voor mannen en vrouwen en zijn deze ruimtes ook expliciet aangegeven?"
+            },
+            "menstrual_products": {
+                "mappings": {
+                    "0": {
+                        "then": "Er zijn gratis menstruatieprocten beschikbaar voor alle bezoekers van deze toiletten"
+                    },
+                    "1": {
+                        "then": "De gratis menstruatieproducten zijn enkel beschikbaar in een deel van de toiletten"
+                    },
+                    "2": {
+                        "then": "Er zijn geen gratis menstruatieproducten beschikbaar"
+                    }
+                },
+                "question": "Zijn er gratis menstruatieproducten beschikbaar?",
+                "questionHint": "Dit gaat enkel over menstruatieproducten die gratis geschikbaar zijn. Indien er bv. een verkoopautomaat met menstruatieproducten is, negeer deze dan"
+            },
+            "menstrual_products_location": {
+                "mappings": {
+                    "0": {
+                        "then": "De gratis menstruatieproducten bevinden zich in het vrouwentoilet"
+                    },
+                    "1": {
+                        "then": "De gratis menstruatieproducten bevinden zich in het mannentoilet"
+                    },
+                    "2": {
+                        "then": "De gratis menstruatieproducten bevinden zich in het rolstoeltoegankelijke toilet"
+                    }
+                },
+                "question": "Waar bevinden de gratis menstruatieproducten zich?",
+                "render": "De menstruatieproducten bevinden zich in {toilets:menstrual_products:location}"
+            },
             "opening_hours_24_7": {
                 "override": {
                     "question": "Wanneer zijn deze toiletten open?"
@@ -8284,20 +8088,20 @@
             "toilet-changing_table:location": {
                 "mappings": {
                     "0": {
-                        "then": "De luiertafel bevindt zich in de vrouwentoiletten "
+                        "then": "Er bevindt zich een luiertafel in de vrouwentoiletten "
                     },
                     "1": {
-                        "then": "De luiertafel bevindt zich in de herentoiletten "
+                        "then": "Er bevindt zich een luiertafel in de herentoiletten "
                     },
                     "2": {
-                        "then": "De luiertafel bevindt zich in de rolstoeltoegankelijke toilet "
+                        "then": "Er bevindt zich een luiertafel in de rolstoeltoegankelijke toilet "
                     },
                     "3": {
-                        "then": "De luiertafel bevindt zich in een daartoe voorziene kamer "
+                        "then": "Er bevindt zich een luiertafel in een daartoe voorziene kamer "
                     }
                 },
                 "question": "Waar bevindt de luiertafel zich?",
-                "render": "De luiertafel bevindt zich in {changing_table:location}"
+                "render": "Er bevindt zich een luiertafel in {changing_table:location}"
             },
             "toilet-charge": {
                 "freeform": {
@@ -8388,18 +8192,6 @@
         },
         "title": {
             "render": "Toilet"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "meter"
-                    },
-                    "1": {
-                        "human": "centimeter"
-                    }
-                }
-            }
         }
     },
     "toilet_at_amenity": {
@@ -8484,18 +8276,6 @@
                 }
             },
             "render": "Toilet in een voorziening"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "meter"
-                    },
-                    "1": {
-                        "human": "centimeter"
-                    }
-                }
-            }
         }
     },
     "trail": {
@@ -8568,13 +8348,6 @@
     },
     "transit_routes": {
         "description": "Laag met buslijnen",
-        "mapRendering": {
-            "0": {
-                "color": {
-                    "render": "#ff0000"
-                }
-            }
-        },
         "name": "Buslijnen",
         "tagRenderings": {
             "colour": {
@@ -8831,15 +8604,169 @@
             "render": "Boom"
         }
     },
+    "trolley_bay": {
+        "tagRenderings": {
+            "denominations": {
+                "mappings": {
+                    "0": {
+                        "then": "Munten van 50 cent worden geaccepteerd"
+                    },
+                    "1": {
+                        "then": "Munten van 1 euro worden geaccepteerd"
+                    },
+                    "2": {
+                        "then": "Munten van 2 euro worden geaccepteerd"
+                    }
+                }
+            }
+        }
+    },
+    "unit": {
+        "units": {
+            "0": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} megawatt"
+                    },
+                    "1": {
+                        "human": "{quantity} kilowatt"
+                    },
+                    "2": {
+                        "human": "{quantity} watt"
+                    },
+                    "3": {
+                        "human": "{quantity} gigawatt"
+                    }
+                }
+            },
+            "1": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} volt"
+                    }
+                }
+            },
+            "2": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} A"
+                    }
+                }
+            },
+            "3": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} meter",
+                        "humanSingular": "één meter"
+                    },
+                    "1": {
+                        "human": "{quantity} centimeter",
+                        "humanSingular": "één centimeter"
+                    },
+                    "2": {
+                        "human": "{quantity} millimeter",
+                        "humanSingular": "één millimeter"
+                    },
+                    "3": {
+                        "human": "{quantity} voet"
+                    }
+                }
+            },
+            "4": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} kilometers/uur",
+                        "humanShort": "{quantity} km/u"
+                    },
+                    "1": {
+                        "human": "{quantity} miles/uur",
+                        "humanShort": "{quantity} mph"
+                    }
+                }
+            },
+            "5": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} minuten",
+                        "humanSingular": "één minuut"
+                    },
+                    "1": {
+                        "human": "{quantity} uren",
+                        "humanSingular": "één uur"
+                    },
+                    "2": {
+                        "human": "{quantity} day",
+                        "humanSingular": "één dag"
+                    },
+                    "3": {
+                        "human": "{quantity} weken",
+                        "humanSingular": "één week"
+                    },
+                    "4": {
+                        "human": "{quantity} maanden",
+                        "humanSingular": "één maand"
+                    },
+                    "5": {
+                        "human": "{quantity} jaar",
+                        "humanSingular": "één jaar"
+                    }
+                }
+            }
+        }
+    },
     "usersettings": {
         "description": "Een speciale lag die niet getoond wordt op de kaart, maar die de instellingen van de gebruiker weergeeft",
         "tagRenderings": {
+            "a11y-features": {
+                "mappings": {
+                    "0": {
+                        "then": "Schakel toegankelijkheidsmode aan wanneer op de pijltjestoetsen wordt geduwd om de kaart te bewegen"
+                    },
+                    "1": {
+                        "then": "Schakel de toegankelijkheidsmode altijd aan"
+                    },
+                    "2": {
+                        "then": "Gebruik geen toegankelijkheidsmode"
+                    }
+                },
+                "question": "Wanneer moet de toegankelijkheidsmode ingeschakeld worden?"
+            },
             "all-questions-at-once": {
                 "mappings": {
+                    "0": {
+                        "then": "Toon alle onbeantwoorde vragen"
+                    },
                     "1": {
                         "then": "Toon de vragen één per één"
                     }
-                }
+                },
+                "question": "Moeten onbeantwoorde vragen om beurt of allemaal samen getoond worden?"
+            },
+            "background-layer": {
+                "mappings": {
+                    "0": {
+                        "then": "Gebruik de standaard achtergrondlaag"
+                    },
+                    "1": {
+                        "then": "Gebruik OpenStreetMap-carto altijd als achtergrondlaag"
+                    },
+                    "2": {
+                        "then": "Gebruik luchtfoto's als standaard achtergrondlaag"
+                    },
+                    "3": {
+                        "then": "Gebruik altijd een kaart di niet op OpenStreetMap gebaseerd is als achtergrond"
+                    },
+                    "4": {
+                        "then": "Gebruik altijd <span class='code'>{__current_background}</span> als achtergrondlaag. Dit is de huidige achtergrond."
+                    },
+                    "5": {
+                        "then": "Gebruik <span class='code'>{mapcomplete-preferred-background-layer}</span> altijd als achtergrondlaag"
+                    }
+                },
+                "question": "Welke achtergrondlaag moet altijd gebruikt worden?"
+            },
+            "background-layer-readonly": {
+                "render": "Deze kaart heeft een achtegrondlaag instgesteld. Je instellingen worden niet gebruikt"
             },
             "contributor-thanks": {
                 "mappings": {
@@ -8855,6 +8782,17 @@
                     }
                 }
             },
+            "fixate-north": {
+                "mappings": {
+                    "0": {
+                        "then": "Sta kaartrotatie toe"
+                    },
+                    "1": {
+                        "then": "Hou het noorden altijd naar boven"
+                    }
+                },
+                "question": "Moet het noorden altijd naar boven getoond worden?"
+            },
             "inbox": {
                 "mappings": {
                     "0": {
@@ -8863,6 +8801,35 @@
                                 "text": "Ga naar je inbox"
                             }
                         }
+                    },
+                    "1": {
+                        "then": {
+                            "special": {
+                                "text": "<b class='alert'>Je hebt {_unreadMessages} ongelezen berichten</b><br/>Ga naar je inbox"
+                            }
+                        }
+                    }
+                }
+            },
+            "language_picker": {
+                "mappings": {
+                    "0": {
+                        "then": "De taal werd ingesteld via een URL-parameter en kan niet manueel ingesteld worden."
+                    }
+                }
+            },
+            "mangrove-key-import": {
+                "render": {
+                    "special": {
+                        "text": "Herstel een Mangrove Private sleutel van backup"
+                    }
+                }
+            },
+            "mangrove-keys": {
+                "render": {
+                    "after": "Iedereen die dit bestand bezit, kan met jouw identiteit wijzigingen maken",
+                    "special": {
+                        "text": "Download de private sleutel van je Mangrove-account"
                     }
                 }
             },
@@ -8883,6 +8850,49 @@
                 },
                 "question": "Met welke licentie wil je je afbeeldingen toevoegen?"
             },
+            "settings-link": {
+                "render": {
+                    "special": {
+                        "text": "Open je instellingen op OpenStreetMap.org"
+                    }
+                }
+            },
+            "show_crosshair": {
+                "question": "Moet er een kruisje getoond worden in het centrum van je display?",
+                "questionHint": "Dit kan helpen om nieuwe elementen accuraat te plaatsen"
+            },
+            "show_debug": {
+                "mappings": {
+                    "0": {
+                        "then": "Toon debug-informatie"
+                    },
+                    "1": {
+                        "then": "Verberg debug-informatie"
+                    },
+                    "2": {
+                        "then": "Verberg debug-informatie"
+                    }
+                },
+                "question": "Moet debug-informatie getoond worden?"
+            },
+            "show_tags": {
+                "mappings": {
+                    "0": {
+                        "then": "Verberg data-attributen"
+                    },
+                    "1": {
+                        "then": "Toon data-attributen bij wijzigingen indien je meer dan {__userjourney_tagsVisibleAt} changesets hebt gemaakt"
+                    },
+                    "2": {
+                        "then": "Toon de data-attributen die toegepast zullen worden bij wijzigingen"
+                    },
+                    "3": {
+                        "then": "Toon de data-attributen die toegepast zullen worden bij wijzigingen en toon een tabel met alle data-attributen bij elk object."
+                    }
+                },
+                "question": "Moeten de data-attributen getoond worden?",
+                "questionHint": "<b>Data-attributen</b> zijn stukjes data die elk element in OpenStreetMap heeft. Dit is technische data die in de databank komt. Je hoeft deze informatie niet te kennen om aanpassingen te maken met MapComplete, maar geavanceerde gebruikers kunnen dit als referentie gebruiken."
+            },
             "translation-completeness": {
                 "mappings": {
                     "0": {
@@ -8898,20 +8908,34 @@
                     }
                 }
             },
+            "translation-mode": {
+                "mappings": {
+                    "0": {
+                        "then": "Verberg de knoppen om een vertaling in te voeren."
+                    },
+                    "1": {
+                        "then": "Toon een knopje om snel vertalingen te maken indien MapComplete op een groot scherm is geopend"
+                    },
+                    "2": {
+                        "then": "Toon een knopje om snel vertalingen te maken op mobiel en op grote schermen"
+                    }
+                },
+                "question": "Wil je MapComplete helpen vertalen?"
+            },
             "translation-thanks": {
                 "mappings": {
                     "0": {
-                        "then": "Je hebt MapComplete helpen vertalen! Dat is fantastisch! Bedankt hiervoor!"
+                        "then": "Je hebt MapComplete helpen vertalen met {_translation_contributions} commits! Dat is fantastisch! Bedankt hiervoor!"
                     }
                 }
             },
             "verified-mastodon": {
                 "mappings": {
                     "0": {
-                        "then": "Een link naar je Mastodon-profiel werd gevonden: <a href='{_mastodon_link}' target='_blank'>{_mastodon_link}</a>"
+                        "then": "Een link naar je Mastodon-profiel werd gevonden: <a href='{_mastodon_link}' target='_blank' rel='noopener'>{_mastodon_link}</a>"
                     },
                     "1": {
-                        "then": "Je profielbeschrijving bevat een link die vermoedelijk naar je Mastodon gaat, maar deze link is niet verifieerdbaar voor Mastodon.<a href='https://www.openstreetmap.org/profile/edit' target='_blank'>Pas je profielbeschrijving aan</a> en plaats er de volgende code: <span class='code'>&lta href=\"{_mastodon_candidate}\" rel=\"me\"&gtMastodon&lt/a&gt"
+                        "then": "Je profielbeschrijving bevat een link die vermoedelijk naar je Mastodon gaat, maar deze link is niet verifieerdbaar voor Mastodon.<a href='https://www.openstreetmap.org/profile/edit' target='_blank' rel='noopener'>Pas je profielbeschrijving aan</a> en plaats er de volgende code: <span class='code'>&lta href=\"{_mastodon_candidate}\" rel=\"me\"&gtMastodon&lt/a&gt"
                     }
                 }
             }
@@ -8974,7 +8998,31 @@
                         "question": "Verkoop van aardappelen"
                     },
                     "16": {
+                        "question": "Verkoop van vlees"
+                    },
+                    "17": {
+                        "question": "Verkoop van fruit"
+                    },
+                    "18": {
+                        "question": "Verkoop van aardbeien"
+                    },
+                    "19": {
                         "question": "Verkoop van bloemen"
+                    },
+                    "23": {
+                        "question": "Verkoop van fietslampjes"
+                    },
+                    "24": {
+                        "question": "Verkoop van handschoenen"
+                    },
+                    "25": {
+                        "question": "Verkoop van fietsreparatiesets"
+                    },
+                    "26": {
+                        "question": "Verkoop van fietspompen"
+                    },
+                    "27": {
+                        "question": "Verkoop van fietssloten"
                     }
                 }
             }
@@ -9055,7 +9103,37 @@
                         "then": "Aardappelen worden verkocht"
                     },
                     "15": {
+                        "then": "Vlees wordt verkocht"
+                    },
+                    "16": {
+                        "then": "Fruit wordt verkocht"
+                    },
+                    "17": {
+                        "then": "Aardbeien worden verkocht"
+                    },
+                    "18": {
                         "then": "Bloemen worden verkocht"
+                    },
+                    "19": {
+                        "then": "Parkeerkaarten worden verkocht"
+                    },
+                    "21": {
+                        "then": "Openbaar vervoerkaartjes worden verkocht"
+                    },
+                    "22": {
+                        "then": "Fietslampjes worden verkocht"
+                    },
+                    "23": {
+                        "then": "Handschoenen worden verkocht"
+                    },
+                    "24": {
+                        "then": "Fietsreparatiesets worden verkocht"
+                    },
+                    "25": {
+                        "then": "Fietspompen worden verkocht"
+                    },
+                    "26": {
+                        "then": "Fietssloten worden verkocht"
                     }
                 },
                 "question": "Wat verkoopt deze verkoopautomaat?",
@@ -9159,18 +9237,6 @@
         },
         "title": {
             "render": "Muur of gebouw"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "meter"
-                    },
-                    "1": {
-                        "human": "centimeter"
-                    }
-                }
-            }
         }
     },
     "waste_basket": {
@@ -9205,17 +9271,6 @@
                 "options": {
                     "0": {
                         "question": "Vuilnisbak met verdeler voor hondenpoepzakjes"
-                    }
-                }
-            }
-        },
-        "mapRendering": {
-            "0": {
-                "iconSize": {
-                    "mappings": {
-                        "0": {
-                            "then": "Vuilnisbak"
-                        }
                     }
                 }
             }
@@ -9263,6 +9318,9 @@
                     },
                     "6": {
                         "then": "Een vuilnisbak voor plastic"
+                    },
+                    "7": {
+                        "then": "Een vuilnisbak voor papier"
                     }
                 },
                 "question": "Wat voor soort vuilnisbak is dit?"
@@ -9366,31 +9424,6 @@
                 }
             },
             "render": "windturbine"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " megawatt"
-                    },
-                    "1": {
-                        "human": " kilowatt"
-                    },
-                    "2": {
-                        "human": " watt"
-                    },
-                    "3": {
-                        "human": " gigawatt"
-                    }
-                }
-            },
-            "1": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " meter"
-                    }
-                }
-            }
         }
     }
 }

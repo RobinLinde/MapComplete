@@ -5,7 +5,6 @@ import { readFileSync, writeFileSync } from "fs"
 import LayoutConfig from "../src/Models/ThemeConfig/LayoutConfig"
 import LayerConfig from "../src/Models/ThemeConfig/LayerConfig"
 import { Utils } from "../src/Utils"
-import TagRenderingConfig from "../src/Models/ThemeConfig/TagRenderingConfig"
 
 /**
  * Generates all the files in "Docs/TagInfo". These are picked up by the taginfo project, showing a link to the mapcomplete theme if the key is used
@@ -33,8 +32,6 @@ function generateTagOverview(
     }
     return overview
 }
-
-function tagrenderingToTaginfoDescription(tr: TagRenderingConfig) {}
 
 function generateLayerUsage(layer: LayerConfig, layout: LayoutConfig): any[] {
     if (layer.name === undefined) {
@@ -90,7 +87,7 @@ function generateLayerUsage(layer: LayerConfig, layout: LayoutConfig): any[] {
             } else {
                 descr += " shows and asks freeform values for"
             }
-            descr += ` key '${key}' (in the MapComplete.osm.be theme '${layout.title.txt}')`
+            descr += ` key '${key}' (in the mapcomplete.org theme '${layout.title.txt}')`
             result.push(generateTagOverview({ k: key, v: undefined }, descr + condition))
         }
 
@@ -109,7 +106,7 @@ function generateLayerUsage(layer: LayerConfig, layout: LayoutConfig): any[] {
             ) {
                 descr += " and allows to pick this as a default answer"
             }
-            descr += ` (in the MapComplete.osm.be theme '${layout.title.txt}')`
+            descr += ` (in the mapcomplete.org theme '${layout.title.txt}')`
             for (const kv of mapping.if.asChange({})) {
                 let d = descr
                 if (q != undefined && kv.v == "") {
@@ -155,9 +152,9 @@ function generateTagInfoEntry(layout: LayoutConfig): any {
         project: {
             name: "MapComplete " + layout.title.txt, // name of the project (required)
             description: layout.shortDescription.txt, // short description of the project (required)
-            project_url: "https://mapcomplete.osm.be/" + layout.id, // home page of the project with general information (required)
+            project_url: "https://mapcomplete.org/" + layout.id, // home page of the project with general information (required)
             doc_url: "https://github.com/pietervdvn/MapComplete/tree/master/assets/themes/", // documentation of the project and especially the tags used (optional)
-            icon_url: "https://mapcomplete.osm.be/" + icon, // project logo, should work in 16x16 pixels on white and light gray backgrounds (optional)
+            icon_url: "https://mapcomplete.org/" + icon, // project logo, should work in 16x16 pixels on white and light gray backgrounds (optional)
             contact_name: "Pieter Vander Vennet", // contact name, needed for taginfo maintainer (required)
             contact_email: "pietervdvn@posteo.net", // contact email, needed for taginfo maintainer (required)
         },

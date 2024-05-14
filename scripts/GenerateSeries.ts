@@ -1,10 +1,10 @@
 import { existsSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from "fs"
 import ScriptUtils from "./ScriptUtils"
-import { Utils } from "../Utils"
+import { Utils } from "../src/Utils"
 import Script from "./Script"
-import { GeoOperations } from "../Logic/GeoOperations"
+import { GeoOperations } from "../src/Logic/GeoOperations"
 import { Feature, Polygon } from "geojson"
-import { Tiles } from "../Models/TileRange"
+import { Tiles } from "../src/Models/TileRange"
 
 class StatsDownloader {
     private readonly urlTemplate =
@@ -273,7 +273,6 @@ class GenerateSeries extends Script {
         allFeatures = allFeatures.filter((f) => f.properties.metadata?.theme !== "EMPTY CS")
         const centerpoints = allFeatures.map((f) => GeoOperations.centerpoint(f))
         console.log("Found", centerpoints.length, " changesets in total")
-        const path = `${targetDir}/all_centerpoints.geojson`
 
         const perBbox = GeoOperations.spreadIntoBboxes(centerpoints, options.zoomlevel)
 

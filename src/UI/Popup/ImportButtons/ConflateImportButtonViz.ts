@@ -24,6 +24,7 @@ export interface ConflateFlowArguments extends ImportFlowArguments {
 
 export default class ConflateImportButtonViz implements SpecialVisualization, AutoAction {
     supportsAutoAction: boolean = true
+    needsUrls = []
     public readonly funcName: string = "conflate_button"
     public readonly args: {
         name: string
@@ -85,8 +86,7 @@ export default class ConflateImportButtonViz implements SpecialVisualization, Au
         state: SpecialVisualizationState,
         tagSource: UIEventSource<Record<string, string>>,
         argument: string[],
-        feature: Feature,
-        layer: LayerConfig
+        feature: Feature
     ): BaseUIElement {
         const canBeImported =
             feature.geometry.type === "LineString" ||

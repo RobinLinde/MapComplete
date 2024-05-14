@@ -1,15 +1,12 @@
+import * as packagefile from "../../package.json"
+import * as extraconfig from "../../config.json"
 import { Utils } from "../Utils"
-import * as meta from "../../package.json"
+import { AuthConfig } from "../Logic/Osm/AuthConfig"
 
 export type PriviligedLayerType = (typeof Constants.priviliged_layers)[number]
 
 export default class Constants {
-    public static vNumber = meta.version
-
-    public static ImgurApiKey = "7070e7167f0a25a"
-    public static readonly mapillary_client_token_v4 =
-        "MLY|4441509239301885|b40ad2d3ea105435bd40c7e76993ae85"
-
+    public static vNumber: string = packagefile.version
     /**
      * API key for Maproulette
      *
@@ -18,17 +15,6 @@ export default class Constants {
      * Using an empty string however does work for most actions, but will attribute all actions to the Superuser.
      */
     public static readonly MaprouletteApiKey = ""
-
-    public static defaultOverpassUrls = [
-        // The official instance, 10000 queries per day per project allowed
-        "https://overpass-api.de/api/interpreter",
-        // 'Fair usage'
-        "https://overpass.kumi.systems/api/interpreter",
-        // Offline: "https://overpass.nchc.org.tw/api/interpreter",
-        "https://overpass.openstreetmap.ru/cgi/interpreter",
-        // Doesn't support nwr: "https://overpass.openstreetmap.fr/api/interpreter"
-    ]
-
     public static readonly added_by_default = [
         "selected_element",
         "gps_location",
@@ -37,6 +23,8 @@ export default class Constants {
         "gps_track",
         "range",
         "last_click",
+        "favourite",
+        "summary",
     ] as const
     /**
      * Special layers which are not included in a theme by default
@@ -46,9 +34,10 @@ export default class Constants {
         "split_point",
         "split_road",
         "current_view",
-        "matchpoint",
         "import_candidate",
         "usersettings",
+        "icons",
+        "filters",
     ] as const
     /**
      * Layer IDs of layers which have special properties through built-in hooks
@@ -57,7 +46,6 @@ export default class Constants {
         ...Constants.added_by_default,
         ...Constants.no_include,
     ] as const
-
     // The user journey states thresholds when a new feature gets unlocked
     public static userJourney = {
         moreScreenUnlock: 1,
@@ -74,12 +62,12 @@ export default class Constants {
 
         importHelperUnlock: 5000,
     }
-    static readonly minZoomLevelToAddNewPoint = Constants.isRetina() ? 18 : 19
+    static readonly minZoomLevelToAddNewPoint = Constants.isRetina() ? 17 : 18
     /**
      * Used by 'PendingChangesUploader', which waits this amount of seconds to upload changes.
      * (Note that pendingChanges might upload sooner if the popup is closed or similar)
      */
-    static updateTimeoutSec: number = 30
+    static updateTimeoutSec: number = 15
     /**
      * If the contributor has their GPS location enabled and makes a change,
      * the points visited less then `nearbyVisitTime`-seconds ago will be inspected.
@@ -100,6 +88,7 @@ export default class Constants {
         "etymology",
         "food",
         "cafes_and_pubs",
+        "shops",
         "playgrounds",
         "hailhydrant",
         "toilets",
@@ -113,26 +102,68 @@ export default class Constants {
      * In seconds
      */
     static zoomToLocationTimeout = 15
-    static countryCoderEndpoint: string =
-        "https://raw.githubusercontent.com/pietervdvn/MapComplete-data/main/latlon2country"
-    public static readonly OsmPreferenceKeyPicturesLicense = "pictures-license"
+    public static readonly viewportCenterCloseToGpsCutoff: number = 20
+    private static readonly config = (() => {
+        const defaultConfig = packagefile.config
+        return { ...defaultConfig, ...extraconfig }
+    })()
+    public static ImgurApiKey = Constants.config.api_keys.imgur
+    public static readonly mapillary_client_token_v4 = Constants.config.api_keys.mapillary_v4
+    public static defaultOverpassUrls = Constants.config.default_overpass_urls
+    public static countryCoderEndpoint: string = Constants.config.country_coder_host
+    public static osmAuthConfig: AuthConfig = Constants.config.oauth_credentials
+    public static nominatimEndpoint: string = Constants.config.nominatimEndpoint
+    public static linkedDataProxy: string = Constants.config["jsonld-proxy"]
     /**
      * These are the values that are allowed to use as 'backdrop' icon for a map pin
      */
     private static readonly _defaultPinIcons = [
-        "square",
-        "circle",
-        "none",
         "pin",
-        "person",
-        "plus",
-        "ring",
-        "star",
-        "teardrop",
-        "triangle",
+        "bug",
+        "square",
+        "square_rounded",
+        "circle",
+        "checkmark",
+        "clock",
+        "close",
         "crosshair",
+        "help",
+        "home",
+        "invalid",
+        "location",
+        "location_empty",
+        "location_locked",
+        "note",
+        "resolved",
+        "ring",
+        "scissors",
+        "teardrop",
+        "teardrop_with_hole_green",
+        "triangle",
+        "brick_wall_square",
+        "brick_wall_round",
+        "gps_arrow",
+        "checkmark",
+        "help",
+        "close",
+        "invalid",
+        "heart",
+        "heart_outline",
+        "link",
+        "confirm",
+        "direction",
+        "not_found",
+        "mastodon",
+        "party",
+        "addSmall",
     ] as const
     public static readonly defaultPinIcons: string[] = <any>Constants._defaultPinIcons
+    /**
+     * The location that the MVT-layer is hosted.
+     * This is a MapLibre/MapBox vector tile server which hosts vector tiles for every (official) layer
+     */
+    public static VectorTileServer: string | undefined = Constants.config.mvt_layer_server
+    public static readonly maptilerApiKey = "GvoVAJgu46I5rZapJuAy"
 
     private static isRetina(): boolean {
         if (Utils.runningFromConsole) {

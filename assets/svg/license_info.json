@@ -6,7 +6,7 @@
       "Pieter Vander Vennet"
     ],
     "sources": [
-      "https://mapcomplete.osm.be"
+      "https://mapcomplete.org"
     ]
   },
   {
@@ -16,7 +16,7 @@
       "Pieter Vander Vennet"
     ],
     "sources": [
-      "https://mapcomplete.osm.be"
+      "https://mapcomplete.org"
     ]
   },
   {
@@ -154,6 +154,14 @@
     ]
   },
   {
+    "path": "center.svg",
+    "license": "CC0-1.0",
+    "authors": [
+      "Pieter Vander Vennet"
+    ],
+    "sources": []
+  },
+  {
     "path": "checkmark.svg",
     "license": "CC0-1.0",
     "authors": [
@@ -234,6 +242,14 @@
     "sources": []
   },
   {
+    "path": "compass_arrow.svg",
+    "license": "CC0-1.0",
+    "authors": [
+      "Pieter Vander Vennet"
+    ],
+    "sources": []
+  },
+  {
     "path": "confirm.svg",
     "license": "CC0-1.0",
     "authors": [
@@ -246,6 +262,14 @@
     "license": "CC0-1.0",
     "authors": [
       "Hannah Declerck"
+    ],
+    "sources": []
+  },
+  {
+    "path": "cross.svg",
+    "license": "CC0-1.0",
+    "authors": [
+      "Pieter Vander Vennet"
     ],
     "sources": []
   },
@@ -652,14 +676,6 @@
     "sources": []
   },
   {
-    "path": "location-empty.svg",
-    "license": "CC0-1.0",
-    "authors": [
-      "Pol Labaut"
-    ],
-    "sources": []
-  },
-  {
     "path": "location-refused.svg",
     "license": "CC0-1.0",
     "authors": [
@@ -672,6 +688,14 @@
     "license": "CC0-1.0",
     "authors": [
       "Hannah Declerck"
+    ],
+    "sources": []
+  },
+  {
+    "path": "location_empty.svg",
+    "license": "CC0-1.0",
+    "authors": [
+      "Pol Labaut"
     ],
     "sources": []
   },
@@ -724,14 +748,13 @@
     "sources": []
   },
   {
-    "path": "mapcomplete_logo.svg",
-    "license": "LOGO AND CC-BY-SA-4.0",
+    "path": "mangrove_logo.svg",
+    "license": "LOGO",
     "authors": [
-      "Pieter Vander Vennet",
-      " OSM"
+      "Mangrove.reviews"
     ],
     "sources": [
-      "https://mapcomplete.osm.be"
+      "https://mangrove.reviews/"
     ]
   },
   {
@@ -742,7 +765,18 @@
       " OSM"
     ],
     "sources": [
-      "https://mapcomplete.osm.be"
+      "https://mapcomplete.org"
+    ]
+  },
+  {
+    "path": "mapcomplete_logo.svg",
+    "license": "LOGO AND CC-BY-SA-4.0",
+    "authors": [
+      "Pieter Vander Vennet",
+      " OSM"
+    ],
+    "sources": [
+      "https://mapcomplete.org"
     ]
   },
   {
@@ -839,24 +873,6 @@
     "authors": [
       "Pieter Vander Vennet"
     ],
-    "sources": []
-  },
-  {
-    "path": "no_checkmark.svg",
-    "license": "TRIVIAL",
-    "authors": [],
-    "sources": []
-  },
-  {
-    "path": "no_checkmark.svg",
-    "license": "TRIVIAL",
-    "authors": [],
-    "sources": []
-  },
-  {
-    "path": "none.svg",
-    "license": "TRIVIAL",
-    "authors": [],
     "sources": []
   },
   {
@@ -1058,16 +1074,6 @@
     ]
   },
   {
-    "path": "satellite.svg",
-    "license": "CC0-1.0",
-    "authors": [
-      "SVG Repo"
-    ],
-    "sources": [
-      "https://www.svgrepo.com/svg/80960/satellite"
-    ]
-  },
-  {
     "path": "scissors.svg",
     "license": "CC-BY-3.0",
     "authors": [
@@ -1156,6 +1162,12 @@
     "sources": []
   },
   {
+    "path": "square_rounded.svg",
+    "license": "TRIVIAL",
+    "authors": [],
+    "sources": []
+  },
+  {
     "path": "star.svg",
     "license": "TRIVIAL",
     "authors": [],
@@ -1187,18 +1199,6 @@
   },
   {
     "path": "star_outline.svg",
-    "license": "TRIVIAL",
-    "authors": [],
-    "sources": []
-  },
-  {
-    "path": "star_outline_half.svg",
-    "license": "TRIVIAL",
-    "authors": [],
-    "sources": []
-  },
-  {
-    "path": "star_outline_half.svg",
     "license": "TRIVIAL",
     "authors": [],
     "sources": []

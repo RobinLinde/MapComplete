@@ -6,7 +6,6 @@ import TagApplyButton from "../TagApplyButton"
 import { PointImportFlowArguments } from "./PointImportFlowState"
 import { Translation } from "../../i18n/Translation"
 import Translations from "../../i18n/Translations"
-import { OsmConnection } from "../../../Logic/Osm/OsmConnection"
 import FilteredLayer from "../../../Models/FilteredLayer"
 import LayerConfig from "../../../Models/ThemeConfig/LayerConfig"
 import { LayerConfigJson } from "../../../Models/ThemeConfig/Json/LayerConfigJson"
@@ -108,13 +107,12 @@ ${Utils.special_visualizations_importRequirementDocs}
      * - targetLayer
      *
      * Others (e.g.: snapOnto-layers) are not to be handled here
-     * @param argsRaw
      */
-    public static getLayerDependencies(argsRaw: string[], argSpec?) {
+    public static getLayerDependencies(argsRaw: string[], argSpec?): string[] {
         const args: ImportFlowArguments = <any>(
             Utils.ParseVisArgs(argSpec ?? ImportFlowUtils.generalArguments, argsRaw)
         )
-        return [args.targetLayer]
+        return args.targetLayer.split(" ")
     }
 
     public static getLayerDependenciesWithSnapOnto(
@@ -130,30 +128,6 @@ ${Utils.special_visualizations_importRequirementDocs}
         deps.push(...snapOntoLayers)
         return deps
     }
-
-    public static buildTagSpec(
-        args: ImportFlowArguments,
-        tagSource: Store<Record<string, string>>
-    ): Store<string> {
-        let tagSpec = args.tags
-        return tagSource.mapD((tags) => {
-            if (
-                tagSpec.indexOf(" ") < 0 &&
-                tagSpec.indexOf(";") < 0 &&
-                tags[args.tags] !== undefined
-            ) {
-                // This is probably a key
-                tagSpec = tags[args.tags]
-                console.debug(
-                    "The import button is using tags from properties[" +
-                        args.tags +
-                        "] of this object, namely ",
-                    tagSpec
-                )
-            }
-            return tagSpec
-        })
-    }
 }
 
 /**
@@ -164,7 +138,7 @@ ${Utils.special_visualizations_importRequirementDocs}
 export default abstract class ImportFlow<ArgT extends ImportFlowArguments> {
     public readonly state: SpecialVisualizationState
     public readonly args: ArgT
-    public readonly targetLayer: FilteredLayer
+    public readonly targetLayer: FilteredLayer[]
     public readonly tagsToApply: Store<Tag[]>
     protected readonly _originalFeatureTags: UIEventSource<Record<string, string>>
 
@@ -178,7 +152,13 @@ export default abstract class ImportFlow<ArgT extends ImportFlowArguments> {
         this.args = args
         this.tagsToApply = tagsToApply
         this._originalFeatureTags = originalTags
-        this.targetLayer = state.layerState.filteredLayers.get(args.targetLayer)
+        this.targetLayer = args.targetLayer.split(" ").map((tl) => {
+            let found = state.layerState.filteredLayers.get(tl)
+            if (!found) {
+                throw "Layer " + tl + " not found"
+            }
+            return found
+        })
     }
 
     /**
@@ -194,10 +174,7 @@ export default abstract class ImportFlow<ArgT extends ImportFlowArguments> {
                     return { error: t.hasBeenImported }
                 }
 
-                const usesTestUrl =
-                    this.state.osmConnection._oauth_config.url ===
-                    OsmConnection.oauth_configs["osm-test"].url
-                if (!state.layout.official && !(isTesting || usesTestUrl)) {
+                if (!state.layout.official && !isTesting) {
                     // Unofficial theme - imports not allowed
                     return {
                         error: t.officialThemesOnly,
@@ -211,7 +188,7 @@ export default abstract class ImportFlow<ArgT extends ImportFlowArguments> {
                     return { error: new Translation({ "*": e }) }
                 }
 
-                if (state.mapProperties.zoom.data < 18) {
+                if (state.mapProperties.zoom.data < 16) {
                     return { error: t.zoomInMore }
                 }
 

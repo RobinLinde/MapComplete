@@ -9,18 +9,215 @@ import { Or } from "./Or"
 import { TagConfigJson } from "../../Models/ThemeConfig/Json/TagConfigJson"
 import key_counts from "../../assets/key_totals.json"
 
+import { ConversionContext } from "../../Models/ThemeConfig/Conversion/ConversionContext"
+
 type Tags = Record<string, string>
 export type UploadableTag = Tag | SubstitutingTag | And
 
 export class TagUtils {
-    private static keyCounts: { keys: any; tags: any } = key_counts
-    private static comparators: [string, (a: number, b: number) => boolean][] = [
+    public static readonly comparators: ReadonlyArray<
+        ["<" | ">" | "<=" | ">=", (a: number, b: number) => boolean]
+    > = [
         ["<=", (a, b) => a <= b],
         [">=", (a, b) => a >= b],
         ["<", (a, b) => a < b],
         [">", (a, b) => a > b],
     ]
+    public static modeDocumentation: Record<
+        string,
+        { name: string; docs: string; uploadable?: boolean; overpassSupport: boolean }
+    > = {
+        "=": {
+            name: "strict equality",
+            uploadable: true,
+            overpassSupport: true,
+            docs:
+                "Strict equality is denoted by `key=value`. This key matches __only if__ the keypair is present exactly as stated.\n" +
+                "\n" +
+                "**Only normal tags (eventually in an `and`) can be used in places where they are uploaded**. Normal tags are used in " +
+                "the `mappings` of a [TagRendering] (unless `hideInAnswer` is specified), they are used in `addExtraTags` of [Freeform] " +
+                "and are used in the `tags`-list of a preset.\n" +
+                "\n" +
+                "If a different kind of tag specification is given, your theme will fail to parse.\n" +
+                "\n" +
+                "### If key is not present\n" +
+                "\n" +
+                "If you want to check if a key is not present, use `key=` (pronounce as *key is empty*). A tag collection will match this\n" +
+                "if `key` is missing or if `key` is a literal empty value.\n" +
+                "\n" +
+                "### Removing a key\n" +
+                "\n" +
+                "If a key should be deleted in the OpenStreetMap-database, specify `key=` as well. This can be used e.g. to remove a\n" +
+                "fixme or value from another mapping if another field is filled out.",
+        },
+        "!=": {
+            name: "strict not equals",
+            overpassSupport: true,
+            docs:
+                "To check if a key does _not_ equal a certain value, use `key!=value`. This is converted behind the scenes\n" +
+                "to `key!~^value$`\n" +
+                "\n" +
+                "If `key` is not present or empty, this will match too.\n" +
+                "\n" +
+                "### If key is present\n" +
+                "\n" +
+                "This implies that, to check if a key is present, `key!=` can be used. This will only match if the key is present and not\n" +
+                "empty.",
+        },
+        "~": {
+            name: "Value matches regex",
+            overpassSupport: true,
+            docs:
+                "A tag can also be tested against a regex with `key~regex`. Note that this regex __must match__ the entire value. If the\n" +
+                "value is allowed to appear anywhere as substring, use `key~.*regex.*`.\n" +
+                "The regex is put within braces as to prevent runaway values.\n" +
+                "\nUse `key~*` to indicate that any value is allowed. This is effectively the check that the attribute is present (defined _and_ not empty)." +
+                "\n" +
+                "Regexes will match the newline character with `.` too - the `s`-flag is enabled by default.",
+        },
+        "~i~": {
+            name: "Value matches case-invariant regex",
+            overpassSupport: true,
+            docs: "A tag can also be tested against a regex with `key~i~regex`, where the case of the value will be ignored. The regex is still matched against the _entire_ value",
+        },
+        "!~": {
+            name: "Value should _not_ match regex",
+            overpassSupport: true,
+            docs:
+                "A tag can also be tested against a regex with `key!~regex`. This filter will match if the value does *not* match the regex. " +
+                "\n If the\n" +
+                "value is allowed to appear anywhere as substring, use `key~.*regex.*`.\n" +
+                "The regex is put within braces as to prevent runaway values.\n",
+        },
+        "!~i~": {
+            name: "Value does *not* match case-invariant regex",
+            overpassSupport: true,
+            docs: "A tag can also be tested against a regex with `key~i~regex`, where the case of the value will be ignored. The regex is still matched against the _entire_ value. This filter returns true if the value does *not* match",
+        },
+        "~~": {
+            name: "Key and value should match given regex",
+            overpassSupport: true,
+            docs: "Both the `key` and `value` part of this specification are interpreted as regexes, both the key and value musth completely match their respective regexes",
+        },
+        ":=": {
+            name: "Substitute `... {some_key} ...` and match `key`",
+            overpassSupport: false,
+            uploadable: true,
+            docs:
+                "**This is an advanced feature - use with caution**\n" +
+                "\n" +
+                "Some tags are automatically set or calculated - see [CalculatedTags](CalculatedTags.md) for an entire overview. If one\n" +
+                "wants to apply such a value as tag, use a substituting-tag such, for example`survey:date:={_date:now}`. Note that the\n" +
+                "separator between key and value here is `:=`. The text between `{` and `}` is interpreted as a key, and the respective\n" +
+                "value is substituted into the string.\n" +
+                "\n" +
+                "One can also append, e.g. `key:={some_key} fixed text {some_other_key}`.\n" +
+                "\n" +
+                "An assigning tag _cannot_ be used to query OpenStreetMap/Overpass.\n" +
+                "\n" +
+                "If using a key or variable which might not be defined, add a condition in the mapping to hide the option. This is\n" +
+                "because, if `some_other_key` is not defined, one might actually upload the literal text `key={some_other_key}` to OSM -\n" +
+                "which we do not want.\n" +
+                "\n" +
+                "To mitigate this, use:\n" +
+                "\n" +
+                "```json\n" +
+                "{\n" +
+                '    "mappings": [\n' +
+                "        {\n" +
+                '            "if":"key:={some_other_key}",\n' +
+                '            "then": "...",\n' +
+                '            "hideInAnswer": "some_other_key="\n' +
+                "        }\n" +
+                "    ]\n" +
+                "}\n" +
+                "```\n" +
+                "\n" +
+                "One can use `key!:=prefix-{other_key}-postfix` as well, to match if `key` is _not_ the same\n" +
+                "as `prefix-{other_key}-postfix` (with `other_key` substituted by the value)",
+        },
+        "!:=": {
+            name: "Substitute `{some_key}` should not match `key`",
+            overpassSupport: false,
+            docs: "See `:=`, except that this filter is inverted",
+        },
+    }
+    private static keyCounts: { keys: any; tags: any } = key_counts
+    public static readonly numberAndDateComparisonDocs =
+        "If the value of a tag is a number (e.g. `key=42`), one can use a filter `key<=42`, `key>=35`, `key>40` or `key<50` to\n" +
+        "match this, e.g. in conditions for renderings. These tags cannot be used to generate an answer nor can they be used to\n" +
+        "request data upstream from overpass.\n" +
+        "\n" +
+        "Note that the value coming from OSM will first be stripped by removing all non-numeric characters. For\n" +
+        "example, `length=42 meter` will be interpreted as `length=42` and will thus match `length<=42` and `length>=42`. In\n" +
+        "special circumstances (e.g. `surface_area=42 m2` or `length=100 feet`), this will result in erronous\n" +
+        "values (`surface=422` or if a length in meters is compared to). However, this can be partially alleviated by using '\n" +
+        "Units' to rewrite to a default format.\n" +
+        "\n" +
+        "Dates can be compared with the same expression: `somekey<2022-06-22` will match if `somekey` is a date and is smaller\n" +
+        "then 22nd june '22."
 
+    public static readonly logicalOperator =
+        "\n" +
+        "## Logical operators\n" +
+        "\n" +
+        "One can combine multiple tags by using `and` or `or`, e.g.:\n" +
+        "\n" +
+        "```json\n" +
+        "{\n" +
+        '  "osmTags": {\n' +
+        '    "or": [\n' +
+        '      "amenity=school",\n' +
+        '      "amenity=kindergarten"\n' +
+        "    ]\n" +
+        "  }\n" +
+        "}\n" +
+        "```\n"
+
+    public static readonly intro =
+        "Tags format\n" +
+        "=============\n" +
+        "\n" +
+        "When creating the `json` file describing your layer or theme, you'll have to add a few tags to describe what you want.\n" +
+        "This document gives an overview of what every expression means and how it behaves in edge cases.\n" +
+        "\n" +
+        "If the schema-files note a type [`TagConfigJson`](https://github.com/pietervdvn/MapComplete/blob/develop/src/Models/ThemeConfig/Json/TagConfigJson.ts), you can use one of these values.\n" +
+        "\n" +
+        "In some cases, not every type of tags-filter can be used. For example,  _rendering_ an option with a regex is\n" +
+        'fine (`"if": "brand~[Bb]randname", "then":" The brand is Brandname"`); but this regex can not be used to write a value\n' +
+        "into the database. The theme loader will however refuse to work with such inconsistencies and notify you of this while\n" +
+        "you are building your theme.\n" +
+        "\n" +
+        "Example\n" +
+        "-------\n" +
+        "\n" +
+        "This example shows the most common options on how to specify tags:\n" +
+        "\n" +
+        "```json\n" +
+        "{\n" +
+        '  "and": [\n' +
+        '    "key=value",\n' +
+        "    {\n" +
+        '      "or": [\n' +
+        '        "other_key=value",\n' +
+        '        "other_key=some_other_value"\n' +
+        "      ]\n" +
+        "    },\n" +
+        '    "key_which_should_be_missing=",\n' +
+        '    "key_which_should_have_a_value~*",\n' +
+        '    "key~.*some_regex_a*_b+_[a-z]?",\n' +
+        '    "height<1"\n' +
+        "  ]\n" +
+        "}\n" +
+        "```\n" +
+        "\n" +
+        "\n"
+
+    /**
+     * Converts a list of tags into the corresponding record
+     *
+     * TagUtils.KVtoProperties([new Tag("a","b"), new Tag("c","d")] // => {a: "b", c: "d"}
+     */
     static KVtoProperties(tags: Tag[]): Record<string, string> {
         const properties: Record<string, string> = {}
         for (const tag of tags) {
@@ -37,27 +234,8 @@ export class TagUtils {
         return tags
     }
 
-    /**
-     * Given two hashes of {key --> values[]}, makes sure that every neededTag is present in availableTags
-     */
-    static AllKeysAreContained(availableTags: any, neededTags: any) {
-        for (const neededKey in neededTags) {
-            const availableValues: string[] = availableTags[neededKey]
-            if (availableValues === undefined) {
-                return false
-            }
-            const neededValues: string[] = neededTags[neededKey]
-            for (const neededValue of neededValues) {
-                if (availableValues.indexOf(neededValue) < 0) {
-                    return false
-                }
-            }
-        }
-        return true
-    }
-
     static SplitKeys(tagsFilters: UploadableTag[]): Record<string, string[]> {
-        return <any>this.SplitKeysRegex(tagsFilters, false)
+        return this.SplitKeysRegex(tagsFilters, false)
     }
 
     /***
@@ -65,6 +243,11 @@ export class TagUtils {
      *
      * TagUtils.SplitKeysRegex([new Tag("isced:level", "bachelor; master")], true) // => {"isced:level": ["bachelor","master"]}
      */
+    static SplitKeysRegex(tagsFilters: UploadableTag[], allowRegex: false): Record<string, string[]>
+    static SplitKeysRegex(
+        tagsFilters: UploadableTag[],
+        allowRegex: boolean
+    ): Record<string, (string | RegexTag)[]>
     static SplitKeysRegex(
         tagsFilters: UploadableTag[],
         allowRegex: boolean
@@ -98,7 +281,7 @@ export class TagUtils {
                         "Invalid type to flatten the multiAnswer: key is a regex too",
                         tagsFilter
                     )
-                    throw "Invalid type to FlattenMultiAnswer"
+                    throw "Invalid type to FlattenMultiAnswer: key is a regex too"
                 }
                 const keystr = <string>key
                 if (keyValues[keystr] === undefined) {
@@ -109,7 +292,9 @@ export class TagUtils {
             }
 
             console.error("Invalid type to flatten the multiAnswer", tagsFilter)
-            throw "Invalid type to FlattenMultiAnswer"
+            throw `Invalid type to FlattenMultiAnswer, not one of ${
+                allowRegex ? "RegexTag, " : ""
+            }Tag or And: ${tagsFilter.asHumanString(false, false, {})}`
         }
         return keyValues
     }
@@ -130,8 +315,19 @@ export class TagUtils {
         return tags
     }
 
+    static optimzeJson(json: TagConfigJson): TagConfigJson | boolean {
+        const optimized = TagUtils.Tag(json).optimize()
+        if (optimized === true || optimized === false) {
+            return optimized
+        }
+        return optimized.asJson()
+    }
+
     /**
      * Given multiple tagsfilters which can be used as answer, will take the tags with the same keys together as set.
+     *
+     * @see MatchesMultiAnswer to do the reverse
+     *
      * E.g:
      *
      * const tag = TagUtils.ParseUploadableTag({"and": [
@@ -155,7 +351,7 @@ export class TagUtils {
             return new And([])
         }
 
-        let keyValues = TagUtils.SplitKeys(tagsFilters)
+        const keyValues = TagUtils.SplitKeys(tagsFilters)
         const and: UploadableTag[] = []
         for (const key in keyValues) {
             const values = Utils.Dedup(keyValues[key]).filter((v) => v !== "")
@@ -280,12 +476,18 @@ export class TagUtils {
      * regex.matchesProperties({maxspeed: "50 mph"}) // => true
      */
 
-    public static Tag(json: TagConfigJson, context: string = ""): TagsFilter {
+    public static Tag(json: TagConfigJson, context: string | ConversionContext = ""): TagsFilter {
         try {
-            return this.ParseTagUnsafe(json, context)
+            const ctx = typeof context === "string" ? context : context.path.join(".")
+            return this.ParseTagUnsafe(json, ctx)
         } catch (e) {
-            console.error("Could not parse tag", json, "in context", context, "due to ", e)
-            throw e
+            if (typeof context === "string") {
+                console.error("Could not parse tag", json, "in context", context, "due to ", e)
+                throw e
+            } else {
+                context.err(e)
+                return undefined
+            }
         }
     }
 
@@ -309,7 +511,7 @@ export class TagUtils {
             )}`
         })
 
-        return <any>t
+        return <UploadableTag>t
     }
 
     /**
@@ -477,13 +679,22 @@ export class TagUtils {
      * TagUtils.LevelsParser("-1") // => ["-1"]
      * TagUtils.LevelsParser("0;-1") // => ["0", "-1"]
      * TagUtils.LevelsParser(undefined) // => []
+     * TagUtils.LevelsParser("") // => []
+     * TagUtils.LevelsParser(";") // => []
+     *
      */
     public static LevelsParser(level: string): string[] {
+        if (level === undefined || level === null) {
+            return []
+        }
         let spec = Utils.NoNull([level])
         spec = [].concat(...spec.map((s) => s?.split(";")))
         spec = [].concat(
             ...spec.map((s) => {
                 s = s.trim()
+                if (s === "") {
+                    return undefined
+                }
                 if (s.indexOf("-") < 0 || s.startsWith("-")) {
                     return s
                 }
@@ -509,7 +720,9 @@ export class TagUtils {
         }
         if (typeof json != "string") {
             if (json["and"] !== undefined && json["or"] !== undefined) {
-                throw `Error while parsing a TagConfig: got an object where both 'and' and 'or' are defined. Did you override a value? Perhaps use \`"=parent": { ... }\` instead of \"parent": {...}\` to trigger a replacement and not a fuse of values`
+                throw `${context}: Error while parsing a TagConfig: got an object where both 'and' and 'or' are defined. Did you override a value? Perhaps use \`"=parent": { ... }\` instead of \"parent": {...}\` to trigger a replacement and not a fuse of values. The value is ${JSON.stringify(
+                    json
+                )}`
             }
             if (json["and"] !== undefined) {
                 return new And(json["and"].map((t) => TagUtils.Tag(t, context)))
@@ -523,11 +736,10 @@ export class TagUtils {
         const tag = json as string
         for (const [operator, comparator] of TagUtils.comparators) {
             if (tag.indexOf(operator) >= 0) {
-                const split = Utils.SplitFirst(tag, operator)
-
-                let val = Number(split[1].trim())
+                const split = Utils.SplitFirst(tag, operator).map((v) => v.trim())
+                let val = Number(split[1])
                 if (isNaN(val)) {
-                    val = new Date(split[1].trim()).getTime()
+                    val = new Date(split[1]).getTime()
                 }
 
                 const f = (value: string | number | undefined) => {
@@ -550,7 +762,7 @@ export class TagUtils {
                     }
                     return comparator(b, val)
                 }
-                return new ComparingTag(split[0], f, operator + val)
+                return new ComparingTag(split[0], f, operator, "" + val)
             }
         }
 
@@ -585,7 +797,7 @@ export class TagUtils {
                 )
             }
 
-            let value: string | RegExp = withRegex.value
+            const value: string | RegExp = withRegex.value
             if (value === "*") {
                 return new RegexTag(
                     withRegex.key,
@@ -649,6 +861,27 @@ export class TagUtils {
         return TagUtils.keyCounts.keys[key]
     }
 
+    public static GetPopularity(tag: TagsFilter): number | undefined {
+        if (tag instanceof And) {
+            return Math.min(...Utils.NoNull(tag.and.map((t) => TagUtils.GetPopularity(t)))) - 1
+        }
+        if (tag instanceof Or) {
+            return Math.max(...Utils.NoNull(tag.or.map((t) => TagUtils.GetPopularity(t)))) + 1
+        }
+        if (tag instanceof Tag) {
+            return TagUtils.GetCount(tag.key, tag.value)
+        }
+        if (tag instanceof RegexTag) {
+            const key = tag.key
+            if (key instanceof RegExp || tag.invert || tag.isNegative()) {
+                return undefined
+            }
+            return TagUtils.GetCount(key)
+        }
+
+        return undefined
+    }
+
     private static order(a: TagsFilter, b: TagsFilter, usePopularity: boolean): number {
         const rta = a instanceof RegexTag
         const rtb = b instanceof RegexTag
@@ -687,5 +920,20 @@ export class TagUtils {
             return joined
         }
         return " (" + joined + ") "
+    }
+
+    public static generateDocs(): string {
+        return [
+            TagUtils.intro,
+            ...Object.keys(TagUtils.modeDocumentation).map((mode) => {
+                const doc = TagUtils.modeDocumentation[mode]
+                return ["", "## `" + mode + "` " + doc.name, "", doc.docs, "", ""].join("\n")
+            }),
+            "## " +
+                TagUtils.comparators.map((comparator) => "`" + comparator[0] + "`").join(" ") +
+                " Logical comparators",
+            TagUtils.numberAndDateComparisonDocs,
+            TagUtils.logicalOperator,
+        ].join("\n")
     }
 }

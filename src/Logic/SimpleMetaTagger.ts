@@ -84,7 +84,7 @@ export class ReferencingWaysMetaTagger extends SimpleMetaTagger {
         super({
             keys: ["_referencing_ways"],
             isLazy: true,
-            doc: "_referencing_ways contains - for a node - which ways use this this node as point in their geometry. ",
+            doc: "_referencing_ways contains - for a node - which ways use this node as point in their geometry. ",
         })
     }
 
@@ -140,8 +140,32 @@ class CountryTagger extends SimpleMetaTagger {
                 const oldCountry = feature.properties["_country"]
                 const newCountry = countries[0].trim().toLowerCase()
                 if (oldCountry !== newCountry) {
-                    tagsSource.data["_country"] = newCountry
-                    tagsSource?.ping()
+                    if (typeof window === undefined) {
+                        tagsSource.data["_country"] = newCountry
+                        tagsSource?.ping()
+                    } else {
+                        // We set, be we don't ping... this is for later
+                        tagsSource.data["_country"] = newCountry
+
+                        /**
+                         * What is this weird construction?
+                         *
+                         * For a theme with a hundreds of items (e.g. shops)
+                         * the country for all those shops will probably arrive at the same time.
+                         *
+                         * This means that all those stores will be pinged around the same time.
+                         * Now, the country is pivotal in calculating the opening hours (because opening hours need the country to determine e.g. public holidays).
+                         *
+                         * In other words, when the country information becomes available, it'll start calculating the opening hours for hundreds of items at the same time.
+                         * This will choke up the main thread for at least a few seconds, causing a very annoying hang.
+                         *
+                         * As such, we use 'requestIdleCallback' instead to gently spread out these calculations
+                         */
+
+                        window.requestIdleCallback(() => {
+                            tagsSource?.ping()
+                        })
+                    }
                 }
             })
             .catch((e) => {
@@ -219,7 +243,7 @@ class RewriteMetaInfoTags extends SimpleMetaTagger {
         move("changeset", "_last_edit:changeset")
         move("timestamp", "_last_edit:timestamp")
         move("version", "_version_number")
-        feature.properties._backend = feature.properties._backend ?? "https://openstreetmap.org"
+        feature.properties._backend = feature.properties._backend ?? "https://api.openstreetmap.org"
         return movedSomething
     }
 }
@@ -339,21 +363,37 @@ export default class SimpleMetaTaggers {
     )
     private static levels = new InlineMetaTagger(
         {
-            doc: "Extract the 'level'-tag into a normalized, ';'-separated value",
+            doc: "Extract the 'level'-tag into a normalized, ';'-separated value called '_level' (which also includes 'repeat_on'). The `level` tag (without underscore) will be normalized with only the value of `level`.",
             keys: ["_level"],
         },
         (feature) => {
-            if (feature.properties["level"] === undefined) {
-                return false
+            let somethingChanged = false
+            if (feature.properties["level"] !== undefined) {
+                const l = feature.properties["level"]
+                const newValue = TagUtils.LevelsParser(l).join(";")
+                if (l !== newValue) {
+                    feature.properties["level"] = newValue
+                    somethingChanged = true
+                }
             }
 
-            const l = feature.properties["level"]
-            const newValue = TagUtils.LevelsParser(l).join(";")
-            if (l === newValue) {
-                return false
+            if (feature.properties["repeat_on"] !== undefined) {
+                const l = feature.properties["repeat_on"]
+                const newValue = TagUtils.LevelsParser(l).join(";")
+                if (l !== newValue) {
+                    feature.properties["repeat_on"] = newValue
+                    somethingChanged = true
+                }
             }
-            feature.properties["level"] = newValue
-            return true
+
+            const combined = TagUtils.LevelsParser(
+                (feature.properties.repeat_on ?? "") + ";" + (feature.properties.level ?? "")
+            ).join(";")
+            if (feature.properties["_level"] !== combined) {
+                feature.properties["_level"] = combined
+                somethingChanged = true
+            }
+            return somethingChanged
         }
     )
     private static canonicalize = new InlineMetaTagger(
@@ -395,7 +435,7 @@ export default class SimpleMetaTaggers {
                         () => feature.properties["_country"]
                     )
                     let canonical =
-                        denomination?.canonicalValue(value, defaultDenom == denomination) ??
+                        denomination?.canonicalValue(value, defaultDenom == denomination, unit.inverted) ??
                         undefined
                     if (canonical === value) {
                         break
@@ -440,6 +480,9 @@ export default class SimpleMetaTaggers {
                 // isOpen is irrelevant
                 return false
             }
+            if (feature.properties.opening_hours === undefined) {
+                return false
+            }
             if (feature.properties.opening_hours === "24/7") {
                 feature.properties._isOpen = "yes"
                 return true
@@ -454,7 +497,8 @@ export default class SimpleMetaTaggers {
                     if (tags.opening_hours === undefined) {
                         return
                     }
-                    if (tags._country === undefined) {
+                    const country = tags._country
+                    if (country === undefined) {
                         return
                     }
 
@@ -571,7 +615,7 @@ export default class SimpleMetaTaggers {
             isLazy: true,
             includesDates: true,
         },
-        (feature, layer, tagsStore) => {
+        (feature) => {
             Utils.AddLazyProperty(feature.properties, "_last_edit:passed_time", () => {
                 const lastEditTimestamp = new Date(
                     feature.properties["_last_edit:timestamp"]

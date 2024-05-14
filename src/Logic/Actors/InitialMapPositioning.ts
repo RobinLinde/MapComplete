@@ -1,11 +1,16 @@
-import { UIEventSource } from "../UIEventSource"
+import { ImmutableStore, Store, UIEventSource } from "../UIEventSource"
 import LayoutConfig from "../../Models/ThemeConfig/LayoutConfig"
 import { LocalStorageSource } from "../Web/LocalStorageSource"
 import { QueryParameters } from "../Web/QueryParameters"
+import Hash from "../Web/Hash"
+import OsmObjectDownloader from "../Osm/OsmObjectDownloader"
+import { OsmObject } from "../Osm/OsmObject"
+import Constants from "../../Models/Constants"
 
 /**
  * This actor is responsible to set the map location.
  * It will attempt to
+ * - Set the map to the position of the selected element
  * - Set the map to the position as passed in by the query parameters (if available)
  * - Set the map to the position remembered in LocalStorage (if available)
  * - Set the map to the layout default
@@ -15,6 +20,8 @@ import { QueryParameters } from "../Web/QueryParameters"
 export default class InitialMapPositioning {
     public zoom: UIEventSource<number>
     public location: UIEventSource<{ lon: number; lat: number }>
+    public useTerrain: Store<boolean>
+
     constructor(layoutToUse: LayoutConfig) {
         function localStorageSynced(
             key: string,
@@ -37,6 +44,8 @@ export default class InitialMapPositioning {
             return src
         }
 
+        const initialHash = Hash.hash.data
+
         // -- Location control initialization
         this.zoom = localStorageSynced(
             "z",
@@ -55,10 +64,25 @@ export default class InitialMapPositioning {
         )
 
         this.location = new UIEventSource({ lon: lon.data, lat: lat.data })
+        // Note: this syncs only in one direction
         this.location.addCallbackD((loc) => {
             lat.setData(loc.lat)
             lon.setData(loc.lon)
         })
-        // Note: this syncs only in one direction
+        this.useTerrain = new ImmutableStore<boolean>(layoutToUse.enableTerrain)
+
+        if (initialHash?.match(/^(node|way|relation)\/[0-9]+$/)) {
+            const [type, id] = initialHash.split("/")
+            OsmObjectDownloader.RawDownloadObjectAsync(type, Number(id), Constants.osmAuthConfig.url + "/").then(osmObject => {
+                if (osmObject === "deleted") {
+                    return
+                }
+                const targetLayer = layoutToUse.getMatchingLayer(osmObject.tags)
+                this.zoom.setData(Math.max(this.zoom.data, targetLayer.minzoom))
+                const [lat, lon] = osmObject.centerpoint()
+                this.location.setData({ lon, lat })
+            })
+        }
+
     }
 }

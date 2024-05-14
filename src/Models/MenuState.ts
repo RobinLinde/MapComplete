@@ -3,6 +3,7 @@ import { UIEventSource } from "../Logic/UIEventSource"
 import UserRelatedState from "../Logic/State/UserRelatedState"
 import { Utils } from "../Utils"
 import { LocalStorageSource } from "../Logic/Web/LocalStorageSource"
+import Zoomcontrol from "../UI/Zoomcontrol"
 
 export type ThemeViewTabStates = (typeof MenuState._themeviewTabs)[number]
 export type MenuViewTabStates = (typeof MenuState._menuviewTabs)[number]
@@ -14,16 +15,11 @@ export type MenuViewTabStates = (typeof MenuState._menuviewTabs)[number]
  * Some convenience methods are provided for this as well
  */
 export class MenuState {
-    public static readonly _themeviewTabs = [
-        "intro",
-        "filters",
-        "download",
-        "copyright",
-        "share",
-    ] as const
+    public static readonly _themeviewTabs = ["intro", "download", "copyright", "share"] as const
     public static readonly _menuviewTabs = [
         "about",
         "settings",
+        "favourites",
         "community",
         "privacy",
         "advanced",
@@ -38,6 +34,9 @@ export class MenuState {
     public readonly backgroundLayerSelectionIsOpened: UIEventSource<boolean> =
         new UIEventSource<boolean>(false)
 
+    public readonly filtersPanelIsOpened: UIEventSource<boolean> = new UIEventSource<boolean>(false)
+    public readonly privacyPanelIsOpened: UIEventSource<boolean> = new UIEventSource<boolean>(false)
+    public readonly communityIndexPanelIsOpened: UIEventSource<boolean> = new UIEventSource(false)
     public readonly allToggles: {
         toggle: UIEventSource<boolean>
         name: string
@@ -78,8 +77,13 @@ export class MenuState {
                 this.highlightedUserSetting.setData(undefined)
             }
         })
-        this.themeViewTab.addCallbackAndRun((tab) => {
-            if (tab !== "filters") {
+        this.menuViewTab.addCallbackD((tab) => {
+            if (tab !== "settings") {
+                this.highlightedUserSetting.setData(undefined)
+            }
+        })
+        this.filtersPanelIsOpened.addCallbackAndRun((isOpen) => {
+            if (!isOpen) {
                 this.highlightedLayerInFilters.setData(undefined)
             }
         })
@@ -97,6 +101,11 @@ export class MenuState {
 
         this.allToggles = [
             {
+                toggle: this.privacyPanelIsOpened,
+                name: "privacy",
+                showOverOthers: true,
+            },
+            {
                 toggle: this.menuIsOpened,
                 name: "menu",
                 submenu: this.menuViewTab,
@@ -111,12 +120,35 @@ export class MenuState {
                 name: "background",
                 showOverOthers: true,
             },
+            {
+                toggle: this.communityIndexPanelIsOpened,
+                name: "community",
+                showOverOthers: true,
+            },
+            {
+                toggle: this.filtersPanelIsOpened,
+                name: "filters",
+                showOverOthers: true,
+            },
         ]
+        for (const toggle of this.allToggles) {
+            toggle.toggle.addCallback((isOpen) => {
+                if (!isOpen) {
+                    this.resetZoomIfAllClosed()
+                }
+            })
+        }
+    }
+
+    private resetZoomIfAllClosed() {
+        if (this.isSomethingOpen()) {
+            return
+        }
+        Zoomcontrol.resetzoom()
     }
 
     public openFilterView(highlightLayer?: LayerConfig | string) {
-        this.themeIsOpened.setData(true)
-        this.themeViewTab.setData("filters")
+        this.filtersPanelIsOpened.setData(true)
         if (highlightLayer) {
             if (typeof highlightLayer !== "string") {
                 highlightLayer = highlightLayer.id
@@ -144,18 +176,23 @@ export class MenuState {
         this.highlightedUserSetting.setData(highlightTagRendering)
     }
 
+    public isSomethingOpen(): boolean {
+        return this.allToggles.some((t) => t.toggle.data)
+    }
+
     /**
      * Close all floatOvers.
      * Returns 'true' if at least one menu was opened
      */
     public closeAll(): boolean {
-        const toggles = [
-            this.menuIsOpened,
-            this.themeIsOpened,
-            this.backgroundLayerSelectionIsOpened,
-        ]
-        const somethingIsOpen = toggles.some((t) => t.data)
-        toggles.forEach((t) => t.setData(false))
-        return somethingIsOpen
+        let somethingWasOpen = false
+        for (const t of this.allToggles) {
+            somethingWasOpen = t.toggle.data
+            t.toggle.setData(false)
+            if (somethingWasOpen) {
+                break
+            }
+        }
+        return somethingWasOpen
     }
 }

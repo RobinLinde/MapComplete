@@ -17,7 +17,7 @@ export class BBox {
      * Coordinates should be [[lon, lat],[lon, lat]]
      * @param coordinates
      */
-    constructor(coordinates) {
+    constructor(coordinates: [number, number][]) {
         this.maxLat = -90
         this.maxLon = -180
         this.minLat = 90
@@ -45,15 +45,16 @@ export class BBox {
         ])
     }
 
-    static get(feature): BBox {
-        if (feature.bbox?.overlapsWith === undefined) {
+    static get(feature: Feature): BBox {
+        const f = <any>feature
+        if (f.bbox?.overlapsWith === undefined) {
             const turfBbox: number[] = turf.bbox(feature)
-            feature.bbox = new BBox([
+            f["bbox"] = new BBox([
                 [turfBbox[0], turfBbox[1]],
                 [turfBbox[2], turfBbox[3]],
             ])
         }
-        return feature.bbox
+        return f["bbox"]
     }
 
     static bboxAroundAll(bboxes: BBox[]): BBox {
@@ -287,5 +288,9 @@ export class BBox {
             console.trace("BBox with NaN detected:", this)
             throw "BBOX has NAN"
         }
+    }
+
+    public overlapsWithFeature(f: Feature) {
+        return GeoOperations.calculateOverlap(this.asGeoJson({}), [f]).length > 0
     }
 }

@@ -8,23 +8,35 @@
   import { Validator } from "./Validator"
   import { Unit } from "../../Models/Unit"
   import UnitInput from "../Popup/UnitInput.svelte"
+  import { Utils } from "../../Utils"
+  import { twMerge } from "tailwind-merge"
 
-  export let type: ValidatorType 
+  export let type: ValidatorType
   export let feedback: UIEventSource<Translation> | undefined = undefined
-  export let getCountry: () => string | undefined
-  export let placeholder: string | Translation | undefined
+  export let cls: string = undefined
+  export let getCountry: () => string | undefined = undefined
+  export let placeholder: string | Translation | undefined = undefined
+  export let autofocus: boolean = false
   export let unit: Unit = undefined
-
-  export let value: UIEventSource<string>
+  /**
+   * Valid state, exported to the calling component
+   */
+  export let value: UIEventSource<string | undefined>
   /**
    * Internal state bound to the input element.
    *
    * This is only copied to 'value' when appropriate so that no invalid values leak outside;
    * Additionally, the unit is added when copying
    */
-  let _value = new UIEventSource(value.data ?? "")
+  export let unvalidatedText = new UIEventSource(value.data ?? "")
 
+  if (unvalidatedText == /*Compare by reference!*/ value) {
+    throw "Value and unvalidatedText may not be the same store!"
+  }
   let validator: Validator = Validators.get(type ?? "string")
+  if (validator === undefined) {
+    console.warn("Didn't find a validator for type", type)
+  }
   let selectedUnit: UIEventSource<string> = new UIEventSource<string>(undefined)
   let _placeholder = placeholder ?? validator?.getPlaceholder() ?? type
 
@@ -32,86 +44,135 @@
     if (unit && value.data) {
       const [v, denom] = unit?.findDenomination(value.data, getCountry)
       if (denom) {
-        _value.setData(v)
+        unvalidatedText.setData(v)
         selectedUnit.setData(denom.canonical)
       } else {
-        _value.setData(value.data ?? "")
+        unvalidatedText.setData(value.data ?? "")
       }
     } else {
-      _value.setData(value.data ?? "")
+      unvalidatedText.setData(value.data ?? "")
     }
   }
 
+  function onKeyPress(e: KeyboardEvent) {
+    if (e.key === "Enter") {
+      e.stopPropagation()
+      e.preventDefault()
+      dispatch("submit")
+    }
+  }
   initValueAndDenom()
 
   $: {
     // The type changed -> reset some values
     validator = Validators.get(type ?? "string")
+
     _placeholder = placeholder ?? validator?.getPlaceholder() ?? type
-    feedback = feedback?.setData(validator?.getFeedback(_value.data, getCountry))
+    if (unvalidatedText.data?.length > 0) {
+      feedback?.setData(validator?.getFeedback(unvalidatedText.data, getCountry))
+    } else {
+      feedback?.setData(undefined)
+    }
 
     initValueAndDenom()
   }
 
   function setValues() {
     // Update the value stores
-    const v = _value.data
-    if (!validator.isValid(v, getCountry) || v === "") {
+    const v = unvalidatedText.data
+    if (v === "") {
       value.setData(undefined)
-      feedback?.setData(validator.getFeedback(v, getCountry))
+      feedback?.setData(undefined)
       return
     }
-
-    if (unit && isNaN(Number(v))) {
-      console.debug("Not a number, but a unit is required")
+    if (!validator?.isValid(v, getCountry)) {
+      feedback?.setData(validator?.getFeedback(v, getCountry))
       value.setData(undefined)
       return
     }
 
     feedback?.setData(undefined)
-    value.setData(v + (selectedUnit.data ?? ""))
+    if (selectedUnit.data) {
+      value.setData(unit.toOsm(v, selectedUnit.data))
+    } else {
+      value.setData(v)
+    }
   }
 
-  onDestroy(_value.addCallbackAndRun((_) => setValues()))
+  onDestroy(unvalidatedText.addCallbackAndRun((_) => setValues()))
+  if (unit === undefined) {
+    onDestroy(
+      value.addCallbackAndRunD((fromUpstream) => {
+        if (unvalidatedText.data !== fromUpstream && fromUpstream !== "") {
+          unvalidatedText.setData(fromUpstream)
+        }
+      })
+    )
+  } else {
+    // Handled by the UnitInput
+  }
   onDestroy(selectedUnit.addCallback((_) => setValues()))
   if (validator === undefined) {
-    throw "Not a valid type for a validator:" + type
+    throw (
+      "Not a valid type (no validator found) for type '" +
+      type +
+      "'; did you perhaps mean one of: " +
+      Utils.sortedByLevenshteinDistance(
+        type,
+        Validators.AllValidators.map((v) => v.name),
+        (v) => v
+      )
+        .slice(0, 5)
+        .join(", ")
+    )
   }
 
-  const isValid = _value.map((v) => validator.isValid(v, getCountry))
+  const isValid = unvalidatedText.map((v) => validator?.isValid(v, getCountry) ?? true)
 
-  let htmlElem: HTMLInputElement
+  let htmlElem: HTMLInputElement | HTMLTextAreaElement
 
-  let dispatch = createEventDispatcher<{ selected }>()
+  let dispatch = createEventDispatcher<{ selected; submit }>()
   $: {
     if (htmlElem !== undefined) {
       htmlElem.onfocus = () => dispatch("selected")
+      if (autofocus) {
+        Utils.focusOn(htmlElem)
+      }
     }
   }
 </script>
 
-{#if validator.textArea}
+{#if validator?.textArea}
   <textarea
     class="w-full"
-    bind:value={$_value}
-    inputmode={validator.inputmode ?? "text"}
+    bind:value={$unvalidatedText}
+    inputmode={validator?.inputmode ?? "text"}
     placeholder={_placeholder}
+    bind:this={htmlElem}
+    on:keypress={onKeyPress}
   />
 {:else}
-  <span class="inline-flex">
+  <div class={twMerge("inline-flex", cls)}>
     <input
       bind:this={htmlElem}
-      bind:value={$_value}
+      bind:value={$unvalidatedText}
       class="w-full"
-      inputmode={validator.inputmode ?? "text"}
+      inputmode={validator?.inputmode ?? "text"}
       placeholder={_placeholder}
+      on:keypress={onKeyPress}
     />
     {#if !$isValid}
       <ExclamationIcon class="-ml-6 h-6 w-6" />
     {/if}
 
     {#if unit !== undefined}
-      <UnitInput {unit} {selectedUnit} textValue={_value} upstreamValue={value} />
+      <UnitInput
+        {unit}
+        {selectedUnit}
+        textValue={unvalidatedText}
+        upstreamValue={value}
+        {getCountry}
+      />
     {/if}
-  </span>
+  </div>
 {/if}

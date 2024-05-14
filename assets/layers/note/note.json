@@ -4,37 +4,15 @@
     "en": "OpenStreetMap notes",
     "nl": "OpenStreetMap Notes",
     "de": "OpenStreetMap-Hinweise",
-    "es": "Notas de OpenStreetMap"
+    "es": "Notas de OpenStreetMap",
+    "ca": "Notes d'OpenStreetMap",
+    "cs": "Poznámky OpenStreetMap"
   },
   "description": "This layer shows notes on OpenStreetMap. Having this layer in your theme will trigger the 'add new note' functionality in the 'addNewPoint'-popup (or if your theme has no presets, it'll enable adding notes)",
   "source": {
     "osmTags": "date_created~*",
     "geoJson": "https://api.openstreetmap.org/api/0.6/notes.json?limit=10000&closed=7&bbox={x_min},{y_min},{x_max},{y_max}",
-    "geoJsonZoomLevel": 12,
-    "maxCacheAge": 0,
-    "isOsmCache": false
-  },
-  "minzoom": 10,
-  "title": {
-    "render": {
-      "en": "Note",
-      "nl": "Note",
-      "ca": "Nota",
-      "de": "Notiz",
-      "es": "Nota",
-      "pa_PK": "نوٹ"
-    },
-    "mappings": [
-      {
-        "if": "closed_at~*",
-        "then": {
-          "en": "Closed note",
-          "nl": "Gesloten Note",
-          "de": "Geschlossene Notiz",
-          "es": "Nota cerrada"
-        }
-      }
-    ]
+    "geoJsonZoomLevel": 12
   },
   "calculatedTags": [
     "_total_comments:=get(feat)('comments').length",
@@ -43,16 +21,83 @@
     "_first_user:=get(feat)('comments')[0].user",
     "_last_user:=(() => {const comms = get(feat)('comments'); return comms[comms.length - 1].user})()",
     "_first_user_id:=get(feat)('comments')[0].uid",
-    "_is_import_note:=(() => {const lines = feat.properties['_first_comment'].split('\\n'); const matchesMapCompleteURL = lines.map(l => l.match(\".*https://mapcomplete.osm.be/\\([a-zA-Z_-]+\\)\\(.html\\).*#import\")); const matchedIndexes = matchesMapCompleteURL.map((doesMatch, i) => [doesMatch !== null, i]).filter(v => v[0]).map(v => v[1]); return matchedIndexes[0] })()"
+    "_is_import_note:=(() => {const lines = feat.properties['_first_comment'].split('\\n'); const matchesMapCompleteURL = lines.map(l => l.match(\".*https://mapcomplete.\\(osm.be|org\\)/\\([a-zA-Z_-]+\\)\\(.html\\).*#import\")); const matchedIndexes = matchesMapCompleteURL.map((doesMatch, i) => [doesMatch !== null, i]).filter(v => v[0]).map(v => v[1]); return matchedIndexes[0] })()"
   ],
+  "minzoom": 10,
+  "title": {
+    "render": {
+      "en": "Note",
+      "nl": "Note",
+      "ca": "Nota",
+      "de": "Notiz",
+      "es": "Nota",
+      "pa_PK": "نوٹ",
+      "pl": "Notatka",
+      "cs": "Poznámka"
+    },
+    "mappings": [
+      {
+        "if": "closed_at~*",
+        "then": {
+          "en": "Closed note",
+          "nl": "Gesloten Note",
+          "de": "Geschlossene Notiz",
+          "es": "Nota cerrada",
+          "pl": "Zamknięta notatka",
+          "ca": "Nota tancada",
+          "cs": "Uzavřená poznámka"
+        }
+      }
+    ]
+  },
   "titleIcons": [
     {
+      "ariaLabel": {
+        "en": "See on OpenStreetMap.org",
+        "nl": "Bekijk op OpenStreetMap.org",
+        "de": "Auf OpenStreetMap.org ansehen"
+      },
       "render": "<a href='https://openstreetmap.org/note/{id}' target='_blank'><img src='./assets/svg/osm-logo-us.svg'></a>"
     }
   ],
+  "pointRendering": [
+    {
+      "location": [
+        "point",
+        "centroid"
+      ],
+      "marker": [
+        {
+          "icon": {
+            "render": "./assets/svg/note.svg",
+            "mappings": [
+              {
+                "if": "closed_at~*",
+                "then": "./assets/svg/resolved.svg"
+              }
+            ]
+          }
+        }
+      ],
+      "iconSize": "40,40",
+      "iconBadges": [
+        {
+          "if": "_total_comments>1",
+          "then": "circle:white;./assets/svg/speech_bubble.svg"
+        },
+        {
+          "if": "_is_import_note~*",
+          "then": "./assets/svg/addSmall.svg"
+        }
+      ],
+      "anchor": "bottom"
+    }
+  ],
+  "lineRendering": [],
   "tagRenderings": [
     {
       "id": "conversation",
+      "classes": "p-0",
       "render": "{visualize_note_comments()}"
     },
     {
@@ -70,7 +115,9 @@
           "en": "<h3>Nearby images</h3>The pictures below are nearby geotagged images and might be helpful to handle this note.",
           "de": "<h3>Bilder aus der Nähe</h3>Die folgenden Bilder sind mit Geotags versehene Bilder aus der Nähe und könnten für die Bearbeitung dieser Notiz hilfreich sein.",
           "es": "<h3>Imágenes cercanas</h3>Las imágenes de debajo son imágenes geoetiquetadas cercanas y pueden ser útiles para encargarse de esta nota.",
-          "nl": "<h3>Afbeeldingen in de buurt</h3>Onderstaande afbeeldingen zijn afbeeldingen met geo-referentie en die in de buurt genomen zijn. Mogelijks zijn ze nuttig om deze kaartnota af te handelen."
+          "nl": "<h3>Afbeeldingen in de buurt</h3>Onderstaande afbeeldingen zijn afbeeldingen met geo-referentie en die in de buurt genomen zijn. Mogelijks zijn ze nuttig om deze kaartnota af te handelen.",
+          "ca": "<h3>Imatges properes</h3>Les imatges de sota són imatges geoetiquetades properes i poden ser útils per a encarregar-se d'aquesta nota.",
+          "cs": "<h3>Obrázky v okolí</h3>Obrázky níže jsou obrázky s geografickými značkami v okolí a mohou vám pomoci s touto poznámkou."
         },
         "special": {
           "type": "nearby_images",
@@ -84,7 +131,9 @@
         "en": "<a href='https://www.openstreetmap.org/reports/new?reportable_id={_first_user_id}&reportable_type=User' target='_blank' class='subtle'>Report {_first_user} for spam or inappropriate messages</a>",
         "nl": "<a href='https://www.openstreetmap.org/reports/new?reportable_id={_first_user_id}&reportable_type=User' target='_blank' class='subtle'>{_first_user} melden voor spam of ongepaste opmerkingen</a>",
         "de": "<a href='https://www.openstreetmap.org/reports/new?reportable_id={_first_user_id}&reportable_type=User' target='_blank' class='subtle' {_first_user} für Spam oder unangemessene Nachrichten melden</a>",
-        "es": "<a href='https://www.openstreetmap.org/reports/new?reportable_id={_first_user_id}&reportable_type=User' target='_blank' class='subtle'>Reportar {_first_user}"
+        "es": "<a href='https://www.openstreetmap.org/reports/new?reportable_id={_first_user_id}&reportable_type=User' target='_blank' class='subtle'>Reportar {_first_user} por spam o mensajes inapropiados</a>",
+        "ca": "<a href='https://www.openstreetmap.org/reports/new?reportable_id={_first_user_id}&reportable_type=User' target='_blank' class='subtle'>Reporta {_first_user} per spam o missatges inapropiats</a>",
+        "cs": "<a href='https://www.openstreetmap.org/reports/new?reportable_id={_first_user_id}&reportable_type=User' target='_blank' class='subtle'>Nahlásit uživateli {_first_user} spam nebo nevhodné zprávy</ a>"
       },
       "condition": "_opened_by_anonymous_user=false"
     },
@@ -94,37 +143,10 @@
         "en": "<a href='https://www.openstreetmap.org/reports/new?reportable_id={id}&reportable_type=Note' target='_blank'>Report this note as spam or inappropriate</a>",
         "nl": "<a href='https://www.openstreetmap.org/reports/new?reportable_id={id}&reportable_type=Note' target='_blank'>Deze note melden als spam of ongepast</a>",
         "de": "<a href='https://www.openstreetmap.org/reports/new?reportable_id={id}&reportable_type=Note' target='_blank'>Notiz als Spam oder unangemessen melden</a>",
-        "es": "<a href='https://www.openstreetmap.org/reports/new?reportable_id={id}&reportable_type=Note' target='_blank'>Reporta esta nota como spam o inapropiada</a>"
+        "es": "<a href='https://www.openstreetmap.org/reports/new?reportable_id={id}&reportable_type=Note' target='_blank'>Reporta esta nota como spam o inapropiada</a>",
+        "ca": "<a href='https://www.openstreetmap.org/reports/new?reportable_id={id}&reportable_type=Note' target='_blank'>Reporta aquesta nota com spam o inapropiada</a>",
+        "cs": "<a href='https://www.openstreetmap.org/reports/new?reportable_id={id}&reportable_type=Note' target='_blank'>Nahlásit tuto poznámku jako spam nebo nevhodnou</a>"
       }
-    }
-  ],
-  "mapRendering": [
-    {
-      "location": [
-        "point",
-        "centroid"
-      ],
-      "icon": {
-        "render": "note",
-        "mappings": [
-          {
-            "if": "closed_at~*",
-            "then": "resolved"
-          }
-        ]
-      },
-      "iconSize": "40,40",
-      "iconBadges": [
-        {
-          "if": "_total_comments>1",
-          "then": "circle:white;speech_bubble"
-        },
-        {
-          "if": "_is_import_note~*",
-          "then": "addSmall"
-        }
-      ],
-      "anchor": "bottom"
     }
   ],
   "filter": [
@@ -142,7 +164,9 @@
             "en": "Should mention {search} in the first comment",
             "nl": "Moet in de eerste opmerking \"{search}\" bevatten",
             "de": "Sollte {search} im ersten Kommentar erwähnen",
-            "es": "Debe mencionar {search} en el primer comentario"
+            "es": "Debe mencionar {search} en el primer comentario",
+            "ca": "Has de mencionar {search} en el primer comentari",
+            "cs": "Měl by se zmínit {search} v prvním komentáři"
           }
         }
       ]
@@ -161,7 +185,9 @@
             "en": "Should <b>not</b> mention {search} in the first comment",
             "nl": "Mag in de eerste opmerking <b>niet</b> \"{search}\" bevatten",
             "de": "Sollte <b>nicht</b> {search} im ersten Kommentar erwähnen",
-            "es": "<b>No</b> debe mencionar {search} en el primer comentario"
+            "es": "<b>No</b> debe mencionar {search} en el primer comentario",
+            "ca": "<b>No</b> s'ha de mencionar {search} al primer comentari",
+            "cs": "V prvním komentáři by jste <b>neměli</b> zmiňovat {search}"
           }
         }
       ]
@@ -180,7 +206,10 @@
             "en": "Opened by contributor {search}",
             "nl": "Geopend door bijdrager {search}",
             "de": "Erstellt von {search}",
-            "es": "Abierto por el contributor {search}"
+            "es": "Abierto por el contributor {search}",
+            "fr": "Ouverte par {search}",
+            "ca": "Obert pel contribuïdor {search}",
+            "cs": "Otevřeno přispěvatelem {search}"
           }
         }
       ]
@@ -199,7 +228,9 @@
             "en": "<b>Not</b> opened by contributor {search}",
             "nl": "<b>Niet</b> geopend door bijdrager {search}",
             "de": "<b>Nicht</b> erstellt von {search}",
-            "es": "<b>No</b> abierto por el contributor {search}"
+            "es": "<b>No</b> abierto por el contributor {search}",
+            "ca": "<b>No</b> obert pel contribuïdor {search}",
+            "cs": "<b>Není</b> otevřeno přispěvatelem {search}"
           }
         }
       ]
@@ -218,7 +249,9 @@
             "en": "Last edited by contributor {search}",
             "nl": "Laatst bewerkt door bijdrager {search}",
             "de": "Zuletzt bearbeitet von {search}",
-            "es": "Editada por última vez por el contributor {search}"
+            "es": "Editada por última vez por el contributor {search}",
+            "ca": "Editat per última vega pel contribuïdor {search}",
+            "cs": "Naposledy upravil přispěvatel {search}"
           }
         }
       ]
@@ -237,7 +270,9 @@
             "en": "Opened after {search}",
             "nl": "Geopend na {search}",
             "de": "Zuletzt bearbeitet nach dem {search}",
-            "es": "Abierta después de {search}"
+            "es": "Abierta después de {search}",
+            "ca": "Oberta després de {search}",
+            "cs": "Otevřeno po {search}"
           }
         }
       ]
@@ -257,7 +292,9 @@
             "en": "Created before {search}",
             "nl": "Aangemaakt voor {search}",
             "de": "Erstellt vor dem {search}",
-            "es": "Creada antes de {search}"
+            "es": "Creada antes de {search}",
+            "ca": "Creada abans de {search}",
+            "cs": "Vytvořeno před {search}"
           }
         }
       ]
@@ -277,7 +314,9 @@
             "en": "Created after {search}",
             "nl": "Aangemaakt na {search}",
             "de": "Erstellt nach dem {search}",
-            "es": "Creada después de {search}"
+            "es": "Creada después de {search}",
+            "ca": "Creada després de {search}",
+            "cs": "Vytvořeno po {search}"
           }
         }
       ]
@@ -291,7 +330,9 @@
             "en": "Only show notes opened by an anonymous contributor",
             "nl": "Toon enkel de Notes geopend door een anonieme bijdrager",
             "de": "Nur Notizen anzeigen, die anonym erstellt wurden",
-            "es": "Solo mostrar las notas abiertas por contributores anómimos"
+            "es": "Solo mostrar las notas abiertas por contributores anómimos",
+            "ca": "Sols mostrar les notes obertes per contribuïdors anònims",
+            "cs": "Zobrazovat pouze poznámky otevřené anonymním přispěvatelem"
           }
         }
       ]
@@ -305,7 +346,9 @@
             "en": "Only show open notes",
             "nl": "Toon enkel open Notes",
             "de": "Nur offene Notizen anzeigen",
-            "es": "Solo mostrar las notas abiertas"
+            "es": "Solo mostrar las notas abiertas",
+            "ca": "Sols mostra les notes obertes",
+            "cs": "Zobrazit pouze otevřené poznámky"
           }
         }
       ]
@@ -318,7 +361,9 @@
             "en": "All Notes",
             "nl": "Alle Notes",
             "de": "Alle Notizen",
-            "es": "Todas las notas"
+            "es": "Todas las notas",
+            "ca": "Totes les notes",
+            "cs": "Všechny poznámky"
           }
         },
         {
@@ -327,7 +372,9 @@
             "en": "Hide import notes",
             "nl": "Verberg import Notes",
             "de": "Importnotizen ausblenden",
-            "es": "Ocultar las nostras de importación"
+            "es": "Ocultar las notas de importación",
+            "ca": "Oculta les notes d'importació",
+            "cs": "Skrýt poznámky k importu"
           }
         },
         {
@@ -336,7 +383,9 @@
             "en": "Show only import Notes",
             "nl": "Toon enkel import Notes",
             "de": "Nur Importnotizen anzeigen",
-            "es": "Solo mostrar las notas de importación"
+            "es": "Solo mostrar las notas de importación",
+            "ca": "Mostrar només les notes d'importació",
+            "cs": "Zobrazit pouze poznámky k importu"
           }
         }
       ]

@@ -11,9 +11,12 @@
   import type { MapProperties } from "../../Models/MapProperties"
   import { onDestroy } from "svelte"
   import type { RasterLayerPolygon } from "../../Models/RasterLayers"
+  import StyleLoadingIndicator from "./StyleLoadingIndicator.svelte"
 
   export let placedOverMapProperties: MapProperties
-  export let placedOverMap: UIEventSource<MlMap>
+  export let placedOverMap: Store<MlMap>
+
+  export let interactive: boolean = undefined
 
   export let rasterLayer: UIEventSource<RasterLayerPolygon>
 
@@ -22,6 +25,8 @@
   let altproperties = new MapLibreAdaptor(altmap, {
     rasterLayer,
     zoom: UIEventSource.feedFrom(placedOverMapProperties.zoom),
+    rotation: UIEventSource.feedFrom(placedOverMapProperties.rotation),
+    pitch: UIEventSource.feedFrom(placedOverMapProperties.pitch),
   })
   altproperties.allowMoving.setData(false)
   altproperties.allowZooming.setData(false)
@@ -41,7 +46,6 @@
       return
     }
     altmap.data.resize()
-    const { lon, lat } = placedOverMapProperties.location.data
     const altMapCenter = pixelCenterOf(altmap)
     const c = placedOverMap.data.unproject(altMapCenter)
     altproperties.location.setData({ lon: c.lng, lat: c.lat })
@@ -66,4 +70,7 @@
   }
 </script>
 
-<MaplibreMap map={altmap} />
+<div class="absolute flex h-full w-full items-center justify-center" style="z-index: 100">
+  <StyleLoadingIndicator map={altmap} />
+</div>
+<MaplibreMap {interactive} map={altmap} mapProperties={altproperties} />

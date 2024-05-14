@@ -6,14 +6,26 @@
   import Constants from "../../Models/Constants"
   import type { LayoutInformation } from "../../Models/ThemeConfig/LayoutConfig"
   import Tr from "../Base/Tr.svelte"
-  import SubtleLink from "../Base/SubtleLink.svelte"
   import Translations from "../i18n/Translations"
+  import { LocalStorageSource } from "../../Logic/Web/LocalStorageSource"
 
   export let theme: LayoutInformation
   export let isCustom: boolean = false
   export let userDetails: UIEventSource<UserDetails>
   export let state: { layoutToUse?: { id: string }; osmConnection: OsmConnection }
   export let selected: boolean = false
+
+  let unlockedPersonal = LocalStorageSource.GetParsed("unlocked_personal_theme", false)
+
+  userDetails.addCallbackAndRunD((userDetails) => {
+    if (!userDetails.loggedIn) {
+      return
+    }
+    if (userDetails.csCount > Constants.userJourney.personalLayoutUnlock) {
+      unlockedPersonal.setData(true)
+    }
+    return true
+  })
 
   $: title = new Translation(
     theme.title,
@@ -72,19 +84,17 @@
   let href = createUrl(theme, isCustom, state)
 </script>
 
-{#if theme.id !== personal.id || $userDetails.csCount > Constants.userJourney.personalLayoutUnlock}
-  <SubtleLink href={$href} options={{ extraClasses: "w-full" }}>
-    <img slot="image" src={theme.icon} class="mx-4 block h-11 w-11" alt="" />
+{#if theme.id !== personal.id || $unlockedPersonal}
+  <a class={"button theme-button w-full text-ellipsis"} href={$href}>
+    <img src={theme.icon} class="m-1 mr-2 block h-11 w-11 sm:m-2 sm:mr-4" alt="" />
     <span class="flex flex-col overflow-hidden text-ellipsis">
       <Tr t={title} />
-      <span class="subtle max-h-12 truncate text-ellipsis">
-        <Tr t={description} />
-      </span>
+
       {#if selected}
-        <span class="alert">
+        <span class="thanks hidden-on-mobile" aria-hidden="true">
           <Tr t={Translations.t.general.morescreen.enterToOpen} />
         </span>
       {/if}
     </span>
-  </SubtleLink>
+  </a>
 {/if}

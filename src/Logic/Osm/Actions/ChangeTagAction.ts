@@ -4,6 +4,27 @@ import { TagsFilter } from "../../Tags/TagsFilter"
 import { OsmTags } from "../../../Models/OsmFeature"
 
 export default class ChangeTagAction extends OsmChangeAction {
+    static metatags: {
+        readonly key?: string
+        readonly value?: string
+        readonly docs: string
+        readonly changeType: string[]
+        readonly specialMotivation?: boolean
+    }[] = [
+        {
+            changeType: ["answer"],
+            docs: "Indicates the number of questions that have been answered",
+        },
+        { changeType: ["soft-delete"], docs: "Indicates the number of soft-deleted items" },
+        {
+            changeType: ["add-image"],
+            docs: "Indicates the number of images that have been added in this changeset",
+        },
+        {
+            changeType: ["link-image"],
+            docs: "Indicates the number of images that have been linked in this changeset",
+        },
+    ]
     private readonly _elementId: string
     /**
      * The tags to apply onto the object
@@ -28,7 +49,7 @@ export default class ChangeTagAction extends OsmChangeAction {
         currentTags: Record<string, string>,
         meta: {
             theme: string
-            changeType: "answer" | "soft-delete" | "add-image" | string
+            changeType: "answer" | "soft-delete" | "add-image" | "link-image" | string
         }
     ) {
         super(elementId, true)

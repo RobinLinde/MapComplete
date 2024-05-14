@@ -11,7 +11,23 @@
                     "0": {
                         "then": "這棟建築沒有門牌"
                     }
-                }
+                },
+                "question": "這間房子的門牌號碼是多少？",
+                "render": "門牌號碼是 <b>{addr:housenumber}</b>"
+            },
+            "street": {
+                "question": "地址所在的道路是？"
+            }
+        }
+    },
+    "advertising": {
+        "name": "廣告",
+        "presets": {
+            "0": {
+                "title": "一塊告示牌"
+            },
+            "1": {
+                "title": "獨自設立的海報框"
             }
         }
     },
@@ -72,7 +88,11 @@
             },
             "artwork-website": {
                 "question": "在那個網站能夠找到更多藝術品的資訊？",
-                "render": "<a href='{website}' target='_blank'>這個網站</a>有更多資訊"
+                "render": {
+                    "special": {
+                        "text": "這個網站有更多資訊"
+                    }
+                }
             }
         },
         "title": {
@@ -82,6 +102,20 @@
                 }
             },
             "render": "藝術品"
+        }
+    },
+    "barrier": {
+        "tagRenderings": {
+            "bicycle=yes/no": {
+                "mappings": {
+                    "0": {
+                        "then": "單車騎士能夠穿越。"
+                    },
+                    "1": {
+                        "then": "單車騎士無法穿越。"
+                    }
+                }
+            }
         }
     },
     "bench": {
@@ -367,6 +401,9 @@
                     },
                     "2": {
                         "then": "通行性僅限學校、公司或組織的成員"
+                    },
+                    "3": {
+                        "then": "通行性僅限學校、公司或組織的成員"
                     }
                 },
                 "question": "誰可以使用這個單車停車場？",
@@ -559,7 +596,7 @@
         "name": "消防栓地圖"
     },
     "last_click": {
-        "mapRendering": {
+        "pointRendering": {
             "0": {
                 "label": {
                     "render": "點這邊新增新項目"
@@ -624,34 +661,13 @@
             "email": {
                 "question": "{title()} 的電子郵件地址是什麼？"
             },
-            "level": {
-                "mappings": {
-                    "0": {
-                        "then": "位於地下"
-                    },
-                    "1": {
-                        "then": "位於 1 樓"
-                    },
-                    "2": {
-                        "then": "位於 1 樓"
-                    },
-                    "3": {
-                        "then": "位於 2 樓"
-                    },
-                    "4": {
-                        "then": "位於地下一樓"
-                    }
-                },
-                "question": "此圖徽位於哪個樓層／層級？",
-                "render": "位於 {level} 樓"
-            },
             "opening_hours": {
                 "question": "{title()} 的開放時間是什麼？",
                 "render": "<h3>開放時間</h3>{opening_hours_table(opening_hours)}"
             },
             "opening_hours_24_7": {
                 "override": {
-                    "mappings": {
+                    "+mappings": {
                         "0": {
                             "then": "24/7 開放 (包括假日)"
                         }
@@ -701,6 +717,27 @@
                 },
                 "question": "這個便利設施有電器設備，能給客戶使用嗎？"
             },
+            "single_level": {
+                "mappings": {
+                    "0": {
+                        "then": "位於地下"
+                    },
+                    "1": {
+                        "then": "位於 1 樓"
+                    },
+                    "2": {
+                        "then": "位於 1 樓"
+                    },
+                    "3": {
+                        "then": "位於 2 樓"
+                    },
+                    "4": {
+                        "then": "位於地下一樓"
+                    }
+                },
+                "question": "此圖徽位於哪個樓層／層級？",
+                "render": "位於 {level} 樓"
+            },
             "website": {
                 "question": "{title()} 網址是什麼？"
             },
@@ -734,6 +771,33 @@
             }
         }
     },
+    "unit": {
+        "units": {
+            "0": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} 百萬瓦"
+                    },
+                    "1": {
+                        "human": "{quantity} 千瓦"
+                    },
+                    "2": {
+                        "human": "{quantity} 瓦"
+                    },
+                    "3": {
+                        "human": "{quantity} 千兆瓦"
+                    }
+                }
+            },
+            "3": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} 公尺"
+                    }
+                }
+            }
+        }
+    },
     "usersettings": {
         "tagRenderings": {
             "translation-completeness": {
@@ -746,6 +810,9 @@
                     }
                 }
             }
+        },
+        "title": {
+            "render": "設定"
         }
     },
     "walls_and_buildings": {
@@ -787,31 +854,6 @@
                 }
             },
             "render": "風機"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " 百萬瓦"
-                    },
-                    "1": {
-                        "human": " 千瓦"
-                    },
-                    "2": {
-                        "human": " 瓦"
-                    },
-                    "3": {
-                        "human": " 千兆瓦"
-                    }
-                }
-            },
-            "1": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " 公尺"
-                    }
-                }
-            }
         }
     }
 }

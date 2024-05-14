@@ -1,4 +1,88 @@
 {
+    "address": {
+        "description": "Indirizzi",
+        "name": "Indirizzo presente su OSM",
+        "tagRenderings": {
+            "fixme": {
+                "question": "Indica cosa deve essere corretto qui"
+            },
+            "housenumber": {
+                "mappings": {
+                    "0": {
+                        "then": "Questo edificio non ha indirizzo"
+                    }
+                },
+                "question": "Qual è il numero civico di questa casa?",
+                "render": "Il numero civico della casa è <b>{addr:housenumber}</b>"
+            },
+            "street": {
+                "question": "Qual è la via in cui si trova?",
+                "render": "L’indirizzo è in via <b>{addr:street}</b>"
+            }
+        },
+        "title": {
+            "render": "Indirizzo conosciuto"
+        }
+    },
+    "advertising": {
+        "description": "Completeremo i dati da caratteristiche pubblicitarie, con referenza, operatore e illuminazione",
+        "name": "Pubblicità",
+        "presets": {
+            "0": {
+                "description": "Grande struttura pubblicitaria all'aperto, trovata normalmente in aree ad alto traffico come accanto a strade molto trafficate",
+                "title": "un cartellone"
+            },
+            "1": {
+                "title": "un cartellone pubblicitario fissato a terra"
+            },
+            "2": {
+                "title": "un cartellone pubblicitario fissato al muro"
+            },
+            "4": {
+                "description": "PIccolo pannello per la pubblicità di vicinanza, generalmente destinato ai pedoni",
+                "title": "un piccolo pannello"
+            },
+            "5": {
+                "description": "Una struttura cilindrica all'esterno con affissa della pubblicità",
+                "title": "una colonna"
+            },
+            "6": {
+                "title": "una bandiera"
+            },
+            "7": {
+                "title": "uno schermo"
+            },
+            "8": {
+                "title": "uno schermo fissato al muro"
+            },
+            "10": {
+                "description": "Un telo impermeabile con un messaggio stampato, fissato in modo permanente al muro",
+                "title": "un telone"
+            },
+            "11": {
+                "title": "un totem"
+            },
+            "12": {
+                "description": "Utilizzato per insegna pubblicitaria, un'insegna al neon, i loghi o le indicazioni d'entrata",
+                "title": "un'insegna"
+            },
+            "13": {
+                "title": "una scultura"
+            },
+            "14": {
+                "title": "un murales"
+            }
+        },
+        "tagRenderings": {
+            "Sides": {
+                "mappings": {
+                    "0": {
+                        "then": "Questo oggetto ha la pubblicità solo da un lato"
+                    }
+                }
+            }
+        }
+    },
     "ambulancestation": {
         "description": "La stazione delle ambulanze è un’area per lo stoccaggio delle ambulanze, dell’equipaggiamento medico, dei dispositivi di protezione individuale e di altre forniture medicali.",
         "name": "Carta delle stazioni delle ambulanze",
@@ -98,6 +182,9 @@
                     },
                     "11": {
                         "then": "Mosaico di piastrelle"
+                    },
+                    "12": {
+                        "then": "Scultura in legno"
                     }
                 },
                 "question": "Che tipo di opera d’arte è questo?",
@@ -105,7 +192,29 @@
             },
             "artwork-website": {
                 "question": "Esiste un sito web con maggiori informazioni su quest’opera?",
-                "render": "Ulteriori informazioni su <a href='{website}' target='_blank'>questo sito web</a>"
+                "render": {
+                    "special": {
+                        "text": "Ulteriori informazioni su questo sito web"
+                    }
+                }
+            },
+            "artwork_subject": {
+                "question": "Che cosa rappresenta quest'opera d'arte?",
+                "render": "Quest'opera d'arte rappresenta {wikidata_label(subject:wikidata)}{wikipedia(subject:wikidata)}"
+            },
+            "doubles_as_bench": {
+                "mappings": {
+                    "0": {
+                        "then": "Quest'opera d'arte funge anche da panchina"
+                    },
+                    "1": {
+                        "then": "Quest'opera d'arte non funge anche da panchina"
+                    },
+                    "2": {
+                        "then": "Quest'opera d'arte non funge anche da panchina"
+                    }
+                },
+                "question": "Quest'opera d'arte funge da panchina?"
             }
         },
         "title": {
@@ -115,6 +224,115 @@
                 }
             },
             "render": "Opera d’arte"
+        }
+    },
+    "assembly_point": {
+        "description": "Questo livello contiene punti di raccolta e aree di attesa in cui tutti i dipendenti, i passeggeri o una grande folla si riuniscono in caso di emergenza.",
+        "name": "Punti di raccolta per emergenze",
+        "presets": {
+            "0": {
+                "title": "un punto di raccolta"
+            }
+        },
+        "tagRenderings": {
+            "assembly_point_name": {
+                "question": "Qual è il nome di questo punto di raccolta?",
+                "render": "Questo punto di raccolta si chiama <b>{name}</b>"
+            },
+            "assembly_point_operator": {
+                "question": "Quale organizzazione gestisce questo punto di raccolta?",
+                "render": "Questo punto di raccolta è gestita da <b>{operator}</b>"
+            },
+            "disaster_type": {
+                "mappings": {
+                    "0": {
+                        "then": "Terremoto"
+                    },
+                    "1": {
+                        "then": "Alluvione"
+                    },
+                    "2": {
+                        "then": "Incendio"
+                    },
+                    "3": {
+                        "then": "Frana"
+                    }
+                },
+                "question": "Per quali tipi di disastro è pensato questo punto di raccolta?"
+            }
+        }
+    },
+    "atm": {
+        "description": "Sportello Bancomat per prelevare denaro",
+        "name": "Sportelli Bancomat",
+        "presets": {
+            "0": {
+                "title": "Uno sportello bancomat"
+            }
+        },
+        "tagRenderings": {
+            "cash_in": {
+                "mappings": {
+                    "0": {
+                        "then": "Probabilmente non puoi depositare dei contanti in questo sportello bancomat"
+                    },
+                    "1": {
+                        "then": "Puoi depositare dei contanti in questo sportello bancomat"
+                    },
+                    "2": {
+                        "then": "Non puoi depositare dei contanti in questo sportello bancomat"
+                    }
+                },
+                "question": "Puoi depositare dei contanti in questo sportello bancomat?"
+            },
+            "cash_out": {
+                "mappings": {
+                    "0": {
+                        "then": "Puoi prelevare dei contanti da questo sportello bancomat"
+                    },
+                    "1": {
+                        "then": "Puoi prelevare dei contanti da questo sportello bancomat"
+                    },
+                    "2": {
+                        "then": "Non puoi prelevare dei contanti da questo sportello bancomat"
+                    }
+                },
+                "question": "Puoi prelevare dei contanti da questo sportello bancomat?"
+            },
+            "cash_out-denominations-notes": {
+                "mappings": {
+                    "0": {
+                        "then": "Si possono prelevare banconote da 5 euro"
+                    },
+                    "1": {
+                        "then": "Si possono prelevare banconote da 10 euro"
+                    },
+                    "2": {
+                        "then": "Si possono prelevare banconote da 20 euro"
+                    },
+                    "3": {
+                        "then": "Si possono prelevare banconote da 50 euro"
+                    },
+                    "4": {
+                        "then": "Si possono prelevare banconote da 100 euro"
+                    },
+                    "5": {
+                        "then": "Non si possono prelevare banconote da 200 euro"
+                    },
+                    "6": {
+                        "then": "Non si possono prelevare banconote da 500 euro"
+                    }
+                },
+                "question": "Quali banconote si possono ritirare qui?"
+            },
+            "name": {
+                "render": "Il nome di questo sportello bancomat è {name}"
+            },
+            "operator": {
+                "freeform": {
+                    "placeholder": "Operatore"
+                }
+            }
         }
     },
     "bench": {
@@ -383,6 +601,7 @@
         }
     },
     "bike_parking": {
+        "description": "Un livello che mostra dove puoi parcheggiare la tua bicicletta",
         "name": "Parcheggio bici",
         "presets": {
             "0": {
@@ -399,6 +618,9 @@
                         "then": "Accesso destinato principalmente ai visitatori di un’attività"
                     },
                     "2": {
+                        "then": "Accesso limitato ai membri di una scuola, una compagnia o un’organizzazione"
+                    },
+                    "3": {
                         "then": "Accesso limitato ai membri di una scuola, una compagnia o un’organizzazione"
                     }
                 },
@@ -429,7 +651,7 @@
                         "then": "Colonnina"
                     },
                     "7": {
-                        "then": "Una zona del pavimento che è marcata per il parcheggio delle bici"
+                        "then": "Una zona del terreno che è marcata per il parcheggio delle bici"
                     }
                 },
                 "question": "Di che tipo di parcheggio bici si tratta?",
@@ -1180,6 +1402,23 @@
         "description": "Questo livello visualizza le direzioni",
         "name": "Visualizzazione della direzione"
     },
+    "disaster_response": {
+        "description": "Questo livello contiene organizzazioni che hanno come obiettivo principale quello di aiutare la popolazione civile durante e dopo disastri naturali o antropogenici, lavorando nell'area colpita.",
+        "presets": {
+            "0": {
+                "title": "un'organizzazione per la risposta ai disastri"
+            }
+        },
+        "tagRenderings": {
+            "disaster_response_name": {
+                "question": "Qual è il nome di questa organizzazione?",
+                "render": "Questa organizzazione si chiama <b>{name}</b>"
+            }
+        },
+        "title": {
+            "render": "Organizzazione per la risposta ai disastri"
+        }
+    },
     "drinking_water": {
         "name": "Acqua potabile",
         "presets": {
@@ -1344,7 +1583,11 @@
             },
             "ghost_bike-source": {
                 "question": "In quale pagina web si possono trovare informazioni sulla bici fantasma o l’incidente?",
-                "render": "<a href='{source}' target='_blank'>Sono disponibili ulteriori informazioni</a>"
+                "render": {
+                    "special": {
+                        "text": "Sono disponibili ulteriori informazioni"
+                    }
+                }
             },
             "ghost_bike-start_date": {
                 "question": "Quando è stata installata questa bici fantasma?",
@@ -1434,7 +1677,7 @@
         }
     },
     "last_click": {
-        "mapRendering": {
+        "pointRendering": {
             "0": {
                 "label": {
                     "render": "Aggiungi nuovo elemento"
@@ -1486,6 +1729,13 @@
             "render": "Mappa"
         }
     },
+    "memorial": {
+        "tagRenderings": {
+            "start_date": {
+                "render": "Piazzata in data {start_date}"
+            }
+        }
+    },
     "nature_reserve": {
         "tagRenderings": {
             "Curator": {
@@ -1509,8 +1759,7 @@
             },
             "Email": {
                 "question": "Qual è l’indirizzo email a cui scrivere per fare domande o segnalare problemi su questa riserva naturale?",
-                "questionHint": "Rispetta la privacy (compila l’indirizzo email personale solo se è stato reso pubblico)",
-                "render": "<a href='mailto:{email}' target='_blank'>{email}</a>"
+                "questionHint": "Rispetta la privacy (compila l’indirizzo email personale solo se è stato reso pubblico)"
             },
             "Surface area": {
                 "render": "Area: {_surface:ha} ha"
@@ -1759,7 +2008,11 @@
             },
             "public_bookcase-website": {
                 "question": "C'è un sito web con maggiori informazioni su questa microbiblioteca?",
-                "render": "Maggiori informazioni sul <a href='{website}' target='_blank'>sito web</a>"
+                "render": {
+                    "special": {
+                        "text": "Maggiori informazioni sul sito web"
+                    }
+                }
             }
         },
         "title": {
@@ -1797,24 +2050,6 @@
             "email": {
                 "question": "Qual è l'indirizzo email di {title()}?"
             },
-            "level": {
-                "mappings": {
-                    "0": {
-                        "then": "Si trova sotto il livello stradale"
-                    },
-                    "1": {
-                        "then": "Si trova al pianoterra"
-                    },
-                    "2": {
-                        "then": "Si trova al pianoterra"
-                    },
-                    "3": {
-                        "then": "Si trova al primo piano"
-                    }
-                },
-                "question": "A quale piano si trova questo elemento?",
-                "render": "Si trova al piano numero {level}"
-            },
             "opening_hours": {
                 "question": "Quali sono gli orari di apertura di {title()}?",
                 "render": "<h3>Orari di apertura</h3>{opening_hours_table(opening_hours)}"
@@ -1841,6 +2076,24 @@
             },
             "phone": {
                 "question": "Qual è il numero di telefono di {title()}?"
+            },
+            "single_level": {
+                "mappings": {
+                    "0": {
+                        "then": "Si trova sotto il livello stradale"
+                    },
+                    "1": {
+                        "then": "Si trova al pianoterra"
+                    },
+                    "2": {
+                        "then": "Si trova al pianoterra"
+                    },
+                    "3": {
+                        "then": "Si trova al primo piano"
+                    }
+                },
+                "question": "A quale piano si trova questo elemento?",
+                "render": "Si trova al piano numero {level}"
             },
             "website": {
                 "question": "Qual è il sito web di {title()}?"
@@ -2117,6 +2370,14 @@
                     }
                 },
                 "render": "La superficie è <b>{surface}</b>"
+            }
+        }
+    },
+    "speed_camera": {
+        "tagRenderings": {
+            "camera_direction": {
+                "question": "In quale direzione geografica punta questa videocamera?",
+                "render": "Punta in direzione {direction}"
             }
         }
     },
@@ -2612,6 +2873,36 @@
             "render": "Albero"
         }
     },
+    "unit": {
+        "units": {
+            "0": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} megawatt"
+                    },
+                    "1": {
+                        "human": "{quantity} kilowatt"
+                    },
+                    "2": {
+                        "human": "{quantity} watt"
+                    },
+                    "3": {
+                        "human": "{quantity} gigawatt"
+                    }
+                }
+            },
+            "3": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} metri"
+                    },
+                    "3": {
+                        "human": "{quantity} piedi"
+                    }
+                }
+            }
+        }
+    },
     "viewpoint": {
         "description": "Un punto panoramico che offre una bella vista. L'ideale è aggiungere un'immagine, se nessun'altra categoria è appropriata",
         "name": "Punto panoramico",
@@ -2665,17 +2956,6 @@
                 }
             }
         },
-        "mapRendering": {
-            "0": {
-                "iconSize": {
-                    "mappings": {
-                        "0": {
-                            "then": "Cestino dei rifiuti"
-                        }
-                    }
-                }
-            }
-        },
         "name": "Cestino dei rifiuti",
         "presets": {
             "0": {
@@ -2719,6 +2999,9 @@
                     },
                     "6": {
                         "then": "Un cestino rifiuti per la plastica"
+                    },
+                    "7": {
+                        "then": "Un cestino rifiuti per la carta"
                     }
                 },
                 "question": "Che tipo di cestino dei rifiuti è questo?"
@@ -2820,31 +3103,6 @@
                 }
             },
             "render": "pala eolica"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " megawatt"
-                    },
-                    "1": {
-                        "human": " kilowatt"
-                    },
-                    "2": {
-                        "human": " watt"
-                    },
-                    "3": {
-                        "human": " gigawatt"
-                    }
-                }
-            },
-            "1": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " metri"
-                    }
-                }
-            }
         }
     }
 }

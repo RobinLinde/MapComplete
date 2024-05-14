@@ -252,22 +252,30 @@ class ClosestNObjectFunc implements ExtraFunction {
     static GetClosestNFeatures(
         params: ExtraFuncParams,
         feature: any,
-        features: string | Feature[],
+        features: string | string[] | Feature[],
         options?: { maxFeatures?: number; uniqueTag?: string | undefined; maxDistance?: number }
     ): { feat: any; distance: number }[] {
         const maxFeatures = options?.maxFeatures ?? 1
         const maxDistance = options?.maxDistance ?? 500
         const uniqueTag: string | undefined = options?.uniqueTag
-        let allFeatures: Feature[][]
         if (typeof features === "string") {
-            const name = features
-            const bbox = GeoOperations.bbox(
-                GeoOperations.buffer(GeoOperations.bbox(feature), maxDistance)
-            )
-            allFeatures = params.getFeaturesWithin(name, new BBox(bbox.geometry.coordinates))
-        } else {
-            allFeatures = [features]
+            features = [features]
         }
+
+        let allFeatures: Feature[][] = []
+        for (const spec of features) {
+            if (typeof spec === "string") {
+                const name = spec
+                const bbox = GeoOperations.bbox(
+                    GeoOperations.buffer(GeoOperations.bbox(feature), maxDistance)
+                )
+                const coors = <[number, number][]>bbox.geometry.coordinates
+                allFeatures.push(...params.getFeaturesWithin(name, new BBox(coors)))
+            } else {
+                allFeatures.push([spec])
+            }
+        }
+
         if (features === undefined) {
             return
         }
@@ -275,8 +283,11 @@ class ClosestNObjectFunc implements ExtraFunction {
         const selfCenter = GeoOperations.centerpointCoordinates(feature)
         let closestFeatures: { feat: any; distance: number }[] = []
 
-        for (const feats of allFeatures) {
+        for (const feats of allFeatures ?? []) {
             for (const otherFeature of feats) {
+                if (otherFeature.properties === undefined) {
+                    console.warn("OtherFeature does not have properties:", otherFeature)
+                }
                 if (
                     otherFeature === feature ||
                     otherFeature.properties.id === feature.properties.id
@@ -454,11 +465,15 @@ export class ExtraFunctions {
         "To enable this feature,  add a field `calculatedTags` in the layer object, e.g.:",
         "````",
         '"calculatedTags": [',
-        '    "_someKey=javascript-expression",',
+        '    "_someKey=javascript-expression (lazy execution)",',
+        '    "_some_other_key:=javascript expression (strict execution)',
         '    "name=feat.properties.name ?? feat.properties.ref ?? feat.properties.operator",',
         "    \"_distanceCloserThen3Km=distanceTo(feat)( some_lon, some_lat) < 3 ? 'yes' : 'no'\" ",
         "  ]",
         "````",
+        "",
+        "By using `:=` as separator, the attribute will be calculated as soon as the data is loaded (strict evaluation)",
+        "The default behaviour, using `=` as separator, is lazy loading",
         "",
         "The above code will be executed for every feature in the layer. The feature is accessible as `feat` and is an amended geojson object:",
 

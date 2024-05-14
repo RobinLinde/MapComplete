@@ -7,9 +7,19 @@
     "es": "Lugares para ver pájaros",
     "da": "Steder til fugleobservation",
     "fr": "Lieu pour observer des oiseaux",
-    "ca": "Llocs per a vore ocells"
+    "ca": "Llocs per a vore ocells",
+    "pl": "Miejsca do obserwacji ptaków",
+    "cs": "Místa pro pozorování ptáků"
   },
-  "minzoom": 14,
+  "description": {
+    "en": "A birdhide",
+    "nl": "Een vogelkijkhut",
+    "da": "Et fugleskjul",
+    "de": "Ein Vogelbeobachtungsturm",
+    "fr": "Un observatoire ornithologique",
+    "ca": "Un observatori d'ocells",
+    "cs": "Pozorovatelna"
+  },
   "source": {
     "osmTags": {
       "and": [
@@ -17,13 +27,16 @@
       ]
     }
   },
+  "minzoom": 14,
   "title": {
     "render": {
       "en": "Bird watching place",
       "nl": "Vogelkijkplaats",
       "de": "Ort zur Vogelbeobachtung",
       "fr": "Lieu d’observation d’oiseaux",
-      "da": "Plads til fugleobservation"
+      "da": "Plads til fugleobservation",
+      "ca": "Lloc d'observació d'ocells",
+      "cs": "Místo pozorování ptáků"
     },
     "mappings": [
       {
@@ -54,7 +67,9 @@
           "nl": "Vogelkijkhut {name}",
           "da": "Fugleskjul {name}",
           "de": "Vogelbeobachtungsplatz {name}",
-          "fr": "Observatoire ornithologique {name}"
+          "fr": "Observatoire ornithologique {name}",
+          "ca": "Observatori d'Ocells {name}",
+          "cs": "Ptačí pozorovatelna {name}"
         }
       },
       {
@@ -68,19 +83,95 @@
           "nl": "Vogelkijkwand {name}",
           "de": "Vogelversteck {name}",
           "fr": "Camouflage d’observation ornithologique {name}",
-          "da": "Fugletårn {name}"
+          "da": "Fugletårn {name}",
+          "ca": "Observatori d'ocells {name}",
+          "cs": "Ptačí pozorovatelna {name}"
         }
       }
     ]
   },
-  "description": {
-    "en": "A birdhide",
-    "nl": "Een vogelkijkhut",
-    "da": "Et fugleskjul",
-    "de": "Ein Vogelbeobachtungsturm",
-    "fr": "Un observatoire ornithologique",
-    "ca": "Un observatori d'ocells"
-  },
+  "pointRendering": [
+    {
+      "marker": [
+        {
+          "icon": {
+            "render": "./assets/layers/birdhide/birdhide.svg",
+            "mappings": [
+              {
+                "if": {
+                  "or": [
+                    "building=yes",
+                    "shelter=yes",
+                    "amenity=shelter"
+                  ]
+                },
+                "then": "./assets/layers/birdhide/birdshelter.svg"
+              }
+            ]
+          }
+        }
+      ],
+      "location": [
+        "point",
+        "centroid"
+      ]
+    }
+  ],
+  "lineRendering": [],
+  "presets": [
+    {
+      "tags": [
+        "leisure=bird_hide",
+        "building=yes",
+        "shelter=yes",
+        "amenity=shelter"
+      ],
+      "title": {
+        "en": "a birdhide",
+        "nl": "een vogelkijkhut",
+        "da": "et fugleskjul",
+        "de": "ein Gebäude zur Vogelbeobachtung",
+        "fr": "un observatoire ornithologique",
+        "ca": "un observatori d'ocells",
+        "cs": "pozorovatelna"
+      },
+      "description": {
+        "en": "A covered shelter where one can watch birds comfortably",
+        "nl": "Een overdekte hut waarbinnen er warm en droog naar vogels gekeken kan worden",
+        "de": "Ein überdachter Unterstand, in dem man bequem Vögel beobachten kann",
+        "es": "Un refugio cubierto donde se pueden ver pájaros confortablemente",
+        "da": "Et overdækket ly, hvor man kan se fugle i ro og mag",
+        "fr": "Un abris couvert pour observer les oiseaux confortablement",
+        "ca": "Un refugi cobert on es poden veure ocells confortablement",
+        "cs": "Krytý přístřešek, kde lze pohodlně pozorovat ptáky"
+      }
+    },
+    {
+      "tags": [
+        "leisure=bird_hide",
+        "building=no",
+        "shelter=no"
+      ],
+      "title": {
+        "en": "a bird blind",
+        "nl": "een vogelkijkwand",
+        "de": "einen Sichtschutz zur Vogelbeobachtung",
+        "fr": "un camouflage d’observation ornithologique",
+        "da": "et fugletårn",
+        "ca": "un observatori d'ocells"
+      },
+      "description": {
+        "en": "A screen or wall with openings to watch birds",
+        "nl": "Een vogelkijkwand waarachter men kan staan om vogels te kijken",
+        "es": "Una pantalla o pared con aperturas para ver pájaros",
+        "da": "En skærm eller væg med åbninger til at se på fugle",
+        "de": "Ein Schirm oder eine Wand mit Öffnungen zum Beobachten von Vögeln",
+        "fr": "Un écran ou un mur avec des ouvertures pour observer les oiseaux",
+        "ca": "Una pantalla o paret amb obertures per a observar ocells",
+        "cs": "Obrazovka nebo stěna s otvory pro sledování ptáků"
+      }
+    }
+  ],
   "tagRenderings": [
     "images",
     {
@@ -90,7 +181,8 @@
         "nl": "Is dit een kijkwand of kijkhut?",
         "de": "Ist dies nur ein Sichtschutz oder ein überdachter Unterstand zur Vogelbeobachtung?",
         "fr": "S’agit-il d’un camouflage ou d’un abris d’observation ?",
-        "da": "Er dette en fugletårn eller et fuglekiggerskjul?"
+        "da": "Er dette en fugletårn eller et fuglekiggerskjul?",
+        "cs": "Jedná se o ptačí zástěnu nebo o úkryt pro pozorování ptáků?"
       },
       "mappings": [
         {
@@ -106,7 +198,9 @@
             "nl": "Vogelkijkwand",
             "de": "Sichtschutz zur Vogelbeobachtung",
             "fr": "Camouflage d’observation ornithologique",
-            "da": "Fugletårn"
+            "da": "Fugletårn",
+            "ca": "Observatori d'ocells",
+            "cs": "Ptačí pozorovatelna"
           }
         },
         {
@@ -123,7 +217,8 @@
             "da": "Fugleskjul",
             "de": "Vogelbeobachtungsturm",
             "fr": "Observatoire ornithologique",
-            "ca": "Observatori d'ocells"
+            "ca": "Observatori d'ocells",
+            "cs": "Ptačí skrýš"
           }
         },
         {
@@ -138,7 +233,9 @@
             "nl": "Vogelkijktoren",
             "de": "Turm zur Vogelbeobachtung",
             "fr": "Tour d’observation ornithologique",
-            "da": "Fugletårn skjul"
+            "da": "Fugletårn skjul",
+            "ca": "Torre d'observació d'ocells",
+            "cs": "Ptačí budka věž"
           }
         },
         {
@@ -154,7 +251,8 @@
             "nl": "Vogelkijkhut",
             "de": "Unterstand zur Vogelbeobachtung",
             "fr": "Abris d’observation ornithologique",
-            "da": "Fuglekigger skjul"
+            "da": "Fuglekigger skjul",
+            "cs": "Úkryt pro pozorování ptáků"
           },
           "hideInAnswer": true
         }
@@ -167,7 +265,9 @@
         "nl": "Is deze vogelkijkplaats rolstoeltoegankelijk?",
         "da": "Er dette fugleskjul tilgængeligt for kørestolsbrugere?",
         "de": "Ist der Ort rollstuhlgerecht gestaltet?",
-        "fr": "Cet observatoire ornithologique est-il accessible en chaise roulante ?"
+        "fr": "Cet observatoire ornithologique est-il accessible en chaise roulante ?",
+        "ca": "Aquest observatori d'ocells és accessible per als usuaris de cadira de rodes?",
+        "cs": "Je tato ptačí pozorovatelna přístupná pro vozíčkáře?"
       },
       "mappings": [
         {
@@ -182,7 +282,9 @@
             "es": "Hay provisiones especiales para usuarios de sillas de ruedas",
             "de": "Für Rollstuhlfahrer gibt es besondere Vorrichtungen",
             "fr": "L’infrastructure est adaptée aux utilisateurs de chaises roulantes",
-            "da": "Der er særlige bestemmelser for kørestolsbrugere"
+            "da": "Der er særlige bestemmelser for kørestolsbrugere",
+            "ca": "Hi ha provisions especials per als usuaris de cadira de rodes",
+            "cs": "Pro vozíčkáře jsou připravena speciální opatření"
           }
         },
         {
@@ -196,7 +298,9 @@
             "nl": "Een rolstoel raakt er vlot",
             "da": "En kørestolsbruger kan sagtens bruge dette fugleskjul",
             "de": "Der Ort ist rollstuhlgerecht gestaltet",
-            "fr": "Cet observatoire ornithologique est facilement accessible en chaise roulante"
+            "fr": "Cet observatoire ornithologique est facilement accessible en chaise roulante",
+            "ca": "Una cadira de rodes pot utilitzar fàcilment aquest observador d'ocells",
+            "cs": "Invalidní vozík může snadno používat tuto ptačí pozorovatelnu"
           }
         },
         {
@@ -210,7 +314,9 @@
             "nl": "Je kan er raken met een rolstoel, maar het is niet makkelijk",
             "da": "Dette fugleskjul kan nås med kørestol, men det er ikke nemt",
             "de": "Der Ort ist nur eingeschränkt rollstuhlgerecht gestaltet",
-            "fr": "Cet observatoire ornithologique est accessible en chaise roulante mais difficilement"
+            "fr": "Cet observatoire ornithologique est accessible en chaise roulante mais difficilement",
+            "ca": "Aquest observatori d'ocells és accessible amb cadira de rodes, però no és fàcil",
+            "cs": "Tato ptačí pozorovatelna je dosažitelná na invalidním vozíku, ale není to snadné"
           }
         },
         {
@@ -226,7 +332,9 @@
             "es": "No accesible a usuarios con sillas de ruedas",
             "da": "Ikke tilgængelig for kørestolsbrugere",
             "fr": "Pas accessible en chaise roulante",
-            "ca": "No accessible per a persones amb cadira de rodes"
+            "ca": "No accessible per a persones amb cadira de rodes",
+            "pl": "Niedostępne dla osób na wózkach",
+            "cs": "Není přístupný pro osoby na invalidním vozíku"
           }
         }
       ]
@@ -238,7 +346,10 @@
         "de": "Betrieben von {operator}",
         "es": "Operado por {operator}",
         "da": "Drives af {operator}",
-        "fr": "Opéré par {operator}"
+        "fr": "Opéré par {operator}",
+        "ca": "Gestionat per {operator}",
+        "pl": "Obsługiwane przez {operator}",
+        "cs": "Provozuje {operator}"
       },
       "freeform": {
         "key": "operator"
@@ -248,7 +359,9 @@
         "nl": "Wie beheert deze vogelkijkplaats?",
         "da": "Hvem driver dette fugleskjul?",
         "de": "Wer betreibt diesen Ort zur Vogelbeobachtung?",
-        "fr": "Qui opère cet observatoire ornithologique ?"
+        "fr": "Qui opère cet observatoire ornithologique ?",
+        "ca": "Qui gestiona aquest observatori d'ocells?",
+        "cs": "Kdo provozuje tuto ptačí pozorovatelnu?"
       },
       "mappings": [
         {
@@ -259,7 +372,10 @@
             "de": "Betrieben von Natuurpunt",
             "es": "Operado por Natuurpunt",
             "da": "Drives af Natuurpunt",
-            "fr": "Opéré par Natuurpunt"
+            "fr": "Opéré par Natuurpunt",
+            "ca": "Operat per Natuurpunt",
+            "pl": "Obsługiwane przez Natuurpunt",
+            "cs": "Provozuje Natuurpunt"
           }
         },
         {
@@ -269,61 +385,12 @@
             "nl": "Beheer door het Agentschap Natuur en Bos",
             "de": "Betrieben von einer Forst- bzw. Naturschutzbehörde",
             "fr": "Opéré par l’Agence Nature et Forêts",
-            "da": "Drives af Natur- og Skovstyrelsen"
+            "da": "Drives af Natur- og Skovstyrelsen",
+            "cs": "Provozuje the Agency for Nature and Forests"
           }
         }
       ],
       "id": "birdhide-operator"
-    }
-  ],
-  "presets": [
-    {
-      "tags": [
-        "leisure=bird_hide",
-        "building=yes",
-        "shelter=yes",
-        "amenity=shelter"
-      ],
-      "title": {
-        "en": "a birdhide",
-        "nl": "een vogelkijkhut",
-        "da": "et fugleskjul",
-        "de": "ein Gebäude zur Vogelbeobachtung",
-        "fr": "un observatoire ornithologique",
-        "ca": "un observatori d'ocells"
-      },
-      "description": {
-        "en": "A covered shelter where one can watch birds comfortably",
-        "nl": "Een overdekte hut waarbinnen er warm en droog naar vogels gekeken kan worden",
-        "de": "Ein überdachter Unterstand, in dem man bequem Vögel beobachten kann",
-        "es": "Un refugio cubierto donde se pueden ver pájaros confortablemente",
-        "da": "Et overdækket ly, hvor man kan se fugle i ro og mag",
-        "fr": "Un abris couvert pour observer les oiseaux confortablement",
-        "ca": "Un refugi cobert on es poden veure ocells confortablement"
-      }
-    },
-    {
-      "tags": [
-        "leisure=bird_hide",
-        "building=no",
-        "shelter=no"
-      ],
-      "title": {
-        "en": "a bird blind",
-        "nl": "een vogelkijkwand",
-        "de": "einen Sichtschutz zur Vogelbeobachtung",
-        "fr": "un camouflage d’observation ornithologique",
-        "da": "et fugletårn"
-      },
-      "description": {
-        "en": "A screen or wall with openings to watch birds",
-        "nl": "Een vogelkijkwand waarachter men kan staan om vogels te kijken",
-        "es": "Una pantalla o pared con aperturas para ver pájaros",
-        "da": "En skærm eller væg med åbninger til at se på fugle",
-        "de": "Ein Schirm oder eine Wand mit Öffnungen zum Beobachten von Vögeln",
-        "fr": "Un écran ou un mur avec des ouvertures pour observer les oiseaux",
-        "ca": "Una pantalla o paret amb obertures per a observar ocells"
-      }
     }
   ],
   "filter": [
@@ -338,7 +405,8 @@
             "fr": "Accessible aux fauteuils roulants",
             "ca": "Accessible per a cadires de rodes",
             "es": "Accesible con sillas de ruedas",
-            "da": "Tilgængelig for kørestolsbrugere"
+            "da": "Tilgængelig for kørestolsbrugere",
+            "cs": "Bezbariérový přístup"
           },
           "osmTags": {
             "or": [
@@ -360,7 +428,8 @@
             "de": "Nur überdachte Vogelbeobachtungsstellen",
             "da": "Kun overdækkede fugleskjul",
             "fr": "Seulement les observatoires ornithologiques couverts",
-            "ca": "Només observatoris d'ocells coberts"
+            "ca": "Només observatoris d'ocells coberts",
+            "cs": "Pouze zakryté pozorovatelny"
           },
           "osmTags": {
             "and": [
@@ -388,28 +457,5 @@
   "allowMove": {
     "enableRelocation": false,
     "enableImproveAccuracy": true
-  },
-  "mapRendering": [
-    {
-      "icon": {
-        "render": "./assets/layers/birdhide/birdhide.svg",
-        "mappings": [
-          {
-            "if": {
-              "or": [
-                "building=yes",
-                "shelter=yes",
-                "amenity=shelter"
-              ]
-            },
-            "then": "./assets/layers/birdhide/birdshelter.svg"
-          }
-        ]
-      },
-      "location": [
-        "point",
-        "centroid"
-      ]
-    }
-  ]
+  }
 }

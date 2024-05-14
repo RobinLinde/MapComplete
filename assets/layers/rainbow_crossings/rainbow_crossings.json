@@ -4,13 +4,17 @@
     "en": "Crossings with rainbow paintings",
     "de": "Fußgängerüberwege in Regenbogenfarben",
     "fr": "Passages avec peinture arc-en-ciel",
-    "ca": "Pasos de vianants pintats amb l'arc de Sant Martí"
+    "ca": "Pasos de vianants pintats amb l'arc de Sant Martí",
+    "cs": "Přechody s duhovými malbami"
   },
   "description": {
     "en": "A layer showing pedestrian crossings with rainbow paintings",
     "de": "Eine Ebene mit Fußgängerüberwegen in Regenbogenfarben",
     "fr": "Une couche affichant les passages piétons avec des peintures arc-en-ciel",
-    "ca": "Una capa que mostra els passos de vianants pintats amb de l'arc de Sant Martí"
+    "ca": "Una capa que mostra els passos de vianants pintats amb de l'arc de Sant Martí",
+    "cs": "Vrstva zobrazující přechody pro chodce s duhovými malbami",
+    "pl": "Warstwa przedstawiająca przejścia dla pieszych z tęczowym malowaniem",
+    "es": "Una capa que muestra cruces peatonales con pinturas arco iris"
   },
   "source": {
     "osmTags": {
@@ -33,16 +37,51 @@
       "de": "Überweg",
       "nl": "Oversteekplaats",
       "pa_PK": "کراسنگ",
-      "fr": "Passage"
+      "fr": "Passage",
+      "ca": "Creuament",
+      "cs": "Přechod"
     }
   },
+  "pointRendering": [
+    {
+      "marker": [
+        {
+          "icon": {
+            "render": "./assets/themes/rainbow_crossings/crossing.svg",
+            "mappings": [
+              {
+                "if": "surface:colour=rainbow",
+                "then": "./assets/themes/rainbow_crossings/logo.svg"
+              }
+            ]
+          }
+        }
+      ],
+      "iconSize": "40,40",
+      "location": [
+        "point",
+        "centroid"
+      ],
+      "anchor": "center"
+    }
+  ],
+  "lineRendering": [
+    {
+      "color": "red",
+      "width": "5",
+      "dashArray": "10 2",
+      "lineCap": "square"
+    }
+  ],
   "presets": [
     {
       "title": {
         "en": "a crossing",
         "de": "einen Überweg",
         "nl": "een oversteekplaats",
-        "fr": "un passage"
+        "fr": "un passage",
+        "ca": "un creuament",
+        "cs": "přechod"
       },
       "tags": [
         "highway=footway",
@@ -53,9 +92,12 @@
         "de": "Fußgängerüberweg",
         "nl": "Voetgangersoversteekplaats",
         "fr": "Passage piéton",
-        "ca": "Pas de vianants"
+        "ca": "Pas de vianants",
+        "cs": "Přechod pro chodce"
       },
-      "snapToLayer": "cycleways_and_roads",
+      "snapToLayer": [
+        "cycleways_and_roads"
+      ],
       "maxSnapDistance": 25
     }
   ],
@@ -67,7 +109,8 @@
         "en": "Does this crossing has rainbow paintings?",
         "de": "Hat der Überweg eine Markierung in Regenbogenfarben?",
         "fr": "Ce passage a-t-il une peinture arc-en-ciel ?",
-        "ca": "Aquest pas de vianants està pintat amb l'arc de Sant Martí?"
+        "ca": "Aquest pas de vianants està pintat amb l'arc de Sant Martí?",
+        "cs": "Má tento přechod duhové malby?"
       },
       "mappings": [
         {
@@ -76,7 +119,8 @@
             "en": "This crossing has rainbow paintings",
             "de": "Der Überweg hat eine Markierung in Regenbogenfarben",
             "fr": "Ce passage a une peinture arc-en-ciel",
-            "ca": "Aquest pas de vianants està pintat amb l'arc de Sant Martí"
+            "ca": "Aquest pas de vianants està pintat amb l'arc de Sant Martí",
+            "cs": "Tento přechod má duhové malby"
           },
           "icon": {
             "path": "./assets/themes/rainbow_crossings/logo.svg",
@@ -89,7 +133,8 @@
             "en": "No rainbow paintings here",
             "de": "Hier gibt es kein Markierung in Regenbogenfarben",
             "fr": "Pas de peinture arc-en-ciel ici",
-            "ca": "No està pintat amb l'arc de Sant Martí"
+            "ca": "No està pintat amb l'arc de Sant Martí",
+            "cs": "Žádné duhové malby"
           },
           "icon": "./assets/themes/rainbow_crossings/crossing.svg"
         },
@@ -99,37 +144,13 @@
             "en": "No rainbow paintings here",
             "de": "Hier gibt es kein Markierung in Regenbogenfarben",
             "fr": "Pas de peinture arc-en-ciel ici",
-            "ca": "No està pintat amb l'arc de Sant Martí"
+            "ca": "No està pintat amb l'arc de Sant Martí",
+            "cs": "Žádné duhové malby"
           },
           "icon": "./assets/themes/rainbow_crossings/crossing.svg",
           "hideInAnswer": true
         }
       ]
-    }
-  ],
-  "mapRendering": [
-    {
-      "icon": {
-        "render": "./assets/themes/rainbow_crossings/crossing.svg",
-        "mappings": [
-          {
-            "if": "surface:colour=rainbow",
-            "then": "./assets/themes/rainbow_crossings/logo.svg"
-          }
-        ]
-      },
-      "iconSize": "40,40",
-      "location": [
-        "point",
-        "centroid"
-      ],
-      "anchor": "center"
-    },
-    {
-      "color": "red",
-      "width": "5",
-      "dashArray": "10 2",
-      "lineCap": "square"
     }
   ]
 }

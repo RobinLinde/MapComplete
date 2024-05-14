@@ -26,7 +26,7 @@
     },
     "advertising": {
         "description": "We will complete data from advertising features with reference, operator and lit",
-        "name": "Advertise",
+        "name": "Advertisement",
         "presets": {
             "0": {
                 "description": "A large outdoor advertising structure, typically found in high-traffic areas such as alongside busy roads",
@@ -39,37 +39,43 @@
                 "title": "a poster box mounted on a wall"
             },
             "3": {
+                "title": "a poster box part of a public transport shelter"
+            },
+            "4": {
                 "description": "Small billboard for neighbourhood advertising, generally intended for pedestrians",
                 "title": "a board"
             },
-            "4": {
+            "5": {
                 "description": "A cylindrical outdoor structure which shows advertisements",
                 "title": "a column"
             },
-            "5": {
+            "6": {
                 "title": "a flag"
             },
-            "6": {
+            "7": {
                 "title": "a screen"
             },
-            "7": {
+            "8": {
                 "title": "a screen mounted on a wall"
             },
-            "8": {
+            "9": {
+                "title": "a screen mounted on a transit shelter"
+            },
+            "10": {
                 "description": "A piece of waterproof textile with a printed message, permanently anchored on a wall",
                 "title": "a tarp"
             },
-            "9": {
+            "11": {
                 "title": "a totem"
             },
-            "10": {
+            "12": {
                 "description": "Used for advertising signs, neon signs, logos & institutional entrance signs",
                 "title": "a sign"
             },
-            "11": {
+            "13": {
                 "title": "a sculpture"
             },
-            "12": {
+            "14": {
                 "title": "a wall painting"
             }
         },
@@ -135,7 +141,7 @@
                         "then": "Message from non-profit organizations"
                     },
                     "6": {
-                        "then": "To expres your opinion"
+                        "then": "To express your opinion"
                     },
                     "7": {
                         "then": "Religious message"
@@ -235,6 +241,83 @@
             }
         }
     },
+    "aerialway": {
+        "description": "Various forms of transport for passengers and goods that use wires, including cable cars, gondolas, chair lifts, drag lifts, and zip lines. ",
+        "name": "Aerialways",
+        "pointRendering": {
+            "1": {
+                "label": {
+                    "render": "{name}"
+                }
+            }
+        },
+        "tagRenderings": {
+            "duration": {
+                "question": "How long takes a single journey with this elevator?",
+                "questionHint": "This excludes the waiting time.",
+                "render": "A single journey takes {duration} minutes"
+            },
+            "length": {
+                "render": "This aerialway is {_length:km} kilometer long"
+            },
+            "occupancy": {
+                "question": "How many people fit a single carriage?",
+                "render": "{aerialway:occupancy} people fit a single carriage"
+            },
+            "oneway": {
+                "mappings": {
+                    "0": {
+                        "then": "This aerialway can only be taken to the top"
+                    },
+                    "1": {
+                        "then": "This aerialway can be taken in both directions"
+                    }
+                },
+                "question": "In what direction can this aerialway be taken?"
+            },
+            "type": {
+                "mappings": {
+                    "0": {
+                        "then": "This is a cable car where the car goes up and down again on the same cable."
+                    },
+                    "1": {
+                        "then": "This is a gondola where the cars go around in continuous circles"
+                    },
+                    "2": {
+                        "then": "An open chairlift with seats to sit on and open to the outside air."
+                    },
+                    "3": {
+                        "then": "An aerialway which has both chairs and gondolas in the same continuous track"
+                    },
+                    "4": {
+                        "then": "A drag lift"
+                    },
+                    "5": {
+                        "then": "A drag lift with T-shaped carriers for two passengers at a time"
+                    },
+                    "6": {
+                        "then": "A drag lift with L-shaped bars for a single passenger at a time"
+                    },
+                    "7": {
+                        "then": "A drag lift with a platter to drag a single passenger at a time"
+                    },
+                    "8": {
+                        "then": "A tow line which which drags skieers"
+                    },
+                    "9": {
+                        "then": "A magic carpet (a conveyor belt on the ground)"
+                    },
+                    "10": {
+                        "then": "A zip line. (A touristical attraction where adventurous people go down at high speeds) "
+                    }
+                },
+                "question": "What type of aerialway is this?"
+            }
+        },
+        "title": {
+            "render": "Aerialway {name}"
+        }
+    },
     "ambulancestation": {
         "description": "An ambulance station is an area for storage of ambulance vehicles, medical equipment, personal protective equipment, and other medical supplies.",
         "name": "Map of ambulance stations",
@@ -282,6 +365,43 @@
         },
         "title": {
             "render": "Ambulance Station"
+        }
+    },
+    "animal_shelter": {
+        "description": "An animal shelter is a facility where animals in trouble are brought and facility's staff (volunteers or not) feeds them and cares of them, rehabilitating and healing them if necessary. This definition includes kennels for abandoned dogs, catteries for abandoned cats, shelters for other abandoned pets and wildlife recovery centres. ",
+        "name": "Animal shelters",
+        "presets": {
+            "0": {
+                "title": "an animal shelter"
+            }
+        },
+        "tagRenderings": {
+            "2": {
+                "question": "What is the name of this animal shelter?",
+                "render": "This animal shelter is named <b>{name}</b>"
+            },
+            "6": {
+                "mappings": {
+                    "0": {
+                        "then": "Animals are kept here until adopted by a new owner"
+                    },
+                    "1": {
+                        "then": "Animals are taken care of for the rest of their lives"
+                    },
+                    "2": {
+                        "then": "Injured animals are rehabilitated here until they can be released in nature again "
+                    }
+                },
+                "question": "What is the purpose of the animal shelter?"
+            }
+        },
+        "title": {
+            "mappings": {
+                "0": {
+                    "then": "{name}"
+                }
+            },
+            "render": "Animal shelter"
         }
     },
     "artwork": {
@@ -351,7 +471,11 @@
             },
             "artwork-website": {
                 "question": "Is there a website with more information about this artwork?",
-                "render": "More information on <a href='{website}' target='_blank'>this website</a>"
+                "render": {
+                    "special": {
+                        "text": "More information on this website"
+                    }
+                }
             },
             "artwork_subject": {
                 "question": "What does this artwork depict?",
@@ -379,6 +503,45 @@
                 }
             },
             "render": "Artwork"
+        }
+    },
+    "assembly_point": {
+        "description": "This layer contains assembly points and waiting areas where all employees, passengers or a large crowd assemble in case of an emergency.",
+        "name": "Emergency assembly points",
+        "presets": {
+            "0": {
+                "title": "an assembly point"
+            }
+        },
+        "tagRenderings": {
+            "assembly_point_name": {
+                "question": "What is the name of this assembly point?",
+                "render": "This assembly point is named <b>{name}</b>"
+            },
+            "assembly_point_operator": {
+                "question": "What organization operates this assembly point?",
+                "render": "This assembly point is operated by <b>{operator}</b>"
+            },
+            "disaster_type": {
+                "mappings": {
+                    "0": {
+                        "then": "Earthquake"
+                    },
+                    "1": {
+                        "then": "Flood"
+                    },
+                    "2": {
+                        "then": "Fire"
+                    },
+                    "3": {
+                        "then": "Landslide"
+                    }
+                },
+                "question": "For which disaster type is this assembly point meant?"
+            }
+        },
+        "title": {
+            "render": "Assembly point during emergencies"
         }
     },
     "atm": {
@@ -485,8 +648,8 @@
                 "render": {
                     "special": {
                         "question": "In which languages does this ATM have speech output?",
-                        "render_list_item": "This ATM has speech output in {language():font-bold}",
-                        "render_single_language": "This ATM has speech output in {language():font-bold}"
+                        "render_list_item": "This ATM has speech output in {language()}",
+                        "render_single_language": "This ATM has speech output in {language()}"
                     }
                 }
             }
@@ -668,6 +831,9 @@
                     },
                     "1": {
                         "then": "This bench does not have an integrated artwork"
+                    },
+                    "2": {
+                        "then": "This bench <span class=\"subtle\">probably</span> doesn't have an integrated artwork"
                     }
                 },
                 "question": "Does this bench have an artistic element?",
@@ -679,10 +845,10 @@
                         "then": "This bench is two-sided and shares the backrest"
                     },
                     "1": {
-                        "then": "Does have a backrest"
+                        "then": "This bench does have a backrest"
                     },
                     "2": {
-                        "then": "Does <b>not</b> have a backrest"
+                        "then": "This bench does <b>not</b> have a backrest"
                     }
                 },
                 "question": "Does this bench have a backrest?"
@@ -727,12 +893,12 @@
                         "then": "This bench does not have an inscription"
                     },
                     "1": {
-                        "then": "This bench does <span class='subtle'>(probably)</span> not have an inscription"
+                        "then": "This bench <span class='subtle'>(probably)</span> does not not have an inscription"
                     }
                 },
                 "question": "Does this bench have an inscription?",
                 "questionHint": "E.g. on a mounted plaque, in the backrest, …",
-                "render": "This bench does have the following inscription:<br/><p><i>{inscription}</i></p>"
+                "render": "This bench has the following inscription:<br/><p><i>{inscription}</i></p>"
             },
             "bench-material": {
                 "mappings": {
@@ -776,7 +942,7 @@
                     }
                 },
                 "question": "How many seats does this bench have?",
-                "render": "{seats} seats"
+                "render": "This bench has {seats} seats"
             },
             "bench-survey:date": {
                 "mappings": {
@@ -1027,9 +1193,64 @@
                 },
                 "question": "Is this vending machine still operational?",
                 "render": "The operational status is <i>{operational_status}</i>"
+            },
+            "bicycle_tube_vending_machine-brand": {
+                "mappings": {
+                    "0": {
+                        "then": "Continental tubes are sold here"
+                    },
+                    "1": {
+                        "then": "Schwalbe tubes are sold here"
+                    }
+                },
+                "question": "Which brand of tubes are sold here?",
+                "render": "{brand} tubes are sold here"
+            },
+            "bicycle_tube_vending_machine-charge": {
+                "question": "How much does a bicycle tube cost?",
+                "render": "A bicycle tube costs {charge}"
+            },
+            "bicycle_tube_vending_machine-operator": {
+                "mappings": {
+                    "0": {
+                        "then": "Maintained by Schwalbe"
+                    },
+                    "1": {
+                        "then": "Maintained by Continental"
+                    }
+                },
+                "question": "Who maintains this vending machine?"
+            },
+            "other-items-vending": {
+                "mappings": {
+                    "0": {
+                        "then": "Bicycle inner tubes are sold here"
+                    },
+                    "1": {
+                        "then": "Bicycle lights are sold here"
+                    },
+                    "2": {
+                        "then": "Gloves are sold here"
+                    },
+                    "3": {
+                        "then": "Bicycle repair kits are sold here"
+                    },
+                    "4": {
+                        "then": "Bicycle pumps are sold here"
+                    },
+                    "5": {
+                        "then": "Bicycle locks are sold here"
+                    }
+                },
+                "question": "Are other biycle accessories sold here?"
             }
         },
         "title": {
+            "mappings": {
+                "0": {
+                    "then": "Bicycle tube vending machine {name}"
+                }
+            },
             "render": "Bicycle tube vending machine"
         }
     },
@@ -1156,6 +1377,9 @@
                     },
                     "2": {
                         "then": "Access is limited to members of a school, company or organisation"
+                    },
+                    "3": {
+                        "then": "Access is limited to members of a school, company or organisation"
                     }
                 },
                 "question": "Who can use this bicycle parking?",
@@ -1164,10 +1388,10 @@
             "Bicycle parking type": {
                 "mappings": {
                     "0": {
-                        "then": "Staple racks"
+                        "then": "Stands"
                     },
                     "1": {
-                        "then": "Wheel rack/loops"
+                        "then": "Wheelbenders / rack"
                     },
                     "2": {
                         "then": "Handlebar holder"
@@ -1186,16 +1410,25 @@
                     },
                     "7": {
                         "then": "An area on the floor which is marked for bicycle parking"
+                    },
+                    "8": {
+                        "then": "A locker - the bicycles are enclosed completely individually or with a few bicycles together. The locker is too small to fit a person standing.."
                     }
                 },
                 "question": "What is the type of this bicycle parking?",
                 "render": "This is a bicycle parking of the type: {bicycle_parking}"
             },
             "Capacity": {
-                "question": "How many bicycles fit in this bicycle parking (including possible cargo bicycles)?",
+                "question": "How many bicycles fit in this bicycle parking?",
+                "questionHint": "This includes regular bicycles, cargo bikes, ebikes, ...",
                 "render": "Place for {capacity} bikes"
             },
             "Cargo bike capacity?": {
+                "mappings": {
+                    "0": {
+                        "then": "There are no dedicated spaces for cargo bikes here or parking cargo bikes here is not allowed"
+                    }
+                },
                 "question": "How many cargo bicycles fit in this bicycle parking?",
                 "render": "This parking fits {capacity:cargo_bike} cargo bikes"
             },
@@ -1208,7 +1441,7 @@
                         "then": "This parking has designated (official) spots for cargo bikes."
                     },
                     "2": {
-                        "then": "You're not allowed to park cargo bikes"
+                        "then": "You're not allowed to park cargo bikes or there are no places provided for cargo bikes"
                     }
                 },
                 "question": "Does this bicycle parking have spots for cargo bikes?"
@@ -1240,6 +1473,33 @@
                     }
                 },
                 "question": "What is the relative location of this bicycle parking?"
+            },
+            "charge": {
+                "question": "How much does it cost to park your bike here?",
+                "questionHint": "This is the amount which is charged for a single bike",
+                "render": "Parking your bike costs {charge}"
+            },
+            "fee": {
+                "mappings": {
+                    "0": {
+                        "then": "One has to <b>pay</b> to use this bicycle parking"
+                    },
+                    "1": {
+                        "then": "Free to use"
+                    }
+                },
+                "question": "Are these bicycle parkings free to use?"
+            },
+            "operator": {
+                "question": "Who maintains this bicycle parking?",
+                "render": "This bicycle parking is maintained by {operator}"
+            },
+            "operator_phone": {
+                "question": "What is the phone number of the operator of this bicycle parking?",
+                "questionHint": "One might be able to call this number in case of problems, e.g. to remove unmaintained bicycles"
+            },
+            "operator_website": {
+                "question": "What is the website number of the operator of this bicycle parking?"
             }
         },
         "title": {
@@ -1389,7 +1649,7 @@
             "send_email_about_broken_pump": {
                 "render": {
                     "special": {
-                        "body": "Hello,\n\nWith this email, I'd like to inform you that the bicycle pump located at https://mapcomplete.osm.be/cyclofix?lat={_lat}&lon={_lon}&z=18#{id} is broken.\n\n Kind regards",
+                        "body": "Hello,\n\nWith this email, I'd like to inform you that the bicycle pump located at https://mapcomplete.org/cyclofix?lat={_lat}&lon={_lon}&z=18#{id} is broken.\n\n Kind regards",
                         "button_text": "Report this bicycle pump as broken",
                         "subject": "Broken bicycle pump"
                     }
@@ -1706,6 +1966,24 @@
             "render": "Bird watching place"
         }
     },
+    "brothel": {
+        "description": "An establishment specifically dedicated to prostitution. ",
+        "name": "Brothels",
+        "presets": {
+            "0": {
+                "title": "a brothel"
+            }
+        },
+        "tagRenderings": {
+            "name": {
+                "question": "What is the name of this brothel?",
+                "render": "This brothel is named <b>{name}</b>"
+            }
+        },
+        "title": {
+            "render": "Brothel"
+        }
+    },
     "cafe_pub": {
         "deletion": {
             "extraDeleteReasons": {
@@ -1767,6 +2045,15 @@
             "mappings": {
                 "0": {
                     "then": "<i>{name}</i>"
+                },
+                "1": {
+                    "then": "Bar"
+                },
+                "2": {
+                    "then": "Cafe"
+                },
+                "3": {
+                    "then": "Nightclub"
                 }
             },
             "render": "Pub"
@@ -1840,10 +2127,10 @@
                         "question": "Has a <div style='display: inline-block'><b><b>Type 1 with cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> connector"
                     },
                     "5": {
-                        "question": "Has a <div style='display: inline-block'><b>Type 1 <i>without</i> cable (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> connector"
+                        "question": "Has a <div style='display: inline-block'><b><b>Type 1 <i>without</i> cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> connector"
                     },
                     "6": {
-                        "question": "Has a <div style='display: inline-block'><b>Type 1 CCS (aka Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div> connector"
+                        "question": "Has a <div style='display: inline-block'><b><b>Type 1 CCS</b> (aka Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div> connector"
                     },
                     "7": {
                         "question": "Has a <div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> connector"
@@ -1864,7 +2151,7 @@
                         "question": "Has a <div style='display: inline-block'><b><b>Tesla Supercharger (destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> connector"
                     },
                     "13": {
-                        "question": "Has a <div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b> (A Type 2 with cable branded as tesla)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> connector"
+                        "question": "Has a <div style='display: inline-block'><b><b>Tesla supercharger (destination)</b> (A Type 2 with cable branded as tesla)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> connector"
                     },
                     "14": {
                         "question": "Has a <div style='display: inline-block'><b><b>USB</b> to charge phones and small electronics</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div> connector"
@@ -1881,10 +2168,10 @@
         "name": "Charging stations",
         "presets": {
             "0": {
-                "title": "a charging station for electrical bikes with a normal european wall plug <img src='./assets/layers/charging_station/typee.svg' style='width: 2rem; height: 2rem; float: left; background: white; border-radius: 1rem; margin-right: 0.5rem'/> (meant to charge electrical bikes)"
+                "title": "charging station for electrical bikes"
             },
             "1": {
-                "title": "a charging station for cars"
+                "title": "charging station for cars"
             }
         },
         "tagRenderings": {
@@ -2114,7 +2401,7 @@
                         "then": "A <b>key</b> must be requested to access this charging station<br/><span class='subtle'>E.g. a charging station operated by hotel which is only usable by their guests, which receive a key from the reception to unlock the charging station</span>"
                     },
                     "4": {
-                        "then": "Not accessible to the general public (e.g. only accessible to the owners, employees, …)"
+                        "then": "Not accessible to the general public (e.g. only accessible to the owners, employees, ...)"
                     },
                     "5": {
                         "then": "This charging station is accessible to the public during certain hours or conditions. Restrictions might apply, but general use is allowed."
@@ -2130,167 +2417,6 @@
             "charge": {
                 "question": "How much does one have to pay to use this charging station?",
                 "render": "Using this charging station costs <b>{charge}</b>"
-            },
-            "current-0": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Schuko wall plug</b> without ground pin (CEE7/4 type F) outputs at most 16 A"
-                    }
-                },
-                "question": "What current do the plugs with <div style='display: inline-block'><b><b>Schuko wall plug</b> without ground pin (CEE7/4 type F)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/CEE7_4F.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Schuko wall plug</b> without ground pin (CEE7/4 type F)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/CEE7_4F.svg'/></div> outputs at most {socket:schuko:current}A"
-            },
-            "current-1": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>European wall plug</b> with ground pin (CEE7/4 type E) outputs at most 16 A"
-                    }
-                },
-                "question": "What current do the plugs with <div style='display: inline-block'><b><b>European wall plug</b> with ground pin (CEE7/4 type E)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/TypeE.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>European wall plug</b> with ground pin (CEE7/4 type E)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/TypeE.svg'/></div> outputs at most {socket:typee:current}A"
-            },
-            "current-10": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger CCS</b> (a branded type2_css) outputs at most 125 A"
-                    },
-                    "1": {
-                        "then": "<b>Tesla Supercharger CCS</b> (a branded type2_css) outputs at most 350 A"
-                    }
-                },
-                "question": "What current do the plugs with <div style='display: inline-block'><b><b>Tesla Supercharger CCS</b> (a branded type2_css)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger CCS</b> (a branded type2_css)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> outputs at most {socket:tesla_supercharger_ccs:current}A"
-            },
-            "current-11": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger (Destination)</b> outputs at most 125 A"
-                    },
-                    "1": {
-                        "then": "<b>Tesla Supercharger (Destination)</b> outputs at most 350 A"
-                    }
-                },
-                "question": "What current do the plugs with <div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> outputs at most {socket:tesla_destination:current}A"
-            },
-            "current-12": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger (Destination)</b> (A Type 2 with cable branded as tesla) outputs at most 16 A"
-                    },
-                    "1": {
-                        "then": "<b>Tesla Supercharger (Destination)</b> (A Type 2 with cable branded as Tesla) outputs at most 32 A"
-                    }
-                },
-                "question": "What current do the plugs with <div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b> (A Type 2 with cable branded as Tesla)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b> (A Type 2 with cable branded as Tesla)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> outputs at most {socket:tesla_destination:current}A"
-            },
-            "current-13": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>USB</b> to charge phones and small electronics outputs at most 1 A"
-                    },
-                    "1": {
-                        "then": "<b>USB</b> to charge phones and small electronics outputs at most 2 A"
-                    }
-                },
-                "question": "What current do the plugs with <div style='display: inline-block'><b><b>USB</b> to charge phones and small electronics</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>USB</b> to charge phones and small electronics</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div> outputs at most {socket:USB-A:current}A"
-            },
-            "current-14": {
-                "question": "What current do the plugs with <div style='display: inline-block'><b><b>Bosch Active Connect with 3 pins</b> and cable</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-3pin.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Bosch Active Connect with 3 pins</b> and cable</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-3pin.svg'/></div> outputs at most {socket:bosch_3pin:current}A"
-            },
-            "current-15": {
-                "question": "What current do the plugs with <div style='display: inline-block'><b><b>Bosch Active Connect with 5 pins</b> and cable</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-5pin.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Bosch Active Connect with 5 pins</b> and cable</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-5pin.svg'/></div> outputs at most {socket:bosch_5pin:current}A"
-            },
-            "current-2": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Chademo</b> outputs at most 120 A"
-                    }
-                },
-                "question": "What current do the plugs with <div style='display: inline-block'><b><b>Chademo</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Chademo_type4.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Chademo</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Chademo_type4.svg'/></div> outputs at most {socket:chademo:current}A"
-            },
-            "current-3": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 with cable</b> (J1772) outputs at most 32 A"
-                    }
-                },
-                "question": "What current do the plugs with <div style='display: inline-block'><b><b>Type 1 with cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 1 with cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> outputs at most {socket:type1_cable:current}A"
-            },
-            "current-4": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 <i>without</i> cable</b> (J1772) outputs at most 32 A"
-                    }
-                },
-                "question": "What current do the plugs with <div style='display: inline-block'><b><b>Type 1 <i>without</i> cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 1 <i>without</i> cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> outputs at most {socket:type1:current}A"
-            },
-            "current-5": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 CCS</b> (aka Type 1 Combo) outputs at most 50 A"
-                    },
-                    "1": {
-                        "then": "<b>Type 1 CCS</b> (aka Type 1 Combo) outputs at most 125 A"
-                    }
-                },
-                "question": "What current do the plugs with <div style='display: inline-block'><b><b>Type 1 CCS</b> (aka Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 1 CCS</b> (aka Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div> outputs at most {socket:type1_combo:current}A"
-            },
-            "current-6": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger</b> outputs at most 125 A"
-                    },
-                    "1": {
-                        "then": "<b>Tesla Supercharger</b> outputs at most 350 A"
-                    }
-                },
-                "question": "What current do the plugs with <div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> outputs at most {socket:tesla_supercharger:current}A"
-            },
-            "current-7": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2</b> (mennekes) outputs at most 16 A"
-                    },
-                    "1": {
-                        "then": "<b>Type 2</b> (mennekes) outputs at most 32 A"
-                    }
-                },
-                "question": "What current do the plugs with <div style='display: inline-block'><b><b>Type 2</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_socket.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 2</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_socket.svg'/></div> outputs at most {socket:type2:current}A"
-            },
-            "current-8": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2 CCS</b> (mennekes) outputs at most 125 A"
-                    },
-                    "1": {
-                        "then": "<b>Type 2 CCS</b> (mennekes) outputs at most 350 A"
-                    }
-                },
-                "question": "What current do the plugs with <div style='display: inline-block'><b><b>Type 2 CCS</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 2 CCS</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> outputs at most {socket:type2_combo:current}A"
-            },
-            "current-9": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2 with cable</b> (mennekes) outputs at most 16 A"
-                    },
-                    "1": {
-                        "then": "<b>Type 2 with cable</b> (mennekes) outputs at most 32 A"
-                    }
-                },
-                "question": "What current do the plugs with <div style='display: inline-block'><b><b>Type 2 with cable</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 2 with cable</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> outputs at most {socket:type2_cable:current}A"
             },
             "email": {
                 "question": "What is the email address of the operator?",
@@ -2308,7 +2434,7 @@
                         "then": "Free to use"
                     },
                     "3": {
-                        "then": "Paid use, but free for customers of the hotel/pub/hospital/… who operates the charging station"
+                        "then": "Paid use, but free for customers of the hotel/pub/hospital/... who operates the charging station"
                     },
                     "4": {
                         "then": "Paid use"
@@ -2329,252 +2455,6 @@
                 "question": "What number can one call if there is a problem with this charging station?",
                 "render": "In case of problems, call <a href='tel:{phone}'>{phone}</a>"
             },
-            "plugs-0": {
-                "question": "How much plugs of type <div style='display: inline-block'><b><b>Schuko wall plug</b> without ground pin (CEE7/4 type F)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/CEE7_4F.svg'/></div> are available here?",
-                "render": "There are <b class='text-xl'>{socket:schuko}</b> plugs of type <div style='display: inline-block'><b><b>Schuko wall plug</b> without ground pin (CEE7/4 type F)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/CEE7_4F.svg'/></div> available here"
-            },
-            "plugs-1": {
-                "question": "How much plugs of type <div style='display: inline-block'><b><b>European wall plug</b> with ground pin (CEE7/4 type E)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/TypeE.svg'/></div> are available here?",
-                "render": "There are <b class='text-xl'>{socket:typee}</b> plugs of type <div style='display: inline-block'><b><b>European wall plug</b> with ground pin (CEE7/4 type E)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/TypeE.svg'/></div> available here"
-            },
-            "plugs-10": {
-                "question": "How much plugs of type <div style='display: inline-block'><b><b>Tesla Supercharger CCS</b> (a branded type2_css)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> are available here?",
-                "render": "There are <b class='text-xl'>{socket:tesla_supercharger_ccs}</b> plugs of type <div style='display: inline-block'><b><b>Tesla Supercharger CCS</b> (a branded type2_css)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> available here"
-            },
-            "plugs-11": {
-                "question": "How much plugs of type <div style='display: inline-block'><b><b>Tesla Supercharger (destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> are available here?",
-                "render": "There are <b class='text-xl'>{socket:tesla_destination}</b> plugs of type <div style='display: inline-block'><b><b>Tesla Supercharger (destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> available here"
-            },
-            "plugs-12": {
-                "question": "How much plugs of type <div style='display: inline-block'><b><b>Tesla supercharger (destination)</b> (A Type 2 with cable branded as tesla)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> are available here?",
-                "render": "There are <b class='text-xl'>{socket:tesla_destination}</b> plugs of type <div style='display: inline-block'><b><b>Tesla supercharger (destination)</b> (A Type 2 with cable branded as tesla)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> available here"
-            },
-            "plugs-13": {
-                "question": "How much plugs of type <div style='display: inline-block'><b><b>USB</b> to charge phones and small electronics</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div> are available here?",
-                "render": "There are <b class='text-xl'>{socket:USB-A}</b> plugs of type <div style='display: inline-block'><b><b>USB</b> to charge phones and small electronics</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div> available here"
-            },
-            "plugs-14": {
-                "question": "How much plugs of type <div style='display: inline-block'><b><b>Bosch Active Connect with 3 pins</b> and cable</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-3pin.svg'/></div> are available here?",
-                "render": "There are <b class='text-xl'>{socket:bosch_3pin}</b> plugs of type <div style='display: inline-block'><b><b>Bosch Active Connect with 3 pins</b> and cable</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-3pin.svg'/></div> available here"
-            },
-            "plugs-15": {
-                "question": "How much plugs of type <div style='display: inline-block'><b><b>Bosch Active Connect with 5 pins</b> and cable</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-5pin.svg'/></div> are available here?",
-                "render": "There are <b class='text-xl'>{socket:bosch_5pin}</b> plugs of type <div style='display: inline-block'><b><b>Bosch Active Connect with 5 pins</b> and cable</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-5pin.svg'/></div> available here"
-            },
-            "plugs-2": {
-                "question": "How much plugs of type <div style='display: inline-block'><b><b>Chademo</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Chademo_type4.svg'/></div> are available here?",
-                "render": "There are <b class='text-xl'>{socket:chademo}</b> plugs of type <div style='display: inline-block'><b><b>Chademo</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Chademo_type4.svg'/></div> available here"
-            },
-            "plugs-3": {
-                "question": "How much plugs of type <div style='display: inline-block'><b><b>Type 1 with cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> are available here?",
-                "render": "There are <b class='text-xl'>{socket:type1_cable}</b> plugs of type <div style='display: inline-block'><b><b>Type 1 with cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> available here"
-            },
-            "plugs-4": {
-                "question": "How much plugs of type <div style='display: inline-block'><b><b>Type 1 <i>without</i> cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> are available here?",
-                "render": "There are <b class='text-xl'>{socket:type1}</b> plugs of type <div style='display: inline-block'><b><b>Type 1 <i>without</i> cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> available here"
-            },
-            "plugs-5": {
-                "question": "How much plugs of type <div style='display: inline-block'><b><b>Type 1 CCS</b> (aka Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div> are available here?",
-                "render": "There are <b class='text-xl'>{socket:type1_combo}</b> plugs of type <div style='display: inline-block'><b><b>Type 1 CCS</b> (aka Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div> available here"
-            },
-            "plugs-6": {
-                "question": "How much plugs of type <div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> are available here?",
-                "render": "There are <b class='text-xl'>{socket:tesla_supercharger}</b> plugs of type <div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> available here"
-            },
-            "plugs-7": {
-                "question": "How much plugs of type <div style='display: inline-block'><b><b>Type 2</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_socket.svg'/></div> are available here?",
-                "render": "There are <b class='text-xl'>{socket:type2}</b> plugs of type <div style='display: inline-block'><b><b>Type 2</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_socket.svg'/></div> available here"
-            },
-            "plugs-8": {
-                "question": "How much plugs of type <div style='display: inline-block'><b><b>Type 2 CCS</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> are available here?",
-                "render": "There are <b class='text-xl'>{socket:type2_combo}</b> plugs of type <div style='display: inline-block'><b><b>Type 2 CCS</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> available here"
-            },
-            "plugs-9": {
-                "question": "How much plugs of type <div style='display: inline-block'><b><b>Type 2 with cable</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> are available here?",
-                "render": "There are <b class='text-xl'>{socket:type2_cable}</b> plugs of type <div style='display: inline-block'><b><b>Type 2 with cable</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> available here"
-            },
-            "power-output-0": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Schuko wall plug</b> without ground pin (CEE7/4 type F) outputs at most 3.6 kw A"
-                    }
-                },
-                "question": "What power output does a single plug of type <div style='display: inline-block'><b><b>Schuko wall plug</b> without ground pin (CEE7/4 type F)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/CEE7_4F.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Schuko wall plug</b> without ground pin (CEE7/4 type F)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/CEE7_4F.svg'/></div> outputs at most {socket:schuko:output}"
-            },
-            "power-output-1": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>European wall plug</b> with ground pin (CEE7/4 type E) outputs at most 3 kw A"
-                    },
-                    "1": {
-                        "then": "<b>European wall plug</b> with ground pin (CEE7/4 type E) outputs at most 22 kw A"
-                    }
-                },
-                "question": "What power output does a single plug of type <div style='display: inline-block'><b><b>European wall plug</b> with ground pin (CEE7/4 type E)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/TypeE.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>European wall plug</b> with ground pin (CEE7/4 type E)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/TypeE.svg'/></div> outputs at most {socket:typee:output}"
-            },
-            "power-output-10": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger CCS</b> (a branded Type 2 CSS) outputs at most 50 kw A"
-                    }
-                },
-                "question": "What power output does a single plug of type <div style='display: inline-block'><b><b>Tesla Supercharger CCS</b> (a branded Type 2 CSS)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger CCS</b> (a branded Type 2 CSS)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> outputs at most {socket:tesla_supercharger_ccs:output}"
-            },
-            "power-output-11": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger (Destination)</b> outputs at most 120 kw A"
-                    },
-                    "1": {
-                        "then": "<b>Tesla Supercharger (Destination)</b> outputs at most 150 kw A"
-                    },
-                    "2": {
-                        "then": "<b>Tesla Supercharger (Destination)</b> outputs at most 250 kw A"
-                    }
-                },
-                "question": "What power output does a single plug of type <div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> outputs at most {socket:tesla_destination:output}"
-            },
-            "power-output-12": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger (Destination)</b> (A Type 2 with cable branded as Tesla) outputs at most 11 kw A"
-                    },
-                    "1": {
-                        "then": "<b>Tesla Supercharger (Destination)</b> (A Type 2 with cable branded as Tesla) outputs at most 22 kw A"
-                    }
-                },
-                "question": "What power output does a single plug of type <div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b> (A Type 2 with cable branded as Tesla)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b> (A Type 2 with cable branded as Tesla)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> outputs at most {socket:tesla_destination:output}"
-            },
-            "power-output-13": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>USB</b> to charge phones and small electronics outputs at most 5w A"
-                    },
-                    "1": {
-                        "then": "<b>USB</b> to charge phones and small electronics outputs at most 10w A"
-                    }
-                },
-                "question": "What power output does a single plug of type <div style='display: inline-block'><b><b>USB</b> to charge phones and small electronics</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>USB</b> to charge phones and small electronics</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div> outputs at most {socket:USB-A:output}"
-            },
-            "power-output-14": {
-                "question": "What power output does a single plug of type <div style='display: inline-block'><b><b>Bosch Active Connect with 3 pins</b> and cable</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-3pin.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Bosch Active Connect with 3 pins</b> and cable</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-3pin.svg'/></div> outputs at most {socket:bosch_3pin:output}"
-            },
-            "power-output-15": {
-                "question": "What power output does a single plug of type <div style='display: inline-block'><b><b>Bosch Active Connect with 5 pins</b> and cable</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-5pin.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Bosch Active Connect with 5 pins</b> and cable</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-5pin.svg'/></div> outputs at most {socket:bosch_5pin:output}"
-            },
-            "power-output-2": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Chademo</b> outputs at most 50 kw A"
-                    }
-                },
-                "question": "What power output does a single plug of type <div style='display: inline-block'><b><b>Chademo</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Chademo_type4.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Chademo</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Chademo_type4.svg'/></div> outputs at most {socket:chademo:output}"
-            },
-            "power-output-3": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 with cable</b> (J1772) outputs at most 3.7 kw A"
-                    },
-                    "1": {
-                        "then": "<b>Type 1 with cable</b> (J1772) outputs at most 7 kw A"
-                    }
-                },
-                "question": "What power output does a single plug of type <div style='display: inline-block'><b><b>Type 1 with cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 1 with cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> outputs at most {socket:type1_cable:output}"
-            },
-            "power-output-4": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 <i>without</i> cable</b> (J1772) outputs at most 3.7 kw A"
-                    },
-                    "1": {
-                        "then": "<b>Type 1 <i>without</i> cable</b> (J1772) outputs at most 6.6 kw A"
-                    },
-                    "2": {
-                        "then": "<b>Type 1 <i>without</i> cable</b> (J1772) outputs at most 7 kw A"
-                    },
-                    "3": {
-                        "then": "<b>Type 1 <i>without</i> cable</b> (J1772) outputs at most 7.2 kw A"
-                    }
-                },
-                "question": "What power output does a single plug of type <div style='display: inline-block'><b><b>Type 1 <i>without</i> cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 1 <i>without</i> cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> outputs at most {socket:type1:output}"
-            },
-            "power-output-5": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 CCS</b> (aka Type 1 Combo) outputs at most 50 kw A"
-                    },
-                    "1": {
-                        "then": "<b>Type 1 CCS</b> (aka Type 1 Combo) outputs at most 62.5 kw A"
-                    },
-                    "2": {
-                        "then": "<b>Type 1 CCS</b> (aka Type 1 Combo) outputs at most 150 kw A"
-                    },
-                    "3": {
-                        "then": "<b>Type 1 CCS</b> (aka Type 1 Combo) outputs at most 350 kw A"
-                    }
-                },
-                "question": "What power output does a single plug of type <div style='display: inline-block'><b><b>Type 1 CCS</b> (aka Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 1 CCS</b> (aka Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div> outputs at most {socket:type1_combo:output}"
-            },
-            "power-output-6": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger</b> outputs at most 120 kw A"
-                    },
-                    "1": {
-                        "then": "<b>Tesla Supercharger</b> outputs at most 150 kw A"
-                    },
-                    "2": {
-                        "then": "<b>Tesla Supercharger</b> outputs at most 250 kw A"
-                    }
-                },
-                "question": "What power output does a single plug of type <div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> outputs at most {socket:tesla_supercharger:output}"
-            },
-            "power-output-7": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2</b> (mennekes) outputs at most 11 kw A"
-                    },
-                    "1": {
-                        "then": "<b>Type 2</b> (mennekes) outputs at most 22 kw A"
-                    }
-                },
-                "question": "What power output does a single plug of type <div style='display: inline-block'><b><b>Type 2</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_socket.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 2</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_socket.svg'/></div> outputs at most {socket:type2:output}"
-            },
-            "power-output-8": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2 CCS</b> (mennekes) outputs at most 50 kw A"
-                    }
-                },
-                "question": "What power output does a single plug of type <div style='display: inline-block'><b><b>Type 2 CCS</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 2 CCS</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> outputs at most {socket:type2_combo:output}"
-            },
-            "power-output-9": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2 with cable</b> (mennekes) outputs at most 11 kw A"
-                    },
-                    "1": {
-                        "then": "<b>Type 2 with cable</b> (mennekes) outputs at most 22 kw A"
-                    }
-                },
-                "question": "What power output does a single plug of type <div style='display: inline-block'><b><b>Type 2 with cable</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 2 with cable</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> outputs at most {socket:type2_cable:output}"
-            },
             "questions-technical": {
                 "render": "<h3>Technical questions</h3>The questions below are very technical. Feel free to ignore them<br/>{questions(technical)}"
             },
@@ -2582,163 +2462,86 @@
                 "question": "What is the reference number of this charging station?",
                 "render": "Reference number is <b>{ref}</b>"
             },
-            "voltage-0": {
-                "mappings": {
+            "rewritten-questions": {
+                "renderings": {
                     "0": {
-                        "then": "<b>Schuko wall plug</b> without ground pin (CEE7/4 type F) outputs 230 volt"
-                    }
-                },
-                "question": "What voltage do the plugs with <div style='display: inline-block'><b><b>Schuko wall plug</b> without ground pin (CEE7/4 type F)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/CEE7_4F.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Schuko wall plug</b> without ground pin (CEE7/4 type F)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/CEE7_4F.svg'/></div> outputs {socket:schuko:voltage} volt"
-            },
-            "voltage-1": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>European wall plug</b> with ground pin (CEE7/4 type E) outputs 230 volt"
-                    }
-                },
-                "question": "What voltage do the plugs with <div style='display: inline-block'><b><b>European wall plug</b> with ground pin (CEE7/4 type E)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/TypeE.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>European wall plug</b> with ground pin (CEE7/4 type E)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/TypeE.svg'/></div> outputs {socket:typee:voltage} volt"
-            },
-            "voltage-10": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger CCS</b> (a branded Type 2 CSS) outputs 500 volt"
+                        "question": "How much plugs of type {{description}} are available here?",
+                        "render": "There are <b class='text-xl'>{{{key}}}</b> plugs of type {{description}} available here"
                     },
                     "1": {
-                        "then": "<b>Tesla Supercharger CCS</b> (a branded Type 2 CSS) outputs 920 volt"
-                    }
-                },
-                "question": "What voltage do the plugs with <div style='display: inline-block'><b><b>Tesla Supercharger CCS</b> (a branded Type 2 CSS)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger CCS</b> (a branded Type 2 CSS)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> outputs {socket:tesla_supercharger_ccs:voltage} volt"
-            },
-            "voltage-11": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger (Destination)</b> outputs 480 volt"
-                    }
-                },
-                "question": "What voltage do the plugs with <div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> outputs {socket:tesla_destination:voltage} volt"
-            },
-            "voltage-12": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger (Destination)</b> (A Type 2 with cable branded as Tesla) outputs 230 volt"
+                        "mappings": {
+                            "then": "{{description}} outputs {{commonVoltages}} volt"
+                        },
+                        "question": "What voltage do the plugs with {{description}} offer?",
+                        "render": "{{description}} outputs {canonical({{key}}:voltage)}"
                     },
-                    "1": {
-                        "then": "<b>Tesla Supercharger (Destination)</b> (A Type 2 with cable branded as Tesla) outputs 400 volt"
-                    }
-                },
-                "question": "What voltage do the plugs with <div style='display: inline-block'><b><b>Tesla Supercharger (Destination)</b> (A Type 2 with cable branded as Tesla)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Tesla supercharger (destination)</b> (A Type 2 with cable branded as tesla)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> outputs {socket:tesla_destination:voltage} volt"
-            },
-            "voltage-13": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>USB</b> to charge phones and small electronics outputs 5 volt"
-                    }
-                },
-                "question": "What voltage do the plugs with <div style='display: inline-block'><b><b>USB</b> to charge phones and small electronics</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>USB</b> to charge phones and small electronics</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/usb_port.svg'/></div> outputs {socket:USB-A:voltage} volt"
-            },
-            "voltage-14": {
-                "question": "What voltage do the plugs with <div style='display: inline-block'><b><b>Bosch Active Connect with 3 pins</b> and cable</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-3pin.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Bosch Active Connect with 3 pins</b> and cable</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-3pin.svg'/></div> outputs {socket:bosch_3pin:voltage} volt"
-            },
-            "voltage-15": {
-                "question": "What voltage do the plugs with <div style='display: inline-block'><b><b>Bosch Active Connect with 5 pins</b> and cable</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-5pin.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Bosch Active Connect with 5 pins</b> and cable</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/bosch-5pin.svg'/></div> outputs {socket:bosch_5pin:voltage} volt"
-            },
-            "voltage-2": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Chademo</b> outputs 500 volt"
-                    }
-                },
-                "question": "What voltage do the plugs with <div style='display: inline-block'><b><b>Chademo</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Chademo_type4.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Chademo</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Chademo_type4.svg'/></div> outputs {socket:chademo:voltage} volt"
-            },
-            "voltage-3": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 with cable</b> (J1772) outputs 200 volt"
+                    "2": {
+                        "mappings": {
+                            "then": "{{description}} outputs at most {{commonCurrent}} A"
+                        },
+                        "question": "What current do the plugs with {{description}} offer?",
+                        "render": "{{description}} outputs at most {canonical({{key}}:current)}"
                     },
-                    "1": {
-                        "then": "<b>Type 1 with cable</b> (J1772) outputs 240 volt"
+                    "3": {
+                        "mappings": {
+                            "then": "{{description}} outputs at most {{commonOutput}} A"
+                        },
+                        "question": "What power output does a single plug of type {{description}} offer?",
+                        "render": "{{description}} outputs at most {canonical({{key}}:output)}"
                     }
                 },
-                "question": "What voltage do the plugs with <div style='display: inline-block'><b><b>Type 1 with cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 1 with cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> outputs {socket:type1_cable:voltage} volt"
-            },
-            "voltage-4": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 <i>without</i> cable</b> (J1772) outputs 200 volt"
-                    },
-                    "1": {
-                        "then": "<b>Type 1 <i>without</i> cable</b> (J1772) outputs 240 volt"
+                "rewrite": {
+                    "into": {
+                        "0": {
+                            "2": "<b>Schuko wall plug</b> without ground pin (CEE7/4 type F)"
+                        },
+                        "1": {
+                            "2": "<b>European wall plug</b> with ground pin (CEE7/4 type E)"
+                        },
+                        "2": {
+                            "2": "<b>Chademo</b>"
+                        },
+                        "3": {
+                            "2": "<b>Type 1 with cable</b> (J1772)"
+                        },
+                        "4": {
+                            "2": "<b>Type 1 <i>without</i> cable</b> (J1772)"
+                        },
+                        "5": {
+                            "2": "<b>Type 1 CCS</b> (aka Type 1 Combo)"
+                        },
+                        "6": {
+                            "2": "<b>Tesla Supercharger</b>"
+                        },
+                        "7": {
+                            "2": "<b>Type 2</b> (mennekes)"
+                        },
+                        "8": {
+                            "2": "<b>Type 2 CCS</b> (mennekes)"
+                        },
+                        "9": {
+                            "2": "<b>Type 2 with cable</b> (mennekes)"
+                        },
+                        "10": {
+                            "2": "<b>Tesla Supercharger CCS</b> (a branded type2_css)"
+                        },
+                        "11": {
+                            "2": "<b>Tesla Supercharger (destination)</b>"
+                        },
+                        "12": {
+                            "2": "<b>Tesla supercharger (destination)</b> (A Type 2 with cable branded as tesla)"
+                        },
+                        "13": {
+                            "2": "<b>USB</b> to charge phones and small electronics"
+                        },
+                        "14": {
+                            "2": "<b>Bosch Active Connect with 3 pins</b> and cable"
+                        },
+                        "15": {
+                            "2": "<b>Bosch Active Connect with 5 pins</b> and cable"
+                        }
                     }
-                },
-                "question": "What voltage do the plugs with <div style='display: inline-block'><b><b>Type 1 <i>without</i> cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 1 <i>without</i> cable</b> (J1772)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1_J1772.svg'/></div> outputs {socket:type1:voltage} volt"
-            },
-            "voltage-5": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 1 CCS</b> (aka Type 1 Combo) outputs 400 volt"
-                    },
-                    "1": {
-                        "then": "<b>Type 1 CCS</b> (aka Type 1 Combo) outputs 1000 volt"
-                    }
-                },
-                "question": "What voltage do the plugs with <div style='display: inline-block'><b><b>Type 1 CCS</b> (aka Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 1 CCS</b> (aka Type 1 Combo)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type1-ccs.svg'/></div> outputs {socket:type1_combo:voltage} volt"
-            },
-            "voltage-6": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Tesla Supercharger</b> outputs 480 volt"
-                    }
-                },
-                "question": "What voltage do the plugs with <div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Tesla Supercharger</b></b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Tesla-hpwc-model-s.svg'/></div> outputs {socket:tesla_supercharger:voltage} volt"
-            },
-            "voltage-7": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2</b> (mennekes) outputs 230 volt"
-                    },
-                    "1": {
-                        "then": "<b>Type 2</b> (mennekes) outputs 400 volt"
-                    }
-                },
-                "question": "What voltage do the plugs with <div style='display: inline-block'><b><b>Type 2</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_socket.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 2</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_socket.svg'/></div> outputs {socket:type2:voltage} volt"
-            },
-            "voltage-8": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2 CCS</b> (mennekes) outputs 500 volt"
-                    },
-                    "1": {
-                        "then": "<b>Type 2 CCS</b> (mennekes) outputs 920 volt"
-                    }
-                },
-                "question": "What voltage do the plugs with <div style='display: inline-block'><b><b>Type 2 CCS</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 2 CCS</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_CCS.svg'/></div> outputs {socket:type2_combo:voltage} volt"
-            },
-            "voltage-9": {
-                "mappings": {
-                    "0": {
-                        "then": "<b>Type 2 with cable</b> (mennekes) outputs 230 volt"
-                    },
-                    "1": {
-                        "then": "<b>Type 2 with cable</b> (mennekes) outputs 400 volt"
-                    }
-                },
-                "question": "What voltage do the plugs with <div style='display: inline-block'><b><b>Type 2 with cable</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> offer?",
-                "render": "<div style='display: inline-block'><b><b>Type 2 with cable</b> (mennekes)</b> <img style='width:1rem; display: inline-block' src='./assets/layers/charging_station/Type2_tethered.svg'/></div> outputs {socket:type2_cable:voltage} volt"
+                }
             },
             "website": {
                 "question": "What is the website where one can find more information about this charging station?",
@@ -2755,48 +2558,26 @@
                 }
             },
             "render": "Charging station"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
+        }
+    },
+    "cinema": {
+        "description": " A place showing movies (films), generally open to the public for a fee. Commonly referred to as a movie theater in the US",
+        "name": "Cinema",
+        "tagRenderings": {
+            "cinema_type": {
+                "mappings": {
                     "0": {
-                        "human": " minutes",
-                        "humanSingular": " minute"
+                        "then": "This is a normal cinema showing movies for all ages"
                     },
                     "1": {
-                        "human": " hours",
-                        "humanSingular": " hour"
-                    },
-                    "2": {
-                        "human": " days",
-                        "humanSingular": " day"
+                        "then": "This is an erotic cinema showing adult movies"
                     }
-                }
-            },
-            "1": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "Volts"
-                    }
-                }
-            },
-            "2": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "A"
-                    }
-                }
-            },
-            "3": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "kilowatt"
-                    },
-                    "1": {
-                        "human": "megawatt"
-                    }
-                }
+                },
+                "question": "What type of cinema is this?"
             }
+        },
+        "title": {
+            "render": "Cinema"
         }
     },
     "climbing": {
@@ -3814,6 +3595,18 @@
                 "question": "How wide is the gap between the cycleway and the road?",
                 "render": "The buffer besides this cycleway is {cycleway:buffer} m"
             },
+            "incline": {
+                "mappings": {
+                    "0": {
+                        "then": "There is (probably) no incline here"
+                    },
+                    "1": {
+                        "then": "This road has a slope"
+                    }
+                },
+                "question": "Does {title()} have an incline?",
+                "render": "This road has an slope of {incline}"
+            },
             "is lit?": {
                 "mappings": {
                     "0": {
@@ -4019,6 +3812,24 @@
         "description": "This layer visualizes directions",
         "name": "Direction visualization"
     },
+    "disaster_response": {
+        "description": "This layer contains organizations that have the main objective to help the civil population during and after natural or anthropogenic disasters by working in the affected area.",
+        "name": "Disaster response organizations",
+        "presets": {
+            "0": {
+                "title": "a disaster response organization"
+            }
+        },
+        "tagRenderings": {
+            "disaster_response_name": {
+                "question": "What is the name of this organization?",
+                "render": "This organization is named <b>{name}</b>"
+            }
+        },
+        "title": {
+            "render": "Disaster response organization"
+        }
+    },
     "doctors": {
         "description": "This layer shows doctor offices",
         "name": "Doctors",
@@ -4106,6 +3917,9 @@
                 },
                 "1": {
                     "then": "This is a water tap or water pump with non-drinkable water.<div class='subtle'>Examples are water taps with rain water to tap water for nearby plants</div>"
+                },
+                "2": {
+                    "then": "This is a historic, manual water pump where no drinking water can be found"
                 }
             }
         },
@@ -4113,6 +3927,7 @@
         "name": "Drinking water",
         "presets": {
             "0": {
+                "description": "Typically a drinking fountain, water tap, water well or natural spring",
                 "title": "a drinking water"
             }
         },
@@ -4143,8 +3958,72 @@
                 "question": "Is this drinking water spot still operational?",
                 "render": "The operational status is <i>{operational_status}</i>"
             },
+            "bench-artwork": {
+                "mappings": {
+                    "0": {
+                        "then": "This drinking water point has an integrated artwork"
+                    },
+                    "1": {
+                        "then": "This drinking water point does not have an integrated artwork"
+                    },
+                    "2": {
+                        "then": "This drinking water point <span class=\"subtle\">probably</span> doesn't have an integrated artwork"
+                    }
+                },
+                "question": "Does this drinking water fountain have an artistic element?",
+                "questionHint": "E.g. it has an integrated statue or other non-trivial, creative work"
+            },
+            "fee": {
+                "mappings": {
+                    "0": {
+                        "then": "Free to use"
+                    },
+                    "1": {
+                        "then": "One needs to pay to use this drinking water point"
+                    }
+                },
+                "question": "Is this drinking water point free to use?"
+            },
+            "opening_hours_24_7": {
+                "override": {
+                    "+mappings": {
+                        "0": {
+                            "then": "This drinking water fountain is closed this season. As such, the opening hours are not shown."
+                        }
+                    },
+                    "questionHint": "These are the opening hours if the drinking water fountain is operational."
+                }
+            },
             "render-closest-drinking-water": {
                 "render": "<a href='#{_closest_other_drinking_water_id}'>There is another drinking water fountain at {_closest_other_drinking_water_distance} meters</a>"
+            },
+            "seasonal": {
+                "mappings": {
+                    "0": {
+                        "then": "This drinking water point is available all around the year"
+                    },
+                    "1": {
+                        "then": "This drinking water point is only available in summer"
+                    },
+                    "2": {
+                        "then": "This drinking water point is closed during the winter"
+                    }
+                },
+                "question": "Is this drinking water point available all year round?"
+            },
+            "type": {
+                "mappings": {
+                    "0": {
+                        "then": "This is a bubbler fountain. A water jet to drink from is sent upwards, typically controlled by a push button."
+                    },
+                    "1": {
+                        "then": "This is a bottle refill point where the water is sent downwards, typically controlled by a push button or a motion sensor. Drinking directly from the stream might be very hard or impossible."
+                    },
+                    "2": {
+                        "then": "This is a water tap. The water flows downward and the stream is controlled by a valve or push-button."
+                    }
+                },
+                "question": "What type of drinking water point is this?"
             }
         },
         "title": {
@@ -4166,11 +4045,26 @@
             },
             "elevator-depth": {
                 "question": "What is the depth of this elevator?",
-                "render": "This elevator has a depth of {canonical(elevator:depth)}"
+                "render": "This elevator has a depth of {canonical(length)}"
+            },
+            "elevator-diameter": {
+                "question": "What is the diameter of this elevator?",
+                "render": "This elevator has a diameter of {canonical(diameter)}"
+            },
+            "elevator-shape": {
+                "mappings": {
+                    "0": {
+                        "then": "This elevator has a rectangular shape"
+                    },
+                    "1": {
+                        "then": "This elevator has a circular shape"
+                    }
+                },
+                "question": "What shape does this elevator have?"
             },
             "elevator-width": {
                 "question": "What is the width of this elevator?",
-                "render": "This elevator has a width of {canonical(elevator:width)}"
+                "render": "This elevator has a width of {canonical(width)}"
             },
             "operational_status": {
                 "mappings": {
@@ -4193,35 +4087,157 @@
                 "render": {
                     "special": {
                         "question": "In which languages does this elevator have speech output?",
-                        "render_list_item": "This elevator has speech output in {language():font-bold}",
-                        "render_single_language": "This elevator has speech output in {language():font-bold}"
+                        "render_list_item": "This elevator has speech output in {language()}",
+                        "render_single_language": "This elevator has speech output in {language()}"
                     }
                 }
+            },
+            "speech_output_available": {
+                "mappings": {
+                    "0": {
+                        "then": "This elevator has speech output"
+                    },
+                    "1": {
+                        "then": "This elevator does not have speech output"
+                    }
+                },
+                "question": "Has this elevator speech output?",
+                "questionHint": "E.g. it announces the current floor"
+            },
+            "tactile_writing_available": {
+                "mappings": {
+                    "0": {
+                        "then": "This elevator has tactile writing in Braille"
+                    },
+                    "1": {
+                        "then": "This elevator does not have tactile writing"
+                    }
+                },
+                "question": "Has this elevator tactile writing?"
             },
             "tactile_writing_language": {
                 "render": {
                     "special": {
                         "question": "In which languages does this elevator have tactile writing (braille)?",
-                        "render_list_item": "This elevator has tactile writing in {language():font-bold}",
-                        "render_single_language": "This elevator has tactile writing in {language():font-bold}"
+                        "render_list_item": "This elevator has tactile writing in {language()}",
+                        "render_single_language": "This elevator has tactile writing in {language()}"
                     }
                 }
             }
         },
         "title": {
             "render": "Elevator"
-        },
-        "units": {
+        }
+    },
+    "elongated_coin": {
+        "description": "Layer showing penny presses.",
+        "name": "Penny Presses",
+        "presets": {
             "0": {
-                "applicableUnits": {
+                "title": "a penny press"
+            }
+        },
+        "tagRenderings": {
+            "charge": {
+                "freeform": {
+                    "placeholder": "Cost (e.g. 0.50 EUR)"
+                },
+                "mappings": {
                     "0": {
-                        "human": "meter"
+                        "then": "It costs 1 euro to press a penny."
                     },
                     "1": {
-                        "human": "centimeter"
+                        "then": "It costs 2 euros to press a penny."
+                    },
+                    "2": {
+                        "then": "It costs 2 Swiss francs to press a penny."
+                    },
+                    "3": {
+                        "then": "It costs 1 Swiss franc to press a penny."
                     }
-                }
+                },
+                "question": "How much does it cost to press a penny?",
+                "render": "It costs {charge} to press a penny."
+            },
+            "coin": {
+                "freeform": {
+                    "placeholder": "Coin type (e.g. 10cent)"
+                },
+                "mappings": {
+                    "0": {
+                        "then": "This penny press uses a 2 cent coin for pressing."
+                    },
+                    "1": {
+                        "then": "This penny press uses a 5 cent coin for pressing."
+                    },
+                    "2": {
+                        "then": "This penny press uses a 10 cent coin for pressing."
+                    },
+                    "3": {
+                        "then": "This penny press uses a 25 cent coin for pressing."
+                    },
+                    "4": {
+                        "then": "This penny press uses a 50 cent coin for pressing."
+                    },
+                    "5": {
+                        "then": "This penny press uses a 10 centimes coin for pressing."
+                    },
+                    "6": {
+                        "then": "This penny press uses a 20 centimes coin for pressing."
+                    }
+                },
+                "question": "What coin is used for pressing?",
+                "render": "This penny press uses a {coin:type} coin for pressing."
+            },
+            "designs": {
+                "freeform": {
+                    "placeholder": "Number of designs (e.g. 5)"
+                },
+                "mappings": {
+                    "0": {
+                        "then": "This penny press has one design available."
+                    },
+                    "1": {
+                        "then": "This penny press has two designs available."
+                    },
+                    "2": {
+                        "then": "This penny press has three designs available."
+                    },
+                    "3": {
+                        "then": "This penny press has four designs available."
+                    }
+                },
+                "question": "How many designs are available?",
+                "render": "This penny press has {coin:design_count} designs available."
+            },
+            "fee": {
+                "mappings": {
+                    "0": {
+                        "then": "It costs money to press a penny."
+                    },
+                    "1": {
+                        "then": "It costs money to press a penny."
+                    },
+                    "2": {
+                        "then": "It is free to press a penny."
+                    }
+                },
+                "question": "Does it cost money to press a penny?"
+            },
+            "indoor": {
+                "mappings": {
+                    "0": {
+                        "then": "This penny press is located indoors."
+                    },
+                    "1": {
+                        "then": "This penny press is located outdoors."
+                    }
+                },
+                "question": "Is the penny press indoors?"
             }
+        },
+        "title": {
+            "render": "Penny Press"
         }
     },
     "entrance": {
@@ -4342,18 +4358,6 @@
         },
         "title": {
             "render": "Entrance"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "meter"
-                    },
-                    "1": {
-                        "human": "centimeter"
-                    }
-                }
-            }
         }
     },
     "etymology": {
@@ -4441,6 +4445,20 @@
             "3": {
                 "options": {
                     "0": {
+                        "question": "Accepts debit cards"
+                    }
+                }
+            },
+            "4": {
+                "options": {
+                    "0": {
+                        "question": "Accepts credit cards"
+                    }
+                }
+            },
+            "5": {
+                "options": {
+                    "0": {
                         "question": "With and without images"
                     },
                     "1": {
@@ -4451,14 +4469,14 @@
                     }
                 }
             },
-            "4": {
+            "6": {
                 "options": {
                     "0": {
                         "question": "With tactile paving"
                     }
                 }
             },
-            "5": {
+            "7": {
                 "options": {
                     "0": {
                         "question": "With or without tactile paving"
@@ -4474,17 +4492,65 @@
                     }
                 }
             },
-            "6": {
+            "8": {
                 "options": {
                     "0": {
                         "question": "Has organic options"
                     }
                 }
             },
-            "7": {
+            "9": {
                 "options": {
                     "0": {
                         "question": "Free to use"
+                    }
+                }
+            },
+            "10": {
+                "options": {
+                    "0": {
+                        "question": "No preference towards dogs"
+                    },
+                    "1": {
+                        "question": "Dogs allowed"
+                    },
+                    "2": {
+                        "question": "No dogs allowed"
+                    }
+                }
+            },
+            "11": {
+                "options": {
+                    "0": {
+                        "question": "Offers internet"
+                    }
+                }
+            },
+            "12": {
+                "options": {
+                    "0": {
+                        "question": "Offers electricity"
+                    }
+                }
+            },
+            "13": {
+                "options": {
+                    "0": {
+                        "question": "Has a sugar-free offering"
+                    }
+                }
+            },
+            "14": {
+                "options": {
+                    "0": {
+                        "question": "Has a gluten free offering"
+                    }
+                }
+            },
+            "15": {
+                "options": {
+                    "0": {
+                        "question": "Has a lactose free offering"
                     }
                 }
             }
@@ -4737,10 +4803,10 @@
             "2": {
                 "options": {
                     "0": {
-                        "question": "Has a vegetarian menu"
+                        "question": "Restaurants and fast food businesses"
                     },
                     "1": {
-                        "question": "Only fastfood buisinesses"
+                        "question": "Only fastfood businesses"
                     },
                     "2": {
                         "question": "Only restaurants"
@@ -4750,14 +4816,14 @@
             "3": {
                 "options": {
                     "0": {
-                        "question": "Has a vegan menu"
+                        "question": "Has a vegetarian menu"
                     }
                 }
             },
             "4": {
                 "options": {
                     "0": {
-                        "question": "Has a halal menu"
+                        "question": "Has a vegan menu"
                     }
                 }
             },
@@ -4780,7 +4846,7 @@
                 "title": "a fastfood"
             },
             "2": {
-                "description": "A fastfood-business focused on french fries",
+                "description": "A fast-food business focused on french fries",
                 "title": "a fries shop"
             }
         },
@@ -4800,7 +4866,7 @@
                         "then": "This is kebab shop"
                     },
                     "4": {
-                        "then": "This is a sandwichbar"
+                        "then": "This is a sandwich shop"
                     },
                     "5": {
                         "then": "Burgers are served here"
@@ -4812,7 +4878,7 @@
                         "then": "Coffee is served here"
                     },
                     "8": {
-                        "then": "This is an italian restaurant (which serves more then pasta and pizza)"
+                        "then": "This is an Italian restaurant (which serves more than pasta and pizza)"
                     },
                     "9": {
                         "then": "French dishes are served here"
@@ -4833,13 +4899,13 @@
                         "then": "Thai dishes are served here"
                     }
                 },
-                "question": "Which food is served here?",
+                "question": "What kind of food is served here?",
                 "render": "This place mostly serves {cuisine}"
             },
             "Fastfood vs restaurant": {
                 "mappings": {
                     "0": {
-                        "then": "This is a fastfood-business, focused on fast service. If seating is available, these are rather limited and functional."
+                        "then": "This is a fast-food business, focused on fast service. If seating is available, it is rather limited and functional."
                     },
                     "1": {
                         "then": "A <b>restaurant</b>, focused on creating a nice experience where one is served at the table"
@@ -4895,6 +4961,9 @@
                     },
                     "3": {
                         "then": "All dishes are vegan"
+                    },
+                    "4": {
+                        "then": "Some dishes might be adapted to a vegan version if asked for"
                     }
                 },
                 "question": "Does this business serve vegan meals?"
@@ -4912,6 +4981,9 @@
                     },
                     "3": {
                         "then": "All dishes are vegetarian"
+                    },
+                    "4": {
+                        "then": "Some dishes might be adapted to a vegetarian version, but this should be demanded"
                     }
                 },
                 "question": "Does this restaurant have a vegetarian option?"
@@ -4925,7 +4997,7 @@
                         "then": "This business does not deliver at home"
                     }
                 },
-                "question": "Delivers {title()} their food at home?"
+                "question": "Does {title()} deliver food to your home?"
             },
             "friture-oil": {
                 "mappings": {
@@ -5072,11 +5144,20 @@
             },
             "ghost_bike-source": {
                 "question": "On what webpage can one find more info about the ghost bike or the accident?",
-                "render": "<a href='{source}' target='_blank'>More info available</a>"
+                "render": {
+                    "special": {
+                        "text": "More info available"
+                    }
+                }
             },
             "ghost_bike-start_date": {
                 "question": "When was this Ghost bike installed?",
                 "render": "Placed on {start_date}"
+            },
+            "wikidata": {
+                "render": {
+                    "before": "<h3>Wikipedia page about the deceased person</h3>"
+                }
             }
         },
         "title": {
@@ -5120,6 +5201,39 @@
             "render": "Your travelled path"
         }
     },
+    "guidepost": {
+        "description": "Guideposts (also known as fingerposts or finger posts) are often found along official hiking/cycling/riding/skiing routes to indicate the directions to different destinations",
+        "name": "Guideposts",
+        "presets": {
+            "0": {
+                "description": "A guidepost (also known as fingerpost) is often found along official hiking/cycling/riding/skiing routes to indicate the directions to different destinations",
+                "title": "a guidepost"
+            }
+        },
+        "tagRenderings": {
+            "type": {
+                "mappings": {
+                    "0": {
+                        "then": "This guidepost shows bicycle routes"
+                    },
+                    "1": {
+                        "then": "This guidepost shows hiking routes"
+                    },
+                    "2": {
+                        "then": "This guidepost shows mountain bike routes"
+                    },
+                    "3": {
+                        "then": "This guidepost shows horse riding routes"
+                    },
+                    "4": {
+                        "then": "This guidepost shows ski routes"
+                    }
+                },
+                "question": "What kind of routes are shown on this guidepost?"
+            }
+        },
+        "title": "Guideposts"
+    },
     "hackerspace": {
         "description": "Hackerspace",
         "name": "Hackerspace",
@@ -5143,6 +5257,9 @@
                             },
                             "1": {
                                 "then": "There is no {negative-name} available at this hackerspace"
+                            },
+                            "2": {
+                                "then": "There is a limited {negative-name} available at this hackerspace"
                             }
                         },
                         "question": "Is {device-name} available at this hackerspace?"
@@ -5161,6 +5278,30 @@
                         "2": {
                             "1": "a CNC drill",
                             "2": "CNC drill"
+                        },
+                        "3": {
+                            "1": "a multimedia studio",
+                            "2": "multimedia studio"
+                        },
+                        "4": {
+                            "1": "a sewing machine",
+                            "2": "sewing machine"
+                        },
+                        "5": {
+                            "1": "a woodworking workshop",
+                            "2": "woodworking workshop"
+                        },
+                        "6": {
+                            "1": "a ceramics workshop",
+                            "2": "ceramics workshop"
+                        },
+                        "7": {
+                            "1": "a metal workshop",
+                            "2": "metal workshop"
+                        },
+                        "8": {
+                            "1": "a bicycle repair workshop",
+                            "2": "bicycle repair workshop"
                         }
                     }
                 }
@@ -5362,20 +5503,68 @@
         },
         "title": {
             "render": "Hydrant"
-        },
-        "units": {
+        }
+    },
+    "ice_cream": {
+        "description": "A place where ice cream is sold over the counter",
+        "name": "Ice cream parlors",
+        "presets": {
             "0": {
-                "applicableUnits": {
+                "description": "A shop where one can buy only icecream and related items. Ice cream is normally hand-scooped.",
+                "title": "an ice cream parlor"
+            }
+        },
+        "tagRenderings": {
+            "1": {
+                "question": "What is the name of this ice cream parlor?",
+                "render": "This ice cream parlor is named <b>{name}</b>"
+            }
+        },
+        "title": {
+            "mappings": {
+                "0": {
+                    "then": "{name}"
+                }
+            },
+            "render": "Ice cream parlor"
+        }
+    },
+    "icons": {
+        "description": "A layer acting as library for icon-tagrenderings, especially to show as badge next to a POI",
+        "tagRenderings": {
+            "osmlink": {
+                "mappings": {
+                    "1": {
+                        "then": {
+                            "special": {
+                                "arialabel": "Open on openstreetmap.org"
+                            }
+                        }
+                    }
+                },
+                "render": {
+                    "special": {
+                        "arialabel": "Open on openstreetmap.org"
+                    }
+                }
+            },
+            "phonelink": {
+                "mappings": {
                     "0": {
-                        "human": "millimeters",
-                        "humanSingular": "millimeter"
+                        "then": {
+                            "special": {
+                                "arialabel": "phone"
+                            }
+                        }
+                    }
+                },
+                "render": {
+                    "special": {
+                        "arialabel": "phone"
                     }
                 }
             }
         }
-    },
-    "icons": {
-        "description": "A layer acting as library for icon-tagrenderings, especially to show as badge next to a POI"
     },
     "indoors": {
         "description": "Basic indoor mapping: shows room outlines",
@@ -5394,6 +5583,84 @@
                 },
                 "question": "What is the reference number of this room?",
                 "render": "This room has the reference number {ref}"
+            },
+            "room-capacity": {
+                "question": "How much people can at most fit in this room?",
+                "render": "At most {capacity} people fit this room"
+            },
+            "room-type": {
+                "mappings": {
+                    "0": {
+                        "then": "This is a administrative room"
+                    },
+                    "1": {
+                        "then": "This is a auditorium"
+                    },
+                    "2": {
+                        "then": "This is a bedroom"
+                    },
+                    "3": {
+                        "then": "This is a chapel"
+                    },
+                    "4": {
+                        "then": "This is a classroom"
+                    },
+                    "5": {
+                        "then": "This is a classroom"
+                    },
+                    "6": {
+                        "then": "This is a computer room"
+                    },
+                    "7": {
+                        "then": "This is a conference room"
+                    },
+                    "8": {
+                        "then": "This is a crypt"
+                    },
+                    "9": {
+                        "then": "This is a kitchen"
+                    },
+                    "10": {
+                        "then": "This is a laboratory"
+                    },
+                    "11": {
+                        "then": "This is a library"
+                    },
+                    "12": {
+                        "then": "This is a locker room"
+                    },
+                    "13": {
+                        "then": "This is a nursery"
+                    },
+                    "14": {
+                        "then": "This is an office"
+                    },
+                    "15": {
+                        "then": "This is a prison_cell"
+                    },
+                    "16": {
+                        "then": "This is a restaurant"
+                    },
+                    "17": {
+                        "then": "This is a room to perform security checks"
+                    },
+                    "18": {
+                        "then": "This is a sport room"
+                    },
+                    "19": {
+                        "then": "This is a storage room"
+                    },
+                    "20": {
+                        "then": "This is a technical room"
+                    },
+                    "21": {
+                        "then": "These are toilets"
+                    },
+                    "22": {
+                        "then": "This is a waiting room"
+                    }
+                },
+                "question": "What type of room is this?"
             }
         },
         "title": {
@@ -5430,6 +5697,12 @@
         },
         "title": {
             "render": "Information board"
+        }
+    },
+    "item_with_image": {
+        "name": "Items with at least one image",
+        "title": {
+            "render": "POI with image"
         }
     },
     "kerbs": {
@@ -5515,20 +5788,6 @@
         },
         "title": {
             "render": "Kerb"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "centimeters",
-                        "humanSingular": "centimeter"
-                    },
-                    "1": {
-                        "human": "meters",
-                        "humanSingular": "meter"
-                    }
-                }
-            }
         }
     },
     "kindergarten_childcare": {
@@ -5579,7 +5838,7 @@
         }
     },
     "last_click": {
-        "mapRendering": {
+        "pointRendering": {
             "0": {
                 "label": {
                     "mappings": {
@@ -5603,6 +5862,25 @@
                     "then": "Add a new point"
                 }
             }
+        }
+    },
+    "love_hotel": {
+        "description": "A love hotel is a type of short-stay hotel found around the world operated primarily for the purpose of allowing guests privacy for sexual activities",
+        "name": "Love hotels",
+        "presets": {
+            "0": {
+                "description": "A love hotel is a type of short-stay hotel found around the world operated primarily for the purpose of allowing guests privacy for sexual activities.",
+                "title": "a love hotel"
+            }
+        },
+        "tagRenderings": {
+            "name": {
+                "question": "What is the name of this love hotel?",
+                "render": "This love hotel is named <b>{name}</b>"
+            }
+        },
+        "title": {
+            "render": "Love Hotel <i>{name}</i>"
         }
     },
     "map": {
@@ -5880,31 +6158,111 @@
                     "then": "Road without a name"
                 }
             }
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "kilometers/hour",
-                        "humanShort": "km/h"
-                    },
-                    "1": {
-                        "human": "miles/hour",
-                        "humanShort": "mph"
-                    }
-                }
-            }
         }
     },
     "memorial": {
+        "name": "Memorials",
+        "presets": {
+            "0": {
+                "title": "a memorial"
+            }
+        },
         "tagRenderings": {
             "inscription": {
+                "mappings": {
+                    "0": {
+                        "then": "This memorial does not have an inscription"
+                    }
+                },
                 "question": "What is the inscription of this plaque?",
                 "render": "The inscription on this plaque reads: <p><i>{inscription}<i></p>"
+            },
+            "memorial-type": {
+                "mappings": {
+                    "0": {
+                        "then": "This is a statue"
+                    },
+                    "1": {
+                        "then": "This is a plaque"
+                    },
+                    "2": {
+                        "then": "This is a commemorative bench"
+                    },
+                    "3": {
+                        "then": "This is a ghost bike - a bicycle painted white to remember a cyclist whom deceased because of a car crash"
+                    },
+                    "4": {
+                        "then": "This is a stolperstein (stumbing stone)"
+                    },
+                    "5": {
+                        "then": "This is a stele"
+                    },
+                    "6": {
+                        "then": "This is a memorial stone"
+                    },
+                    "7": {
+                        "then": "This is a bust"
+                    },
+                    "8": {
+                        "then": "This is a sculpture"
+                    },
+                    "9": {
+                        "then": "This is an obelisk"
+                    },
+                    "10": {
+                        "then": "This is a cross"
+                    },
+                    "11": {
+                        "then": "This is a blue plaque"
+                    },
+                    "12": {
+                        "then": "This is a historic tank, permanently placed in public space as memorial"
+                    },
+                    "13": {
+                        "then": "This is a memorial tree"
+                    }
+                },
+                "question": "What type of memorial is this?",
+                "render": "This is a {memorial}"
+            },
+            "memorial-wikidata": {
+                "question": "What is the Wikipedia page about this memorial?",
+                "questionHint": "This is a about the memorial itself, not about the person or event that the memorial remembers. If this memorial does not have a Wikipedia page or Wikidata entity, skip this question.",
+                "render": {
+                    "before": "<h3>Wikipedia page about the memorial</h3>"
+                }
+            },
+            "start_date": {
+                "question": "When was this memorial installed?",
+                "render": "Placed on {start_date}"
+            },
+            "subject-wikidata": {
+                "question": "What is the Wikipedia page about the person or event that is remembered here?",
+                "questionHint": "If the person or event does not have a Wikipedia page or Wikidata entity, skip this question.",
+                "render": {
+                    "before": "<h3>Wikipedia page about the remembered event or person</h3>"
+                }
             }
         },
         "title": {
+            "mappings": {
+                "0": {
+                    "then": "Memorial plaque"
+                }
+            },
             "render": "Memorial plaque"
+        }
+    },
+    "mountain_rescue": {
+        "description": "A building where first aid responders store material and might be on watch",
+        "name": "Mountain rescue stations",
+        "presets": {
+            "0": {
+                "title": "a mountain rescue station"
+            }
+        },
+        "title": {
+            "render": "Mountain rescue station"
         }
     },
     "nature_reserve": {
@@ -5987,9 +6345,8 @@
                 "render": "Extra info: <i>{description:0}</i>"
             },
             "Email": {
-                "question": "What email adress can one send to with questions and problems with this nature reserve?",
-                "questionHint": "Respect privacy - only fill out a personal email address if this is widely published",
-                "render": "<a href='mailto:{email}' target='_blank'>{email}</a>"
+                "question": "What email address can one send to with questions and problems with this nature reserve?",
+                "questionHint": "Respect privacy - only fill out a personal email address if this is widely published"
             },
             "Name tag": {
                 "mappings": {
@@ -6137,6 +6494,11 @@
                 }
             },
             "render": "Note"
+        },
+        "titleIcons": {
+            "0": {
+                "ariaLabel": "See on OpenStreetMap.org"
+            }
         }
     },
     "observation_tower": {
@@ -6203,15 +6565,6 @@
                 }
             },
             "render": "Observation tower"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " meter"
-                    }
-                }
-            }
         }
     },
     "osm_community_index": {
@@ -6446,39 +6799,36 @@
                         "then": "This is a disabled parking space."
                     },
                     "3": {
-                        "then": "This is a private parking space."
-                    },
-                    "4": {
                         "then": "This is parking space reserved for charging vehicles."
                     },
-                    "5": {
+                    "4": {
                         "then": "This is parking space reserved for deliveries."
                     },
-                    "6": {
+                    "5": {
                         "then": "This is parking space reserved for heavy goods vehicles."
                     },
-                    "7": {
+                    "6": {
                         "then": "This is parking space reserved for caravans or RVs."
                     },
-                    "8": {
+                    "7": {
                         "then": "This is parking space reserved for buses."
                     },
-                    "9": {
+                    "8": {
                         "then": "This is parking space reserved for motorcycles."
                     },
-                    "10": {
+                    "9": {
                         "then": "This is a parking space reserved for parents with children."
                     },
-                    "11": {
+                    "10": {
                         "then": "This is a parking space reserved for staff."
                     },
-                    "12": {
+                    "11": {
                         "then": "This is a parking space reserved for taxis."
                     },
-                    "13": {
+                    "12": {
                         "then": "This is a parking space reserved for vehicles towing a trailer."
                     },
-                    "14": {
+                    "13": {
                         "then": "This is a parking space reserved for car sharing."
                     }
                 },
@@ -6489,6 +6839,9 @@
             "mappings": {
                 "0": {
                     "then": "Disabled Parking Space"
+                },
+                "1": {
+                    "then": "Electric Vehicle Charging Parking Space"
                 }
             },
             "render": "Parking Space"
@@ -6747,6 +7100,12 @@
                     },
                     "7": {
                         "then": "The surface is <b>paved</b>"
+                    },
+                    "8": {
+                        "then": "The surface is tartan - a synthetic, springy surface typically seen on athletic pistes"
+                    },
+                    "9": {
+                        "then": "The surface is made from rubber, such as rubber tiles, rubber mulch or a big rubber area"
                     }
                 },
                 "question": "Which is the surface of this playground?",
@@ -6763,6 +7122,101 @@
             "render": "Playground"
         }
     },
+    "playground_equipment": {
+        "description": "Layer showing playground equipment",
+        "name": "Playground equipment",
+        "presets": {
+            "0": {
+                "description": "An exact type is asked later",
+                "title": "a playground device"
+            }
+        },
+        "tagRenderings": {
+            "type": {
+                "freeform": {
+                    "placeholder": "Type of device"
+                },
+                "mappings": {
+                    "0": {
+                        "then": "This is a swing"
+                    },
+                    "1": {
+                        "then": "This is a structure consisting of several connected playground devices"
+                    },
+                    "2": {
+                        "then": "This is a slide"
+                    },
+                    "3": {
+                        "then": "This is a sand pit"
+                    },
+                    "4": {
+                        "then": "This is a spring rider"
+                    },
+                    "5": {
+                        "then": "This is a climbing frame"
+                    },
+                    "6": {
+                        "then": "This is a seesaw"
+                    },
+                    "7": {
+                        "then": "This is a playhouse"
+                    },
+                    "8": {
+                        "then": "This is a roundabout"
+                    },
+                    "9": {
+                        "then": "This is a basket swing"
+                    },
+                    "10": {
+                        "then": "This is a zip wire"
+                    },
+                    "11": {
+                        "then": "This is a horizontal bar"
+                    },
+                    "12": {
+                        "then": "This is a hopscotch"
+                    },
+                    "13": {
+                        "then": "This is a splash pad"
+                    },
+                    "14": {
+                        "then": "This is a climbing wall"
+                    },
+                    "15": {
+                        "then": "This is a map"
+                    },
+                    "16": {
+                        "then": "This is a bridge (either as a standalone device or as part of a larger structure)"
+                    },
+                    "17": {
+                        "then": "This is a bouncy cushion"
+                    },
+                    "18": {
+                        "then": "This is an activity panel"
+                    },
+                    "19": {
+                        "then": "This is a teen shelter"
+                    },
+                    "20": {
+                        "then": "This is a funnel used to play with funnel ball"
+                    },
+                    "21": {
+                        "then": "This is a spinning circle"
+                    }
+                },
+                "question": "What kind of device is this?",
+                "render": "This is a {playground}"
+            },
+            "wheelchair-access": {
+                "override": {
+                    "question": "Is this device accessible by wheelchair?"
+                }
+            }
+        },
+        "title": {
+            "render": "Playground device"
+        }
+    },
     "postboxes": {
         "description": "The layer showing postboxes.",
         "name": "Postboxes",
@@ -6777,6 +7231,43 @@
     },
     "postoffices": {
         "description": "A layer showing post offices.",
+        "filter": {
+            "1": {
+                "options": {
+                    "0": {
+                        "question": "Offers letter posting"
+                    }
+                }
+            },
+            "2": {
+                "options": {
+                    "0": {
+                        "question": "Offers parcel posting"
+                    }
+                }
+            },
+            "3": {
+                "options": {
+                    "0": {
+                        "question": "Offers pickup of missed parcels"
+                    }
+                }
+            },
+            "4": {
+                "options": {
+                    "0": {
+                        "question": "Accepts pickup of parcels sent here"
+                    }
+                }
+            },
+            "5": {
+                "options": {
+                    "0": {
+                        "question": "Sells stamps"
+                    }
+                }
+            }
+        },
         "name": "Post offices",
         "presets": {
             "0": {
@@ -6784,6 +7275,20 @@
             }
         },
         "tagRenderings": {
+            "has_atm": {
+                "mappings": {
+                    "0": {
+                        "then": "This post office has an ATM"
+                    },
+                    "1": {
+                        "then": "This post office does <b>not</b> have an ATM"
+                    },
+                    "2": {
+                        "then": "This post office does have an ATM, but it is mapped as a different icon"
+                    }
+                },
+                "question": "Does this post office have an ATM?"
+            },
             "letter-from": {
                 "mappings": {
                     "0": {
@@ -7022,7 +7527,11 @@
             },
             "public_bookcase-website": {
                 "question": "Is there a website with more information about this public bookcase?",
-                "render": "More info on <a href='{website}' target='_blank'>the website</a>"
+                "render": {
+                    "special": {
+                        "text": "More info on the website"
+                    }
+                }
             }
         },
         "title": {
@@ -7036,6 +7545,15 @@
     },
     "questions": {
         "tagRenderings": {
+            "check_date": {
+                "mappings": {
+                    "0": {
+                        "then": "This object was last checked today"
+                    }
+                },
+                "question": "When was this object last checked?",
+                "render": "This object was last checked on <b>{check_date}</b>"
+            },
             "denominations-coins": {
                 "mappings": {
                     "0": {
@@ -7061,6 +7579,27 @@
                     },
                     "7": {
                         "then": "2 euro coins are accepted"
+                    },
+                    "8": {
+                        "then": "5 centimes coins are accepted"
+                    },
+                    "9": {
+                        "then": "10 centimes coins are accepted"
+                    },
+                    "10": {
+                        "then": "20 centimes coins are accepted"
+                    },
+                    "11": {
+                        "then": "½ franc coins are accepted"
+                    },
+                    "12": {
+                        "then": "1 franc coins are accepted"
+                    },
+                    "13": {
+                        "then": "2 francs coins are accepted"
+                    },
+                    "14": {
+                        "then": "5 francs coins are accepted"
                     }
                 },
                 "question": "What coins can you use to pay here?"
@@ -7087,6 +7626,24 @@
                     },
                     "6": {
                         "then": "500 euro notes are accepted"
+                    },
+                    "7": {
+                        "then": "10 francs notes are accepted"
+                    },
+                    "8": {
+                        "then": "20 francs notes are accepted"
+                    },
+                    "9": {
+                        "then": "50 francs notes are accepted"
+                    },
+                    "10": {
+                        "then": "100 francs notes are accepted"
+                    },
+                    "11": {
+                        "then": "200 francs notes are accepted"
+                    },
+                    "12": {
+                        "then": "1000 francs notes are accepted"
                     }
                 },
                 "question": "what notes can you use to pay here?"
@@ -7113,7 +7670,25 @@
                 "question": "Are dogs allowed in this business?"
             },
             "email": {
+                "editButtonAriaLabel": "Edit email address",
                 "question": "What is the email address of {title()}?"
+            },
+            "gluten_free": {
+                "mappings": {
+                    "0": {
+                        "then": "This shop <b>only sells gluten free</b> products"
+                    },
+                    "1": {
+                        "then": "This shop has a big gluten free offering"
+                    },
+                    "2": {
+                        "then": "This shop has a <b>limited gluten free</b> offering"
+                    },
+                    "3": {
+                        "then": "This shop has no gluten free offering"
+                    }
+                },
+                "question": "Does this shop have a gluten free offering?"
             },
             "induction-loop": {
                 "mappings": {
@@ -7174,33 +7749,29 @@
                     }
                 }
             },
+            "lactose_free": {
+                "mappings": {
+                    "0": {
+                        "then": "<b>Only sells lactose free</b> products"
+                    },
+                    "1": {
+                        "then": "Big lactose free offering"
+                    },
+                    "2": {
+                        "then": "<b>Limited lactose free</b> offering"
+                    },
+                    "3": {
+                        "then": "No lactose free offering"
+                    }
+                },
+                "question": "Does {title()} have a lactose-free offering?"
+            },
             "last_edit": {
                 "render": {
                     "special": {
                         "text": "Last edited on {_last_edit:timestamp} by {_last_edit:contributor}"
                     }
                 }
-            },
-            "level": {
-                "mappings": {
-                    "0": {
-                        "then": "Located underground"
-                    },
-                    "1": {
-                        "then": "Located on the ground floor"
-                    },
-                    "2": {
-                        "then": "Located on the ground floor"
-                    },
-                    "3": {
-                        "then": "Located on the first floor"
-                    },
-                    "4": {
-                        "then": "Located on the first basement level"
-                    }
-                },
-                "question": "On what level is this feature located?",
-                "render": "Located on the {level}th floor"
             },
             "luminous_or_lit": {
                 "mappings": {
@@ -7219,6 +7790,9 @@
                 },
                 "question": "Is this object lit or does it emit light?"
             },
+            "mastodon": {
+                "question": "What is the Mastodon-handle of {title()}?"
+            },
             "multilevels": {
                 "override": {
                     "question": "What levels does this elevator go to?",
@@ -7226,12 +7800,17 @@
                 }
             },
             "opening_hours": {
+                "mappings": {
+                    "0": {
+                        "then": "Marked as closed for an unspecified time"
+                    }
+                },
                 "question": "What are the opening hours of {title()}?",
                 "render": "<h3>Opening hours</h3>{opening_hours_table(opening_hours)}"
             },
             "opening_hours_24_7": {
                 "override": {
-                    "mappings": {
+                    "+mappings": {
                         "0": {
                             "then": "24/7 opened (including holidays)"
                         }
@@ -7295,7 +7874,16 @@
                 }
             },
             "phone": {
+                "editButtonAriaLabel": "Edit phone number",
                 "question": "What is the phone number of {title()}?"
+            },
+            "qr_code": {
+                "render": {
+                    "after": "Scan this code to open this location on another device"
+                }
+            },
+            "repeated": {
+                "render": "Multiple, identical objects can be found on floors {repeat_on}."
             },
             "service:electricity": {
                 "mappings": {
@@ -7314,6 +7902,34 @@
                 },
                 "question": "Does this amenity have electrical outlets, available to customers when they are inside?"
             },
+            "share": {
+                "render": {
+                    "special": {
+                        "text": "Share this location"
+                    }
+                }
+            },
+            "single_level": {
+                "mappings": {
+                    "0": {
+                        "then": "Located underground"
+                    },
+                    "1": {
+                        "then": "Located on the ground floor"
+                    },
+                    "2": {
+                        "then": "Located on the ground floor"
+                    },
+                    "3": {
+                        "then": "Located on the first floor"
+                    },
+                    "4": {
+                        "then": "Located on the first basement level"
+                    }
+                },
+                "question": "On what level is this feature located?",
+                "render": "Located on the {level}th floor"
+            },
             "smoking": {
                 "mappings": {
                     "0": {
@@ -7328,6 +7944,24 @@
                 },
                 "question": "Is smoking allowed at {title()}?"
             },
+            "sugar_free": {
+                "mappings": {
+                    "0": {
+                        "then": "This shop <b>only sells sugar free</b> products"
+                    },
+                    "1": {
+                        "then": "This shop has a big sugar free offering"
+                    },
+                    "2": {
+                        "then": "This shop has a <b>limited sugar free</b> offering"
+                    },
+                    "3": {
+                        "then": "This shop has no sugar free offering"
+                    }
+                },
+                "question": "Does this shop have a sugar free offering?",
+                "questionHint": "This is important for people following a sugar-free diet, such as people with Diabetes"
+            },
             "survey_date": {
                 "mappings": {
                     "0": {
@@ -7337,7 +7971,25 @@
                 "question": "When was this object last surveyed?",
                 "render": "This object was last surveyed on <b>{survey:date}</b>"
             },
+            "vegan": {
+                "mappings": {
+                    "0": {
+                        "then": "This place <b>only sells vegan</b> products"
+                    },
+                    "1": {
+                        "then": "This shop has a big vegan offering"
+                    },
+                    "2": {
+                        "then": "This shop has a <b>limited vegan</b> offering"
+                    },
+                    "3": {
+                        "then": "This shop has no vegan offering"
+                    }
+                },
+                "question": "Does this place offer a vegan option?"
+            },
             "website": {
+                "editButtonAriaLabel": "Edit website",
                 "question": "What is the website of {title()}?"
             },
             "wheelchair-access": {
@@ -7437,18 +8089,6 @@
         },
         "title": {
             "render": "Reception desk"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "meter"
-                    },
-                    "1": {
-                        "human": "centimeter"
-                    }
-                }
-            }
         }
     },
     "recycling": {
@@ -7705,6 +8345,41 @@
             "render": "Recycling facility"
         }
     },
+    "route_marker": {
+        "description": "Route markers are small markers often found along official hiking/cycling/riding/skiing routes to indicate the direction of the route.",
+        "name": "Route markers",
+        "presets": {
+            "0": {
+                "description": "A route marker is a small marker often found along official hiking/cycling/riding/skiing routes to indicate the direction of the route.",
+                "title": "a route marker"
+            }
+        },
+        "tagRenderings": {
+            "type": {
+                "mappings": {
+                    "0": {
+                        "then": "This is a route marker for a bicycle route."
+                    },
+                    "1": {
+                        "then": "This is a route marker for a hiking route."
+                    },
+                    "2": {
+                        "then": "This is a route marker for a mountain bike route."
+                    },
+                    "3": {
+                        "then": "This is a route marker for a horse riding route."
+                    },
+                    "4": {
+                        "then": "This is a route marker for a ski route."
+                    }
+                },
+                "question": "For what kind of route is this marker?"
+            }
+        },
+        "title": {
+            "render": "Route marker"
+        }
+    },
     "school": {
         "name": "Primary and secondary schools",
         "presets": {
@@ -7766,7 +8441,7 @@
                         "no_known_languages": "The main language of this school is unknown",
                         "question": "What is the main language of this school?<div class='subtle'>What language is spoken with the students in non-language related courses and with the administration?</div>",
                         "render_all": "The following languages are used in this school:{list()}",
-                        "render_single_language": "{language():font-bold} is the main language of this school"
+                        "render_single_language": "{language()} is the main language of this school"
                     }
                 }
             },
@@ -7851,9 +8526,9 @@
     },
     "shops": {
         "deletion": {
-            "extraDeleteReasons": {
+            "nonDeleteMappings": {
                 "0": {
-                    "explanation": "{title()} has closed down permanently"
+                    "then": "{title()} has closed down permanently"
                 }
             }
         },
@@ -7872,12 +8547,19 @@
                         "question": "Only show shops with name {search}"
                     }
                 }
+            },
+            "6": {
+                "options": {
+                    "0": {
+                        "question": "Only show shops selling second-hand items"
+                    }
+                }
             }
         },
         "name": "Shop",
         "presets": {
             "0": {
-                "description": "Add a new shop",
+                "description": "You can specify later on what this shop sells.",
                 "title": "a shop"
             }
         },
@@ -7908,6 +8590,20 @@
                     "render": "This is a {shop}"
                 }
             },
+            "key_cutter": {
+                "mappings": {
+                    "0": {
+                        "then": "This shop is also specialized in key cutting"
+                    },
+                    "1": {
+                        "then": "This shop offers key cutting as a service"
+                    },
+                    "2": {
+                        "then": "This shops does not offer key cutting as a service"
+                    }
+                },
+                "question": "Does this shop offer key cutting?"
+            },
             "organic": {
                 "mappings": {
                     "0": {
@@ -7921,6 +8617,9 @@
                     }
                 },
                 "question": "Does this shop offer organic products?"
+            },
+            "second_hand": {
+                "question": "Does this shop sell second-hand items?"
             },
             "shops-name": {
                 "question": "What is the name of this shop?",
@@ -8009,9 +8708,75 @@
             "render": "Shower"
         }
     },
+    "ski_piste": {
+        "description": "Ski and snowboard pistes",
+        "name": "Ski and snowboard pistes",
+        "tagRenderings": {
+            "length": {
+                "render": "This part of the ski piste is {_length:km} kilometer long"
+            },
+            "piste_difficulty": {
+                "mappings": {
+                    "0": {
+                        "then": "Novice (green)"
+                    },
+                    "1": {
+                        "then": "Easy (blue)"
+                    },
+                    "2": {
+                        "then": "Intermediate (red)"
+                    },
+                    "3": {
+                        "then": "Advanced (black)"
+                    },
+                    "4": {
+                        "then": "Expert (orange/double black)"
+                    },
+                    "5": {
+                        "then": "Freeride"
+                    }
+                },
+                "question": "What is the difficulty of this piste?"
+            }
+        },
+        "title": {
+            "render": "Ski piste {name}"
+        }
+    },
     "slow_roads": {
         "description": "All carfree roads",
+        "name": "Paths, carfree and slow roads",
         "tagRenderings": {
+            "explanation": {
+                "mappings": {
+                    "0": {
+                        "then": "This is a living street"
+                    },
+                    "1": {
+                        "then": "This is a wide, carfree street"
+                    },
+                    "2": {
+                        "then": "This is a footway"
+                    },
+                    "3": {
+                        "then": "This is a small path"
+                    },
+                    "4": {
+                        "then": "This is a bridleway"
+                    },
+                    "5": {
+                        "then": "This is a land access road"
+                    }
+                }
+            },
+            "slow_road_is_lit": {
+                "mappings": {
+                    "1": {
+                        "then": "Not lit"
+                    }
+                },
+                "question": "Is this road lit at night?"
+            },
             "slow_roads-surface": {
                 "mappings": {
                     "0": {
@@ -8039,8 +8804,148 @@
                         "then": "The surface is <b>paved</b>"
                     }
                 },
+                "question": "What surface does this road have?",
                 "render": "The surface is <b>{surface}</b>"
             }
+        },
+        "title": {
+            "mappings": {
+                "1": {
+                    "then": "Footway"
+                },
+                "2": {
+                    "then": "Cycleway"
+                },
+                "3": {
+                    "then": "Pedestrian street"
+                },
+                "4": {
+                    "then": "Living street"
+                },
+                "5": {
+                    "then": "Small path"
+                }
+            },
+            "render": "Slow road"
+        }
+    },
+    "souvenir_coin": {
+        "description": "Layer showing machines selling souvenir coins",
+        "name": "Souvenir Coin Machines",
+        "presets": {
+            "0": {
+                "description": "Add a machine selling souvenir coins",
+                "title": "a souvenir coin machine"
+            }
+        },
+        "tagRenderings": {
+            "charge": {
+                "freeform": {
+                    "placeholder": "Cost (e.g. 2 EUR)"
+                },
+                "mappings": {
+                    "0": {
+                        "then": "A souvenir coin costs 2 euro"
+                    }
+                },
+                "question": "How much does a souvenir coin cost?",
+                "render": "A souvenir coins costs {charge}"
+            },
+            "designs": {
+                "override": {
+                    "mappings": {
+                        "0": {
+                            "then": "This machine has one design available"
+                        },
+                        "1": {
+                            "then": "This machine has two designs available"
+                        },
+                        "2": {
+                            "then": "This machine has three designs available"
+                        },
+                        "3": {
+                            "then": "This machine has four designs available"
+                        }
+                    },
+                    "render": "This machine has {coin:design_count} designs available"
+                }
+            },
+            "indoor": {
+                "mappings": {
+                    "0": {
+                        "then": "This machine is located indoors."
+                    },
+                    "1": {
+                        "then": "This machine is located outdoors."
+                    }
+                },
+                "question": "Is this machine located indoors?"
+            }
+        },
+        "title": {
+            "render": "Souvenir Coin Machine"
+        }
+    },
+    "souvenir_note": {
+        "description": "Layer showing machines selling souvenir banknotes",
+        "name": "Souvenir Banknote Machines",
+        "presets": {
+            "0": {
+                "description": "Add a machine selling souvenir banknotes",
+                "title": "a souvenir banknote machine"
+            }
+        },
+        "tagRenderings": {
+            "charge": {
+                "freeform": {
+                    "placeholder": "Cost (e.g. 2 EUR)"
+                },
+                "mappings": {
+                    "0": {
+                        "then": "A souvenir note costs 2 euro"
+                    },
+                    "1": {
+                        "then": "A souvenir note costs 3 euro"
+                    }
+                },
+                "question": "How much does a souvenir note cost?",
+                "render": "A souvenir note costs {charge}"
+            },
+            "designs": {
+                "freeform": {
+                    "placeholder": "Number of designs (e.g. 5)"
+                },
+                "mappings": {
+                    "0": {
+                        "then": "This machine has one design available."
+                    },
+                    "1": {
+                        "then": "This machine has two designs available."
+                    },
+                    "2": {
+                        "then": "This machine has three designs available."
+                    },
+                    "3": {
+                        "then": "This machine has four designs available."
+                    }
+                },
+                "question": "How many designs are available?",
+                "render": "This machine has {note:design_count} designs available."
+            },
+            "indoor": {
+                "mappings": {
+                    "0": {
+                        "then": "This machine is located indoors."
+                    },
+                    "1": {
+                        "then": "This machine is located outdoors."
+                    }
+                },
+                "question": "Is this machine located indoors?"
+            }
+        },
+        "title": {
+            "render": "Souvenir Banknote Machine"
         }
     },
     "speed_camera": {
@@ -8065,20 +8970,6 @@
         },
         "title": {
             "render": "Speed Camera"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "kilometers/hour",
-                        "humanShort": "km/h"
-                    },
-                    "1": {
-                        "human": "miles/hour",
-                        "humanShort": "mph"
-                    }
-                }
-            }
         }
     },
     "speed_display": {
@@ -8107,20 +8998,6 @@
         },
         "title": {
             "render": "Speed Display"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "kilometers/hour",
-                        "humanShort": "km/h"
-                    },
-                    "1": {
-                        "human": "miles/hour",
-                        "humanShort": "mph"
-                    }
-                }
-            }
         }
     },
     "sport_pitch": {
@@ -8149,6 +9026,9 @@
                     },
                     "4": {
                         "question": "Tennis fields"
+                    },
+                    "5": {
+                        "question": "Badminton fields"
                     }
                 }
             }
@@ -8277,6 +9157,12 @@
                     },
                     "4": {
                         "then": "The surface is <b>concrete</b>"
+                    },
+                    "5": {
+                        "then": "The surface is <b>fine gravel</b>"
+                    },
+                    "6": {
+                        "then": "The surface of this track is Tartan, a synthetic, slightly springy, porous surface"
                     }
                 },
                 "question": "Which is the surface of this sport pitch?",
@@ -8327,6 +9213,18 @@
                 },
                 "question": "Does this stair have a handrail?"
             },
+            "incline": {
+                "mappings": {
+                    "0": {
+                        "then": "The upward direction is {direction_absolute()}"
+                    },
+                    "1": {
+                        "then": "The downward direction is {direction_absolute()}"
+                    }
+                },
+                "question": "What is the incline of these stairs?",
+                "render": "These stairs have an incline of {incline}"
+            },
             "multilevels": {
                 "override": {
                     "question": "Between which levels are these stairs?",
@@ -8368,8 +9266,8 @@
                 "render": {
                     "special": {
                         "question": "In which languages is there tactile writing (braille) for navigation? <img src='./assets/layers/stairs/Braille_stairs.jpg' style='height: 300px; width: auto; display: block;' />",
-                        "render_list_item": "These stairs have tactile writing in {language():font-bold}",
-                        "render_single_language": "These stairs have tactile writing in {language():font-bold}"
+                        "render_list_item": "These stairs have tactile writing in {language()}",
+                        "render_single_language": "These stairs have tactile writing in {language()}"
                     }
                 }
             }
@@ -8532,6 +9430,29 @@
             "render": "Street Lamp"
         }
     },
+    "stripclub": {
+        "description": "A venue where erotic dance, striptease, or lap dances are performed commercially. ",
+        "name": "Stripclubs",
+        "presets": {
+            "0": {
+                "title": "a stripclub"
+            }
+        },
+        "tagRenderings": {
+            "name": {
+                "question": "What is the name of this stripclub?",
+                "render": "This stripclub is named <b>{name}</b>"
+            }
+        },
+        "title": {
+            "render": "Stripclub"
+        }
+    },
+    "summary": {
+        "title": {
+            "render": "Summary"
+        }
+    },
     "surveillance_camera": {
         "description": "This layer shows surveillance cameras and allows a contributor to update information and add new cameras",
         "name": "Surveillance camera's",
@@ -8541,6 +9462,14 @@
             },
             "1": {
                 "title": "a surveillance camera mounted on a wall"
+            },
+            "2": {
+                "description": "An ALPR typically has two lenses and an array of infrared lights.",
+                "title": "an ALPR camera (Automatic Number Plate Reader)"
+            },
+            "3": {
+                "description": "An ALPR typically has two lenses and an array of infrared lights.",
+                "title": "an ALPR camera (Automatic Number Plate Reader) mounted on a wall"
             }
         },
         "tagRenderings": {
@@ -8633,6 +9562,18 @@
                 },
                 "question": "In which geographical direction does this camera film?",
                 "render": "Films to a compass heading of {camera:direction}"
+            },
+            "has_alpr": {
+                "mappings": {
+                    "0": {
+                        "then": "This is a camera without number plate recognition."
+                    },
+                    "1": {
+                        "then": "This is an ALPR (Automatic License Plate Reader)"
+                    }
+                },
+                "question": "Can this camera automatically detect license plates?",
+                "questionHint": "An <b>ALPR</b> (Automatic License Plate Reader) typically has two lenses and an array of infrared LEDS in between."
             },
             "is_indoor": {
                 "mappings": {
@@ -8804,6 +9745,48 @@
             }
         },
         "tagRenderings": {
+            "gender_segregated": {
+                "mappings": {
+                    "0": {
+                        "then": "There is a separate, signposted area for men and women"
+                    },
+                    "1": {
+                        "then": "There is no separate, signposted area for men and women"
+                    }
+                },
+                "question": "Are these toilets gender-segregated?",
+                "questionHint": "Are there separate stalls or separate areas for men and women and are they signposted as such?"
+            },
+            "menstrual_products": {
+                "mappings": {
+                    "0": {
+                        "then": "Free menstrual products are available to all visitors of these toilets"
+                    },
+                    "1": {
+                        "then": "Free menstrual products are available to some visitors of these toilets"
+                    },
+                    "2": {
+                        "then": "No free menstrual products are available here"
+                    }
+                },
+                "question": "Are free, menstrual products distributed here?",
+                "questionHint": "This is only about menstrual products that are free of charge. If e.g. a vending machine is available which charges for menstrual products, ignore it for this question."
+            },
+            "menstrual_products_location": {
+                "mappings": {
+                    "0": {
+                        "then": "The free, menstrual products are located in the toilet for women"
+                    },
+                    "1": {
+                        "then": "The free, menstrual products are located in the toilet for men"
+                    },
+                    "2": {
+                        "then": "The free, menstrual products are located in the toilet for wheelchair users"
+                    }
+                },
+                "question": "Where are the free menstrual products located?",
+                "render": "The menstrual products are located in {toilets:menstrual_products:location}"
+            },
             "opening_hours_24_7": {
                 "override": {
                     "question": "When are these toilets opened?"
@@ -8833,20 +9816,20 @@
             "toilet-changing_table:location": {
                 "mappings": {
                     "0": {
-                        "then": "The changing table is in the toilet for women. "
+                        "then": "A changing table is in the toilet for women"
                     },
                     "1": {
-                        "then": "The changing table is in the toilet for men. "
+                        "then": "A changing table is in the toilet for men"
                     },
                     "2": {
-                        "then": "The changing table is in the toilet for wheelchair users. "
+                        "then": "A changing table is in the toilet for wheelchair users"
                     },
                     "3": {
-                        "then": "The changing table is in a dedicated room. "
+                        "then": "A changing table is in a dedicated room"
                     }
                 },
                 "question": "Where is the changing table located?",
-                "render": "The changing table is located at {changing_table:location}"
+                "render": "A changing table is located at {changing_table:location}"
             },
             "toilet-charge": {
                 "freeform": {
@@ -8858,10 +9841,10 @@
             "toilet-handwashing": {
                 "mappings": {
                     "0": {
-                        "then": "This toilets have a sink to wash your hands"
+                        "then": "These toilets have a sink to wash your hands"
                     },
                     "1": {
-                        "then": "This toilets <b>don't</b> have a sink to wash your hands"
+                        "then": "These toilets <b>don't</b> have a sink to wash your hands"
                     }
                 },
                 "question": "Do these toilets have a sink to wash your hands?"
@@ -8914,7 +9897,7 @@
                         "then": "Both seated toilets and urinals are available here"
                     }
                 },
-                "question": "Which kind of toilets are this?"
+                "question": "Which kind of toilets are these?"
             },
             "toilets-wheelchair": {
                 "mappings": {
@@ -8937,18 +9920,6 @@
         },
         "title": {
             "render": "Toilet"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "meter"
-                    },
-                    "1": {
-                        "human": "centimeter"
-                    }
-                }
-            }
         }
     },
     "toilet_at_amenity": {
@@ -9038,21 +10009,10 @@
                 }
             },
             "render": "Toilet at amenity"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "meter"
-                    },
-                    "1": {
-                        "human": "centimeter"
-                    }
-                }
-            }
         }
     },
     "trail": {
+        "description": "Waymarked trails",
         "name": "Trails",
         "tagRenderings": {
             "Color": {
@@ -9069,7 +10029,47 @@
                     "3": {
                         "then": "Yellow trail"
                     }
-                }
+                },
+                "question": "What is the reference colour of this trail?",
+                "render": "The reference colour is {colour}"
+            },
+            "Name": {
+                "question": "What is the name of this trail?",
+                "render": "This trail is called <b>{name}</b>"
+            },
+            "Operator tag": {
+                "mappings": {
+                    "0": {
+                        "then": "This trail is maintained by Natuurpunt"
+                    },
+                    "1": {
+                        "then": "This trail is maintained by {operator}"
+                    }
+                },
+                "question": "Who maintains this trail?",
+                "render": "This trail is maintained by {operator}"
+            },
+            "Wheelchair access": {
+                "mappings": {
+                    "0": {
+                        "then": "This trail is wheelchair-accessible"
+                    },
+                    "1": {
+                        "then": "This trail is not wheelchair accessible"
+                    }
+                },
+                "question": "Is this trail wheelchair accessible?"
+            },
+            "pushchair access": {
+                "mappings": {
+                    "0": {
+                        "then": "This trail is accessible with a pushchair"
+                    },
+                    "1": {
+                        "then": "This trail is not accessible with a pushchair"
+                    }
+                },
+                "question": "Is this trail accessible with a pushchair?"
             },
             "trail-length": {
                 "render": "The trail is {_length:km} kilometers long"
@@ -9081,13 +10081,6 @@
     },
     "transit_routes": {
         "description": "Layer showing bus lines",
-        "mapRendering": {
-            "0": {
-                "color": {
-                    "render": "#ff0000"
-                }
-            }
-        },
         "name": "Bus lines",
         "tagRenderings": {
             "colour": {
@@ -9391,9 +10384,189 @@
             "render": "Tree"
         }
     },
+    "trolley_bay": {
+        "description": "Find trolley bays for shopping trolleys.",
+        "name": "Trolley Bays",
+        "presets": {
+            "0": {
+                "description": "A trolley bay for parking shopping carts.",
+                "title": "a trolley bay"
+            }
+        },
+        "tagRenderings": {
+            "cart_types": {
+                "mappings": {
+                    "0": {
+                        "then": "Trolleys with a magnifier are available"
+                    },
+                    "1": {
+                        "then": "Trolleys for wheelchair users are available"
+                    },
+                    "2": {
+                        "then": "Trolleys for children are available"
+                    },
+                    "3": {
+                        "then": "Trolleys with seats for children are available"
+                    },
+                    "4": {
+                        "then": "Trolleys with a flatbed are available"
+                    },
+                    "5": {
+                        "then": "Vertical trolleys for sheet-like goods are available"
+                    }
+                },
+                "question": "What kind of special trolleys are available?"
+            },
+            "covered": {
+                "mappings": {
+                    "0": {
+                        "then": "This trolley bay is covered"
+                    },
+                    "1": {
+                        "then": "This trolley bay is not covered"
+                    }
+                },
+                "question": "Is this trolley bay covered?"
+            },
+            "denominations": {
+                "mappings": {
+                    "0": {
+                        "then": "50 cent coins are accepted"
+                    },
+                    "1": {
+                        "then": "1 euro coins are accepted"
+                    },
+                    "2": {
+                        "then": "2 euro coins are accepted"
+                    }
+                },
+                "question": "What coins are accepted for the deposit?"
+            },
+            "deposit": {
+                "mappings": {
+                    "0": {
+                        "then": "A deposit is required for the trolleys"
+                    },
+                    "1": {
+                        "then": "No deposit is required for the trolleys"
+                    }
+                },
+                "question": "Is a deposit (e.g. a coin) required for the trolleys?"
+            }
+        },
+        "title": "Trolley Bay"
+    },
+    "unit": {
+        "description": "Library layer with all common units.  Units can _only_ be imported from this file.",
+        "units": {
+            "0": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} megawatts"
+                    },
+                    "1": {
+                        "human": "{quantity} kilowatt"
+                    },
+                    "2": {
+                        "human": "{quantity} watts"
+                    },
+                    "3": {
+                        "human": "{quantity} gigawatts"
+                    }
+                }
+            },
+            "1": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} Volt"
+                    }
+                }
+            },
+            "2": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} A"
+                    }
+                }
+            },
+            "3": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} meter",
+                        "humanSingular": "one meter"
+                    },
+                    "1": {
+                        "human": "{quantity} centimeter",
+                        "humanSingular": "one centimeter"
+                    },
+                    "2": {
+                        "human": "{quantity} millimeters",
+                        "humanSingular": "one millimeter"
+                    },
+                    "3": {
+                        "human": "{quantity} feet"
+                    }
+                }
+            },
+            "4": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} kilometers/hour",
+                        "humanShort": "{quantity} km/h"
+                    },
+                    "1": {
+                        "human": "{quantity} miles/hour",
+                        "humanShort": "{quantity} mph"
+                    }
+                }
+            },
+            "5": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} minutes",
+                        "humanSingular": "one minute"
+                    },
+                    "1": {
+                        "human": "{quantity} hours",
+                        "humanSingular": "one hour"
+                    },
+                    "2": {
+                        "human": "{quantity} days",
+                        "humanSingular": "one day"
+                    },
+                    "3": {
+                        "human": "{quantity} weeks",
+                        "humanSingular": "one week"
+                    },
+                    "4": {
+                        "human": "{quantity} months",
+                        "humanSingular": "one month"
+                    },
+                    "5": {
+                        "human": "{quantity} years",
+                        "humanSingular": "one year"
+                    }
+                }
+            }
+        }
+    },
     "usersettings": {
         "description": "A special layer which is not meant to be shown on a map, but which is used to set user settings",
         "tagRenderings": {
+            "a11y-features": {
+                "mappings": {
+                    "0": {
+                        "then": "Enable accessibility features when arrow keys are used to navigate the map"
+                    },
+                    "1": {
+                        "then": "Always enable accessibility features"
+                    },
+                    "2": {
+                        "then": "Never enable accessibility features"
+                    }
+                },
+                "question": "What accessibility features should be applied?"
+            },
             "all-questions-at-once": {
                 "mappings": {
                     "0": {
@@ -9404,6 +10577,32 @@
                     }
                 },
                 "question": "Should questions for unknown data fields appear one-by-one or together?"
+            },
+            "background-layer": {
+                "mappings": {
+                    "0": {
+                        "then": "Use the default background layer"
+                    },
+                    "1": {
+                        "then": "Use OpenStreetMap-carto as default layer"
+                    },
+                    "2": {
+                        "then": "Use aerial imagery as default background"
+                    },
+                    "3": {
+                        "then": "Use a non-openstreetmap based map as default background"
+                    },
+                    "4": {
+                        "then": "Use the current background layer (<span class='code'>{__current_background}</span>) as default background"
+                    },
+                    "5": {
+                        "then": "Use background layer <span class='code'>{mapcomplete-preferred-background-layer}</span> as default background"
+                    }
+                },
+                "question": "What background layer should be shown by default?"
+            },
+            "background-layer-readonly": {
+                "render": "This thematic map has a predefined background layer set. Your default theme setting does not apply"
             },
             "contributor-thanks": {
                 "mappings": {
@@ -9442,7 +10641,7 @@
                     "1": {
                         "then": {
                             "special": {
-                                "text": "<b class='alert'>You have {_unreadMessages}</b><br/>Open your inbox"
+                                "text": "<b class='alert'>You have {_unreadMessages} messages</b><br/>Open your inbox"
                             }
                         }
                     }
@@ -9451,12 +10650,25 @@
             "language_picker": {
                 "mappings": {
                     "0": {
-                        "then": "The language was set via an URL-parameter and cannot be set by the user.²"
+                        "then": "The language was set via an URL-parameter and cannot be set by the user."
+                    }
+                }
+            },
+            "mangrove-key-import": {
+                "render": {
+                    "after": "Uploading a private key erases your current private key. If you made reviews with it, download your current private key first",
+                    "special": {
+                        "text": "Import a mangrove private key from backup"
                     }
                 }
             },
             "mangrove-keys": {
-                "render": "<a href='data:application/json,{mangroveidentity}' download='mangrove_private_key_{_name}'>Download the private key for your Mangrove Account</a> <p>Anyone possessing this file can make reviews with your identity</p>"
+                "render": {
+                    "after": "Anyone possessing this file can make reviews with your identity",
+                    "special": {
+                        "text": "Download the private key for your Mangrove Account"
+                    }
+                }
             },
             "picture-license": {
                 "mappings": {
@@ -9481,6 +10693,10 @@
                         "text": "Open your settings on OpenStreetMap.org"
                     }
                 }
+            },
+            "show_crosshair": {
+                "question": "Should a crosshair be shown in the center of the display?",
+                "questionHint": "This can help to accurately position a new element"
             },
             "show_debug": {
                 "mappings": {
@@ -9546,17 +10762,17 @@
             "translation-thanks": {
                 "mappings": {
                     "0": {
-                        "then": "You have contributed to translating MapComplete! That's awesome!"
+                        "then": "You have contributed to translating MapComplete with {_translation_contributions} commits! That's awesome!"
                     }
                 }
             },
             "verified-mastodon": {
                 "mappings": {
                     "0": {
-                        "then": "A link to your Mastodon-profile has been been found: <a href='{_mastodon_link}' target='_blank'>{_mastodon_link}</a>"
+                        "then": "A link to your Mastodon-profile has been been found: <a href='{_mastodon_link}' target='_blank' rel='noopener'>{_mastodon_link}</a>"
                     },
                     "1": {
-                        "then": "We found a link to what looks to be a mastodon account, but it is unverified. <a href='https://www.openstreetmap.org/profile/edit' target='_blank'>Edit your profile description</a> and place the following there: <span class='code'>&lta href=\"{_mastodon_candidate}\" rel=\"me\"&gtMastodon&lt/a&gt"
+                        "then": "We found a link to what looks to be a mastodon account, but it is unverified. <a href='https://www.openstreetmap.org/profile/edit' target='_blank' rel='noopener'>Edit your profile description</a> and place the following there: <span class='code'>&lta href=\"{_mastodon_candidate}\" rel=\"me\"&gtMastodon&lt/a&gt"
                     }
                 }
             }
@@ -9619,7 +10835,40 @@
                         "question": "Sale of potatoes"
                     },
                     "16": {
+                        "question": "Sale of meat"
+                    },
+                    "17": {
+                        "question": "Sale of fruit"
+                    },
+                    "18": {
+                        "question": "Sale of strawberries"
+                    },
+                    "19": {
                         "question": "Sale of flowers"
+                    },
+                    "20": {
+                        "question": "Sale of parking tickets"
+                    },
+                    "21": {
+                        "question": "Sale of pressed pennies"
+                    },
+                    "22": {
+                        "question": "Sale of public transport tickets"
+                    },
+                    "23": {
+                        "question": "Sale of bicycle lights"
+                    },
+                    "24": {
+                        "question": "Sale of gloves"
+                    },
+                    "25": {
+                        "question": "Sale of bicycle repair kits"
+                    },
+                    "26": {
+                        "question": "Sale of bicycle pumps"
+                    },
+                    "27": {
+                        "question": "Sale of bicycle locks"
                     }
                 }
             }
@@ -9651,6 +10900,12 @@
                 },
                 "question": "Who operates this vending machine?",
                 "render": "This vending machine is operated by {operator}"
+            },
+            "phone": {
+                "override": {
+                    "question": "What is the phone number of the operator of this vending machine?",
+                    "questionHint": "This is the number you can call in case of problems with the vending machine"
+                }
             },
             "vending": {
                 "mappings": {
@@ -9700,7 +10955,40 @@
                         "then": "Potatoes are sold"
                     },
                     "15": {
+                        "then": "Meat is sold"
+                    },
+                    "16": {
+                        "then": "Fruit is sold"
+                    },
+                    "17": {
+                        "then": "Strawberries are sold"
+                    },
+                    "18": {
                         "then": "Flowers are sold"
+                    },
+                    "19": {
+                        "then": "Parking tickets are sold"
+                    },
+                    "20": {
+                        "then": "Pressed pennies are sold"
+                    },
+                    "21": {
+                        "then": "Public transport tickets are sold"
+                    },
+                    "22": {
+                        "then": "Bicycle lights are sold"
+                    },
+                    "23": {
+                        "then": "Gloves are sold"
+                    },
+                    "24": {
+                        "then": "Bicycle repair kits are sold"
+                    },
+                    "25": {
+                        "then": "Bicycle pumps are sold"
+                    },
+                    "26": {
+                        "then": "Bicycle locks are sold"
                     }
                 },
                 "question": "What does this vending machine sell?",
@@ -9792,18 +11080,6 @@
         },
         "title": {
             "render": "Wall or building"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "meter"
-                    },
-                    "1": {
-                        "human": "centimeter"
-                    }
-                }
-            }
         }
     },
     "waste_basket": {
@@ -9838,17 +11114,6 @@
                 "options": {
                     "0": {
                         "question": "Waste basket with dispenser for (dog) excrement bags"
-                    }
-                }
-            }
-        },
-        "mapRendering": {
-            "0": {
-                "iconSize": {
-                    "mappings": {
-                        "0": {
-                            "then": "Waste Basket"
-                        }
                     }
                 }
             }
@@ -9896,6 +11161,9 @@
                     },
                     "6": {
                         "then": "A waste basket for plastic"
+                    },
+                    "7": {
+                        "then": "A waste basket for paper"
                     }
                 },
                 "question": "What kind of waste basket is this?"
@@ -10010,31 +11278,6 @@
                 }
             },
             "render": "wind turbine"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " megawatts"
-                    },
-                    "1": {
-                        "human": " kilowatts"
-                    },
-                    "2": {
-                        "human": " watts"
-                    },
-                    "3": {
-                        "human": " gigawatts"
-                    }
-                }
-            },
-            "1": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " meter"
-                    }
-                }
-            }
         }
     }
 }

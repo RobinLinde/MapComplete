@@ -43,7 +43,7 @@
     },
     "flyer": {
         "aerial": "Dette kartet bruker en annen bakgrunn, altså luftfoto av Agentschap Informatie Vlaanderen",
-        "callToAction": "Test på mapcomplete.osm.be",
+        "callToAction": "Test på mapcomplete.org",
         "cyclofix": "Sykkelpumper, reperasjonsstasjoner, drikkevann og sykkelbutikker finner du på cyclofix.",
         "description": "Et liggende A4-informasjonsblad som promoterer MapComplete",
         "editing": {
@@ -69,7 +69,7 @@
         },
         "onwheels": "Innendørskart for rullestolsbrukere er også tilgjengelig.",
         "tagline": "Samle inn geodata med OpenStreetMap",
-        "title": "MapComplete.osm.be",
+        "title": "mapcomplete.org",
         "whatIsOsm": "Hva er OpenStreetMap?"
     },
     "general": {
@@ -208,7 +208,7 @@
         "pdf": {
             "attr": "Kartdata © OpenStreetMap-bidragsytere, gjenbrukbart med ODbL-lisens",
             "attrBackground": "Bakgrunnslag: {background}",
-            "generatedWith": "Generert av MapComplete.osm.be/{layoutid}",
+            "generatedWith": "Generert av mapcomplete.org/{layoutid}",
             "versionInfo": "v{version}. Generert {date}"
         },
         "pickLanguage": "Velg språk: ",
@@ -300,17 +300,6 @@
         "doDelete": "Fjern bilde",
         "dontDelete": "Avbryt",
         "isDeleted": "Slettet",
-        "nearbyPictures": {
-            "allFiltered": "Ingen bilder samsvarte",
-            "browseNearby": "Utforsk bilder i nærheten …",
-            "confirm": "Valgt bilde viser {title()}",
-            "loadMore": "Last inn flere bilder",
-            "loading": "Laster inn bilder i nærheten …",
-            "noImageSelected": "Velg et bilde for å knytte det til objektet",
-            "nothingFound": "Fant ingen bilder i nærheten …",
-            "removeFilters": "Klikk her for å fjerne filterne",
-            "title": "Bilder i nærheten"
-        },
         "pleaseLogin": "Logg inn for å legge til et bilde",
         "respectPrivacy": "Ikke ta bilder av folk eller bilskilt. Ikke last opp Google Maps, Google Streetview eller andre opphavsrettsbeskyttede kilder.",
         "toBig": "Bildet ditt på {actual_size} er for stort. Det kan maksimalt være {max_size}.",
@@ -412,10 +401,7 @@
         "attribution": "Vurderinger er muliggjort av <a href=\"https://mangrove.reviews/\" target=\"_blank\">Mangrove Reviews</a> og er tilgjengelige som <a href=\"https://mangrove.reviews/terms#8-licensing-of-content\" target=\"_blank\">CC-BY 4.0</a>.",
         "i_am_affiliated": "<span>Jeg har en tilknytning til dette objektet</span><br/><span class='subtle'>Sjekk om du er eier, skaper, ansatt, …</span>",
         "name_required": "Et navn kreves for å vise og opprette vurderinger",
-        "no_rating": "Ingen vurdering gitt",
         "no_reviews_yet": "Ingen vurderinger enda. Vær først til å skrive en og hjelp åpen data og bevegelsen.",
-        "plz_login": "Logg inn for å legge igjen en vurdering",
-        "posting_as": "Anmelder som",
         "saved": "<span class=\"thanks\">Vurdering lagret. Takk for at du deler din mening.</span>",
         "saving_review": "Lagrer …",
         "title": "{count} vurderinger",

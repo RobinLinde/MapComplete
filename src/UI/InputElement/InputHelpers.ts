@@ -1,12 +1,6 @@
-import { ValidatorType } from "./Validators"
 import { UIEventSource } from "../../Logic/UIEventSource"
-import SvelteUIElement from "../Base/SvelteUIElement"
-import DirectionInput from "./Helpers/DirectionInput.svelte"
+
 import { MapProperties } from "../../Models/MapProperties"
-import DateInput from "./Helpers/DateInput.svelte"
-import ColorInput from "./Helpers/ColorInput.svelte"
-import BaseUIElement from "../BaseUIElement"
-import OpeningHoursInput from "../OpeningHours/OpeningHoursInput"
 import WikidataSearchBox from "../Wikipedia/WikidataSearchBox"
 import Wikidata from "../../Logic/Web/Wikidata"
 import { Utils } from "../../Utils"
@@ -35,35 +29,16 @@ export interface InputHelperProperties {
 }
 
 export default class InputHelpers {
-    public static readonly AvailableInputHelpers: Readonly<
-        Partial<
-            Record<
-                ValidatorType,
-                (
-                    value: UIEventSource<string>,
-                    extraProperties?: InputHelperProperties
-                ) => BaseUIElement
-            >
-        >
-    > = {
-        direction: (value, properties) =>
-            new SvelteUIElement(DirectionInput, {
-                value,
-                mapProperties: InputHelpers.constructMapProperties(properties),
-            }),
-        date: (value) => new SvelteUIElement(DateInput, { value }),
-        color: (value) => new SvelteUIElement(ColorInput, { value }),
-        opening_hours: (value) => new OpeningHoursInput(value),
-        wikidata: InputHelpers.constructWikidataHelper,
-    } as const
+    public static hideInputField: string[] = ["translation", "simple_tag", "tag"]
 
+    // noinspection JSUnusedLocalSymbols
     /**
      * Constructs a mapProperties-object for the given properties.
      * Assumes that the first helper-args contains the desired zoom-level
      * @param properties
      * @private
      */
-    private static constructMapProperties(
+    public static constructMapProperties(
         properties: InputHelperProperties
     ): Partial<MapProperties> {
         let location = properties?.mapProperties?.location
@@ -85,19 +60,27 @@ export default class InputHelpers {
         if (!mapProperties.zoom) {
             mapProperties = { ...mapProperties, zoom: new UIEventSource<number>(zoom) }
         }
+        if (!mapProperties.rasterLayer) {
+            /*     mapProperties = {
+                ...mapProperties, rasterLayer: properties?.mapProperties?.rasterLayer
+            }*/
+        }
         return mapProperties
     }
-    private static constructWikidataHelper(
+
+    public static constructWikidataHelper(
         value: UIEventSource<string>,
         props: InputHelperProperties
     ) {
         const inputHelperOptions = props
         const args = inputHelperOptions.args ?? []
-        const searchKey = <string>args[0] ?? "name"
+        const searchKey: string = <string>args[0] ?? "name"
 
-        const searchFor = <string>(
-            (inputHelperOptions.feature?.properties[searchKey]?.toLowerCase() ?? "")
-        )
+        const searchFor: string =
+            searchKey
+                .split(";")
+                .map((k) => inputHelperOptions.feature?.properties[k]?.toLowerCase())
+                .find((foundValue) => !!foundValue) ?? ""
 
         let searchForValue: UIEventSource<string> = new UIEventSource(searchFor)
         const options: any = args[1]

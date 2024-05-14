@@ -9,7 +9,8 @@
     "ca": "Estacions de tren",
     "es": "Estaciones de tren",
     "cs": "Vlaková nádraží",
-    "zh_Hant": "火車站"
+    "zh_Hant": "火車站",
+    "pl": "Stacje Kolejowe"
   },
   "description": {
     "en": "View, edit and add details to a train station",
@@ -18,37 +19,25 @@
     "fr": "Voir, modifier et ajouter des détails à une gare ferroviaire",
     "ca": "Veure, editar i afegir detalls a una estació de tren",
     "es": "Ver, editar y añadir detalles a una estación de tren",
-    "cs": "Zobrazení, úprava a přidání podrobností o vlakovém nádraží"
+    "cs": "Zobrazení, úprava a přidání podrobností o vlakovém nádraží",
+    "pl": "Przeglądaj, edytuj i dodawaj szczegóły do stacji kolejowej"
   },
   "icon": "./assets/themes/stations/rail-light.svg",
-  "startLat": 0,
-  "startLon": 0,
-  "startZoom": 0,
+  "defaultBackgroundId": "protomaps.white",
   "hideFromOverview": true,
-  "defaultBackgroundId": "CartoDB.Positron",
   "layers": [
     {
       "builtin": "indoors",
       "override": {
-        "minzoom": 19,
+        "minzoom": 18,
         "passAllFeatures": true,
-        "mapRendering": [
-          {},
-          {},
-          {
-            "label": {
-              "render": null,
-              "mappings": null
-            },
-            "iconSize": "0,0"
-          }
-        ]
+        "=pointRendering": null
       }
     },
     {
       "builtin": "stairs",
       "override": {
-        "minzoom": 19
+        "minzoom": 18
       }
     },
     {
@@ -56,7 +45,8 @@
       "override": {
         "title": null,
         "name": null,
-        "mapRendering": null
+        "pointRendering": null,
+        "lineRendering": "null"
       }
     },
     {
@@ -79,7 +69,9 @@
         "fr": "Gares ferroviaires",
         "ca": "Estació de tren",
         "es": "Estación de Tren",
-        "cs": "Vlaková nádraží"
+        "cs": "Vlaková nádraží",
+        "it": "Stazioni ferroviarie",
+        "pl": "Stacje Kolejowe"
       },
       "description": {
         "en": "Layer showing train stations",
@@ -90,11 +82,16 @@
         "ca": "Capa que mostra les estacions de tren",
         "es": "Capa que muestra las estaciones de tren",
         "cs": "Vrstva zobrazující vlaková nádraží",
-        "zh_Hant": "顯示火車站的圖層"
+        "zh_Hant": "顯示火車站的圖層",
+        "pl": "Warstwa pokazująca stacje kolejowe"
       },
-      "mapRendering": [
+      "pointRendering": [
         {
-          "icon": "./assets/themes/stations/rail-light.svg",
+          "marker": [
+            {
+              "icon": "./assets/themes/stations/rail-light.svg"
+            }
+          ],
           "location": [
             "point",
             "centroid"
@@ -107,7 +104,9 @@
               }
             ]
           }
-        },
+        }
+      ],
+      "lineRendering": [
         {
           "color": "green"
         }
@@ -125,7 +124,7 @@
           ]
         },
         "presets": null,
-        "minzoom": 19
+        "minzoom": 18
       }
     },
     {
@@ -138,10 +137,18 @@
           ]
         },
         "presets": null,
-        "minzoom": 19,
-        "mapRendering": [
+        "minzoom": 18,
+        "pointRendering": [
           {
-            "icon": "circle:white;./assets/themes/stations/bicycle_parking.svg"
+            "marker": [
+              {
+                "icon": "circle",
+                "color": "white"
+              },
+              {
+                "icon": "./assets/themes/stations/bicycle_parking.svg"
+              }
+            ]
           }
         ]
       }
@@ -156,10 +163,18 @@
           ]
         },
         "presets": null,
-        "minzoom": 19,
-        "mapRendering": [
+        "minzoom": 18,
+        "pointRendering": [
           {
-            "icon": "circle:white;./assets/themes/stations/rental_bicycle.svg"
+            "marker": [
+              {
+                "icon": "circle",
+                "color": "white"
+              },
+              {
+                "icon": "./assets/themes/stations/rental_bicycle.svg"
+              }
+            ]
           }
         ]
       }
@@ -174,7 +189,7 @@
           ]
         },
         "presets": null,
-        "minzoom": 19
+        "minzoom": 18
       }
     },
     {
@@ -190,8 +205,8 @@
           ]
         },
         "presets": null,
-        "minzoom": 19,
-        "mapRendering+": [
+        "minzoom": 18,
+        "lineRendering+": [
           {
             "color": "#00f",
             "width": "8"
@@ -209,8 +224,8 @@
           ]
         },
         "presets": null,
-        "minzoom": 19,
-        "mapRendering+": [
+        "minzoom": 18,
+        "lineRendering+": [
           {
             "color": "yellow",
             "width": "8"
@@ -230,16 +245,20 @@
         "clock"
       ],
       "override": {
-        "minzoom": 19
+        "minzoom": 18
       }
     },
     {
       "builtin": "bench",
       "override": {
-        "minzoom": 19,
-        "mapRendering": [
+        "minzoom": 18,
+        "lineRendering": [
           {
-            "icon": "./assets/themes/stations/bench.svg"
+            "marker": [
+              {
+                "icon": "./assets/themes/stations/bench.svg"
+              }
+            ]
           }
         ]
       }
@@ -247,10 +266,18 @@
     {
       "builtin": "drinking_water",
       "override": {
-        "minzoom": 19,
-        "mapRendering": [
+        "minzoom": 18,
+        "pointRendering": [
           {
-            "icon": "circle:white;./assets/themes/stations/drinking_water.svg"
+            "=marker": [
+              {
+                "icon": "circle",
+                "color": "white"
+              },
+              {
+                "icon": "./assets/themes/stations/drinking_water.svg"
+              }
+            ]
           }
         ]
       }
@@ -264,7 +291,8 @@
         "fr": "Panneaux des départs",
         "ca": "Taulers de sortides",
         "es": "Tableros de salidas",
-        "cs": "Odjezdové tabule"
+        "cs": "Odjezdové tabule",
+        "pl": "Tablice odjazdów"
       },
       "description": {
         "en": "Displays showing the trains that will leave from this station",
@@ -273,7 +301,8 @@
         "fr": "Panneau affichant les trains au départ depuis cette gare",
         "ca": "Pantalles que mostren els trens que sortiran de l'estació",
         "es": "Pantallas que muestran los trenes que saldrán de esta estación",
-        "cs": "Zobrazuje vlaky odjíždějící z této stanice"
+        "cs": "Zobrazuje vlaky odjíždějící z této stanice",
+        "pl": "Ekrany wyświetlające pokazujące pociągi, które odjadą z tej stacji"
       },
       "title": {
         "render": {
@@ -284,10 +313,11 @@
           "ca": "Tauler de sortides",
           "es": "Tablero de salidas",
           "cs": "Odjezdová tabule",
-          "zh_Hant": "時刻表"
+          "zh_Hant": "時刻表",
+          "pl": "Tablica odjazdów"
         }
       },
-      "minzoom": 19,
+      "minzoom": 18,
       "source": {
         "osmTags": {
           "and": [
@@ -309,7 +339,8 @@
             "ca": "Quin tipus de tauler de sortides és aquest?",
             "es": "¿Qué tipo de tablero de salidas es éste?",
             "cs": "Co je to za odjezdovou tabuli?",
-            "zh_Hant": "這是那種類型的時刻表？"
+            "zh_Hant": "這是那種類型的時刻表？",
+            "pl": "Co to za tablica odjazdów?"
           },
           "mappings": [
             {
@@ -321,7 +352,8 @@
                 "fr": "Panneau des départs de type inconnu",
                 "ca": "Aquest tauler de sortides és de tipus desconegut",
                 "es": "Este es un panel de salidas de tipo desconocido",
-                "cs": "Toto je odjezdová tabule neznámého typu"
+                "cs": "Toto je odjezdová tabule neznámého typu",
+                "pl": "Jest to tablica odjazdów nieznanego typu"
               }
             },
             {
@@ -333,7 +365,8 @@
                 "fr": "Panneau électronique, affichant les prochains départs en temps réel",
                 "ca": "Aquest és un tauler electrònic que mostra les pròximes sortides en temps real",
                 "es": "Este es un tablero electrónico que muestra las próximas salidas en tiempo real",
-                "cs": "Jedná se o elektronickou tabuli, která v reálném čase zobrazuje příští odjezdy"
+                "cs": "Jedná se o elektronickou tabuli, která v reálném čase zobrazuje příští odjezdy",
+                "pl": "To elektroniczna tablica, pokazująca w czasie rzeczywistym kolejne odjazdy"
               }
             },
             {
@@ -347,7 +380,8 @@
                 "ca": "Aquest és un horari en paper",
                 "es": "Este es un horario en papel",
                 "cs": "Jedná se o papírový rozvrh",
-                "zh_Hant": "這份是紙本時刻表"
+                "zh_Hant": "這份是紙本時刻表",
+                "pl": "To jest papierowy rozkład jazdy"
               }
             },
             {
@@ -358,7 +392,9 @@
                 "nl": "Er is een bord met de tijden tussen treinen",
                 "ca": "Hi ha un cartell que mostra la freqüència dels trens",
                 "es": "Hay un cartel que muestra la frecuencia de los trenes",
-                "cs": "Nachází se zde cedule zobrazující frekvenci odjezdů vlaků"
+                "cs": "Nachází se zde cedule zobrazující frekvenci odjezdů vlaků",
+                "fr": "Il y a un panneau indiquant la fréquence des trains",
+                "pl": "Jest tu znak informujący częstotliwość jazdy pociągów"
               }
             }
           ]
@@ -378,7 +414,8 @@
             "ca": "un tauler de sortides",
             "es": "un tablero de salidas",
             "cs": "odjezdová tabule",
-            "zh_Hant": "時刻表"
+            "zh_Hant": "時刻表",
+            "pl": "tablica odjazdów"
           },
           "description": {
             "en": "Add a board showing departures, either electronic or paper",
@@ -387,18 +424,26 @@
             "fr": "Ajouter un panneau indiquant les départs, qu'il soit électronique ou papier",
             "ca": "Afegeix un tauler que mostra les sortides, de forma electrònica o en paper",
             "es": "Añadir un panel de salidas, electrónico o en papel",
-            "cs": "Přidejte tabuli s odjezdy, ať už v elektronické nebo papírové podobě"
+            "cs": "Přidejte tabuli s odjezdy, ať už v elektronické nebo papírové podobě",
+            "pl": "Dodaj tablicę pokazującą odjazdy, w wersji elektronicznej lub papierowej"
           }
         }
       ],
-      "mapRendering": [
+      "pointRendering": [
         {
-          "icon": "./assets/themes/stations/departures_board.svg",
+          "marker": [
+            {
+              "icon": "./assets/themes/stations/departures_board.svg"
+            }
+          ],
           "location": [
             "point",
             "centroid"
           ]
         }
+      ],
+      "lineRendering": [
+        {}
       ]
     }
   ]

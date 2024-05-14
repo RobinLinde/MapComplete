@@ -9,23 +9,13 @@
     "es": "Aceras",
     "fr": "Trottoirs",
     "nb_NO": "Fortau",
-    "it": "Marciapiede",
+    "it": "Marciapiedi",
     "da": "Fortove",
     "pa_PK": "فُٹ‌پاتھ",
     "cs": "Chodníky",
-    "zh_Hant": "人行道"
-  },
-  "shortDescription": {
-    "en": "Sidewalk mapping",
-    "ca": "Mapejat de voreres",
-    "de": "Kartierung von Bürgersteigen",
-    "es": "Mapeo de aceras",
-    "nl": "Voetpaden in kaart brengen",
-    "fr": "Cartographier des trottoirs",
-    "it": "Mappatura del marciapiede",
-    "da": "Kortlægning af fortov",
-    "pa_PK": "فُت‌پیتھ دا نقشہ بݨاؤݨ",
-    "cs": "Mapování chodníků"
+    "zh_Hant": "人行道",
+    "eu": "Espaloiak",
+    "pl": "Chodniki"
   },
   "description": {
     "en": "Experimental theme",
@@ -39,13 +29,23 @@
     "da": "Eksperimentelt tema",
     "pa_PK": "آزمائش تھیم",
     "cs": "Experimentální téma",
-    "zh_Hant": "實驗性的主題"
+    "zh_Hant": "實驗性的主題",
+    "pl": "Temat eksperymentalny"
+  },
+  "shortDescription": {
+    "en": "Sidewalk mapping",
+    "ca": "Mapejat de voreres",
+    "de": "Kartierung von Bürgersteigen",
+    "es": "Mapeo de aceras",
+    "nl": "Voetpaden in kaart brengen",
+    "fr": "Cartographier des trottoirs",
+    "it": "Mappatura del marciapiede",
+    "da": "Kortlægning af fortov",
+    "pa_PK": "فُت‌پیتھ دا نقشہ بݨاؤݨ",
+    "cs": "Mapování chodníků",
+    "pl": "Mapowanie chodnika"
   },
   "icon": "./assets/svg/bug.svg",
-  "startLat": 0,
-  "startLon": 0,
-  "startZoom": 1,
-  "widenFactor": 0.05,
   "hideFromOverview": true,
   "layers": [
     {
@@ -63,7 +63,9 @@
         "da": "Fortove",
         "pa_PK": "فُٹ‌پاتھ",
         "cs": "Chodníky",
-        "zh_Hant": "人行道"
+        "zh_Hant": "人行道",
+        "eu": "Espaloiak",
+        "pl": "Chodniki"
       },
       "minzoom": 12,
       "source": {
@@ -87,7 +89,9 @@
           "fr": "{name}",
           "it": "{name}",
           "da": "{name}",
-          "cs": "{name}"
+          "cs": "{name}",
+          "eu": "{name}",
+          "pl": "{name}"
         },
         "mappings": [
           {
@@ -105,7 +109,8 @@
         "da": "Lag, der viser fortove på motorveje",
         "ca": "Una capa que mostra les voreres de les vies",
         "cs": "Vrstva zobrazující chodníky silnic",
-        "zh_Hant": "顯示道路的人行穿越道的圖層"
+        "zh_Hant": "顯示道路的人行穿越道的圖層",
+        "pl": "Warstwa pokazująca chodniki przy drogach"
       },
       "tagRenderings": [
         {
@@ -120,7 +125,8 @@
             "it": "La strada si chiama {name}",
             "da": "Denne gade hedder {name}",
             "ca": "El carrer s'anomena {name}",
-            "cs": "Tato ulice se jmenuje {name}"
+            "cs": "Tato ulice se jmenuje {name}",
+            "pl": "Nazwa ulicy to {name}"
           }
         },
         {
@@ -153,33 +159,38 @@
                 "fr": "Y a-t-il un trottoir de ce côté de la route ?",
                 "ca": "Hi ha una vorera a aquest costat del carrer?",
                 "es": "¿Hay una acera en este lado de la calle?",
-                "cs": "Je na této straně silnice chodník?"
+                "cs": "Je na této straně silnice chodník?",
+                "pl": "Czy po tej stronie drogi jest chodnik?"
               },
               "mappings": [
                 {
                   "if": "sidewalk:left|right=yes",
                   "then": {
-                    "en": "Yes, there is a sidewalk on this side of the road",
-                    "de": "Ja, es gibt einen Bürgersteig auf dieser Straßenseite",
-                    "da": "Ja, der er et fortov på denne side af vejen",
-                    "nl": "Ja, er is een stoep aan deze kant van de weg",
-                    "fr": "Oui, il y a un trottoir de ce côté de la route",
-                    "ca": "Sí, hi ha una vorera a aquest costat del carrer",
-                    "es": "Sí, hay una acera en este lado de la calle",
-                    "cs": "Ano, na této straně silnice je chodník"
+                    "en": "There is a sidewalk on this side of the road",
+                    "de": "Es gibt einen Bürgersteig auf dieser Straßenseite",
+                    "da": "Der er et fortov på denne side af vejen",
+                    "nl": "Er is een stoep aan deze kant van de weg",
+                    "fr": "Il y a un trottoir de ce côté de la route",
+                    "ca": "Hi ha una vorera a aquest costat del carrer",
+                    "es": "Hay una acera en este lado de la calle",
+                    "cs": "Na této straně silnice je chodník",
+                    "it": "C'è un marciapiede su questo lato della strada",
+                    "pl": "Jest chodnik z boku drogi"
                   }
                 },
                 {
                   "if": "sidewalk:left|right=no",
                   "then": {
-                    "en": "No, there is no sidewalk to walk on",
-                    "de": "Nein, es gibt keinen Bürgersteig für Fußgänger",
-                    "da": "Nej, der er ikke noget fortov at gå på",
-                    "nl": "Nee, er is geen stoep om op te lopen",
-                    "fr": "Non, il n'y a pas de trottoir où marcher",
-                    "ca": "No, no hi ha vorera per la que caminar",
-                    "es": "No, no hay acera por la que caminar",
-                    "cs": "Ne, není tu žádný chodník"
+                    "en": "There is no sidewalk to walk on",
+                    "de": "Es gibt keinen Bürgersteig für Fußgänger",
+                    "da": "Der er ikke noget fortov at gå på",
+                    "nl": "Er is geen stoep om op te lopen",
+                    "fr": "Il n'y a pas de trottoir où marcher",
+                    "ca": "No hi ha vorera per la que caminar",
+                    "es": "No hay acera por la que caminar",
+                    "cs": "Není tu žádný chodník",
+                    "it": "Non c'è un marciapiede su cui camminare",
+                    "pl": "Nie ma chodnika, którym można chodzić"
                   }
                 },
                 {
@@ -192,7 +203,8 @@
                     "fr": "Il y a un trottoir où marcher cartographié séparément",
                     "ca": "Hi ha una vorera mapejada separadament per on caminar",
                     "es": "Hay una acera mapeada por separado por la que caminar",
-                    "cs": "Na mapě je vyznačen samostatný chodník"
+                    "cs": "Na mapě je vyznačen samostatný chodník",
+                    "pl": "Jest oddzielnie oznaczony chodnik"
                   }
                 }
               ]
@@ -207,7 +219,8 @@
                 "fr": "Quelle est la largeur du trottoir de ce côté de la route ?",
                 "ca": "Quina és l'amplada de la vorera a aquest costat de la calçada?",
                 "es": "¿Cuál es la anchura de la acera en este lado de la calzada?",
-                "cs": "Jaká je šířka chodníku na této straně silnice?"
+                "cs": "Jaká je šířka chodníku na této straně silnice?",
+                "pl": "Jaka jest szerokość chodnika po tej stronie drogi?"
               },
               "render": {
                 "en": "This sidewalk is {sidewalk:left|right:width}m wide",
@@ -217,7 +230,8 @@
                 "fr": "Ce trottoir fait {sidewalk:left|right:width} m de large",
                 "ca": "Aquesta vorera té {sidewalk:left|right:width} m d'ample",
                 "es": "Esta acera tiene {sidewalk:left|right:width} m de ancho",
-                "cs": "Tento chodník je široký {sidewalk:left|right:width}m"
+                "cs": "Tento chodník je široký {sidewalk:left|right:width}m",
+                "pl": "Ten chodnik ma {sidewalk:left|right:width}m szerokości"
               },
               "condition": "sidewalk:left|right=yes",
               "freeform": {
@@ -232,16 +246,23 @@
           ]
         }
       ],
-      "mapRendering": [
+      "allowSplit": true,
+      "pointRendering": [
         {
           "location": [
             "start",
             "end"
           ],
-          "icon": "circle:#ccc",
+          "marker": [
+            {
+              "icon": "circle:#ccc"
+            }
+          ],
           "iconSize": "3,3",
           "anchor": "center"
-        },
+        }
+      ],
+      "lineRendering": [
         {
           "#": "The center line",
           "color": "#ffffff55",
@@ -305,8 +326,8 @@
           "lineCap": "butt",
           "offset": 6
         }
-      ],
-      "allowSplit": true
+      ]
     }
-  ]
+  ],
+  "widenFactor": 0.05
 }

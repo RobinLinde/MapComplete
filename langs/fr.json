@@ -3,6 +3,7 @@
         "title": "Fonctionnalités avancées"
     },
     "centerMessage": {
+        "allFilteredAway": "Aucun objet dans la vue actuelle ne répond aux filtres",
         "loadingData": "Chargement des données…",
         "ready": "Fini !",
         "retrying": "Le chargement a échoué. Nouvel essai dans {count} secondes…",
@@ -11,6 +12,7 @@
     "communityIndex": {
         "available": "Cette communauté parle {native}",
         "intro": "Prenez contact avec d'autres personnes pour les connaître, apprendre d'elles, …",
+        "notAvailable": "Cette communauté ne parle pas {native}",
         "title": "Index communautaire"
     },
     "delete": {
@@ -47,26 +49,43 @@
         "panelIntro": "<h3>Votre thème personnel</h3>Activer vos couches favorites depuis les thèmes officiels",
         "reload": "Recharger les données"
     },
+    "favouritePoi": {
+        "button": {
+            "markAsFavouriteTitle": "Sauvegarder ce lieu comme favoris",
+            "markDescription": "Ajouter ce lieu à votre liste personnelle de favoris"
+        }
+    },
     "flyer": {
+        "cyclofix": "Les pompes à vélo, les stations de réparation, les points d'eau potable et les vélocistes sont sur CycloFix",
         "description": "Un flyer format A4 paysage pour promouvoir MapComplete",
         "editing": {
             "intro": "L'utilisateur est accueilli par une carte avec des objets. Lorsqu'il en sélectionne un, les informations relatives à cet objet s'affichent."
         },
         "fakeui": {
+            "add_images": "Ajoutez des images en quelques clics",
             "edit": "Une info fausse ou pas à jour ? Le bouton de modification est juste ici"
         },
         "mapcomplete": {
-            "li2": "Ajouter facilement des informations de contact et des heures d'ouverture"
+            "intro": "MapComplete est un site qui a {mapCount} carte intéractives. Chaque carte permet d'ajouter et mettre à jour des informations. IL y a de nombreuses fonctionnalités :",
+            "li1": "Ajouter de nouveaux points et mettre à jour les infos de ceux existant",
+            "li2": "Ajouter facilement des informations de contact et des heures d'ouverture",
+            "title": "Qu'est-ce que MapComplete ?"
         },
-        "title": "MapComplete.osm.be"
+        "title": "mapcomplete.org",
+        "whatIsOsm": "Qu'est-ce qu'OpenStreetMap ?"
     },
     "general": {
+        "404": "Cette page n'existe pas",
         "about": "Éditer facilement et ajouter OpenStreetMap pour un certain thème",
+        "aboutMapComplete": {
+            "intro": "Utilisez MapComplete pour ajouter des informations à OpenStreetMap <b>par thématiques.</b> Réponsez à des question et, en quelques minutes, vos contributions seront disponibles partout. Dans la plupart des thèmes vous pouvez ajouter des photos et même laisser un commentaire. Le <b>responsable du thème</b> définit les éléments, les questions et les langues."
+        },
         "add": {
             "addNew": "Ajouter {category}",
             "backToSelect": "Sélectionner une catégorie différente",
             "confirmButton": "Ajouter un/une {category} ici.<br><div class=\"alert\">Votre ajout sera visible par tout le monde</div>",
             "confirmLocation": "Confirmer cet emplacement",
+            "confirmTitle": "Ajouter un {title} ?",
             "disableFilters": "Désactiver tous les filtres",
             "disableFiltersExplanation": "Certains élément peuvent être filtrés",
             "hasBeenImported": "Cet élément a déjà été importé",
@@ -127,6 +146,7 @@
         "cancel": "Annuler",
         "confirm": "Confirmer",
         "customThemeIntro": "<h3>Thèmes personnalisés</h3>Vous avez déjà visité ces thèmes personnalisés.",
+        "customThemeTitle": "Thèmes personnalisés",
         "download": {
             "downloadAsPdf": "Télécharger un PDF de la vue actuelle",
             "downloadAsPdfHelper": "Idéal pour imprimer une carte",
@@ -174,6 +194,7 @@
         },
         "morescreen": {
             "createYourOwnTheme": "Créez votre propre thème MapComplete à partir de zéro",
+            "enterToOpen": "Appuyez sur Entrée pour ouvrir le thème",
             "hiddenExplanation": "Ces thèmes sont seulement accessibles par lien. Vous avez découvert {hidden_discovered} des {total_hidden} thèmes cachés.",
             "intro": "<h3>Plus de thèmes ?</h3>Vous aimez collecter des données géographiques ?<br>Il y a plus de thèmes disponibles.",
             "noMatchingThemes": "Aucun thème ne correspond à vos critères de recherche",
@@ -192,6 +213,7 @@
         "number": "nombre",
         "openStreetMapIntro": "<h3>Une carte ouverte</h3><p>Utilisable et éditable librement. Une seule et unique plateforme regroupant toutes les informations géographiques ? Toutes ces différentes cartes isolées, incompatibles et obsolètes ne sont plus utiles.</p><p><b><a href=\"https://OpenStreetMap.org\" target=\"_blank\">OpenStreetMap</a></b> n’est pas un énième concurrent. Toutes les données de cette carte peuvent être utilisé librement (avec <a href=\"https://osm.org/copyright\" target=\"_blank\"> attribution et publication des changements de données</a>). De plus tout le monde est libre d'ajouter de nouvelles données et corriger les erreurs. Ce site utilise également OpenStreetMap. Toutes les données en proviennent et tous les ajouts et modifications y seront également ajoutés.</p><p>De nombreux individus et applications utilisent déjà OpenStreetMap : <a href=\"https://maps.me/\" target=\"_blank\">Maps.me</a>, <a href=\"https://osmAnd.net\" target=\"_blank\">OsmAnd</a>, mais aussi les cartes de Facebook, Instagram, Apple Maps et Bing Maps sont (en partie) alimentées par OpenStreetMap</p>",
         "openTheMap": "Ouvrir la carte",
+        "openTheMapAtGeolocation": "Zoom sur votre position",
         "opening_hours": {
             "closed_permanently": "Fermé",
             "closed_until": "Fermé jusqu'au {date}",
@@ -211,7 +233,7 @@
         "pdf": {
             "attr": "Données par © les contributeurs &amp; contributrices OpenStreetMap sous licence libre ODbL",
             "attrBackground": "Couche d’arrière plan : {background}",
-            "generatedWith": "Généré à l’aide de MapComplete.osm.be/{layoutid}",
+            "generatedWith": "Généré à l’aide de mapcomplete.org/{layoutid}",
             "versionInfo": "v{version} - générée le {date}"
         },
         "pickLanguage": "Choisir la langue : ",
@@ -266,7 +288,8 @@
                 "public": {
                     "name": "Publique"
                 }
-            }
+            },
+            "title": "Envoyer votre trace sur OpenStreetMap.org"
         },
         "weekdays": {
             "abbreviations": {
@@ -303,6 +326,7 @@
                 "born": "Né·e le : {value}",
                 "died": "Décédé·e le : {value}"
             },
+            "readMore": "Lire le reste de l'article",
             "searchToShort": "Votre requête est trop courte, entrez un texte plus long.",
             "searchWikidata": "Rechercher sur Wikidata",
             "wikipediaboxTitle": "Wikipédia"
@@ -323,18 +347,10 @@
         "doDelete": "Supprimer l'image",
         "dontDelete": "Annuler",
         "isDeleted": "Supprimé",
-        "nearbyPictures": {
-            "allFiltered": "Aucune image ne correspond à votre filtre",
-            "browseNearby": "Parcourir les images à proximité…",
-            "confirm": "L'image sélectionnée représente {title()}",
-            "hasMatchingPicture": "Est-ce qu'une image correspond à cet objet ? Sélectionnez ci-dessous",
-            "loadMore": "Charger plus d'images",
-            "loading": "Chargement des images alentours…",
-            "noImageSelected": "Sélectionnez une image à lier à l'objet",
-            "nothingFound": "Aucune image trouvée à proximité…",
-            "removeFilters": "Cliquez ici pour retirer les filtres",
-            "title": "Images à proximité",
-            "withinRadius": "N'afficher que les images prises dans un rayon de {radius} mètres autour de cet objet"
+        "nearby": {
+            "link": "Cette photo montre l'objet",
+            "seeNearby": "Parcourez et associez des photos à proximité",
+            "title": "Imagerie StreetView à proximité"
         },
         "pleaseLogin": "Connectez-vous pour téléverser une photo",
         "respectPrivacy": "Ne photographiez ni les personnes ni les plaques d'immatriculation. Ne téléversez rien issu de Google Maps, Google Streetview ou d'autre sources soumises à des droits d'auteurs.",
@@ -395,6 +411,7 @@
         "warnAnonymous": "Vous n'êtes pas connecté. Nous ne pourrons pas vous contacter pour résoudre ce problème."
     },
     "plantDetection": {
+        "button": "Détecter automatiquement les espèces végétales à l'aide de l'IA de Plantnet.org",
         "error": "Une erreur est survenue lors de la détection de l'espèce de l'arbre : {error}",
         "howTo": {
             "intro": "Pour de résultats optimaux,",
@@ -407,16 +424,26 @@
         "matchPercentage": "Correspondance {match} %",
         "overviewIntro": "L'IA de <a href='https://plantnet.org/' target='_blank'>PlantNet.org</a> pense que les images représentes les espèces ci-dessous.",
         "overviewTitle": "Espèces détectées automatiquement",
+        "overviewVerify": "Vérifiez que l'espèce est correcte avant de la relier à l'arbre",
         "poweredByPlantnet": "Propulsé par <a href='https://plantnet.org' target='_blank'>plantnet.org</a>",
         "seeInfo": "Voir plus d'informations sur les espèces",
         "takeImages": "Prenez des photos de l'arbre pour détecter automatiquement de quel type il s'agit"
     },
     "privacy": {
-        "editing": "Lorsque vous faites une modification sur la carte, cette modification est enregistrée dans OpenStreetMap et est displnible publiquement pour tout le monde. Un groupe de modification fait avec MapComplete inclus les données suivantes : <ul><li>Les modifications que vous avez faites</li><li>Votre nom d'utilisateur</li><li>Quand la modification a été faite</li><li>Le thème utilisé lorsque vous faites la modification</li><li>La langue de l'interface utilisateur</li><li>Une indication sur votre proximité avec l'objet modifié. D'autres utilisateurs peuvent utiliser cette information pour déterminer si la modification a été faite par un relevé de terrain ou par une recherche à distance</li></ul> Merci de vous référer à <a href='https://wiki.osmfoundation.org/wiki/Privacy_Policy' target='_blank'>la politique de confidentialité d'OpenStreetMap.org</a> pour plus de détails. Nous vous rappelons que vous pouvez utiliser un pseudonyme lors de votre inscription.",
+        "editingIntro": "Lorsque vous faites une modification sur la carte, cette modification est enregistrée dans OpenStreetMap et est displnible publiquement pour tout le monde. Un groupe de modification fait avec MapComplete inclus les données suivantes :",
+        "editingOutro": "Merci de vous référer à <a href='https://wiki.osmfoundation.org/wiki/Privacy_Policy' target='_blank'>la politique de confidentialité d'OpenStreetMap.org</a> pour plus de détails. Nous vous rappelons que vous pouvez utiliser un pseudonyme lors de votre inscription.",
         "editingTitle": "Lorsque vous faites une modification",
         "geodata": "Quand MapComplete obtient votre géolocalisation, votre géolocalisation et les lieux visités précédemment restent sur votre appareil. Vos données de localisation ne sont jamais envoyées automatiquement ailleurs - sauf si une fonctionnalité vous indique que c'est le cas.",
         "geodataTitle": "Votre géolocalisation",
         "intro": "La vie privée est importante - tant pour l'individu que pour la société. MapComplete s'efforce de respecter votre vie privée autant que possible - jusqu'au point où aucune bannière de cookie gênante n'est nécessaire. Toutefois, nous tenons à vous informer des informations qui sont recueillies et partagées, des circonstances dans lesquelles elles le sont et des raisons pour lesquelles ces compromis sont faits.",
+        "items": {
+            "changesYouMake": "Les modifications que vous avez faites",
+            "username": "Votre nom d'utilisateur",
+            "date": "Quand la modification a été faite",
+            "theme": "Le thème utilisé lorsque vous faites la modification",
+            "language": "La langue de l'interface utilisateur",
+            "distanceIndicator": "Une indication sur votre proximité avec l'objet modifié. D'autres utilisateurs peuvent utiliser cette information pour déterminer si la modification a été faite par un relevé de terrain ou par une recherche à distance"
+        },
         "miscCookiesTitle": "Autres cookies",
         "title": "Politique de confidentialité",
         "tracking": "Afin d'avoir une idée des personnes qui visitent notre site web, certaines informations techniques sont collectées. Il s'agit notamment du pays depuis lequel vous avez visité la page Web, du site Web qui vous a renvoyé vers MapComplete, du type de votre appareil et de la taille de l'écran. Un cookie est placé sur votre appareil pour indiquer que vous avez visité MapComplete plus tôt dans la journée. Ces données ne sont pas suffisamment détaillées pour vous identifier personnellement. Ces statistiques ne sont accessibles à quiconque que sous forme agrégée et sont <a href='https://pietervdvn.goatcounter.com' target='_blank'>accessible à tout le monde</a>",
@@ -427,10 +454,7 @@
         "attribution": "Les avis sont fournis par <a href=\"https://mangrove.reviews/\" target=\"_blank\">Mangrove Reviews</a> et sont disponibles sous licence <a href=\"https://mangrove.reviews/terms#8-licensing-of-content\" target=\"_blank\">CC-BY 4.0</a>.",
         "i_am_affiliated": "<span>Je suis affilié à cet objet</span><br><span class=\"subtle\">Cochez si vous en êtes le propriétaire, créateur, employé, …</span>",
         "name_required": "Un nom est requis pour afficher et créer des avis",
-        "no_rating": "Aucun score donné",
         "no_reviews_yet": "Il n'y a pas encore d'avis. Soyez le premier à en écrire un et aidez le lieu et les données ouvertes !",
-        "plz_login": "Connectez vous pour laisser un avis",
-        "posting_as": "Envoi en tant que",
         "saved": "<span class=\"thanks\">Avis enregistré. Merci du partage !</span>",
         "saving_review": "Enregistrement…",
         "title": "{count} avis",

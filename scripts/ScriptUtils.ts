@@ -5,6 +5,7 @@ import * as https from "https"
 import { LayoutConfigJson } from "../src/Models/ThemeConfig/Json/LayoutConfigJson"
 import { LayerConfigJson } from "../src/Models/ThemeConfig/Json/LayerConfigJson"
 import xml2js from "xml2js"
+import { resolve } from "node:dns"
 
 export default class ScriptUtils {
     public static fixUtils() {
@@ -39,7 +40,7 @@ export default class ScriptUtils {
 
     public static DownloadFileTo(url, targetFilePath: string): Promise<void> {
         ScriptUtils.erasableLog("Downloading", url, "to", targetFilePath)
-        return new Promise<void>((resolve, err) => {
+        return new Promise<void>((resolve) => {
             https.get(url, (res) => {
                 const filePath = fs.createWriteStream(targetFilePath)
                 res.pipe(filePath)
@@ -88,7 +89,7 @@ export default class ScriptUtils {
                     const parsed = JSON.parse(contents)
                     return { parsed, path }
                 } catch (e) {
-                    console.error("Could not parse file ", "./assets/layers/" + path, "due to ", e)
+                    console.error("Could not parse file ", path, "due to ", e)
                     throw e
                 }
             })
@@ -100,7 +101,7 @@ export default class ScriptUtils {
             .filter((path) => path.indexOf("license_info.json") < 0)
     }
 
-    public static getThemeFiles(): { parsed: LayoutConfigJson; path: string }[] {
+    public static getThemeFiles(): { parsed: LayoutConfigJson; path: string; raw: string }[] {
         return this.getThemePaths().map((path) => {
             try {
                 const contents = readFileSync(path, { encoding: "utf8" })
@@ -108,7 +109,7 @@ export default class ScriptUtils {
                     throw "The file " + path + " is empty, did you properly save?"
                 }
                 const parsed = JSON.parse(contents)
-                return { parsed: parsed, path: path }
+                return { parsed: parsed, path: path, raw: contents }
             } catch (e) {
                 console.error("Could not read file ", path, "due to ", e)
                 throw e
@@ -148,15 +149,36 @@ export default class ScriptUtils {
         const data = await ScriptUtils.Download(url, headers)
         return JSON.parse(data["content"])
     }
-
-    public static Download(
+    public static async DownloadFetch(
         url: string,
         headers?: any
     ): Promise<{ content: string } | { redirect: string }> {
-        return new Promise((resolve, reject) => {
+        console.log("Fetching", url)
+        const req = await fetch(url, { headers })
+        const data = await req.text()
+        console.log("Fetched", url, data)
+        return { content: data }
+    }
+    public static Download(
+        url: string,
+        headers?: any
+    ): Promise<{ content: string } | { redirect: string }>
+    public static Download(
+        url: string,
+        headers?: any,
+        timeoutSecs?: number
+    ): Promise<{ content: string } | { redirect: string } | "timeout">
+    public static Download(
+        url: string,
+        headers?: any,
+        timeoutSecs?: number
+    ): Promise<{ content: string } | { redirect: string } | "timeout"> {
+        const requestPromise = new Promise((resolve, reject) => {
             try {
                 headers = headers ?? {}
-                headers.accept = "application/json"
+                if(!headers.Accept){
+                    headers.accept ??= "application/json"
+                }
                 console.log(" > ScriptUtils.Download(", url, ")")
                 const urlObj = new URL(url)
                 const request = https.get(
@@ -200,5 +222,17 @@ export default class ScriptUtils {
                 reject(e)
             }
         })
+        const timeoutPromise = new Promise<any>((resolve, reject) => {
+            setTimeout(
+                () => {
+                    if(timeoutSecs === undefined){
+                        return // No resolve
+                    }
+                   resolve("timeout")
+                },
+                (timeoutSecs ?? 10) * 1000
+            )
+        })
+        return Promise.race([requestPromise, timeoutPromise])
     }
 }

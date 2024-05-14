@@ -5,6 +5,8 @@ import { GeoOperations } from "../../GeoOperations"
 import FeaturePropertiesStore from "./FeaturePropertiesStore"
 import { UIEventSource } from "../../UIEventSource"
 import { Utils } from "../../../Utils"
+import { Tiles } from "../../../Models/TileRange"
+import { BBox } from "../../BBox"
 
 class SingleTileSaver {
     private readonly _storage: UIEventSource<Feature[]>
@@ -36,6 +38,10 @@ class SingleTileSaver {
             if (this._registeredIds.has(id)) {
                 continue
             }
+            if(id.match(/(node|way|relation)\/-.*/)){
+                // We don't cache newly created points
+                continue
+            }
             this._featureProperties.getStore(id)?.addCallbackAndRunD(() => {
                 this._isDirty.setData(true)
             })
@@ -54,6 +60,8 @@ class SingleTileSaver {
  * Also see the sibling class
  */
 export default class SaveFeatureSourceToLocalStorage {
+    public readonly storage: TileLocalStorage<Feature[]>
+    private readonly zoomlevel: number
     constructor(
         backend: string,
         layername: string,
@@ -62,7 +70,9 @@ export default class SaveFeatureSourceToLocalStorage {
         featureProperties: FeaturePropertiesStore,
         maxCacheAge: number
     ) {
+        this.zoomlevel = zoomlevel
         const storage = TileLocalStorage.construct<Feature[]>(backend, layername, maxCacheAge)
+        this.storage = storage
         const singleTileSavers: Map<number, SingleTileSaver> = new Map<number, SingleTileSaver>()
         features.features.addCallbackAndRunD((features) => {
             const sliced = GeoOperations.slice(zoomlevel, features)
@@ -78,6 +88,14 @@ export default class SaveFeatureSourceToLocalStorage {
                 features = features.filter((f) => !f.properties.id.match(/(node|way)\/-[0-9]+/))
                 tileSaver.saveFeatures(features)
             })
+        })
+    }
+
+    public invalidateCacheAround(bbox: BBox) {
+        const range = Tiles.tileRangeFrom(bbox, this.zoomlevel)
+        Tiles.MapRange(range, (x, y) => {
+            const index = Tiles.tile_index(this.zoomlevel, x, y)
+            this.storage.invalidate(index)
         })
     }
 }

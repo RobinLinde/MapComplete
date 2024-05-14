@@ -1,5 +1,7 @@
 import { Tag } from "./Tag"
 import { TagsFilter } from "./TagsFilter"
+import { TagConfigJson } from "../../Models/ThemeConfig/Json/TagConfigJson"
+import { ExpressionSpecification } from "maplibre-gl"
 
 export class RegexTag extends TagsFilter {
     public readonly key: RegExp | string
@@ -11,6 +13,9 @@ export class RegexTag extends TagsFilter {
         super()
         this.key = key
         this.value = value
+        if (this.value instanceof RegExp && ("" + this.value).startsWith("^(^(")) {
+            throw "Detected a duplicate start marker ^(^( in a regextag:" + this.value
+        }
         this.invert = invert
         this.matchesEmpty = RegexTag.doesMatch("", this.value)
     }
@@ -41,11 +46,21 @@ export class RegexTag extends TagsFilter {
         return possibleRegex.test(fromTag)
     }
 
-    private static source(r: string | RegExp) {
+    private static source(r: string | RegExp, includeStartMarker: boolean = true) {
         if (typeof r === "string") {
             return r
         }
-        return r.source
+        if (r === undefined) {
+            return undefined
+        }
+        const src = r.source
+        if (includeStartMarker) {
+            return src
+        }
+        if (src.startsWith("^(") && src.endsWith(")$")) {
+            return src.substring(2, src.length - 2)
+        }
+        return src
     }
 
     /**
@@ -80,6 +95,24 @@ export class RegexTag extends TagsFilter {
             // Normal key and normal value
             return [`["${this.key}"${inv}="${this.value}"]`]
         }
+    }
+
+    /**
+     * import { TagUtils } from "./TagUtils";
+     *
+     * const t = TagUtils.Tag("a~b")
+     * t.asJson() // => "a~b"
+     *
+     * const t = TagUtils.Tag("a=")
+     * t.asJson() // => "a="
+     */
+    asJson(): TagConfigJson {
+        const v = RegexTag.source(this.value, false)
+        if (typeof this.key === "string") {
+            const oper = typeof this.value === "string" ? "=" : "~"
+            return `${this.key}${this.invert ? "!" : ""}${oper}${v}`
+        }
+        return `${this.key.source}${this.invert ? "!" : ""}~~${v}`
     }
 
     isUsableAsAnswer(): boolean {
@@ -226,6 +259,13 @@ export class RegexTag extends TagsFilter {
      * new RegexTag("key",/^..*$/, true).shadows(new Tag("key","")) // => true
      * new RegexTag("key","value", true).shadows(new Tag("key","value")) // => false
      * new RegexTag("key","value", true).shadows(new Tag("key","some_other_value")) // => false
+     * new RegexTag("key","value", true).shadows(new Tag("key","some_other_value", true)) // => false
+     *
+     * const route = TagUtils.Tag("climbing!~route")
+     * const routeBottom = TagUtils.Tag("climbing!~route_bottom")
+     * route.shadows(routeBottom) // => false
+     * routeBottom.shadows(route) // => false
+     *
      */
     shadows(other: TagsFilter): boolean {
         if (other instanceof RegexTag) {
@@ -234,7 +274,7 @@ export class RegexTag extends TagsFilter {
                 return false
             }
             if (
-                (other.value["source"] ?? other.key) === (this.value["source"] ?? this.key) &&
+                (other.value["source"] ?? other.value) === (this.value["source"] ?? this.value) &&
                 this.invert == other.invert
             ) {
                 // Values (and inverts) match
@@ -293,7 +333,7 @@ export class RegexTag extends TagsFilter {
         if (typeof this.key === "string") {
             return [this.key]
         }
-        throw "Key cannot be determined as it is a regex"
+        return []
     }
 
     usedTags(): { key: string; value: string }[] {
@@ -307,9 +347,6 @@ export class RegexTag extends TagsFilter {
         if (typeof this.key === "string") {
             if (typeof this.value === "string") {
                 return [{ k: this.key, v: this.value }]
-            }
-            if (this.value.toString() != "/^..*$/" || this.value.toString() != ".+") {
-                console.warn("Regex value in tag; using wildcard:", this.key, this.value)
             }
             return [{ k: this.key, v: undefined }]
         }
@@ -327,5 +364,12 @@ export class RegexTag extends TagsFilter {
 
     visit(f: (TagsFilter) => void) {
         f(this)
+    }
+
+    asMapboxExpression(): ExpressionSpecification {
+        if (typeof this.key === "string" && typeof this.value === "string") {
+            return [this.invert ? "!=" : "==", ["get", this.key], this.value]
+        }
+        throw "TODO"
     }
 }

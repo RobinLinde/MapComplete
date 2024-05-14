@@ -9,7 +9,29 @@
     "da": "Kikkert",
     "es": "Prismáticos",
     "fr": "Jumelles",
-    "pa_PK": "بائینوکولر"
+    "pa_PK": "بائینوکولر",
+    "cs": "Dalekohledy",
+    "eu": "Prismatikoak"
+  },
+  "description": {
+    "en": "Binoculars",
+    "nl": "Verrekijkers",
+    "de": "Ferngläser",
+    "ru": "Бинокли",
+    "ca": "Prismàtics",
+    "da": "Kikkerter",
+    "es": "Prismáticos",
+    "fr": "Jumelles",
+    "pa_PK": "بائینوکولر",
+    "cs": "Dalekohledy",
+    "eu": "Prismatikoak"
+  },
+  "source": {
+    "osmTags": {
+      "and": [
+        "amenity=binoculars"
+      ]
+    }
   },
   "minzoom": 0,
   "title": {
@@ -22,20 +44,63 @@
       "es": "Prismáticos",
       "da": "Kikkert",
       "fr": "Jumelles",
-      "pa_PK": "بائینوکولر"
+      "pa_PK": "بائینوکولر",
+      "eu": "Prismatikoak",
+      "cs": "Dalekohledy"
     }
   },
-  "description": {
-    "en": "Binoculars",
-    "nl": "Verrekijkers",
-    "de": "Ferngläser",
-    "ru": "Бинокли",
-    "ca": "Prismàtics",
-    "da": "Kikkerter",
-    "es": "Prismáticos",
-    "fr": "Jumelles",
-    "pa_PK": "بائینوکولر"
-  },
+  "pointRendering": [
+    {
+      "iconSize": "40,40",
+      "location": [
+        "point"
+      ],
+      "anchor": "center",
+      "marker": [
+        {
+          "icon": "circle",
+          "color": "white"
+        },
+        {
+          "icon": "./assets/layers/binocular/telescope.svg"
+        }
+      ]
+    }
+  ],
+  "lineRendering": [
+    {
+      "color": "#00f",
+      "width": "8"
+    }
+  ],
+  "presets": [
+    {
+      "tags": [
+        "amenity=binoculars"
+      ],
+      "title": {
+        "en": "a binocular",
+        "nl": "een verrekijker",
+        "de": "ein Fernglas",
+        "ru": "бинокль",
+        "ca": "uns prismàtics",
+        "da": "en kikkert",
+        "es": "unos prismáticos",
+        "fr": "des jumelles",
+        "cs": "dalekohled"
+      },
+      "description": {
+        "en": "A telescope or pair of binoculars mounted on a pole, available to the public to look around. <img src='./assets/layers/binocular/binoculars_example.jpg' style='height: 300px; width: auto; display: block;' />",
+        "nl": "Een telescoop of verrekijker die op een vaste plaats gemonteerd staat waar iedereen door mag kijken. <img src='./assets/layers/binocular/binoculars_example.jpg' style='height: 300px; width: auto; display: block;' />",
+        "de": "Ein fest installiertes Teleskop oder Fernglas, für die öffentliche Nutzung. <img src='./assets/layers/binocular/binoculars_example.jpg' style='height: 300px; width: auto; display: block;' />",
+        "fr": "Une longue-vue ou une paire de jumelles montée sur un poteau, disponible au public pour scruter les environs. <img src='./assets/layers/binocular/binoculars_example.jpg' style='height: 300px; width: auto; display: block;' />",
+        "da": "Et teleskop eller en kikkert monteret på en stang, som offentligheden kan se sig omkring med. <img src='./assets/layers/binocular/binoculars_example.jpg' style='height: 300px; width: auto; display: block;' />",
+        "es": "Un telescopio o unos prismáticos montados en un poste, disponible para que el público mire alrededor. <img src='./assets/layers/binocular/binoculars_example.jpg' style='height: 300px; width: auto; display: block;' />",
+        "ca": "Un telescopi o un parell de prismàtics muntats en un pal, a disposició del públic per mirar al seu voltant. <img src='./assets/layers/binocular/binoculars_example.jpg' style='height: 300px; width: auto; display: block;' />",
+        "cs": "Jednooký teleskop nebo dalekohled umístěný na stožáru, který je k dispozici veřejnosti k prohlídce. <img src='./assets/layers/binoculars/binoculars_example.jpg' style='height: 300px; width: auto; display: block;' />"
+      }
+    }
+  ],
   "tagRenderings": [
     "images",
     {
@@ -54,7 +119,8 @@
             "da": "Gratis at bruge",
             "es": "De uso gratuito",
             "fr": "En libre service",
-            "ca": "Debades"
+            "ca": "Debades",
+            "cs": "Použití zdarma"
           }
         }
       ],
@@ -71,7 +137,8 @@
         "es": "Utilizar estos prismáticos cuesta {charge}",
         "da": "Brug af denne kikkert koster {charge}",
         "fr": "L’utilisation des ces jumelles coûte {charge}",
-        "ca": "L'ús d'aquests prismàtics costa {charge}"
+        "ca": "L'ús d'aquests prismàtics costa {charge}",
+        "cs": "Použití tohoto dalekohledu stojí {charge}"
       },
       "question": {
         "en": "How much does one have to pay to use these binoculars?",
@@ -80,7 +147,8 @@
         "es": "¿Cuánto hay que pagar para utilizar estos prismáticos?",
         "da": "Hvor meget koster det at bruge denne kikkert?",
         "fr": "Combien l’utilisation des ces jumelles coûte-t-elle ?",
-        "ca": "Quant s'ha de pagar per utilitzar aquests prismàtics?"
+        "ca": "Quant s'ha de pagar per utilitzar aquests prismàtics?",
+        "cs": "Kolik se platí za používání těchto dalekohledů?"
       },
       "id": "binocular-charge"
     },
@@ -92,7 +160,8 @@
         "es": "¿Cuándo uno mira a través de estos prismáticos, en qué dirección lo hace?",
         "da": "I hvilken retning kigger man, når man ser gennem denne kikkert?",
         "fr": "Dans quelle direction regarde-t-on en utilisant ces jumelles ?",
-        "ca": "En mirar a través d'aquest binocular, en quina direcció es mira?"
+        "ca": "En mirar a través d'aquest binocular, en quina direcció es mira?",
+        "cs": "Při pohledu přes tento dalekohled, kterým směrem se člověk dívá?"
       },
       "render": {
         "en": "Looks towards {direction}°",
@@ -101,7 +170,8 @@
         "es": "Mira hacia {direction}º",
         "da": "Kigger mod {direction}°",
         "fr": "Orienté à {direction}°",
-        "ca": "Mira cap a {direction}°"
+        "ca": "Mira cap a {direction}°",
+        "cs": "Dívá se směrem v úhlu {direction}°"
       },
       "freeform": {
         "key": "direction",
@@ -110,39 +180,6 @@
       "id": "binocular-direction"
     }
   ],
-  "presets": [
-    {
-      "tags": [
-        "amenity=binoculars"
-      ],
-      "title": {
-        "en": "a binocular",
-        "nl": "een verrekijker",
-        "de": "ein Fernglas",
-        "ru": "бинокль",
-        "ca": "uns prismàtics",
-        "da": "en kikkert",
-        "es": "unos prismáticos",
-        "fr": "des jumelles"
-      },
-      "description": {
-        "en": "A telescope or pair of binoculars mounted on a pole, available to the public to look around. <img src='./assets/layers/binocular/binoculars_example.jpg' style='height: 300px; width: auto; display: block;' />",
-        "nl": "Een telescoop of verrekijker die op een vaste plaats gemonteerd staat waar iedereen door mag kijken. <img src='./assets/layers/binocular/binoculars_example.jpg' style='height: 300px; width: auto; display: block;' />",
-        "de": "Ein fest installiertes Teleskop oder Fernglas, für die öffentliche Nutzung. <img src='./assets/layers/binocular/binoculars_example.jpg' style='height: 300px; width: auto; display: block;' />",
-        "fr": "Une longue-vue ou une paire de jumelles montée sur un poteau, disponible au public pour scruter les environs. <img src='./assets/layers/binocular/binoculars_example.jpg' style='height: 300px; width: auto; display: block;' />",
-        "da": "Et teleskop eller en kikkert monteret på en stang, som offentligheden kan se sig omkring med. <img src='./assets/layers/binocular/binoculars_example.jpg' style='height: 300px; width: auto; display: block;' />",
-        "es": "Un telescopio o unos prismáticos montados en un poste, disponible para que el público mire alrededor. <img src='./assets/layers/binocular/binoculars_example.jpg' style='height: 300px; width: auto; display: block;' />",
-        "ca": "Un telescopi o un parell de prismàtics muntats en un pal, a disposició del públic per mirar al seu voltant. <img src='./assets/layers/binocular/binoculars_example.jpg' style='height: 300px; width: auto; display: block;' />"
-      }
-    }
-  ],
-  "source": {
-    "osmTags": {
-      "and": [
-        "amenity=binoculars"
-      ]
-    }
-  },
   "deletion": {
     "softDeletionTags": {
       "and": [
@@ -154,20 +191,6 @@
   },
   "allowMove": {
     "enableRelocation": false,
-    "enableImproveAccuraccy": true
-  },
-  "mapRendering": [
-    {
-      "icon": "circle:white;./assets/layers/binocular/telescope.svg",
-      "iconSize": "40,40",
-      "location": [
-        "point"
-      ],
-      "anchor": "center"
-    },
-    {
-      "color": "#00f",
-      "width": "8"
-    }
-  ]
+    "enableImproveAccuracy": true
+  }
 }

@@ -1,4 +1,14 @@
 {
+    "atm": {
+        "tagRenderings": {
+            "operator": {
+                "render": "Ta bankomat upravlja {operator}"
+            }
+        },
+        "title": {
+            "render": "Bankomat"
+        }
+    },
     "defibrillator": {
         "description": "Sloj prikazuje defibrilatorje, ki jih je možno uporabiti v primeru sile. Sloj poleg javno dostopnih defibrilatorjev vsebuje tudi tiste, ki za dostop morda potrebujejo pomoč osebja",
         "name": "Defibrilatorji",
@@ -149,26 +159,6 @@
             "email": {
                 "question": "Kakšen naslov elektronske pošte ima {title()}?"
             },
-            "level": {
-                "mappings": {
-                    "0": {
-                        "then": "Nahaja se pod zemljo"
-                    },
-                    "1": {
-                        "then": "Nahaja se v pritličju"
-                    },
-                    "2": {
-                        "then": "Nahaja se v pritličju"
-                    },
-                    "3": {
-                        "then": "Nahaja se v prvem nadstropju"
-                    },
-                    "4": {
-                        "then": "Nahaja se v prvi kletni etaži"
-                    }
-                },
-                "render": "Nahaja se v {level}. nadstropju"
-            },
             "opening_hours": {
                 "question": "Kakšen odpiralni čas ima {title()}?",
                 "render": "<h3>Odpiralni čas</h3>{opening_hours_table(opening_hours)}"
@@ -198,6 +188,271 @@
             },
             "phone": {
                 "question": "Kakšno telefonsko številko ima {title()}?"
+            },
+            "qr_code": {
+                "render": {
+                    "after": "Skenirajte to kodo, da odprete ta kraj na drugi napravi"
+                }
+            },
+            "single_level": {
+                "mappings": {
+                    "0": {
+                        "then": "Nahaja se pod zemljo"
+                    },
+                    "1": {
+                        "then": "Nahaja se v pritličju"
+                    },
+                    "2": {
+                        "then": "Nahaja se v pritličju"
+                    },
+                    "3": {
+                        "then": "Nahaja se v prvem nadstropju"
+                    },
+                    "4": {
+                        "then": "Nahaja se v prvi kletni etaži"
+                    }
+                },
+                "render": "Nahaja se v {level}. nadstropju"
+            }
+        }
+    },
+    "speed_camera": {
+        "description": "Sloj prikazuje hitrostne kamere (radarje)",
+        "name": "Hitrostna kamera",
+        "presets": {
+            "0": {
+                "title": "hitrostna kamera"
+            }
+        },
+        "tagRenderings": {
+            "camera_direction": {
+                "question": "V katero geografsko smer snema ta kamera?",
+                "render": "Snema v smeri kompasa {direction}"
+            }
+        }
+    },
+    "surveillance_camera": {
+        "description": "Ta sloj prikazuje nadzorne kamere in urednikom omogoča posodabljanje informacij obstoječih in dodajanje novih kamer",
+        "name": "Nadzorne kamere",
+        "presets": {
+            "0": {
+                "title": "nadzorna kamera"
+            },
+            "1": {
+                "title": "nadzorna kamera pritrjena na steno"
+            },
+            "2": {
+                "description": "Kamera za prepoznavo registrskih tablic ima običajno dve leči in polje infrardečih lučk.",
+                "title": "kamera za prepoznavo registrskih tablic"
+            },
+            "3": {
+                "description": "Kamera za prepoznavo registrskih tablic ima običajno dve leči in polje infrardečih lučk.",
+                "title": "na steno pritrjena kamera za prepoznavo registrskih tablic"
+            }
+        },
+        "tagRenderings": {
+            "Camera type: fixed; panning; dome": {
+                "mappings": {
+                    "0": {
+                        "then": "Fiksna (nepremična) kamera"
+                    },
+                    "1": {
+                        "then": "Kamera v kupoli (obračajoča)"
+                    }
+                },
+                "question": "Kakšne vrste kamera je to?"
+            },
+            "Level": {
+                "question": "V katerem nadstropju je ta kamera?",
+                "render": "Se nahaja v {level}. nadstropju"
+            },
+            "Operator": {
+                "question": "Kdo upravlja s to kamero?",
+                "render": "Upravlja jo {operator}"
+            },
+            "Surveillance type: public, outdoor, indoor": {
+                "mappings": {
+                    "0": {
+                        "then": "Nadzoruje javno površino kot je ulica, most, trg, park, postaja, javni hodnik, tunel…"
+                    },
+                    "1": {
+                        "then": "Nadzoruje zunanjo, a zasebno površino (npr. parkirišče, bencinsko črpalko, dvorišče, vhod v stavbo, zasebni dovoz…)"
+                    },
+                    "2": {
+                        "then": "Nadzoruje zasebno notranjo površino, npr. trgovino, zasebno podzemno parkirišče…"
+                    }
+                },
+                "question": "Kaj nadzoruje ta kamera?"
+            },
+            "Surveillance:zone": {
+                "mappings": {
+                    "0": {
+                        "then": "Nadzoruje parkirišče"
+                    },
+                    "1": {
+                        "then": "Nadzoruje promet"
+                    },
+                    "2": {
+                        "then": "Nadzoruje vhod"
+                    },
+                    "3": {
+                        "then": "Nadzoruje hodnik"
+                    },
+                    "4": {
+                        "then": "Nadzoruje peron javnega prevoza"
+                    },
+                    "5": {
+                        "then": "Nadzoruje trgovino"
+                    }
+                },
+                "question": "Kaj točno je nadzorovano tu?",
+                "render": "Nadzoruje {surveillance:zone}"
+            },
+            "camera:mount": {
+                "mappings": {
+                    "0": {
+                        "then": "Ta kamera je pritrjena na steno"
+                    },
+                    "1": {
+                        "then": "Ta kamera je nameščena na drog"
+                    },
+                    "2": {
+                        "then": "Ta kamera je pritrjena na strop"
+                    },
+                    "3": {
+                        "then": "Ta kamera je nameščena na ulično svetilko"
+                    },
+                    "4": {
+                        "then": "Ta kamera je nameščena na drevo"
+                    }
+                },
+                "question": "Kako je postavljena ta kamera?",
+                "render": "Način namestitve: {camera:mount}"
+            },
+            "camera_direction": {
+                "mappings": {
+                    "0": {
+                        "then": "Snema v smeri kompasa {direction}"
+                    }
+                },
+                "question": "V katero geografsko smer snema ta kamera?",
+                "render": "Snema v smeri kompasa {camera:direction}"
+            },
+            "has_alpr": {
+                "mappings": {
+                    "0": {
+                        "then": "To je kamera brez prepoznave registrskih tablic."
+                    },
+                    "1": {
+                        "then": "To je kamera s prepoznavo registrskih tablic"
+                    }
+                },
+                "question": "Ali ta kamera lahko samodejno prepoznava registrske tablice?",
+                "questionHint": "Kamera za <b>prepoznavo registrskih tablic</b> ima običajno dve leči in med njima polje infrardečih LED svetil."
+            },
+            "is_indoor": {
+                "mappings": {
+                    "0": {
+                        "then": "Ta kamera je znotraj"
+                    },
+                    "1": {
+                        "then": "Ta kamera je zunaj"
+                    },
+                    "2": {
+                        "then": "Ta kamera je verjetno zunaj"
+                    }
+                },
+                "question": "Ali je javni prostor, ki ga nadzoruje ta kamera, notranji ali zunanji?"
+            }
+        },
+        "title": {
+            "render": "Nadzorna kamera"
+        }
+    },
+    "toilet": {
+        "description": "Prikaz (javnih) stranišč",
+        "filter": {
+            "0": {
+                "options": {
+                    "0": {
+                        "question": "Dostopno z vozičkom"
+                    }
+                }
+            },
+            "1": {
+                "options": {
+                    "0": {
+                        "question": "Ima previjalno mizo"
+                    }
+                }
+            }
+        },
+        "name": "Stranišča",
+        "presets": {
+            "0": {
+                "title": "javno stranišče"
+            },
+            "1": {
+                "description": "Stranišča z vsaj enim invalidom na vozičku dostopnim straniščem"
+            }
+        },
+        "title": {
+            "render": "Stranišče"
+        }
+    },
+    "toilet_at_amenity": {
+        "tagRenderings": {
+            "toilet-access": {
+                "mappings": {
+                    "0": {
+                        "then": "Javno dostopno"
+                    },
+                    "1": {
+                        "then": "Samo za stranke lokala"
+                    },
+                    "2": {
+                        "then": "Ni dostopno niti za stranke lokala"
+                    },
+                    "3": {
+                        "then": "Dostopno, a je potrebno vprašati za ključ"
+                    }
+                },
+                "question": "Ali so ta stranišča javno dostopna?",
+                "render": "Dostop je {toilets:access}"
+            },
+            "toilet-charge": {
+                "question": "Koliko je potrebno plačati za ta stranišča?",
+                "render": "Plačilo je {toilets:charge}"
+            },
+            "toilets-fee": {
+                "mappings": {
+                    "0": {
+                        "then": "To so plačljiva stranišča"
+                    },
+                    "1": {
+                        "then": "Brezplačna uporaba"
+                    }
+                },
+                "question": "Ali so ta stranišča brezplačna za uporabo?"
+            },
+            "toilets-wheelchair": {
+                "mappings": {
+                    "1": {
+                        "then": "Ni dostopno invalidom na vozičku"
+                    }
+                },
+                "question": "Ali je tu stranišče namenjeno invalidom na vozičku?"
+            },
+            "wheelchair-door-width": {
+                "question": "Koliko so široka vrata v stranišče za invalide na vozičku?",
+                "render": "Vrata v stranišče za invalide na vozičku so široka {canonical(toilets:door:width)}"
+            }
+        },
+        "title": {
+            "mappings": {
+                "0": {
+                    "then": "Stranišče v {name}"
+                }
             }
         }
     },

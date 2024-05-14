@@ -1,5 +1,5 @@
 import { ImmutableStore, Store, UIEventSource } from "../../Logic/UIEventSource"
-import type { Map as MlMap } from "maplibre-gl"
+import type { AddLayerObject, Map as MlMap } from "maplibre-gl"
 import { GeoJSONSource, Marker } from "maplibre-gl"
 import { ShowDataLayerOptions } from "./ShowDataLayerOptions"
 import { GeoOperations } from "../../Logic/GeoOperations"
@@ -12,10 +12,10 @@ import { Feature, Point } from "geojson"
 import LineRenderingConfig from "../../Models/ThemeConfig/LineRenderingConfig"
 import { Utils } from "../../Utils"
 import * as range_layer from "../../../assets/layers/range/range.json"
-import { LayerConfigJson } from "../../Models/ThemeConfig/Json/LayerConfigJson"
 import PerLayerFeatureSourceSplitter from "../../Logic/FeatureSource/PerLayerFeatureSourceSplitter"
 import FilteredLayer from "../../Models/FilteredLayer"
 import SimpleFeatureSource from "../../Logic/FeatureSource/Sources/SimpleFeatureSource"
+import { TagsFilter } from "../../Logic/Tags/TagsFilter"
 
 class PointRenderingLayer {
     private readonly _config: PointRenderingConfig
@@ -26,12 +26,14 @@ class PointRenderingLayer {
     private readonly _allMarkers: Map<string, Marker> = new Map<string, Marker>()
     private readonly _selectedElement: Store<{ properties: { id?: string } }>
     private readonly _markedAsSelected: HTMLElement[] = []
+    private readonly _metatags: Store<Record<string, string>>
     private _dirty = false
 
     constructor(
         map: MlMap,
         features: FeatureSource,
         config: PointRenderingConfig,
+        metatags?: Store<Record<string, string>>,
         visibility?: Store<boolean>,
         fetchStore?: (id: string) => Store<Record<string, string>>,
         onClick?: (feature: Feature) => void,
@@ -40,11 +42,11 @@ class PointRenderingLayer {
         this._visibility = visibility
         this._config = config
         this._map = map
+        this._metatags = metatags
         this._fetchStore = fetchStore
         this._onClick = onClick
         this._selectedElement = selectedElement
         const self = this
-
         features.features.addCallbackAndRunD((features) => self.updateFeatures(features))
         visibility?.addCallbackAndRunD((visible) => {
             if (visible === true && self._dirty) {
@@ -143,7 +145,7 @@ class PointRenderingLayer {
         } else {
             store = new ImmutableStore(<OsmTags>feature.properties)
         }
-        const { html, iconAnchor } = this._config.RenderIcon(store, true)
+        const { html, iconAnchor } = this._config.RenderIcon(store, { metatags: this._metatags })
         html.SetClass("marker")
         if (this._onClick !== undefined) {
             html.SetClass("cursor-pointer")
@@ -152,10 +154,9 @@ class PointRenderingLayer {
 
         if (this._onClick) {
             const self = this
-            el.addEventListener("click", function (ev) {
+            el.addEventListener("click", function(ev) {
                 ev.preventDefault()
                 self._onClick(feature)
-                console.log("Got click:", feature)
                 // Workaround to signal the MapLibreAdaptor to ignore this click
                 ev["consumed"] = true
             })
@@ -171,6 +172,7 @@ class PointRenderingLayer {
         store
             .map((tags) => this._config.rotationAlignment.GetRenderValue(tags).Subs(tags).txt)
             .addCallbackAndRun((pitchAligment) => marker.setRotationAlignment(<any>pitchAligment))
+
         if (feature.geometry.type === "Point") {
             // When the tags get 'pinged', check that the location didn't change
             store.addCallbackAndRunD(() => {
@@ -198,7 +200,7 @@ class LineRenderingLayer {
         "lineCap",
         "offset",
         "fill",
-        "fillColor",
+        "fillColor"
     ] as const
 
     private static readonly lineConfigKeysColor = ["color", "fillColor"] as const
@@ -230,10 +232,48 @@ class LineRenderingLayer {
         this._onClick = onClick
         const self = this
         features.features.addCallbackAndRunD(() => self.update(features.features))
+
+        map.on("styledata", () => self.update(features.features))
     }
 
     public destruct(): void {
         this._map.removeLayer(this._layername + "_polygon")
+    }
+
+    private async addSymbolLayer(
+        sourceId: string,
+        imageAlongWay: { if?: TagsFilter; then: string }[]
+    ) {
+        const map = this._map
+        await Promise.allSettled(
+            imageAlongWay.map(async (img, i) => {
+                const imgId = img.then.replaceAll(/[/.-]/g, "_")
+                if (map.getImage(imgId) === undefined) {
+                    const loadedImage = await map.loadImage(img.then)
+                    map.addImage(imgId, loadedImage.data)
+                }
+
+                const spec: AddLayerObject = {
+                    id: "symbol-layer_" + this._layername + "-" + i,
+                    type: "symbol",
+                    source: sourceId,
+                    layout: {
+                        "symbol-placement": "line",
+                        "symbol-spacing": 10,
+                        "icon-allow-overlap": true,
+                        "icon-rotation-alignment": "map",
+                        "icon-pitch-alignment": "map",
+                        "icon-image": imgId,
+                        "icon-size": 0.055
+                    }
+                }
+                const filter = img.if?.asMapboxExpression()
+                if (filter) {
+                    spec.filter = filter
+                }
+                map.addLayer(spec)
+            })
+        )
     }
 
     /**
@@ -282,91 +322,115 @@ class LineRenderingLayer {
         // As such, we only now read the features from the featureSource and compare with the previously set data
         const features = featureSource.data
         const src = <GeoJSONSource>map.getSource(this._layername)
-        if (this.currentSourceData === features) {
+        if (
+            src !== undefined &&
+            this.currentSourceData === features &&
+            src._data === <any>features
+        ) {
             // Already up to date
             return
         }
-        if (src === undefined) {
-            this.currentSourceData = features
-            map.addSource(this._layername, {
-                type: "geojson",
-                data: {
-                    type: "FeatureCollection",
-                    features,
-                },
-                promoteId: "id",
-            })
-            // @ts-ignore
-            const linelayer = this._layername + "_line"
-            map.addLayer({
-                source: this._layername,
-                id: linelayer,
-                type: "line",
-                paint: {
-                    "line-color": ["feature-state", "color"],
-                    "line-opacity": ["feature-state", "color-opacity"],
-                    "line-width": ["feature-state", "width"],
-                    "line-offset": ["feature-state", "offset"],
-                },
-                layout: {
-                    "line-cap": "round",
-                },
-            })
-
-            map.on("click", linelayer, (e) => {
-                // line-layer-listener
-                e.originalEvent["consumed"] = true
-                this._onClick(e.features[0])
-            })
-            const polylayer = this._layername + "_polygon"
-
-            map.addLayer({
-                source: this._layername,
-                id: polylayer,
-                type: "fill",
-                filter: ["in", ["geometry-type"], ["literal", ["Polygon", "MultiPolygon"]]],
-                layout: {},
-                paint: {
-                    "fill-color": ["feature-state", "fillColor"],
-                    "fill-opacity": ["feature-state", "fillColor-opacity"],
-                },
-            })
-            if (this._onClick) {
-                map.on("click", polylayer, (e) => {
-                    console.log("Got polylayer click:", e)
-                    // polygon-layer-listener
-                    if (e.originalEvent["consumed"]) {
-                        // This is a polygon beneath a marker, we can ignore it
-                        return
-                    }
-                    e.originalEvent["consumed"] = true
-                    console.log("Got features:", e.features, e)
-                    this._onClick(e.features[0])
+        {
+            // Add source to the map or update the feature source
+            if (src === undefined) {
+                this.currentSourceData = features
+                map.addSource(this._layername, {
+                    type: "geojson",
+                    data: {
+                        type: "FeatureCollection",
+                        features
+                    },
+                    promoteId: "id"
                 })
-            }
+                const linelayer = this._layername + "_line"
+                const layer: AddLayerObject = {
+                    source: this._layername,
+                    id: linelayer,
+                    type: "line",
+                    paint: {
+                        "line-color": ["feature-state", "color"],
+                        "line-opacity": ["feature-state", "color-opacity"],
+                        "line-width": ["feature-state", "width"],
+                        "line-offset": ["feature-state", "offset"]
+                    },
+                    layout: {
+                        "line-cap": "round"
+                    }
+                }
+                if (this._config.dashArray) {
+                    layer.paint["line-dasharray"] =
+                        this._config.dashArray?.split(" ")?.map((s) => Number(s)) ?? null
+                }
+                map.addLayer(layer)
 
-            this._visibility?.addCallbackAndRunD((visible) => {
-                try {
-                    map.setLayoutProperty(linelayer, "visibility", visible ? "visible" : "none")
-                    map.setLayoutProperty(polylayer, "visibility", visible ? "visible" : "none")
-                } catch (e) {
-                    console.warn(
-                        "Error while setting visiblity of layers ",
-                        linelayer,
-                        polylayer,
-                        e
+                if (this._config.imageAlongWay) {
+                    this.addSymbolLayer(this._layername, this._config.imageAlongWay)
+                }
+
+                for (const feature of features) {
+                    if (!feature.properties.id) {
+                        console.warn("Feature without id:", feature)
+                        continue
+                    }
+                    map.setFeatureState(
+                        { source: this._layername, id: feature.properties.id },
+                        this.calculatePropsFor(feature.properties)
                     )
                 }
-            })
-        } else {
-            this.currentSourceData = features
-            src.setData({
-                type: "FeatureCollection",
-                features: this.currentSourceData,
-            })
-        }
 
+                map.on("click", linelayer, (e) => {
+                    // line-layer-listener
+                    e.originalEvent["consumed"] = true
+                    this._onClick(e.features[0])
+                })
+                const polylayer = this._layername + "_polygon"
+
+                map.addLayer({
+                    source: this._layername,
+                    id: polylayer,
+                    type: "fill",
+                    filter: ["in", ["geometry-type"], ["literal", ["Polygon", "MultiPolygon"]]],
+                    layout: {},
+                    paint: {
+                        "fill-color": ["feature-state", "fillColor"],
+                        "fill-opacity": ["feature-state", "fillColor-opacity"]
+                    }
+                })
+                if (this._onClick) {
+                    map.on("click", polylayer, (e) => {
+                        // polygon-layer-listener
+                        if (e.originalEvent["consumed"]) {
+                            // This is a polygon beneath a marker, we can ignore it
+                            return
+                        }
+                        e.originalEvent["consumed"] = true
+                        this._onClick(e.features[0])
+                    })
+                }
+
+                this._visibility?.addCallbackAndRunD((visible) => {
+                    try {
+                        map.setLayoutProperty(linelayer, "visibility", visible ? "visible" : "none")
+                        map.setLayoutProperty(polylayer, "visibility", visible ? "visible" : "none")
+                    } catch (e) {
+                        console.warn(
+                            "Error while setting visibility of layers ",
+                            linelayer,
+                            polylayer,
+                            e
+                        )
+                    }
+                })
+            } else {
+                this.currentSourceData = features
+                src.setData({
+                    type: "FeatureCollection",
+                    features: this.currentSourceData
+                })
+            }
+        }
         for (let i = 0; i < features.length; i++) {
+            // Installs a listener on the 'Tags' of every individual feature to update the rendering
             const feature = features[i]
             const id = feature.properties.id ?? feature.id
             if (id === undefined) {
@@ -383,9 +447,6 @@ class LineRenderingLayer {
             if (this._listenerInstalledOn.has(id)) {
                 continue
             }
-            if (!map.getSource(this._layername)) {
-                continue
-            }
             if (this._fetchStore === undefined) {
                 map.setFeatureState(
                     { source: this._layername, id },
@@ -394,7 +455,16 @@ class LineRenderingLayer {
             } else {
                 const tags = this._fetchStore(id)
                 this._listenerInstalledOn.add(id)
-                tags.addCallbackAndRunD((properties) => {
+                tags?.addCallbackAndRunD((properties) => {
+                    // Make sure to use 'getSource' here, the layer names are different!
+                    try {
+                        if (map.getSource(this._layername) === undefined) {
+                            return true
+                        }
+                    } catch (e) {
+                        console.debug("Could not fetch source for", this._layername)
+                        return
+                    }
                     map.setFeatureState(
                         { source: this._layername, id },
                         this.calculatePropsFor(properties)
@@ -406,11 +476,7 @@ class LineRenderingLayer {
 }
 
 export default class ShowDataLayer {
-    private static rangeLayer = new LayerConfig(
-        <LayerConfigJson>range_layer,
-        "ShowDataLayer.ts:range.json"
-    )
-    private readonly _map: Store<MlMap>
+    public static rangeLayer = new LayerConfig(<any>range_layer, "ShowDataLayer.ts:range.json")
     private readonly _options: ShowDataLayerOptions & {
         layer: LayerConfig
         drawMarkers?: true | boolean
@@ -427,10 +493,8 @@ export default class ShowDataLayer {
             drawLines?: true | boolean
         }
     ) {
-        this._map = map
         this._options = options
-        const self = this
-        this.onDestroy.push(map.addCallbackAndRunD((map) => self.initDrawFeatures(map)))
+        this.onDestroy.push(map.addCallbackAndRunD((map) => this.initDrawFeatures(map)))
     }
 
     public static showMultipleLayers(
@@ -444,14 +508,24 @@ export default class ShowDataLayer {
                 layers.filter((l) => l.source !== null).map((l) => new FilteredLayer(l)),
                 features,
                 {
-                    constructStore: (features, layer) => new SimpleFeatureSource(layer, features),
+                    constructStore: (features, layer) => new SimpleFeatureSource(layer, features)
                 }
             )
+        if (options?.zoomToFeatures) {
+            options.zoomToFeatures = false
+            features.features.addCallbackD(features => {
+                ShowDataLayer.zoomToCurrentFeatures(mlmap.data, features)
+            })
+            mlmap.addCallbackD(map => {
+                ShowDataLayer.zoomToCurrentFeatures(map, features.features.data)
+            })
+        }
+
         perLayer.forEach((fs) => {
             new ShowDataLayer(mlmap, {
                 layer: fs.layer.layerDef,
                 features: fs,
-                ...(options ?? {}),
+                ...(options ?? {})
             })
         })
     }
@@ -464,41 +538,47 @@ export default class ShowDataLayer {
         return new ShowDataLayer(map, {
             layer: ShowDataLayer.rangeLayer,
             features,
-            doShowLayer,
+            doShowLayer
         })
     }
 
-    public destruct() {}
+    public destruct() {
+    }
 
-    private zoomToCurrentFeatures(map: MlMap) {
-        if (this._options.zoomToFeatures) {
-            const features = this._options.features.features.data
-            const bbox = BBox.bboxAroundAll(features.map(BBox.get))
-            map.resize()
-            map.fitBounds(bbox.toLngLat(), {
-                padding: { top: 10, bottom: 10, left: 10, right: 10 },
-                animate: false,
-            })
+    private static zoomToCurrentFeatures(map: MlMap, features: Feature[]) {
+        if (!features || !map || features.length == 0) {
+            return
         }
+        const bbox = BBox.bboxAroundAll(features.map(BBox.get))
+        console.log("Zooming to features", bbox.asGeoJson())
+        window.requestAnimationFrame(() => {
+
+        map.resize()
+        map.fitBounds(bbox.toLngLat(), {
+            padding: { top: 10, bottom: 10, left: 10, right: 10 },
+            animate: false
+        })
+        })
     }
 
     private initDrawFeatures(map: MlMap) {
-        let { features, doShowLayer, fetchStore, selectedElement, selectedLayer } = this._options
-        const onClick =
-            this._options.onClick ??
-            (this._options.layer.title === undefined
-                ? undefined
-                : (feature: Feature) => {
-                      selectedElement?.setData(feature)
-                      selectedLayer?.setData(this._options.layer)
-                  })
+        const { features, doShowLayer, fetchStore, selectedElement } = this._options
+        let onClick = this._options.onClick
+        if (!onClick && selectedElement) {
+            onClick =
+                this._options.layer.title === undefined
+                    ? undefined
+                    : (feature: Feature) => {
+                        selectedElement?.setData(feature)
+                    }
+        }
         if (this._options.drawLines !== false) {
             for (let i = 0; i < this._options.layer.lineRendering.length; i++) {
                 const lineRenderingConfig = this._options.layer.lineRendering[i]
                 const l = new LineRenderingLayer(
                     map,
                     features,
-                    this._options.layer.id + "_linerendering_" + i,
+                    "mapcomplete_" + this._options.layer.id + "_linerendering_" + i,
                     lineRenderingConfig,
                     doShowLayer,
                     fetchStore,
@@ -513,6 +593,7 @@ export default class ShowDataLayer {
                     map,
                     features,
                     pointRenderingConfig,
+                    this._options.metaTags,
                     doShowLayer,
                     fetchStore,
                     onClick,
@@ -520,6 +601,8 @@ export default class ShowDataLayer {
                 )
             }
         }
-        features.features.addCallbackAndRunD((_) => this.zoomToCurrentFeatures(map))
+        if (this._options.zoomToFeatures) {
+            features.features.addCallbackAndRunD((features) => ShowDataLayer.zoomToCurrentFeatures(map, features))
+        }
     }
 }

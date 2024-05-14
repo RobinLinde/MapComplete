@@ -2,13 +2,12 @@ export default {
   "$ref": "#/definitions/DenominationConfigJson",
   "definitions": {
     "TagConfigJson": {
-      "description": "The main representation of Tags.\nSee https://github.com/pietervdvn/MapComplete/blob/develop/Docs/Tags_format.md for more documentation",
+      "description": "The main representation of Tags.\nSee https://github.com/pietervdvn/MapComplete/blob/develop/Docs/Tags_format.md for more documentation\n\ntype: tag",
       "anyOf": [
         {
-          "$ref": "#/definitions/AndTagConfigJson"
+          "$ref": "#/definitions/{and:TagConfigJson[];}"
         },
         {
-          "description": "Chain many tags, to match, all of these should be true\nSee https://github.com/pietervdvn/MapComplete/blob/develop/Docs/Tags_format.md for documentation",
           "type": "object",
           "properties": {
             "or": {
@@ -27,8 +26,7 @@ export default {
         }
       ]
     },
-    "AndTagConfigJson": {
-      "description": "Chain many tags, to match, a single of these should be true\nSee https://github.com/pietervdvn/MapComplete/blob/develop/Docs/Tags_format.md for documentation",
+    "{and:TagConfigJson[];}": {
       "type": "object",
       "properties": {
         "and": {
@@ -42,8 +40,7 @@ export default {
         "and"
       ]
     },
-    "OrTagConfigJson": {
-      "description": "Chain many tags, to match, all of these should be true\nSee https://github.com/pietervdvn/MapComplete/blob/develop/Docs/Tags_format.md for documentation",
+    "{or:TagConfigJson[];}": {
       "type": "object",
       "properties": {
         "or": {
@@ -119,6 +116,10 @@ export default {
         },
         "prefix": {
           "description": "If set, then the canonical value will be prefixed instead, e.g. for '€'\nNote that if all values use 'prefix', the dropdown might move to before the text field",
+          "type": "boolean"
+        },
+        "addSpace": {
+          "description": "If set, add a space between the quantity and the denomination.\n\nE.g.: `50 mph` instad of `50mph`",
           "type": "boolean"
         }
       },

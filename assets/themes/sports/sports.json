@@ -9,7 +9,19 @@
     "ca": "Esports",
     "es": "Deportes",
     "cs": "Sport",
-    "zh_Hant": "運動"
+    "zh_Hant": "運動",
+    "eu": "Kirolak",
+    "pl": "Sporty"
+  },
+  "description": {
+    "en": "All about sports, find sport pitches, fitness centres and more.",
+    "nl": "Alles over sport: vind sportvelden, fitnesscentra en meer.",
+    "de": "Alles über Sport. Finden Sie Sportplätze, Fitnesscenter und vieles mehr.",
+    "ca": "Tot sobre esports, troba camps d'esport, gimnasos i molt més.",
+    "es": "Todo sobre deportes, encuentra campos de deporte, gimnasios y mucho más.",
+    "cs": "Vše o sportu, sportovní hřiště, fitness centra a další.",
+    "fr": "Tout sur les sports, trouver les terrains de sport, les salles de sport et plus encore.",
+    "pl": "Wszystko o sporcie, znajdź boiska sportowe, centra fitness i nie tylko."
   },
   "shortDescription": {
     "en": "Map showing sport facilities.",
@@ -19,20 +31,10 @@
     "ca": "Mapa amb instal·lacions esportives.",
     "es": "Mapa con instalaciones deportivas.",
     "cs": "Mapa se sportovními zařízeními.",
-    "zh_Hant": "顯示運動設施的地圖。"
-  },
-  "description": {
-    "en": "All about sports, find sport pitches, fitness centres and more.",
-    "nl": "Alles over sport: vind sportvelden, fitnesscentra en meer.",
-    "de": "Alles über Sport. Finden Sie Sportplätze, Fitnesscenter und vieles mehr.",
-    "ca": "Tot sobre esports, troba camps d'esport, gimnasos i molt més.",
-    "es": "Todo sobre deportes, encuentra campos de deporte, gimnasios y mucho más.",
-    "cs": "Vše o sportu, sportovní hřiště, fitness centra a další."
+    "zh_Hant": "顯示運動設施的地圖。",
+    "pl": "Mapa pokazująca obiekty sportowe."
   },
   "icon": "./assets/themes/sports/sport.svg",
-  "startLat": 0,
-  "startLon": 0,
-  "startZoom": 1,
   "layers": [
     "sport_pitch",
     "fitness_centre",
@@ -61,7 +63,9 @@
               "ca": "una tenda d'esports",
               "es": "una tienda de deportes",
               "cs": "sportovní obchod",
-              "zh_Hant": "運動用品店"
+              "zh_Hant": "運動用品店",
+              "fr": "une boutique de sport",
+              "pl": "sklep sportowy"
             },
             "description": {
               "en": "Add a new shop selling sports goods.",
@@ -70,14 +74,20 @@
               "fr": "Ajouter un nouveau commerce vendant des équipements sportifs.",
               "ca": "Afegeix una nova botiga d'articles esportius.",
               "es": "Añade una nueva tienda de artículos deportivos.",
-              "cs": "Přidejte nový obchod se sportovním zbožím."
+              "cs": "Přidejte nový obchod se sportovním zbožím.",
+              "pl": "Dodaj nowy sklep sprzedający artykuły sportowe."
             }
           }
         ],
         "minzoom": 12,
-        "mapRendering": [
+        "pointRendering": [
           {
-            "icon": "./assets/layers/id_presets/maki-shop.svg"
+            "marker": [
+              {},
+              {
+                "icon": "./assets/layers/id_presets/maki-shop.svg"
+              }
+            ]
           }
         ]
       }

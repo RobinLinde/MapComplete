@@ -9,6 +9,8 @@ import { OsmFeature } from "../../Models/OsmFeature"
 export interface TagRenderingChartOptions {
     groupToOtherCutoff?: 3 | number
     sort?: boolean
+    hideUnkown?: boolean
+    hideNotApplicable?: boolean
 }
 
 export class StackedRenderingChart extends ChartJs {
@@ -18,11 +20,17 @@ export class StackedRenderingChart extends ChartJs {
         options?: {
             period: "day" | "month"
             groupToOtherCutoff?: 3 | number
+            // If given, take the sum of these fields to get the feature weight
+            sumFields?: string[]
+            hideUnknown?: boolean
+            hideNotApplicable?: boolean
         }
     ) {
         const { labels, data } = TagRenderingChart.extractDataAndLabels(tr, features, {
             sort: true,
             groupToOtherCutoff: options?.groupToOtherCutoff,
+            hideNotApplicable: options?.hideNotApplicable,
+            hideUnkown: options?.hideUnknown,
         })
         if (labels === undefined || data === undefined) {
             console.error(
@@ -34,7 +42,6 @@ export class StackedRenderingChart extends ChartJs {
             )
             throw "No labels or data given..."
         }
-        // labels: ["cyclofix", "buurtnatuur", ...]; data : [ ["cyclofix-changeset", "cyclofix-changeset", ...], ["buurtnatuur-cs", "buurtnatuur-cs"], ... ]
 
         for (let i = labels.length; i >= 0; i--) {
             if (data[i]?.length != 0) {
@@ -78,7 +85,30 @@ export class StackedRenderingChart extends ChartJs {
             const countsPerDay: number[] = []
             for (let i = 0; i < trimmedDays.length; i++) {
                 const day = trimmedDays[i]
-                countsPerDay[i] = perDay[day]?.length ?? 0
+
+                const featuresForDay = perDay[day]
+                if (!featuresForDay) {
+                    continue
+                }
+                if (options.sumFields !== undefined) {
+                    let sum = 0
+                    for (const featuresForDayElement of featuresForDay) {
+                        const props = featuresForDayElement.properties
+                        for (const key of options.sumFields) {
+                            if (!props[key]) {
+                                continue
+                            }
+                            const v = Number(props[key])
+                            if (isNaN(v)) {
+                                continue
+                            }
+                            sum += v
+                        }
+                    }
+                    countsPerDay[i] = sum
+                } else {
+                    countsPerDay[i] = featuresForDay?.length ?? 0
+                }
             }
             let backgroundColor =
                 TagRenderingChart.borderColors[i % TagRenderingChart.borderColors.length]
@@ -361,20 +391,21 @@ export default class TagRenderingChart extends Combine {
             }
         }
 
-        const labels = [
-            "Unknown",
-            "Other",
-            "Not applicable",
-            ...(mappings?.map((m) => m.then.txt) ?? []),
-            ...otherLabels,
-        ]
-        const data: T[][] = [
-            unknownCount,
-            otherGrouped,
-            notApplicable,
-            ...categoryCounts,
-            ...otherData,
-        ]
+        const labels = []
+        const data: T[][] = []
+
+        if (!options.hideUnkown) {
+            data.push(unknownCount)
+            labels.push("Unknown")
+        }
+        data.push(otherGrouped)
+        labels.push("Other")
+        if (!options.hideNotApplicable) {
+            data.push(notApplicable)
+            labels.push("Not applicable")
+        }
+        data.push(...categoryCounts, ...otherData)
+        labels.push(...(mappings?.map((m) => m.then.txt) ?? []), ...otherLabels)
 
         return { labels, data }
     }

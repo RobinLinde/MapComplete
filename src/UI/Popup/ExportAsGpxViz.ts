@@ -13,7 +13,7 @@ export class ExportAsGpxViz implements SpecialVisualization {
     funcName = "export_as_gpx"
     docs = "Exports the selected feature as GPX-file"
     args = []
-
+    needsUrls = []
     constr(
         state: SpecialVisualizationState,
         tagSource: UIEventSource<Record<string, string>>,
@@ -31,14 +31,16 @@ export class ExportAsGpxViz implements SpecialVisualization {
                 t.downloadFeatureAsGpx.SetClass("font-bold text-lg"),
                 t.downloadGpxHelper.SetClass("subtle"),
             ]).SetClass("flex flex-col")
-        ).onClick(() => {
-            console.log("Exporting as GPX!")
-            const tags = tagSource.data
-            const title = layer.title?.GetRenderValue(tags)?.Subs(tags)?.txt ?? "gpx_track"
-            const gpx = GeoOperations.toGpx(<Feature<LineString>>feature, title)
-            Utils.offerContentsAsDownloadableFile(gpx, title + "_mapcomplete_export.gpx", {
-                mimetype: "{gpx=application/gpx+xml}",
+        )
+            .SetClass("w-full")
+            .onClick(() => {
+                console.log("Exporting as GPX!")
+                const tags = tagSource.data
+                const title = layer.title?.GetRenderValue(tags)?.Subs(tags)?.txt ?? "gpx_track"
+                const gpx = GeoOperations.toGpx(<Feature<LineString>>feature, title)
+                Utils.offerContentsAsDownloadableFile(gpx, title + "_mapcomplete_export.gpx", {
+                    mimetype: "{gpx=application/gpx+xml}",
+                })
             })
-        })
     }
 }

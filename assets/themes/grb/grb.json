@@ -3,9 +3,6 @@
   "title": {
     "nl": "GRB import helper"
   },
-  "shortDescription": {
-    "nl": "Grb import helper tool"
-  },
   "description": {
     "nl": "Dit thema helpt het GRB importeren.",
     "en": "This theme is an attempt to help automating the GRB import.",
@@ -15,22 +12,24 @@
     "es": "Este tema es un intento de automatizar la importación GRB.",
     "da": "Dette tema er et forsøg på at hjælpe med at automatisere GRB-importen.",
     "ca": "Aquest tema és un intent d'automatitzar la importació GRB.",
-    "cs": "Toto téma je pokusem o automatizaci importu GRB."
+    "cs": "Toto téma je pokusem o automatizaci importu GRB.",
+    "pl": "Ten temat jest próbą pomocy w automatyzacji importu GRB."
+  },
+  "shortDescription": {
+    "nl": "Grb import helper tool"
   },
   "icon": "./assets/themes/grb/logo.svg",
+  "startZoom": 9,
   "startLat": 51.0249,
   "startLon": 4.026489,
-  "startZoom": 9,
-  "widenFactor": 2,
-  "clustering": {
-    "maxZoom": 15
-  },
-  "overrideAll": {
-    "minzoom": 15
-  },
+  "defaultBackgroundId": "osm",
+  "credits": [
+    "Pieter Vander Vennet"
+  ],
+  "hideFromOverview": true,
   "layers": [
     {
-      "id": "osm-buildings",
+      "id": "osm_buildings_no_points",
       "name": "All OSM-buildings",
       "source": {
         "osmTags": {
@@ -43,52 +42,8 @@
             },
             "building~*"
           ]
-        },
-        "maxCacheAge": 0
-      },
-      "mapRendering": [
-        {
-          "width": {
-            "render": "2",
-            "mappings": [
-              {
-                "if": "fixme~*",
-                "then": "5"
-              }
-            ]
-          },
-          "color": {
-            "render": "#00c",
-            "mappings": [
-              {
-                "if": "fixme~*",
-                "then": "#ff00ff"
-              },
-              {
-                "if": "building=house",
-                "then": "#a00"
-              },
-              {
-                "if": "building=shed",
-                "then": "#563e02"
-              },
-              {
-                "if": {
-                  "or": [
-                    "building=garage",
-                    "building=garages"
-                  ]
-                },
-                "then": "#f9bfbb"
-              },
-              {
-                "if": "building=yes",
-                "then": "#0774f2"
-              }
-            ]
-          }
         }
-      ],
+      },
       "title": "OSM-gebouw",
       "tagRenderings": [
         {
@@ -105,7 +60,8 @@
             "fr": "De quel type de bâtiment s’agit-il ?",
             "da": "Hvad er det for en bygning?",
             "cs": "Jaký druh budovy je toto?",
-            "ca": "Quin tipus d'edifici és aquest?"
+            "ca": "Quin tipus d'edifici és aquest?",
+            "pl": "Jaki to rodzaj budynku?"
           },
           "mappings": [
             {
@@ -203,7 +159,11 @@
           "id": "grb-reference",
           "render": {
             "en": "Has been imported from GRB, reference number is {source:geometry:ref}",
-            "de": "Wurde von GRB importiert, Referenznummer ist {source:geometry:ref}"
+            "de": "Wurde von GRB importiert, Referenznummer ist {source:geometry:ref}",
+            "ca": "Ha estat importat des de GRB, el número de referència és {source:geometry:ref}",
+            "cs": "Byl importován z GRB, referenční číslo je {source:geometry:ref}",
+            "es": "Se ha importado de GRB, el número de referencia es {source:geometry:ref}",
+            "pl": "Został zaimportowany z GRB, numer referencyjny to {source:geometry:ref}"
           },
           "condition": "source:geometry:ref~*"
         },
@@ -270,6 +230,50 @@
             }
           ]
         }
+      ],
+      "pointRendering": null,
+      "lineRendering": [
+        {
+          "width": {
+            "render": "2",
+            "mappings": [
+              {
+                "if": "fixme~*",
+                "then": "5"
+              }
+            ]
+          },
+          "color": {
+            "render": "#00c",
+            "mappings": [
+              {
+                "if": "fixme~*",
+                "then": "#ff00ff"
+              },
+              {
+                "if": "building=house",
+                "then": "#a00"
+              },
+              {
+                "if": "building=shed",
+                "then": "#563e02"
+              },
+              {
+                "if": {
+                  "or": [
+                    "building=garage",
+                    "building=garages"
+                  ]
+                },
+                "then": "#f9bfbb"
+              },
+              {
+                "if": "building=yes",
+                "then": "#0774f2"
+              }
+            ]
+          }
+        }
       ]
     },
     {
@@ -285,13 +289,12 @@
         "geoJson": "https://betadata.grbosm.site/grb?bbox={x_min},{y_min},{x_max},{y_max}",
         "geoJsonZoomLevel": 18,
         "mercatorCrs": true,
-        "maxCacheAge": 0,
         "idKey": "osm_id"
       },
       "name": "GRB geometries",
       "title": "GRB outline",
       "calculatedTags": [
-        "_overlaps_with_buildings=overlapWith(feat)('osm-buildings').filter(f => f.feat.properties.id.indexOf('-') < 0) ?? []",
+        "_overlaps_with_buildings=overlapWith(feat)('osm_buildings_no_points').filter(f => f.feat.properties.id.indexOf('-') < 0) ?? []",
         "_overlaps_with=get(feat)('_overlaps_with_buildings').find(f => f.overlap > 1 /* square meter */ )",
         "_osm_obj:source:ref=get(feat)('_overlaps_with')?.feat?.properties['source:geometry:ref']",
         "_osm_obj:id=get(feat)('_overlaps_with')?.feat?.properties?.id",
@@ -314,7 +317,7 @@
       "tagRenderings": [
         {
           "id": "Import-button",
-          "render": "{import_way_button(osm-buildings,building=$building;man_made=$man_made; source:geometry:date=$_grb_date; source:geometry:ref=$_grb_ref; addr:street=$addr:street; addr:housenumber=$addr:housenumber; building:min_level=$_building:min_level, Upload this building to OpenStreetMap,,_is_part_of_building=true,1,_moveable=true)}",
+          "render": "{import_way_button(osm_buildings_no_points,building=$building;man_made=$man_made; source:geometry:date=$_grb_date; source:geometry:ref=$_grb_ref; addr:street=$addr:street; addr:housenumber=$addr:housenumber; building:min_level=$_building:min_level, Upload this building to OpenStreetMap,,_is_part_of_building=true,1,_moveable=true)}",
           "mappings": [
             {
               "#": "Failsafe",
@@ -327,7 +330,8 @@
                 "da": "Har endnu ikke beregnet metatags... Genåbn denne popup",
                 "cs": "Metatags ještě nebyly vypočítány... Znovu otevřete toto vyskakovací okno",
                 "es": "Aún no se han calculado los metatags... Reabrir esta ventana emergente",
-                "ca": "Encara no s'han calculat les metaetiquetes... Torneu a obrir aquesta finestra emergent"
+                "ca": "Encara no s'han calculat les metaetiquetes... Torneu a obrir aquesta finestra emergent",
+                "pl": "Jeszcze nie obliczono metaznaczników... Otwórz to okienko ponownie"
               }
             },
             {
@@ -347,7 +351,8 @@
                 "nl": "Dit gebouw heeft openingen en is gemodelleerd als een relatie. Bijgevolg kan het niet worden samengevoegd. Voeg het manueel samen via <a href='https://buildings.osm.be/#/'>de export-site voor gebouwen</a> {open_in_josm()}",
                 "da": "Denne bygning har huller og er modelleret som en relation. Som sådan kan det ikke sammenblandes. Sammensæt det manuelt via <a href='https://buildings.osm.be/#/'>bygningseksportwebstedet</a> {open_in_josm()}",
                 "cs": "Tato budova má otvory a je modelována jako vztah. Jako takovou ji nelze spojovat. Spojte ji ručně pomocí <a href='https://buildings.osm.be/#/'>exportní stránky budovy</a> {open_in_josm()}",
-                "ca": "Aquest edifici té forats i està modelat com una relació. Com a tal, no es pot combinar. Combineu-lo manualment mitjançant <a href='https://buildings.osm.be/#/'>el lloc d'exportació de l'edifici</a> {open_in_josm()}"
+                "ca": "Aquest edifici té forats i està modelat com una relació. Com a tal, no es pot combinar. Combineu-lo manualment mitjançant <a href='https://buildings.osm.be/#/'>el lloc d'exportació de l'edifici</a> {open_in_josm()}",
+                "pl": "Budynek ten ma dziury i jest modelowany jako relacja. W związku z tym nie można go łączyć. Połącz to ręcznie za pomocą <a href='https://buildings.osm.be/#/'>strony eksportu budynków</a> {open_in_josm()}"
               }
             },
             {
@@ -364,7 +369,7 @@
                   "addr:housenumber!:={_osm_obj:addr:housenumber}"
                 ]
               },
-              "then": "{conflate_button(osm-buildings,building=$_target_building_type; source:geometry:date=$_grb_date; source:geometry:ref=$_grb_ref; addr:street=$addr:street; addr:housenumber=$addr:housenumber, Replace the geometry in OpenStreetMap and add the address,,_osm_obj:id)}"
+              "then": "{conflate_button(osm_buildings_no_points,building=$_target_building_type; source:geometry:date=$_grb_date; source:geometry:ref=$_grb_ref; addr:street=$addr:street; addr:housenumber=$addr:housenumber, Replace the geometry in OpenStreetMap and add the address,,_osm_obj:id)}"
             },
             {
               "if": {
@@ -373,7 +378,7 @@
                   "_reverse_overlap_percentage>50"
                 ]
               },
-              "then": "{conflate_button(osm-buildings,building=$_target_building_type; source:geometry:date=$_grb_date; source:geometry:ref=$_grb_ref, Replace the geometry in OpenStreetMap,,_osm_obj:id)}"
+              "then": "{conflate_button(osm_buildings_no_points,building=$_target_building_type; source:geometry:date=$_grb_date; source:geometry:ref=$_grb_ref, Replace the geometry in OpenStreetMap,,_osm_obj:id)}"
             }
           ]
         },
@@ -474,31 +479,37 @@
           "_imported_osm_still_fresh!=true"
         ]
       },
-      "mapRendering": [
+      "pointRendering": [
         {
           "label": {
             "render": "<div style='margin-top: -42px; color: black' class='rounded-full p-1 font-bold relative'>{addr:housenumber}</div>",
             "condition": "addr:housenumber~*"
           },
           "iconSize": "50,50",
-          "icon": {
-            "mappings": [
-              {
-                "if": "_intersects_with_other_features~*",
-                "then": "./assets/themes/grb/warning.svg"
-              },
-              {
-                "if": "addr:housenumber~*",
-                "then": "./assets/themes/grb/housenumber_blank.svg"
+          "marker": [
+            {
+              "icon": {
+                "mappings": [
+                  {
+                    "if": "_intersects_with_other_features~*",
+                    "then": "./assets/themes/grb/warning.svg"
+                  },
+                  {
+                    "if": "addr:housenumber~*",
+                    "then": "./assets/themes/grb/housenumber_blank.svg"
+                  }
+                ]
               }
-            ]
-          },
+            }
+          ],
           "location": [
             "point",
             "centroid"
           ],
           "anchor": "center"
-        },
+        }
+      ],
+      "lineRendering": [
         {
           "width": {
             "render": 5,
@@ -537,14 +548,15 @@
       "source": {
         "osmTags": "highway=service"
       },
-      "mapRendering": [
+      "title": "Service road",
+      "tagRenderings": [],
+      "pointRendering": null,
+      "lineRendering": [
         {
           "width": 4,
           "color": "#888888"
         }
-      ],
-      "title": "Service road",
-      "tagRenderings": []
+      ]
     },
     {
       "id": "generic_osm_object",
@@ -573,16 +585,8 @@
               ]
             }
           ]
-        },
-        "maxCacheAge": 0
-      },
-      "mapRendering": [
-        {
-          "color": "#ccc",
-          "width": "1",
-          "fill": "no"
         }
-      ],
+      },
       "title": {
         "render": {
           "*": "Other OSM-Object"
@@ -590,6 +594,14 @@
       },
       "tagRenderings": [
         "all_tags"
+      ],
+      "pointRendering": null,
+      "lineRendering": [
+        {
+          "color": "#ccc",
+          "width": "1",
+          "fill": "no"
+        }
       ]
     },
     "address",
@@ -597,7 +609,7 @@
       "builtin": "crab_address",
       "override": {
         "calculatedTags+": [
-          "_embedded_in=overlapWith(feat)('osm-buildings').filter(b => /* Do not match newly created objects */ b.feat.properties.id.indexOf('-') < 0)[0]?.feat?.properties ?? {}",
+          "_embedded_in=overlapWith(feat)('osm_buildings_no_points').filter(b => /* Do not match newly created objects */ b.feat.properties.id.indexOf('-') < 0)[0]?.feat?.properties ?? {}",
           "_embedding_nr=get(feat)('_embedded_in')['addr:housenumber']+(get(feat)('_embedded_in')['addr:unit'] ?? '')",
           "_embedding_street=get(feat)('_embedded_in')['addr:street']",
           "_embedding_id=get(feat)('_embedded_in').id",
@@ -694,7 +706,7 @@
                 "text": {
                   "nl": "Voeg dit adres als een nieuw adrespunt toe"
                 },
-                "snap_onto_layers": "osm-buildings"
+                "snap_onto_layers": "osm_buildings_no_points"
               }
             },
             "mappings": [
@@ -753,21 +765,27 @@
             "render": "{auto_apply(grb, _applicable_conflate, Import-button, Conflate all non-conflicting buildings in view)}"
           }
         ],
-        "+mapRendering": [
+        "+pointRendering": [
           {
             "location": [
               "point"
             ],
-            "icon": "./assets/svg/robot.svg",
+            "marker": [
+              {
+                "icon": "./assets/svg/robot.svg"
+              }
+            ],
             "iconSize": "15,15"
           }
         ]
       }
     }
   ],
-  "hideFromOverview": true,
-  "defaultBackgroundId": "AGIVFlandersGRB",
+  "overrideAll": {
+    "minzoom": 17,
+    "doCount": false
+  },
   "overpassMaxZoom": 15,
   "osmApiTileSize": 17,
-  "credits": "Pieter Vander Vennet"
+  "widenFactor": 2
 }

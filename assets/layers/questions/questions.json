@@ -2,7 +2,8 @@
   "id": "questions",
   "description": "Special library layer which does not need a '.questions'-prefix before being imported",
   "source": "special:library",
-  "mapRendering": null,
+  "pointRendering": null,
+  "lineRendering": null,
   "tagRenderings": [
     {
       "id": "questions",
@@ -15,8 +16,9 @@
       "id": "images",
       "description": "This block shows the known images which are linked with the `image`-keys, but also via `mapillary` and `wikidata` and shows the button to upload new images",
       "render": {
-        "*": "{image_carousel()}{image_upload()}"
-      }
+        "*": "{image_carousel()}{image_upload()}{nearby_images():my-4}"
+      },
+      "classes": "my-4"
     },
     {
       "id": "mapillary",
@@ -130,7 +132,7 @@
       "id": "reviews",
       "description": "Shows the reviews module (including the possibility to leave a review)",
       "render": {
-        "*": "{reviews()}"
+        "*": "{create_review()}{list_reviews()}"
       }
     },
     {
@@ -188,13 +190,20 @@
         "addExtraTags": [
           "contact:phone="
         ]
+      },
+      "editButtonAriaLabel": {
+        "en": "Edit phone number",
+        "nl": "Pas telefoonnummer aan",
+        "de": "Telefonnummer bearbeiten"
       }
     },
     {
       "id": "mastodon",
       "description": "Shows and asks for the mastodon handle",
       "question": {
-        "en": "What is the Mastodon-handle of {title()}?"
+        "en": "What is the Mastodon-handle of {title()}?",
+        "de": "Wie lautet der Mastodon-Handle von {title()}?",
+        "cs": "Co je Mastodon-handle {title()}?"
       },
       "freeform": {
         "key": "contact:mastodon",
@@ -208,7 +217,7 @@
     {
       "id": "osmlink",
       "render": {
-        "*": "<a href='https://openstreetmap.org/{id}' target='_blank'><img src='./assets/svg/osm-logo-us.svg'/></a>"
+        "*": "<a href='https://openstreetmap.org/{id}' target='_blank' rel='noopener'F><img src='./assets/svg/osm-logo-us.svg'/></a>"
       },
       "mappings": [
         {
@@ -220,7 +229,7 @@
     {
       "id": "email",
       "render": {
-        "*": "<a href='mailto:{email}' target='_blank'>{email}</a>"
+        "*": "<a href='mailto:{email}' target='_blank' rel='noopener'>{email}</a>"
       },
       "icon": "./assets/svg/envelope.svg",
       "labels": [
@@ -246,7 +255,7 @@
         "ja": "{title()}のEメールアドレスは何ですか？",
         "sl": "Kakšen naslov elektronske pošte ima {title()}?",
         "fil": "Ano ang email address ng {title()}?",
-        "es": "¿Cual es la direccióm de correo electrónico de {title()}?",
+        "es": "¿Cuál es la dirección de correo electrónico de {title()}?",
         "zh_Hans": "{title()} 的电子邮箱地址为何？",
         "da": "Hvad er mailadressen på {title()}?",
         "cs": "Jaká je e-mailová adresa {title()}?"
@@ -255,7 +264,13 @@
         {
           "if": "contact:email~*",
           "icon": "./assets/svg/envelope.svg",
-          "then": "<a href='mailto:{contact:email}' target='_blank'>{contact:email}</a>",
+          "then": "<a href='mailto:{contact:email}' target='_blank' rel='noopener'>{contact:email}</a>",
+          "hideInAnswer": true
+        },
+        {
+          "if": "operator:email~*",
+          "icon": "./assets/svg/envelope.svg",
+          "then": "<a href='mailto:{operator:email}' target='_blank' rel='noopener'>{operator:email}</a>",
           "hideInAnswer": true
         }
       ],
@@ -265,6 +280,11 @@
         "addExtraTags": [
           "contact:email="
         ]
+      },
+      "editButtonAriaLabel": {
+        "en": "Edit email address",
+        "nl": "Pas emailadres aan",
+        "de": "E-Mail Adresse bearbeiten"
       }
     },
     {
@@ -315,7 +335,12 @@
           "hideInAnswer": true,
           "icon": "./assets/layers/icons/website.svg"
         }
-      ]
+      ],
+      "editButtonAriaLabel": {
+        "en": "Edit website",
+        "nl": "Pas website aan",
+        "de": "Webseite bearbeiten"
+      }
     },
     {
       "id": "wheelchair-access",
@@ -486,6 +511,7 @@
       "mappings": [
         {
           "if": "dog=yes",
+          "icon": "./assets/layers/questions/dogs_allowed.svg",
           "then": {
             "en": "Dogs are allowed",
             "nl": "honden zijn toegelaten",
@@ -514,6 +540,7 @@
         },
         {
           "if": "dog=no",
+          "icon": "./assets/layers/questions/no_dogs.svg",
           "then": {
             "en": "Dogs are <b>not</b> allowed",
             "nl": "honden zijn <b>niet</b> toegelaten",
@@ -541,6 +568,7 @@
         },
         {
           "if": "dog=leashed",
+          "icon": "./assets/layers/questions/dogs_leashed.svg",
           "then": {
             "en": "Dogs are allowed, but they have to be leashed",
             "nl": "honden zijn <b>enkel aan de leiband</b> welkom",
@@ -567,6 +595,7 @@
         },
         {
           "if": "dog=unleashed",
+          "icon": "./assets/layers/questions/dogs_allowed.svg",
           "then": {
             "en": "Dogs are allowed and can run around freely",
             "nl": "honden zijn welkom en mogen vrij rondlopen",
@@ -589,6 +618,14 @@
             "zh_Hans": "允许犬只，且可自由放养",
             "da": "Hunde er tilladt og kan løbe frit rundt",
             "cs": "Psi mají vstup povolen a mohou volně pobíhat"
+          }
+        },
+        {
+          "if": "dog=outside",
+          "icon": "./assets/layers/questions/dogs_outside.svg",
+          "then": {
+            "en": "Dogs are allowed only outside",
+            "it": "I cani sono ammessi solo all'esterno"
           }
         }
       ]
@@ -703,15 +740,28 @@
       "freeform": {
         "key": "opening_hours",
         "type": "opening_hours"
-      }
+      },
+      "mappings": [
+        {
+          "#": "Just here to be able to handle those ~5000 incorrect 'opening_hours=closed' elements.",
+          "if": "opening_hours=closed",
+          "then": {
+            "en": "Marked as closed for an unspecified time",
+            "nl": "Gesloten voor onbepaalde duur",
+            "de": "Als geschlossen für eine unbestimmte Zeit markiert"
+          },
+          "hideInAnswer": true
+        }
+      ]
     },
     {
       "id": "opening_hours_24_7",
       "builtin": "opening_hours",
       "override": {
-        "mappings": [
+        "+mappings": [
           {
             "if": "opening_hours=24/7",
+            "icon": "./assets/layers/questions/open24_7.svg",
             "then": {
               "en": "24/7 opened (including holidays)",
               "de": "durchgehend geöffnet (auch an Feiertagen)",
@@ -726,6 +776,18 @@
               "ca": "Obert 24/7 (incloent-hi festius)",
               "pl": "Otwarte 24/7 (również w święta)"
             }
+          }
+        ]
+      }
+    },
+    {
+      "id": "opening_hours_24_7_default",
+      "builtin": "opening_hours_24_7",
+      "override": {
+        "mappings": [
+          {
+            "#": "The first mapping is 'opening_hours=24/7', we amend this to also show if no info is known",
+            "alsoShowIf": "opening_hours="
           }
         ]
       }
@@ -806,7 +868,7 @@
             "es": "Hay numerosos enchufes domésticos disponibles para los clientes sentados en el interior, donde pueden cargar sus dispositivos electrónicos",
             "da": "Der er masser af stikkontakter til rådighed for kunder, der sidder indendørs, hvor de kan oplade deres elektroniske udstyr",
             "nb_NO": "Det er massevis av stikkontakter tilgjengelig for kunder som sitter innendørs, der de kan lade elektronikken sin",
-            "cs": "V interiéru je k dispozici dostatek domácích zásuvek, kde si zákazníci mohou nabíjet elektroniku"
+            "cs": "V interiéru je k dispozici dostatek el. zásuvek, kde si zákazníci mohou nabíjet elektroniku"
           },
           "if": "service:electricity=yes"
         },
@@ -827,7 +889,7 @@
             "es": "Hay algunos enchufes domésticos disponibles para los clientes sentados en el interior, donde pueden cargar sus dispositivos electrónicos",
             "da": "Der er nogle få stikkontakter til rådighed for kunder, der sidder indendørs, hvor de kan oplade deres elektroniske udstyr",
             "nb_NO": "Det er noen stikkontakter tilgjengelig for kunder som sitter innendørs, der de kan lagre elektronikken sin",
-            "cs": "V interiéru je zákazníkům k dispozici několik domácích zásuvek, kde si mohou nabít elektroniku"
+            "cs": "V interiéru je zákazníkům k dispozici několik el. zásuvek, kde si mohou nabít elektroniku"
           },
           "if": "service:electricity=limited"
         },
@@ -848,7 +910,7 @@
             "es": "No hay enchufes disponibles en el interior para los clientes, pero cargar puede ser posible si se pregunta al personal",
             "da": "Der er ingen stikkontakter til rådighed indendørs for kunderne, men opladning kan være mulig, hvis man beder personalet om det",
             "nb_NO": "Det er ingen tilgjengelige stikkontakter for kunder som sitter innendørs, men lading kan være mulig hvis man spør betjeningen",
-            "cs": "V interiéru nejsou zákazníkům k dispozici žádné zásuvky, ale na požádání personálu je možné je nabíjet"
+            "cs": "V interiéru nejsou zákazníkům k dispozici žádné el. zásuvky, ale na požádání personálu je možné nabíjet"
           },
           "if": "service:electricity=ask"
         },
@@ -869,7 +931,7 @@
             "es": "No hay enchufes domésticos disponibles para los clientes sentados en el interior",
             "da": "Der er ingen stikkontakter til rådighed for kunder, der sidder indendørs",
             "nb_NO": "Det er ingen stikkontakter tilgjengelig for kunder som sitter innendørs",
-            "cs": "Zákazníci v interiéru nemají k dispozici žádné domácí zásuvky"
+            "cs": "Zákazníci v interiéru nemají k dispozici žádné el. zásuvky"
           },
           "if": "service:electricity=no"
         }
@@ -970,7 +1032,8 @@
             "nl": "Betalen via een QR-code is hier mogelijk",
             "de": "Die Bezahlung per QR-Code ist hier möglich",
             "es": "Aquí se puede pagar con código QR",
-            "ca": "Aquí es pot pagar amb codi QR"
+            "ca": "Aquí es pot pagar amb codi QR",
+            "cs": "Platba QR kódem je zde možná"
           }
         }
       ]
@@ -1126,7 +1189,8 @@
           },
           {
             "or": [
-              "_currency=EUR"
+              "_currency~.*EUR.*",
+              "_currency~.*CHF.*"
             ]
           }
         ]
@@ -1146,7 +1210,7 @@
       "mappings": [
         {
           "if": "payment:coins:denominations=0.01 EUR",
-          "icon": "./assets/layers/questions/1cent.svg",
+          "icon": "./assets/layers/questions/denominations/eur/1cent.svg",
           "then": {
             "en": "1 cent coins are accepted",
             "de": "1-Cent-Münzen werden akzeptiert",
@@ -1163,7 +1227,7 @@
         },
         {
           "if": "payment:coins:denominations=0.02 EUR",
-          "icon": "./assets/layers/questions/2cent.svg",
+          "icon": "./assets/layers/questions/denominations/eur/2cent.svg",
           "then": {
             "en": "2 cent coins are accepted",
             "de": "2-Cent-Münzen werden akzeptiert",
@@ -1180,7 +1244,7 @@
         },
         {
           "if": "payment:coins:denominations=0.05 EUR",
-          "icon": "./assets/layers/questions/5cent.svg",
+          "icon": "./assets/layers/questions/denominations/eur/5cent.svg",
           "then": {
             "en": "5 cent coins are accepted",
             "de": "5-Cent-Münzen werden akzeptiert",
@@ -1197,7 +1261,7 @@
         },
         {
           "if": "payment:coins:denominations=0.10 EUR",
-          "icon": "./assets/layers/questions/10cent.svg",
+          "icon": "./assets/layers/questions/denominations/eur/10cent.svg",
           "then": {
             "en": "10 cent coins are accepted",
             "de": "10-Cent-Münzen werden akzeptiert",
@@ -1214,7 +1278,7 @@
         },
         {
           "if": "payment:coins:denominations=0.20 EUR",
-          "icon": "./assets/layers/questions/20cent.svg",
+          "icon": "./assets/layers/questions/denominations/eur/20cent.svg",
           "then": {
             "en": "20 cent coins are accepted",
             "de": "20-Cent-Münzen werden akzeptiert",
@@ -1231,7 +1295,7 @@
         },
         {
           "if": "payment:coins:denominations=0.50 EUR",
-          "icon": "./assets/layers/questions/50cent.svg",
+          "icon": "./assets/layers/questions/denominations/eur/50cent.svg",
           "then": {
             "en": "50 cent coins are accepted",
             "de": "50-Cent-Münzen werden akzeptiert",
@@ -1248,7 +1312,7 @@
         },
         {
           "if": "payment:coins:denominations=1 EUR",
-          "icon": "./assets/layers/questions/1euro.svg",
+          "icon": "./assets/layers/questions/denominations/eur/1euro.svg",
           "then": {
             "en": "1 euro coins are accepted",
             "de": "1-Euro-Münzen werden akzeptiert",
@@ -1264,7 +1328,7 @@
         },
         {
           "if": "payment:coins:denominations=2 EUR",
-          "icon": "./assets/layers/questions/2euro.svg",
+          "icon": "./assets/layers/questions/denominations/eur/2euro.svg",
           "then": {
             "en": "2 euro coins are accepted",
             "de": "2-Euro-Münzen werden akzeptiert",
@@ -1277,6 +1341,83 @@
             "cs": "Jsou přijímány mince v hodnotě 2 euro"
           },
           "hideInAnswer": "_currency!~.*EUR.*"
+        },
+        {
+          "if": "payment:coins:denominations=0.05 CHF",
+          "icon": "./assets/layers/questions/denominations/chf/5rp-2019-800px.png",
+          "then": {
+            "en": "5 centimes coins are accepted",
+            "nl": "Munten van 5 rappen worden geaccepteerd",
+            "ca": "S'accepten monedes de 5 cèntims",
+            "de": "5-Centime-Münzen werden akzeptiert"
+          },
+          "hideInAnswer": "_currency!~.*CHF.*"
+        },
+        {
+          "if": "payment:coins:denominations=0.10 CHF",
+          "icon": "./assets/layers/questions/denominations/chf/10rp-2019-800px.png",
+          "then": {
+            "en": "10 centimes coins are accepted",
+            "nl": "Munten van 10 rappen worden geaccepteerd",
+            "ca": "S'accepten monedes de 10 cèntims",
+            "de": "10-Centime-Münzen werden akzeptiert"
+          },
+          "hideInAnswer": "_currency!~.*CHF.*"
+        },
+        {
+          "if": "payment:coins:denominations=0.20 CHF",
+          "icon": "./assets/layers/questions/denominations/chf/20rp-2019-800px.png",
+          "then": {
+            "en": "20 centimes coins are accepted",
+            "nl": "Munten van 20 rappen worden geaccepteerd",
+            "ca": "S'accepten monedes de 20 cèntims",
+            "de": "20-Centime-Münzen werden akzeptiert"
+          },
+          "hideInAnswer": "_currency!~.*CHF.*"
+        },
+        {
+          "if": "payment:coins:denominations=0.50 CHF",
+          "icon": "./assets/layers/questions/denominations/chf/50rp-2019-800px.png",
+          "then": {
+            "en": "½ franc coins are accepted",
+            "nl": "Munten van ½ frank worden geaccepteerd",
+            "ca": "S'accepten monedes de ½ franc",
+            "de": "½-Schweizer Franken-Münzen werden akzeptiert"
+          },
+          "hideInAnswer": "_currency!~.*CHF.*"
+        },
+        {
+          "if": "payment:coins:denominations=1 CHF",
+          "icon": "./assets/layers/questions/denominations/chf/1fr-2019-800px.png",
+          "then": {
+            "en": "1 franc coins are accepted",
+            "nl": "Munten van 1 frank worden geaccepteerd",
+            "ca": "S'accepten monedes d'1 franc",
+            "de": "1-Schweizer Franken-Münzen werden akzeptiert"
+          },
+          "hideInAnswer": "_currency!~.*CHF.*"
+        },
+        {
+          "if": "payment:coins:denominations=2 CHF",
+          "icon": "./assets/layers/questions/denominations/chf/2fr-2019-800px.png",
+          "then": {
+            "en": "2 francs coins are accepted",
+            "nl": "Munten van 2 frank worden geaccepteerd",
+            "ca": "S'accepten monedes de 2 francs",
+            "de": "2-Schweizer Franken-Münzen werden akzeptiert"
+          },
+          "hideInAnswer": "_currency!~.*CHF.*"
+        },
+        {
+          "if": "payment:coins:denominations=5 CHF",
+          "icon": "./assets/layers/questions/denominations/chf/5fr-2019-800px.png",
+          "then": {
+            "en": "5 francs coins are accepted",
+            "nl": "Munten van 5 frank worden geaccepteerd",
+            "ca": "S'accepten monedes de 5 francs",
+            "de": "5-Schweizer Franken-Münzen werden akzeptiert"
+          },
+          "hideInAnswer": "_currency!~.*CHF.*"
         }
       ]
     },
@@ -1292,7 +1433,8 @@
           },
           {
             "or": [
-              "_currency=EUR"
+              "_currency~.*EUR.*",
+              "_currency~.*CHF.*"
             ]
           }
         ]
@@ -1311,7 +1453,7 @@
       "mappings": [
         {
           "if": "payment:notes:denominations=5 EUR",
-          "icon": "./assets/layers/questions/5euro.svg",
+          "icon": "./assets/layers/questions/denominations/eur/5euro.svg",
           "then": {
             "en": "5 euro notes are accepted",
             "nl": "Biljetten van 5 euro worden geaccepteerd",
@@ -1326,7 +1468,7 @@
         },
         {
           "if": "payment:notes:denominations=10 EUR",
-          "icon": "./assets/layers/questions/10euro.svg",
+          "icon": "./assets/layers/questions/denominations/eur/10euro.svg",
           "then": {
             "en": "10 euro notes are accepted",
             "nl": "Biljetten van 10 euro worden geaccepteerd",
@@ -1341,7 +1483,7 @@
         },
         {
           "if": "payment:notes:denominations=20 EUR",
-          "icon": "./assets/layers/questions/20euro.svg",
+          "icon": "./assets/layers/questions/denominations/eur/20euro.svg",
           "then": {
             "en": "20 euro notes are accepted",
             "nl": "Biljetten van 20 euro worden geaccepteerd",
@@ -1356,7 +1498,7 @@
         },
         {
           "if": "payment:notes:denominations=50 EUR",
-          "icon": "./assets/layers/questions/50euro.svg",
+          "icon": "./assets/layers/questions/denominations/eur/50euro.svg",
           "then": {
             "en": "50 euro notes are accepted",
             "nl": "Biljetten van 50 euro worden geaccepteerd",
@@ -1371,7 +1513,7 @@
         },
         {
           "if": "payment:notes:denominations=100 EUR",
-          "icon": "./assets/layers/questions/100euro.svg",
+          "icon": "./assets/layers/questions/denominations/eur/100euro.svg",
           "then": {
             "en": "100 euro notes are accepted",
             "nl": "Biljetten van 100 euro worden geaccepteerd",
@@ -1386,7 +1528,7 @@
         },
         {
           "if": "payment:notes:denominations=200 EUR",
-          "icon": "./assets/layers/questions/200euro.svg",
+          "icon": "./assets/layers/questions/denominations/eur/200euro.svg",
           "then": {
             "en": "200 euro notes are accepted",
             "nl": "Biljetten van 200 euro worden geaccepteerd",
@@ -1401,7 +1543,7 @@
         },
         {
           "if": "payment:notes:denominations=500 EUR",
-          "icon": "./assets/layers/questions/500euro.svg",
+          "icon": "./assets/layers/questions/denominations/eur/500euro.svg",
           "then": {
             "en": "500 euro notes are accepted",
             "nl": "Biljetten van 500 euro worden geaccepteerd",
@@ -1413,11 +1555,80 @@
             "fr": "Les billets de 500 euros sont acceptés"
           },
           "hideInAnswer": "_currency!~.*EUR.*"
+        },
+        {
+          "if": "payment:notes:denominations=10 CHF",
+          "icon": "./assets/layers/questions/denominations/chf/10chf.svg",
+          "then": {
+            "en": "10 francs notes are accepted",
+            "nl": "Biljetten van 10 frank worden geaccepteerd",
+            "ca": "S'accepten bitllets de 10 francs",
+            "de": "10-Schweizer Franken-Scheine werden akzeptiert"
+          },
+          "hideInAnswer": "_currency!~.*CHF.*"
+        },
+        {
+          "if": "payment:notes:denominations=20 CHF",
+          "icon": "./assets/layers/questions/denominations/chf/20chf.svg",
+          "then": {
+            "en": "20 francs notes are accepted",
+            "nl": "Biljetten van 20 frank worden geaccepteerd",
+            "ca": "S'accepten bitllets de 20 francs",
+            "de": "20-Schweizer Franken-Scheine werden akzeptiert"
+          },
+          "hideInAnswer": "_currency!~.*CHF.*"
+        },
+        {
+          "if": "payment:notes:denominations=50 CHF",
+          "icon": "./assets/layers/questions/denominations/chf/50chf.svg",
+          "then": {
+            "en": "50 francs notes are accepted",
+            "nl": "Biljetten van 50 frank worden geaccepteerd",
+            "ca": "S'accepten bitllets de 50 francs",
+            "de": "50-Schweizer Franken-Scheine werden akzeptiert"
+          },
+          "hideInAnswer": "_currency!~.*CHF.*"
+        },
+        {
+          "if": "payment:notes:denominations=100 CHF",
+          "icon": "./assets/layers/questions/denominations/chf/100chf.svg",
+          "then": {
+            "en": "100 francs notes are accepted",
+            "nl": "Biljetten van 100 frank worden geaccepteerd",
+            "ca": "S'accepten bitllets de 100 francs",
+            "de": "100-Schweizer Franken-Scheine werden akzeptiert"
+          },
+          "hideInAnswer": "_currency!~.*CHF.*"
+        },
+        {
+          "if": "payment:notes:denominations=200 CHF",
+          "icon": "./assets/layers/questions/denominations/chf/200chf.svg",
+          "then": {
+            "en": "200 francs notes are accepted",
+            "nl": "Biljetten van 200 frank worden geaccepteerd",
+            "ca": "S'accepten bitllets de 200 francs",
+            "de": "200-Schweizer Franken-Scheine werden akzeptiert"
+          },
+          "hideInAnswer": "_currency!~.*CHF.*"
+        },
+        {
+          "if": "payment:notes:denominations=1000 CHF",
+          "icon": "./assets/layers/questions/denominations/chf/1000chf.svg",
+          "then": {
+            "en": "1000 francs notes are accepted",
+            "nl": "Biljetten van 1000 frank worden geaccepteerd",
+            "ca": "S'accepten bitllets de 1000 francs",
+            "de": "1000-Schweizer Franken-Scheine werden akzeptiert"
+          },
+          "hideInAnswer": "_currency!~.*CHF.*"
         }
       ]
     },
     {
       "id": "last_edit",
+      "labels": [
+        "added_by_default"
+      ],
       "description": "Gives some metainfo about the last edit and who did edit it - rendering only",
       "condition": {
         "and": [
@@ -1440,7 +1651,9 @@
           "text": {
             "en": "Last edited on {_last_edit:timestamp} by {_last_edit:contributor}",
             "nl": "Laatst gewijzigd op {_last_edit:timestamp} door {_last_edit:contributor} ",
-            "de": "Zuletzt bearbeitet am {_last_edit:timestamp} von {_last_edit:contributor}"
+            "de": "Zuletzt bearbeitet am {_last_edit:timestamp} von {_last_edit:contributor}",
+            "ca": "Darrera edició el {_last_edit:timestamp} per {_last_edit:contributor}",
+            "cs": "Naposledy upravil {_last_edit:timestamp} {_last_edit:contributor}"
           },
           "class": "subtle font-small"
         }
@@ -1455,6 +1668,9 @@
     },
     {
       "id": "just_created",
+      "labels": [
+        "added_by_default"
+      ],
       "description": "This element shows a 'thank you' that the contributor has recently created this element",
       "classes": "rounded-xl thanks",
       "mappings": [
@@ -1466,7 +1682,8 @@
             "de": "Sie haben gerade dieses Element erstellt! Vielen Dank, dass Sie diese Informationen mit der Welt teilen und Menschen weltweit helfen.",
             "en": "You just created this element! Thanks for sharing this info with the world and helping people worldwide.",
             "fr": "Vous venez de créer cet élément ! Merci d'avoir partagé cette information avec le monde et d'aider les autres personnes.",
-            "nl": "Je hebt dit punt net toegevoegd! Bedankt om deze info met iedereen te delen en om de mensen wereldwijd te helpen."
+            "nl": "Je hebt dit punt net toegevoegd! Bedankt om deze info met iedereen te delen en om de mensen wereldwijd te helpen.",
+            "cs": "Tento prvek jste právě vytvořili! Díky za sdílení těchto informací se světem a pomoc lidem po celém světě."
           }
         }
       ],
@@ -1496,8 +1713,9 @@
     },
     {
       "id": "multilevels",
-      "builtin": "level",
+      "builtin": "single_level",
       "override": {
+        "=labels": [],
         "question": {
           "en": "What levels does this elevator go to?",
           "de": "Auf welchen Geschossen hält dieser Aufzug?",
@@ -1534,7 +1752,24 @@
       }
     },
     {
-      "id": "level",
+      "id": "repeated",
+      "labels": [
+        "level"
+      ],
+      "condition": "repeat_on~*",
+      "render": {
+        "en": "Multiple, identical objects can be found on floors {repeat_on}.",
+        "nl": "Er zijn verschillende, identieke objecten op verdiepingen {repeat_on}.",
+        "de": "Mehrere identische Objekte können in Geschossen {repeat_on} gefunden werden.",
+        "cs": "V patrech {repeat_on} lze nalézt více identických objektů."
+      }
+    },
+    {
+      "id": "single_level",
+      "labels": [
+        "level"
+      ],
+      "condition": "repeat_on=",
       "question": {
         "nl": "Op welke verdieping bevindt dit punt zich?",
         "en": "On what level is this feature located?",
@@ -1857,6 +2092,9 @@
     },
     {
       "id": "internet",
+      "labels": [
+        "internet-all"
+      ],
       "question": {
         "en": "Does this place offer internet access?",
         "nl": "Biedt deze plaats internettoegang aan?",
@@ -1962,6 +2200,9 @@
     },
     {
       "id": "internet-fee",
+      "labels": [
+        "internet-all"
+      ],
       "condition": {
         "and": [
           "internet_access!=no",
@@ -2038,6 +2279,9 @@
     },
     {
       "id": "internet-ssid",
+      "labels": [
+        "internet-all"
+      ],
       "condition": "internet_access=wlan",
       "question": {
         "en": "What is the network name for the wireless internet access?",
@@ -2176,7 +2420,8 @@
       "id": "survey_date",
       "question": {
         "en": "When was this object last surveyed?",
-        "de": "Wann wurde dieses Objekt zuletzt geprüft?"
+        "de": "Wann wurde dieses Objekt zuletzt geprüft?",
+        "cs": "Kdy byl tento objekt naposledy zkoumán?"
       },
       "freeform": {
         "key": "survey:date",
@@ -2184,14 +2429,16 @@
       },
       "render": {
         "en": "This object was last surveyed on <b>{survey:date}</b>",
-        "de": "Dieses Objekt wurde zuletzt geprüft am <b>{survey:date}</b>"
+        "de": "Dieses Objekt wurde zuletzt geprüft am <b>{survey:date}</b>",
+        "cs": "Tento objekt byl naposledy zkoumán dne <b>{survey:date}</b>"
       },
       "mappings": [
         {
           "if": "survey:date:={_now:date}",
           "then": {
             "en": "This object was last surveyed today",
-            "de": "Dieses Objekt wurde heute zuletzt geprüft"
+            "de": "Dieses Objekt wurde heute zuletzt geprüft",
+            "cs": "Tento objekt byl naposledy zkoumán dnes"
           }
         }
       ]
@@ -2201,7 +2448,10 @@
       "question": {
         "en": "When was this object last checked?",
         "de": "Wann wurde dieses Objekt zuletzt kontrolliert?",
-        "nl": "Wanneer is dit object voor het laatst gecontroleerd?"
+        "nl": "Wanneer is dit object voor het laatst gecontroleerd?",
+        "pl": "Kiedy ten obiekt został ostatnio sprawdzony?",
+        "ca": "Quan es va comprovar per última vegada aquest objecte?",
+        "cs": "Kdy byl tento objekt naposledy zkontrolován?"
       },
       "freeform": {
         "key": "check_date",
@@ -2210,7 +2460,10 @@
       "render": {
         "en": "This object was last checked on <b>{check_date}</b>",
         "de": "Dieses Objekt wurde zuletzt kontrolliert am <b>{check_date}</b>",
-        "nl": "Dit object is voor het laatst gecontroleerd op <b>{check_date}</b>"
+        "nl": "Dit object is voor het laatst gecontroleerd op <b>{check_date}</b>",
+        "pl": "Ten obiekt był ostatnio sprawdzony <b>{check_date}</b>",
+        "ca": "Aquest objecte es va comprovar per darrera vegada el <b>{check_date}</b>",
+        "cs": "Tento objekt byl naposledy zkontrolován dne <b>{check_date}</b>"
       },
       "mappings": [
         {
@@ -2218,10 +2471,237 @@
           "then": {
             "en": "This object was last checked today",
             "de": "Dieses Objekt wurde heute zuletzt kontrolliert",
-            "nl": "Dit object is vandaag voor het laatst gecontroleerd"
+            "nl": "Dit object is vandaag voor het laatst gecontroleerd",
+            "pl": "Ten obiekt został ostatnio sprawdzony dzisiaj",
+            "ca": "Aquest objecte es va comprovar per última vegada avui",
+            "cs": "Tento objekt byl naposledy zkontrolován dnes"
           }
         }
       ]
+    },
+    {
+      "id": "sugar_free",
+      "labels": [
+        "diets"
+      ],
+      "question": {
+        "en": "Does this shop have a sugar free offering?",
+        "de": "Verkauft das Geschäft zuckerfreie Produkte?",
+        "cs": "Nabízí tento obchod nabídku bez cukru?"
+      },
+      "questionHint": {
+        "en": "This is important for people following a sugar-free diet, such as people with Diabetes",
+        "de": "Dies ist wichtig für Menschen, die eine zuckerfreie Diät einhalten, z. B. für Menschen mit Diabetes",
+        "cs": "To je důležité pro lidi, kteří dodržují dietu bez cukru, jako jsou lidé s diabetem"
+      },
+      "mappings": [
+        {
+          "if": "diet:sugar_free=only",
+          "then": {
+            "en": "This shop <b>only sells sugar free</b> products",
+            "de": "Das Geschäft verkauft <b>ausschließlich</b> zuckerfreie Produkte",
+            "cs": "Tento obchod <b>prodává pouze produkty bez cukru</b>"
+          }
+        },
+        {
+          "if": "diet:sugar_free=yes",
+          "then": {
+            "en": "This shop has a big sugar free offering",
+            "de": "Das Geschäft verkauft <b>viele<b> zuckerfreie Produkte",
+            "cs": "Tento obchod má velkou nabídku bez cukru"
+          }
+        },
+        {
+          "if": "diet:sugar_free=limited",
+          "then": {
+            "en": "This shop has a <b>limited sugar free</b> offering",
+            "de": "Das Geschäft verkauft <b>wenige</b> zuckerfreie Produkte",
+            "cs": "Tento obchod má <b>omezenou nabídku bez cukru</b>"
+          }
+        },
+        {
+          "if": "diet:sugar_free=no",
+          "then": {
+            "en": "This shop has no sugar free offering",
+            "de": "Das Geschäft verkauft <b>keine<b> zuckerfreie Produkte",
+            "cs": "Tento obchod nemá žádnou nabídku bez cukru"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lactose_free",
+      "labels": [
+        "diets"
+      ],
+      "question": {
+        "en": "Does {title()} have a lactose-free offering?",
+        "de": "Verkauft {title()} laktosefreie Produkte?",
+        "cs": "Má {title()} nabídku bez laktózy?"
+      },
+      "mappings": [
+        {
+          "if": "diet:lactose_free=only",
+          "then": {
+            "en": "<b>Only sells lactose free</b> products",
+            "de": "<b>Ausschließlich</b> laktosefreie Produkte",
+            "cs": "<b>Prodává pouze výrobky bez laktózy</b>"
+          }
+        },
+        {
+          "if": "diet:lactose_free=yes",
+          "then": {
+            "en": "Big lactose free offering",
+            "de": "Viele laktosefreie Produkte",
+            "cs": "Velká nabídka bez laktózy"
+          }
+        },
+        {
+          "if": "diet:lactose_free=limited",
+          "then": {
+            "en": "<b>Limited lactose free</b> offering",
+            "de": "<b>Wenige</b> laktosefreie Produkte",
+            "cs": "<b>Omezená nabídka bez laktózy</b>"
+          }
+        },
+        {
+          "if": "diet:lactose_free=no",
+          "then": {
+            "en": "No lactose free offering",
+            "de": "Keine laktosefreie Produkte",
+            "cs": "Žádná nabídka bez laktózy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "gluten_free",
+      "labels": [
+        "diets"
+      ],
+      "question": {
+        "en": "Does this shop have a gluten free offering?",
+        "de": "Verkauft das Geschäft glutenfreie Produkte?",
+        "cs": "Má tento obchod bezlepkovou nabídku?"
+      },
+      "mappings": [
+        {
+          "if": "diet:gluten_free=only",
+          "then": {
+            "en": "This shop <b>only sells gluten free</b> products",
+            "de": "Das Geschäft verkauft <b>ausschließlich glutenfreie</b> Produkte",
+            "cs": "Tento obchod <b>prodává pouze bezlepkové</b> produkty"
+          }
+        },
+        {
+          "if": "diet:gluten_free=yes",
+          "then": {
+            "en": "This shop has a big gluten free offering",
+            "de": "Das Geschäft verkauft viele glutenfreie Produkte",
+            "cs": "Tento obchod má velkou bezlepkovou nabídku"
+          }
+        },
+        {
+          "if": "diet:gluten_free=limited",
+          "then": {
+            "en": "This shop has a <b>limited gluten free</b> offering",
+            "de": "Das Geschäft verkauft <b>wenige glutenfreie</b> Produkte",
+            "cs": "Tento obchod má <b>omezenou nabídku bezlepkových produktů</b>"
+          }
+        },
+        {
+          "if": "diet:gluten_free=no",
+          "then": {
+            "en": "This shop has no gluten free offering",
+            "de": "Das Geschäft verkauft keine glutenfreie Produkte",
+            "cs": "Tento obchod nemá bezlepkovou nabídku"
+          }
+        }
+      ]
+    },
+    {
+      "id": "vegan",
+      "labels": [
+        "diets"
+      ],
+      "question": {
+        "en": "Does this place offer a vegan option?",
+        "de": "Bietet dieser Ort eine vegane Option an?"
+      },
+      "mappings": [
+        {
+          "if": "diet:vegan=only",
+          "then": {
+            "en": "This place <b>only sells vegan</b> products",
+            "de": "Dieser Ort verkauft <b>nur vegane</b> Produkte"
+          }
+        },
+        {
+          "if": "diet:vegan=yes",
+          "then": {
+            "en": "This shop has a big vegan offering",
+            "de": "Dieser Laden hat ein großes veganes Angebot"
+          }
+        },
+        {
+          "if": "diet:vegan=limited",
+          "then": {
+            "en": "This shop has a <b>limited vegan</b> offering",
+            "de": "Dieser Laden hat ein <b>begrenztes veganes</b> Angebot"
+          }
+        },
+        {
+          "if": "diet:vegan=no",
+          "then": {
+            "en": "This shop has no vegan offering",
+            "de": "Dieser Laden bietet keine veganen Produkte an"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod",
+      "labels": [
+        "added_by_default"
+      ],
+      "render": {
+        "*": "{linked_data_from_website()}"
+      }
+    },
+    {
+      "id": "qr_code",
+      "labels": [
+        "added_by_default"
+      ],
+      "classes": "flex items-center gap-x-2",
+      "render": {
+        "special": {
+          "type": "qr_code"
+        },
+        "after": {
+          "en": "Scan this code to open this location on another device",
+          "nl": "Scan deze code om deze locatie op een ander apparaat te zien",
+          "de": "Scannen Sie den Code, um diesen Ort auf einem anderen Gerät zu öffnen",
+          "sl": "Skenirajte to kodo, da odprete ta kraj na drugi napravi"
+        }
+      }
+    },
+    {
+      "id": "share",
+      "labels": [
+        "added_by_default"
+      ],
+      "metacondition": "_supports_sharing=yes",
+      "render": {
+        "special": {
+          "type": "share_link",
+          "text": {
+            "en": "Share this location",
+            "nl": "Deel deze locatie",
+            "de": "Standort teilen"
+          }
+        }
+      }
     }
   ]
 }

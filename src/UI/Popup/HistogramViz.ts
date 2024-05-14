@@ -6,6 +6,8 @@ import { Feature } from "geojson"
 export class HistogramViz implements SpecialVisualization {
     funcName = "histogram"
     docs = "Create a histogram for a list of given values, read from the properties."
+    needsUrls = []
+
     example =
         '`{histogram(\'some_key\')}` with properties being `{some_key: ["a","b","a","c"]} to create a histogram'
     args = [

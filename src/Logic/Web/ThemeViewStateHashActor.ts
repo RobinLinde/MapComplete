@@ -50,6 +50,11 @@ export default class ThemeViewStateHashActor {
             if (!!hash) {
                 // There is still a hash
                 // We _only_ have to (at most) close the overlays in this case
+                if (state.previewedImage.data) {
+                    state.previewedImage.setData(undefined)
+                    return
+                }
+
                 const parts = hash.split(";")
                 if (parts.indexOf("background") < 0) {
                     state.guistate.backgroundLayerSelectionIsOpened.setData(false)
@@ -110,14 +115,13 @@ export default class ThemeViewStateHashActor {
             ""
         )
         selectedElement.setData(found)
-        state.selectedLayer.setData(layer)
         return true
     }
 
     private loadStateFromHash(hash: string) {
         const state = this._state
         const parts = hash.split(":")
-        outer: for (const { toggle, name, showOverOthers, submenu } of state.guistate.allToggles) {
+        outer: for (const { toggle, name, submenu } of state.guistate.allToggles) {
             for (const part of parts) {
                 if (part === name) {
                     toggle.setData(true)
@@ -175,8 +179,11 @@ export default class ThemeViewStateHashActor {
     }
 
     private back() {
-        console.log("Got a back event")
         const state = this._state
+        if (state.previewedImage.data) {
+            state.previewedImage.setData(undefined)
+            return
+        }
         // history.pushState(null, null, window.location.pathname);
         if (state.selectedElement.data) {
             state.selectedElement.setData(undefined)

@@ -15,11 +15,6 @@ export interface ShowDataLayerOptions {
     selectedElement?: UIEventSource<Feature>
 
     /**
-     * When a feature of this layer is tapped, the layer will be marked
-     */
-    selectedLayer?: UIEventSource<LayerConfig>
-
-    /**
      * If set, zoom to the features when initially loaded and when they are changed
      */
     zoomToFeatures?: false | boolean
@@ -35,4 +30,5 @@ export interface ShowDataLayerOptions {
     fetchStore?: (id: string) => Store<Record<string, string>>
 
     onClick?: (feature: Feature) => void
+    metaTags?: Store<Record<string, string>>
 }

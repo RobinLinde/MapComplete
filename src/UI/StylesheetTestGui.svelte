@@ -1,7 +1,9 @@
 <script lang="ts">
-  import Svg from "../Svg"
   import Loading from "./Base/Loading.svelte"
-  import ToSvelte from "./Base/ToSvelte.svelte"
+  import Community from "../assets/svg/Community.svelte"
+  import Login from "../assets/svg/Login.svelte"
+  import Dropdown from "./Base/Dropdown.svelte"
+  import { UIEventSource } from "../Logic/UIEventSource"
 </script>
 
 <div>
@@ -15,10 +17,14 @@
     <span class="literal-code">normal-background</span>
     -style which is used if there is nothing special going on. Some general information, with at most
     <a href="https://example.com" target="_blank">a link to someplace</a>
-    .
-    <span class="alert">Alert: something went wrong</span>
-    <span class="thanks">Thank you! Operation successful</span>
-    <ToSvelte construct={Svg.login_svg().SetClass("w-12 h-12")} />
+    <div class="subtle">Subtle</div>
+
+    <div class="alert">Alert: something went wrong</div>
+    <div class="warning">Warning</div>
+    <div class="information">Some important information</div>
+    <div class="thanks">Thank you! Operation successful</div>
+
+    <Login class="h-12 w-12" />
     <Loading>Loading...</Loading>
   </div>
 
@@ -29,34 +35,51 @@
       areas, where some buttons might appear.
     </p>
 
+    <div class="border-interactive interactive">
+      Highly interactive area (mostly: active question)
+    </div>
+    <div class="subtle">Subtle</div>
+
     <div class="flex">
       <button class="primary">
-        <ToSvelte construct={Svg.community_svg().SetClass("w-6 h-6")} />
+        <Community class="h-6 w-6" />
         Main action
       </button>
       <button class="primary disabled">
-        <ToSvelte construct={Svg.community_svg().SetClass("w-6 h-6")} />
+        <Community class="h-6 w-6" />
         Main action (disabled)
       </button>
+
+      <button class="small">
+        <Community class="h-6 w-6" />
+        Small button
+      </button>
+
+      <button class="small primary">Small button</button>
+      <button class="small primary disabled">Small, disabled button</button>
     </div>
     <div class="flex">
       <button>
-        <ToSvelte construct={Svg.community_svg().SetClass("w-6 h-6")} />
+        <Community class="h-6 w-6" />
         Secondary action
       </button>
       <button class="disabled">
-        <ToSvelte construct={Svg.community_svg().SetClass("w-6 h-6")} />
+        <Community class="h-6 w-6" />
         Secondary action (disabled)
       </button>
     </div>
     <input type="text" />
 
-    <div>
+    <div class="flex flex-col">
       <label class="checked" for="html">
         <input id="html" name="fav_language" type="radio" value="HTML" />
         HTML (mimicks a
         <span class="literal-code">checked</span>
         -element)
+        <Dropdown value={new UIEventSource("abc")}>
+          <option>abc</option>
+          <option>def</option>
+        </Dropdown>
       </label>
       <label for="css">
         <input id="css" name="fav_language" type="radio" value="CSS" />
@@ -64,14 +87,17 @@
       </label>
       <label for="javascript">
         <input id="javascript" name="fav_language" type="radio" value="JavaScript" />
-        <ToSvelte construct={Svg.community_svg().SetClass("w-8 h-8")} />
+        <Community class="h-8 w-8" />
         JavaScript
       </label>
     </div>
 
-    <span class="alert">Alert: something went wrong</span>
-    <span class="thanks">Thank you! Operation successful</span>
-    <ToSvelte construct={Svg.login_svg().SetClass("w-12 h-12")} />
+    <div class="alert">Alert: something went wrong</div>
+    <div class="warning">Warning</div>
+    <div class="information">Some important information</div>
+    <div class="thanks">Thank you! Operation successful</div>
+
+    <Login class="h-12 w-12" />
     <Loading>Loading...</Loading>
   </div>
 
@@ -81,30 +107,39 @@
       There are <span class="literal-code">interactive</span>
       areas, where many buttons and input elements will appear.
     </p>
+    <div class="subtle">Subtle</div>
 
     <div class="flex">
       <button class="primary">
-        <ToSvelte construct={Svg.community_svg().SetClass("w-6 h-6")} />
+        <Community class="h-6 w-6" />
         Main action
       </button>
       <button class="primary disabled">
-        <ToSvelte construct={Svg.community_svg().SetClass("w-6 h-6")} />
+        <Community class="h-6 w-6" />
         Main action (disabled)
       </button>
+      <button class="small">
+        <Community class="h-6 w-6" />
+        Small button
+      </button>
     </div>
+
     <div class="flex">
       <button>
-        <ToSvelte construct={Svg.community_svg().SetClass("w-6 h-6")} />
+        <Community class="h-6 w-6" />
         Secondary action
       </button>
       <button class="disabled">
-        <ToSvelte construct={Svg.community_svg().SetClass("w-6 h-6")} />
+        <Community class="h-6 w-6" />
         Secondary action (disabled)
       </button>
     </div>
-    <span class="alert">Alert: something went wrong</span>
-    <span class="thanks">Thank you! Operation successful</span>
-    <ToSvelte construct={Svg.login_svg().SetClass("w-12 h-12")} />
+    <div class="alert">Alert: something went wrong</div>
+    <div class="warning">Warning</div>
+    <div class="information">Some important information</div>
+    <div class="thanks">Thank you! Operation successful</div>
+
+    <Login class="h-12 w-12" />
     <Loading>Loading...</Loading>
     <div>
       <label for="html0">
@@ -119,6 +154,10 @@
         <input id="javascript0" name="fav_language" type="radio" value="JavaScript" />
         JavaScript
       </label>
+    </div>
+
+    <div class="border-interactive">
+      Area with extreme high interactivity due to `border-interactive`
     </div>
 
     <select>

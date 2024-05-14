@@ -14,7 +14,7 @@
         "available": "Op dit communicatiekanaal spreekt men {native}",
         "intro": "Contacteer anderen die bezig zijn met OpenStreetMap om kennis te maken, tips uit te wisselen of van elkaar bij te leren.",
         "notAvailable": "Op dit communicatiekanaal spreekt men geen {native}",
-        "title": "Community index"
+        "title": "Kom in contact met anderen"
     },
     "delete": {
         "cancel": "Annuleren",
@@ -50,9 +50,16 @@
         "panelIntro": "<h3>Jouw persoonlijke thema</h3>Activeer je favorite lagen van alle andere themas",
         "reload": "Herlaad de data"
     },
+    "favouritePoi": {
+        "button": {
+            "isMarkedShort": "Als favoriet gemarkeerd",
+            "isNotMarkedShort": "Niet als favoriet gemarkeerd"
+        },
+        "tab": "Jouw favorieten en beoordelingen"
+    },
     "flyer": {
         "aerial": "Deze kaart gebruikt luchtfoto's van het Agentschap Informatie Vlaanderen als achtergrond.\nOok het GRB is beschikbaar als achtergrondlaag.",
-        "callToAction": "Probeer het uit op mapcomplete.osm.be",
+        "callToAction": "Probeer het uit op mapcomplete.org",
         "cyclofix": "Fietspompen, -winkels, -bandenautomaten en drinkwaterkraantjes vind je op Cyclofix",
         "description": "Een horizontale A4 flyer om MapComplete te promoten",
         "editing": {
@@ -60,7 +67,7 @@
             "intro": "De gebruiker krijgt eerst een kaart met interessepunten te zien. Klik je op een punt, dan wordt de interface met informatie over het interessepunt geopend.",
             "title": "Hoe ziet de interface eruit?"
         },
-        "examples": "Online zijn verschillende kaarten met diverse thema's beschikbaar, zoals gezondheidszorg, binnenruimtes, rolstoeltoegankelijkheid, afvalcontainers, boekenruilkasten, regenboog-zebrapaden,...\nEnkele zijn hier afgeprint.\n\nOntdek ze allemaal op mapcomplete.osm.be",
+        "examples": "Online zijn verschillende kaarten met diverse thema's beschikbaar, zoals gezondheidszorg, binnenruimtes, rolstoeltoegankelijkheid, afvalcontainers, boekenruilkasten, regenboog-zebrapaden,...\nEnkele zijn hier afgeprint.\n\nOntdek ze allemaal op mapcomplete.org",
         "fakeui": {
             "add_images": "Voeg foto's toe met een paar klikken",
             "attributes": "Attributen worden getoond op begrijpbare wijze",
@@ -87,7 +94,7 @@
         "onwheels": "Kaarten van binnenruimtes voor rolstoelgebruikers zijn ook beschikbaar",
         "osm": "OpenStreetMap is een online kaart die door iedereen aangepast en herbruikt mag worden mits bronvermelding en het openhouden van de data.\n\nHet is de grootste geodatabank ter wereld en wordt herbruikt door miljoenen websites en applicaties.",
         "tagline": "Geodata eenvoudig verzamelen met OpenStreetMap",
-        "title": "MapComplete.osm.be",
+        "title": "mapcomplete.org",
         "toerisme_vlaanderen": "In samenwerking met Toerisme Vlaanderen werd 'Pin Je Punt' gecreëerd. Op enkele maanden tijd werden hiermee duizenden zitbanken, picknicktafels en oplaadpunten voor elektrische fietsen toegevoegd aan de kaart door meer dan 160 personen.",
         "whatIsOsm": "Wat is OpenStreetMap?"
     },
@@ -124,7 +131,7 @@
             "pleaseLogin": "Gelieve je aan te melden om een object toe te voegen",
             "presetInfo": "Het nieuwe object krijgt de attributen {tags}",
             "stillLoading": "De data worden nog geladen. Nog even geduld en dan kan je een object toevoegen.",
-            "title": "Nieuw object toevoegen?",
+            "title": "Nieuw object toevoegen",
             "warnVisibleForEveryone": "Je toevoeging is voor iedereen zichtbaar",
             "wrongType": "Dit object is geen punt of lijn en kan daarom niet geïmporteerd worden",
             "zoomInFurther": "Gelieve verder in te zoomen om een object toe te voegen.",
@@ -162,6 +169,7 @@
         },
         "back": "Vorige",
         "backToIndex": "Keer terug naar het overzicht met alle thematische kaarten",
+        "backToMap": "Ga terug naar de kaart",
         "backgroundMap": "Selecteer een achtergrondlaag",
         "backgroundSwitch": "Verander achtergrond",
         "cancel": "Annuleren",
@@ -186,10 +194,6 @@
             "includeMetaData": "Exporteer metadata (zoals laatste aanpassing, berekende waardes, …)",
             "licenseInfo": "<h3>Copyright</h3>De voorziene data is beschikbaar onder de ODbL. Het hergebruiken van deze data is gratis voor elke toepassing, maar <ul><li>de bronvermelding <b>© OpenStreetMap bijdragers</b> is vereist</li><li>Elke wijziging aan deze data moet opnieuw gepubliceerd worden onder dezelfde licentie</li></ul> Gelieve de volledige <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">licentie</a> te lezen voor details",
             "noDataLoaded": "Er is nog geen data ingeladen. Downloaden kan zodra de data geladen is.",
-            "pdf": {
-                "current_view_a3": "Exporteer de zichtbare regio als PDF (A3, staand)",
-                "current_view_a4": "Exporteer de zichtbare regio als PDF (A4, liggend)"
-            },
             "title": "Download",
             "uploadGpx": "Track uploaden naar OpenStreetMap"
         },
@@ -202,6 +206,14 @@
         "goToInbox": "Ga naar de berichten",
         "histogram": {
             "error_loading": "Kan het histogram niet laden"
+        },
+        "labels": {
+            "background": "Kies achtergrondlaag",
+            "filter": "Filter data",
+            "jumpToLocation": "Ga naar jouw locatie",
+            "menu": "Menu",
+            "zoomIn": "Zoom in",
+            "zoomOut": "Zoom uit"
         },
         "layerSelection": {
             "title": "Selecteer lagen",
@@ -248,11 +260,17 @@
         "openTheMap": "Raadpleeg de kaart",
         "openTheMapAtGeolocation": "Ga naar jouw locatie",
         "opening_hours": {
+            "all_days_from": "Elke dag geopend {ranges}",
             "closed_permanently": "Gesloten voor onbepaalde tijd",
             "closed_until": "Gesloten - open op {date}",
+            "error": "Kan de openingsuren niet inlezen",
             "error_loading": "Sorry, deze openingsuren kunnen niet getoond worden",
+            "friday": "Op vrijdag {ranges}",
             "loadingCountry": "Het land wordt nog bepaald…",
+            "monday": "Op maandag {ranges}",
             "not_all_rules_parsed": "De openingsuren zijn ingewikkeld. De volgende regels worden niet getoond bij het ingeven:",
+            "on_weekdays": "Op weekdagen {ranges}",
+            "on_weekends": "In het weekend {ranges}",
             "openTill": "tot",
             "open_24_7": "Dag en nacht open",
             "open_during_ph": "Op een feestdag is dit",
@@ -260,13 +278,21 @@
             "ph_closed": "gesloten",
             "ph_not_known": " ",
             "ph_open": "open",
-            "ph_open_as_usual": "geopend zoals gewoonlijk"
+            "ph_open_as_usual": "geopend zoals gewoonlijk",
+            "ranges": "van {starttime} tot {endtime}",
+            "rangescombined": "{range0} en {range1}",
+            "saturday": "Op zaterdag {ranges}",
+            "sunday": "Op zondag {ranges}",
+            "thursday": "Op donderdag {ranges}",
+            "tuesday": "Op dinsdag {ranges}",
+            "unknown": "De openingsuren zijn niet gekend",
+            "wednesday": "Op woensdag {ranges}"
         },
         "osmLinkTooltip": "Bekijk dit object op OpenStreetMap om de geschiedenis te zien en meer te kunnen aanpassen",
         "pdf": {
             "attr": "Kaartgegevens © OpenStreetMap-bijdragers, herbruikbaar volgens ODbL",
             "attrBackground": "Achtergrondlaag: {background}",
-            "generatedWith": "Gemaakt met MapComplete.osm.be/{layoutid}",
+            "generatedWith": "Gemaakt met mapcomplete.org/{layoutid}",
             "versionInfo": "v{version} - gemaakt op {date}"
         },
         "pickLanguage": "Kies je taal: ",
@@ -303,6 +329,7 @@
             "searchShort": "Zoek…",
             "searching": "Aan het zoeken…"
         },
+        "share": "Deel deze locatie",
         "sharescreen": {
             "copiedToClipboard": "Link gekopieerd naar klembord",
             "embedIntro": "<h3>Plaats dit op je website</h3>Voeg dit kaartje toe op je eigen website.<br/>We moedigen dit zelfs aan - je hoeft geen toestemming te vragen.<br/> Het is gratis en zal dat altijd blijven. Hoe meer het gebruikt wordt, hoe waardevoller",
@@ -342,7 +369,43 @@
             "uploading": "Traject uploaden…"
         },
         "useSearch": "Gebruik de zoekfunctie hierboven om meer opties te zien",
-        "useSearchForMore": "Gebruik de zoekfunctie om {total} meer waarden te vinden…",
+        "visualFeedback": {
+            "closestFeaturesAre": "{n} objecten in beeld.",
+            "directionsAbsolute": {
+                "E": "ten oosten",
+                "N": "ten noorden",
+                "NE": "ten noordoosten",
+                "NW": "ten noordwesten",
+                "S": "ten zuiden",
+                "SE": "ten zuidoosten",
+                "SW": "ten zuidwesten",
+                "W": "ten westen"
+            },
+            "directionsRelative": {
+                "behind": "achter je",
+                "left": "links",
+                "right": "rechts",
+                "sharp_left": "scherp linksaf",
+                "sharp_right": "scherp rechtsaf",
+                "slight_left": "ietwat links",
+                "slight_right": "ietwat rechts",
+                "straight": "vooruit"
+            },
+            "east": "Naar het oosten",
+            "in": "Aan het inzoomen naar zoomlevel {z}",
+            "islocked": "Bewegen vergrendeld rond je huidige locatie. Duw op de geolocatie-knop om te ontgrendelen.",
+            "locked": "Bewegen vergrendeld rond jouw huidige locatie.",
+            "navigation": "Gebruik de pijltjestoetsen om te bewegen. Druk op spatie om het meest centrale punt te selecteren. Druk op een cijfertoets om andere items te selecteren.",
+            "noCloseFeatures": "Geen objecten in beeld",
+            "north": "Naar het noorden",
+            "oneFeatureInView": "Eén object in beeld.",
+            "out": "Aan het uitzoomen naar zoomlevel {z}",
+            "south": "Naar het zuiden",
+            "unlocked": "Bewegen ontgrendeld",
+            "viewportCenterCloseToGps": "De kaart is gecentreerd op je huidige GPS-locatie.",
+            "viewportCenterDetails": "Het kaartbeeldcentrum is {distance} {bearing} vanaf je huidige locatie.",
+            "west": "Naar het westen"
+        },
         "weekdays": {
             "abbreviations": {
                 "friday": "Vrij",
@@ -379,6 +442,7 @@
                 "born": "Geboren: {value}",
                 "died": "Gestorven: {value}"
             },
+            "readMore": "Lees de rest van het artikel",
             "searchToShort": "Je zoekopdracht is te kort, vul een langere tekst in",
             "searchWikidata": "Zoek op Wikidata",
             "wikipediaboxTitle": "Wikipedia"
@@ -404,19 +468,10 @@
         "doDelete": "Verwijder afbeelding",
         "dontDelete": "Annuleren",
         "isDeleted": "Verwijderd",
-        "nearbyPictures": {
-            "allFiltered": "Geen enkele afbeelding voldoet aan je filter",
-            "browseNearby": "Bekijk afbeeldingen van deze buurt…",
-            "confirm": "De geselecteerde afbeelding toont {title()}",
-            "hasMatchingPicture": "Is er een afbeelding die dit object toont? Selecteer deze hieronder:",
-            "loadMore": "Toon meer afbeeldingen",
-            "loading": "Afbeeldingen worden geladen…",
-            "noImageSelected": "Selecteer een afbeelding om deze te linken",
-            "nothingFound": "Geen afbeeldingen van deze buurt gevonden…",
-            "onlyTowards": "Toon enkel afbeeldingen die naar dit object kijken",
-            "removeFilters": "Verwijder alle filters",
-            "title": "Afbeeldingen van de buurt",
-            "withinRadius": "Toon enkel afbeeldingen die gemaakt zijn binnen {radius} meter van dit object"
+        "nearby": {
+            "link": "Deze afbeelding toont het object",
+            "seeNearby": "Bekijk en link foto's van in de buurt",
+            "title": "Straatafbeeldingen uit de buurt"
         },
         "pleaseLogin": "Gelieve je aan te melden om een foto toe te voegen",
         "respectPrivacy": "Fotografeer geen mensen of nummerplaten. Voeg geen Google Maps, Google Streetview of foto's met auteursrechten toe.",
@@ -526,14 +581,23 @@
         "takeImages": "Neem afbeeldingen van de boom om de soort automatisch te herkennen"
     },
     "privacy": {
-        "editing": "Wanneer je een wijziging maakt, wordt deze wijziging opgeslaan op OpenStreetMap. Dit is zichtbaar voor iedereen. Een wijzigingenset gemaakt met MapComplete bevat de volgende data:\n<ul><li>De aanpassingen aan de data</li><li>Je gebruikersnaam</li><li>Wanneer deze wijziging werd gemaakt</li><li>Het thema dat je gebruikt om de wijziging te maken</li><li>De taal van de gebruikersinterface</li><li>Een indicatie hoe ver jij je van de gewijzigde objecten bevindt. Andere bijdragers kunnen deze informatie gebruiken om af te leiden of de wijziging gemaakt door lokaal te gaan kijken of door onderzoek vanop afstand</li></ul> Bekijk ook <a href=\"https://wiki.osmfoundation.org/wiki/Privacy_Policy\" target=\"_blank\">de privacy-policy op OpenStreetMap.org</a> voor gedetailleerde info. We herinneren je eraan dat je een pseudoniem of fictieve naam kan gebruiken wanneer je je registreert.",
+        "editingIntro": "Wanneer je een wijziging maakt, wordt deze wijziging opgeslaan op OpenStreetMap. Dit is zichtbaar voor iedereen. Een wijzigingenset gemaakt met MapComplete bevat de volgende data:",
+        "editingOutro": "Bekijk ook <a href=\"https://wiki.osmfoundation.org/wiki/Privacy_Policy\" target=\"_blank\">de privacy-policy op OpenStreetMap.org</a> voor gedetailleerde info. We herinneren je eraan dat je een pseudoniem of fictieve naam kan gebruiken wanneer je je registreert.",
         "editingTitle": "Wanneer je wijzigingen maakt",
         "geodata": "Op het moment dat MapComplete je locatie krijgt, blijft deze informatie en de geschiedenis ervan lokaal op je toestel. Je locatiedata wordt nooit automatisch doorgestuurd naar waar dan ook - behalve wanneer een bepaalde functionaliteit daar expliciet om vraagt.",
         "geodataTitle": "Jouw locatie",
         "intro": "We vinden privacy belangrijk, zowel for het individu als voor de samenleving. MapComplete probeert zo veel mogelijk te vermijden dat private gegevens worden verzameld. Daarom is er zelfs geen cookie banner nodig. Maar we geven graag informatie over welke data verzameld en gedeeld worden, onder welke omstandigheden, en waarom deze afwegingen gemaakt worden.",
+        "items": {
+            "changesYouMake": "De aanpassingen aan de data",
+            "username": "Je gebruikersnaam",
+            "date": "Wanneer deze wijziging werd gemaakt",
+            "theme": "Het thema dat je gebruikt om de wijziging te maken",
+            "language": "De taal van de gebruikersinterface",
+            "distanceIndicator": "Een indicatie hoe ver jij je van de gewijzigde objecten bevindt. Andere bijdragers kunnen deze informatie gebruiken om af te leiden of de wijziging gemaakt door lokaal te gaan kijken of door onderzoek vanop afstand"
+        },
         "miscCookies": "MapComplete integreert met verschillende andere services, in het bijzonder om afbeeldingen van kaart-objecten te tonen. Deze afbeeldingen zijn opgeslaan bij diverse websites, die elk cookies kunnen instellen.",
         "miscCookiesTitle": "Andere cookies",
-        "surveillance": "Gezien je de privacy-policy leest, vind je privacy waarschijnlijk belangrijk - wij ook! We hebben zelfs <a href=\"https://mapcomplete.osm.be/surveillance\">een kaart met bewakingcamera's</a> gemaakt. Voeg er zeker toe!",
+        "surveillance": "Gezien je de privacy-policy leest, vind je privacy waarschijnlijk belangrijk - wij ook! We hebben zelfs <a href=\"https://mapcomplete.org/surveillance\">een kaart met bewakingcamera's</a> gemaakt. Voeg er zeker toe!",
         "title": "Privacyverklaring",
         "tracking": "Om enig inzicht te krijgen in wie de site bezoekt, wordt er technische informatie verzameld. Dit omvat het land van waaruit je de site bezoekt, vanop welke website je doorklikte naar MapComplete, het type toestel en de schermgrootte. Een cookie wordt op he toestel geplaatst om mee te geven dat je de site eerder in de dag bezocht. De data is niet gedetailleerd genoeg om persoonlijke informatie te zijn. Er zijn enkel geaggregeerde statistieken mogelijk. Deze <a href=\"https://pietervdvn.goatcounter.com\" target=\"_blank\">kunnen door iedereen bekeken worden</a>.",
         "trackingTitle": "Statistische informatie",
@@ -544,12 +608,9 @@
         "attribution": "De beoordelingen worden voorzien door <a href='https://mangrove.reviews/' target='_blank'>Mangrove Reviews</a> en zijn beschikbaar onder de<a href='https://mangrove.reviews/terms#8-licensing-of-content' target='_blank'>CC-BY 4.0-licentie</a>. ",
         "i_am_affiliated": "<span>Ik ben persoonlijk betrokken</span><br/><span class='subtle'>Vink aan indien je de oprichter, maker, werknemer, ... of dergelijke bent</span>",
         "name_required": "De naam van dit object moet gekend zijn om een review te kunnen maken",
-        "no_rating": "Geef een beoordeling voordat je verzendt…",
         "no_reviews_yet": "Er zijn nog geen beoordelingen. Wees de eerste om een beoordeling te schrijven en help open data en het bedrijf!",
-        "plz_login": "Meld je aan om een beoordeling te geven",
-        "posting_as": "Ingelogd als",
         "save": "Opslaan",
-        "saved": "<span class='thanks'>Bedankt om je beoordeling te delen!</span>",
+        "saved": "Bedankt om je beoordeling te delen!",
         "saving_review": "Opslaan...",
         "title": "{count} beoordelingen",
         "title_singular": "Eén beoordeling",
@@ -596,6 +657,9 @@
             "description": "email-adres",
             "feedback": "Dit is geen geldig email-adres",
             "noAt": "Een email-adres moet een @ hebben"
+        },
+        "fediverse": {
+            "invalidHost": "{host} is geen geldige hostnaam"
         },
         "float": {
             "description": "een getal",

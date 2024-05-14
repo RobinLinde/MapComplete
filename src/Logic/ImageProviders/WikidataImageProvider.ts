@@ -1,8 +1,9 @@
 import ImageProvider, { ProvidedImage } from "./ImageProvider"
 import BaseUIElement from "../../UI/BaseUIElement"
-import Svg from "../../Svg"
 import { WikimediaImageProvider } from "./WikimediaImageProvider"
 import Wikidata from "../Web/Wikidata"
+import SvelteUIElement from "../../UI/Base/SvelteUIElement"
+import * as Wikidata_icon from "../../assets/svg/Wikidata.svelte"
 
 export class WikidataImageProvider extends ImageProvider {
     public static readonly singleton = new WikidataImageProvider()
@@ -12,8 +13,12 @@ export class WikidataImageProvider extends ImageProvider {
         super()
     }
 
-    public SourceIcon(_?: string): BaseUIElement {
-        return Svg.wikidata_svg()
+    public apiUrls(): string[] {
+        return Wikidata.neededUrls
+    }
+
+    public SourceIcon(): BaseUIElement {
+        return new SvelteUIElement(Wikidata_icon)
     }
 
     public async ExtractUrls(key: string, value: string): Promise<Promise<ProvidedImage>[]> {
@@ -48,7 +53,7 @@ export class WikidataImageProvider extends ImageProvider {
         return allImages
     }
 
-    public DownloadAttribution(_: string): Promise<any> {
+    public DownloadAttribution(_): Promise<any> {
         throw new Error("Method not implemented; shouldn't be needed!")
     }
 }

@@ -1,9 +1,8 @@
 import { UIEventSource } from "../../Logic/UIEventSource"
 import Combine from "../Base/Combine"
 import { FixedUiElement } from "../Base/FixedUiElement"
-import { OH } from "./OpeningHours"
+import { OH, OpeningRange, ToTextualDescription } from "./OpeningHours"
 import Translations from "../i18n/Translations"
-import Constants from "../../Models/Constants"
 import BaseUIElement from "../BaseUIElement"
 import Toggle from "../Input/Toggle"
 import { VariableUiElement } from "../Base/VariableUIElement"
@@ -11,6 +10,8 @@ import Table from "../Base/Table"
 import { Translation } from "../i18n/Translation"
 import { OsmConnection } from "../../Logic/Osm/OsmConnection"
 import Loading from "../Base/Loading"
+import opening_hours from "opening_hours"
+import Locale from "../i18n/Locale"
 
 export default class OpeningHoursVisualization extends Toggle {
     private static readonly weekdays: Translation[] = [
@@ -30,48 +31,35 @@ export default class OpeningHoursVisualization extends Toggle {
         prefix = "",
         postfix = ""
     ) {
-        const country = tags.map((tags) => tags._country)
+        const openingHoursStore = OH.CreateOhObjectStore(tags, key, prefix, postfix)
         const ohTable = new VariableUiElement(
-            tags
-                .map((tags) => {
-                    const value: string = tags[key]
-                    if (value === undefined) {
-                        return undefined
-                    }
-                    if (value.startsWith(prefix) && value.endsWith(postfix)) {
-                        return value.substring(prefix.length, value.length - postfix.length).trim()
-                    }
-                    return value
-                }) // This mapping will absorb all other changes to tags in order to prevent regeneration
-                .map(
-                    (ohtext) => {
-                        if (ohtext === undefined) {
-                            return new FixedUiElement(
-                                "No opening hours defined with key " + key
-                            ).SetClass("alert")
-                        }
-                        try {
-                            return OpeningHoursVisualization.CreateFullVisualisation(
-                                OH.CreateOhObject(<any>tags.data, ohtext)
-                            )
-                        } catch (e) {
-                            console.warn(e, e.stack)
-                            return new Combine([
-                                Translations.t.general.opening_hours.error_loading,
-                                new Toggle(
-                                    new FixedUiElement(e).SetClass("subtle"),
-                                    undefined,
-                                    state?.osmConnection?.userDetails.map(
-                                        (userdetails) =>
-                                            userdetails.csCount >=
-                                            Constants.userJourney.tagsVisibleAndWikiLinked
-                                    )
-                                ),
-                            ])
-                        }
-                    },
-                    [country]
+            openingHoursStore.map((opening_hours_obj) => {
+                if (opening_hours_obj === undefined) {
+                    return new FixedUiElement("No opening hours defined with key " + key).SetClass(
+                        "alert"
+                    )
+                }
+
+                if (opening_hours_obj === "error") {
+                    return Translations.t.general.opening_hours.error_loading
+                }
+
+                const applicableWeek = OH.createRangesForApplicableWeek(opening_hours_obj)
+                const textual = ToTextualDescription.createTextualDescriptionFor(
+                    opening_hours_obj,
+                    applicableWeek.ranges
                 )
+                const vis = OpeningHoursVisualization.CreateFullVisualisation(
+                    opening_hours_obj,
+                    applicableWeek.ranges,
+                    applicableWeek.startingMonday
+                )
+                Locale.language.mapD((lng) => {
+                    console.log("Setting OH description to", lng, textual)
+                    vis.ConstructElement().ariaLabel = textual.textFor(lng)
+                })
+                return vis
+            })
         )
 
         super(
@@ -82,33 +70,11 @@ export default class OpeningHoursVisualization extends Toggle {
         this.SetClass("no-weblate")
     }
 
-    private static CreateFullVisualisation(oh: any): BaseUIElement {
-        /** First, we determine which range of dates we want to visualize: this week or next week?**/
-
-        const today = new Date()
-        today.setHours(0, 0, 0, 0)
-        const lastMonday = OH.getMondayBefore(today)
-        const nextSunday = new Date(lastMonday)
-        nextSunday.setDate(nextSunday.getDate() + 7)
-
-        if (!oh.getState() && !oh.getUnknown()) {
-            // POI is currently closed
-            const nextChange: Date = oh.getNextChange()
-            if (
-                // Shop isn't gonna open anymore in this timerange
-                nextSunday < nextChange &&
-                // And we are already in the weekend to show next week
-                (today.getDay() == 0 || today.getDay() == 6)
-            ) {
-                // We move the range to next week!
-                lastMonday.setDate(lastMonday.getDate() + 7)
-                nextSunday.setDate(nextSunday.getDate() + 7)
-            }
-        }
-
-        /* We calculate the ranges when it is opened! */
-        const ranges = OH.GetRanges(oh, lastMonday, nextSunday)
-
+    private static CreateFullVisualisation(
+        oh: opening_hours,
+        ranges: OpeningRange[][],
+        lastMonday: Date
+    ): BaseUIElement {
         /* First, a small sanity check. The business might be permanently closed, 24/7 opened or something other special
          * So, we have to handle the case that ranges is completely empty*/
         if (ranges.filter((range) => range.length > 0).length === 0) {

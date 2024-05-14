@@ -11,7 +11,7 @@ NL-Net is currently sponsoring Pietervdvn as well [for specific improvements](ht
 
 ## Historical sponsors
 
-The following organisations ordered a theme to Pieter Vander Vennet and thus sponsered the project.
+The following organisations ordered a theme to Pieter Vander Vennet and thus sponsored the project.
 As these projects are finished, they have no relation with the project anymore.
 
 Most recent projects are first:
@@ -23,11 +23,11 @@ See https://osoc.be/editions/2022/removing-obstacles-with-open-data
 
 ### Antwerpse Zuidrand (2020 - 2021)
 
-Antwerpse Zuidrand commissioned a map with [playgrounds and hiking routes](https://mapcomplete.osm.be/speelplekken)
+Antwerpse Zuidrand commissioned a map with [playgrounds and hiking routes](https://mapcomplete.org/speelplekken)
 
 ### OSM UK (2021)
 
-OSM UK commissioned an [address importer](https://mapcomplete.osm.be/uk_addresses)
+OSM UK commissioned an [address importer](https://mapcomplete.org/uk_addresses)
 
 ### Toerisme Vlaanderen (2021 - 2022)
 

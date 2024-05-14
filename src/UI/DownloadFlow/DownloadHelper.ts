@@ -5,6 +5,7 @@ import LayerConfig from "../../Models/ThemeConfig/LayerConfig"
 import { Utils } from "../../Utils"
 import SimpleMetaTagger from "../../Logic/SimpleMetaTagger"
 import geojson2svg from "geojson2svg"
+import { GeoOperations } from "../../Logic/GeoOperations"
 
 /**
  * Exposes the download-functionality
@@ -82,6 +83,7 @@ export default class DownloadHelper {
         height?: 1000 | number
         mapExtent?: BBox
         unit?: "px" | "mm" | string
+        noSelfIntersectingLines?: boolean
     }) {
         const perLayer = this._state.perLayer
         options = options ?? {}
@@ -103,7 +105,7 @@ export default class DownloadHelper {
         const elements: string[] = []
 
         for (const layer of Array.from(perLayer.keys())) {
-            const features = perLayer.get(layer).features.data
+            let features = perLayer.get(layer).features.data
             if (features.length === 0) {
                 continue
             }
@@ -128,7 +130,9 @@ export default class DownloadHelper {
                     },
                 ],
             })
-
+            if (options.noSelfIntersectingLines) {
+                features = GeoOperations.SplitSelfIntersectingWays(features)
+            }
             for (const feature of features) {
                 const stroke =
                     rendering?.color?.GetRenderValue(feature.properties)?.txt ?? "#ff0000"
@@ -149,7 +153,7 @@ export default class DownloadHelper {
         return header + "\n" + elements.join("\n") + "\n</svg>"
     }
 
-    public getCleanGeoJsonPerLayer(includeMetaData: boolean): Map<string, Feature[]> {
+    private getCleanGeoJsonPerLayer(includeMetaData: boolean): Map<string, Feature[]> {
         const state = this._state
         const featuresPerLayer = new Map<string, any[]>()
         const neededLayers = state.layout.layers.filter((l) => l.source !== null).map((l) => l.id)
@@ -157,6 +161,7 @@ export default class DownloadHelper {
 
         for (const neededLayer of neededLayers) {
             const indexedFeatureSource = state.perLayer.get(neededLayer)
+
             let features = indexedFeatureSource.GetFeaturesWithin(bbox)
             // The 'indexedFeatureSources' contains _all_ features, they are not filtered yet
             const filter = state.layerState.filteredLayers.get(neededLayer)

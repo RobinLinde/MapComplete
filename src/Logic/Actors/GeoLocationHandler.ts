@@ -10,6 +10,7 @@ import { GeoOperations } from "../GeoOperations"
 import { OsmTags } from "../../Models/OsmFeature"
 import StaticFeatureSource from "../FeatureSource/Sources/StaticFeatureSource"
 import { MapProperties } from "../../Models/MapProperties"
+import { Orientation } from "../../Sensors/Orientation"
 
 /**
  * The geolocation-handler takes a map-location and a geolocation state.
@@ -94,7 +95,7 @@ export default class GeoLocationHandler {
 
             if (!this.geolocationState.allowMoving.data) {
                 // Jup, the map is locked to the bound location: move automatically
-                self.MoveMapToCurrentLocation()
+                self.MoveMapToCurrentLocation(0)
                 return
             }
         })
@@ -112,7 +113,7 @@ export default class GeoLocationHandler {
      * - The GPS-location iss NULL-island
      * @constructor
      */
-    public MoveMapToCurrentLocation() {
+    public MoveMapToCurrentLocation(zoomToAtLeast: number = 14) {
         const newLocation = this.geolocationState.currentGPSLocation.data
         const mapLocation = this.mapProperties.location
         // We got a new location.
@@ -128,22 +129,21 @@ export default class GeoLocationHandler {
         }
 
         // We check that the GPS location is not out of bounds
-        const bounds = this.mapProperties.maxbounds.data
+        const bounds: BBox = this.mapProperties.maxbounds.data
         if (bounds !== undefined) {
             // B is an array with our lock-location
-            const inRange = new BBox(bounds).contains([newLocation.longitude, newLocation.latitude])
+            const inRange = bounds.contains([newLocation.longitude, newLocation.latitude])
             if (!inRange) {
                 return
             }
         }
 
-        console.trace("Moving the map to the GPS-location")
         mapLocation.setData({
             lon: newLocation.longitude,
             lat: newLocation.latitude,
         })
         const zoom = this.mapProperties.zoom
-        zoom.setData(Math.min(Math.max(zoom.data, 14), 18))
+        zoom.setData(Math.min(Math.max(zoom.data, zoomToAtLeast), 18))
 
         this.mapHasMoved.setData(new Date())
         this.geolocationState.requestMoment.setData(undefined)
@@ -152,27 +152,23 @@ export default class GeoLocationHandler {
     private CopyGeolocationIntoMapstate() {
         const features: UIEventSource<Feature[]> = new UIEventSource<Feature[]>([])
         this.currentUserLocation = new StaticFeatureSource(features)
-        const keysToCopy = ["speed", "accuracy", "altitude", "altitudeAccuracy", "heading"]
         let i = 0
-        this.geolocationState.currentGPSLocation.addCallbackAndRun((location) => {
-            if (location === undefined) {
-                return
-            }
-
+        this.geolocationState.currentGPSLocation.addCallbackAndRunD((location) => {
             const properties = {
                 id: "gps-" + i,
                 "user:location": "yes",
                 date: new Date().toISOString(),
+                // GeolocationObject behaves really weird when indexing, so copying it one by one is the most stable
+                accuracy: location.accuracy,
+                speed: location.speed,
+                altitude: location.altitude,
+                altitudeAccuracy: location.altitudeAccuracy,
+                heading: location.heading,
+                alpha: Orientation.singleton.gotMeasurement.data
+                    ? "" + Orientation.singleton.alpha.data
+                    : undefined,
             }
             i++
-
-            for (const k in keysToCopy) {
-                // For some weird reason, the 'Object.keys' method doesn't work for the 'location: GeolocationCoordinates'-object and will thus not copy all the properties when using {...location}
-                // As such, they are copied here
-                if (location[k]) {
-                    properties[k] = location[k]
-                }
-            }
 
             const feature = <Feature>{
                 type: "Feature",
@@ -182,7 +178,6 @@ export default class GeoLocationHandler {
                     coordinates: [location.longitude, location.latitude],
                 },
             }
-
             features.setData([feature])
         })
     }
@@ -201,7 +196,6 @@ export default class GeoLocationHandler {
             )
         })
         features.ping()
-        let i = 0
         this.currentUserLocation?.features?.addCallbackAndRunD(([location]: [Feature<Point>]) => {
             if (location === undefined) {
                 return
@@ -232,7 +226,6 @@ export default class GeoLocationHandler {
 
             const feature = JSON.parse(JSON.stringify(location))
             feature.properties.id = "gps/" + features.data.length
-            i++
             features.data.push(feature)
             features.ping()
         })

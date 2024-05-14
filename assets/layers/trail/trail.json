@@ -7,9 +7,15 @@
     "de": "Wanderwege",
     "fr": "Sentiers",
     "ca": "Camins",
-    "da": "Stier"
+    "da": "Stier",
+    "cs": "Stezky"
   },
-  "minzoom": 12,
+  "description": {
+    "en": "Waymarked trails",
+    "nl": "Aangeduide wandeltochten",
+    "de": "Markierte Wanderwege",
+    "ca": "Rutes marcades"
+  },
   "source": {
     "osmTags": {
       "and": [
@@ -24,6 +30,7 @@
       ]
     }
   },
+  "minzoom": 12,
   "title": {
     "render": {
       "en": "Trail",
@@ -32,7 +39,8 @@
       "de": "Wanderweg",
       "fr": "Sentier",
       "ca": "Camí",
-      "da": "Sti"
+      "da": "Sti",
+      "cs": "Stezka"
     },
     "mappings": [
       {
@@ -41,6 +49,47 @@
       }
     ]
   },
+  "pointRendering": [
+    {
+      "marker": [
+        {
+          "icon": {
+            "render": "./assets/layers/trail/trail.svg",
+            "mappings": [
+              {
+                "if": "wheelchair=yes",
+                "then": "./assets/layers/trail/wheelchair.svg"
+              },
+              {
+                "if": "pushchair=yes",
+                "then": "./assets/layers/trail/pushchair.svg"
+              }
+            ]
+          }
+        }
+      ],
+      "iconSize": "35,35",
+      "location": [
+        "point"
+      ],
+      "anchor": "center"
+    }
+  ],
+  "lineRendering": [
+    {
+      "color": {
+        "render": "#335D9F",
+        "mappings": [
+          {
+            "if": "colour~*",
+            "then": "{colour}"
+          }
+        ]
+      },
+      "width": "3",
+      "dashArray": "5 5"
+    }
+  ],
   "tagRenderings": [
     "images",
     {
@@ -50,15 +99,23 @@
         "nl": "Deze wandeling is {_length:km} kilometer lang",
         "de": "Der Wanderweg ist {_length:km} Kilometer lang",
         "fr": "Le sentier fait {_length:km} kilomètres de long",
-        "da": "Stien er {_length:km} kilometer lang"
+        "da": "Stien er {_length:km} kilometer lang",
+        "ca": "El sender té {_length:km} quilòmetres",
+        "cs": "Stezka je dlouhá {_length:km} kilometrů"
       }
     },
     {
       "question": {
-        "nl": "Wat is de naam van deze wandeling?"
+        "en": "What is the name of this trail?",
+        "nl": "Wat is de naam van deze wandeling?",
+        "de": "Wie heißt dieser Weg?",
+        "ca": "Quin és el nom d'aquest sender?"
       },
       "render": {
-        "nl": "Deze wandeling heet <b>{name}</b>"
+        "en": "This trail is called <b>{name}</b>",
+        "nl": "Deze wandeling heet <b>{name}</b>",
+        "de": "Dieser Weg heißt <b>{name}</b>",
+        "ca": "Aquest sender s'anomena <b>{name}</b>"
       },
       "freeform": {
         "key": "name"
@@ -67,10 +124,14 @@
     },
     {
       "render": {
-        "nl": "Beheer door {operator}"
+        "en": "This trail is maintained by {operator}",
+        "nl": "Beheer door {operator}",
+        "de": "Dieser Weg wird von {operator} gepflegt"
       },
       "question": {
-        "nl": "Wie beheert deze wandeltocht?"
+        "en": "Who maintains this trail?",
+        "nl": "Wie beheert deze wandeltocht?",
+        "de": "Wer pflegt diesen Weg?"
       },
       "freeform": {
         "key": "operator"
@@ -83,7 +144,10 @@
             ]
           },
           "then": {
-            "nl": "Dit gebied wordt beheerd door Natuurpunt"
+            "en": "This trail is maintained by Natuurpunt",
+            "nl": "Dit gebied wordt beheerd door Natuurpunt",
+            "de": "Dieser Weg wird von Natuurpunt gepflegt",
+            "ca": "Aquest sender és mantingut per Natuurpunt"
           },
           "icon": {
             "path": "./assets/themes/buurtnatuur/Natuurpunt.jpg",
@@ -97,7 +161,9 @@
             ]
           },
           "then": {
-            "nl": "Dit gebied wordt beheerd door {operator}"
+            "en": "This trail is maintained by {operator}",
+            "nl": "Dit gebied wordt beheerd door {operator}",
+            "de": "Dieser Weg wird von {operator} gepflegt"
           },
           "hideInAnswer": true,
           "icon": {
@@ -110,10 +176,16 @@
     },
     {
       "question": {
-        "nl": "Welke kleur heeft deze wandeling?"
+        "en": "What is the reference colour of this trail?",
+        "nl": "Welke kleur heeft deze wandeling?",
+        "de": "Was ist die Referenzfarbe dieses Weges?",
+        "ca": "Quin és el color de referència d'aquest sender?"
       },
       "render": {
-        "nl": "Deze wandeling heeft kleur {colour}"
+        "en": "The reference colour is {colour}",
+        "nl": "Deze wandeling heeft kleur {colour}",
+        "de": "Die Referenzfarbe ist {colour}",
+        "ca": "El color de referència és {colour}"
       },
       "freeform": {
         "key": "colour",
@@ -127,7 +199,9 @@
             "en": "Blue trail",
             "de": "Blauer Weg",
             "fr": "Sentier bleu",
-            "da": "Blå sti"
+            "da": "Blå sti",
+            "ca": "Ruta blava",
+            "cs": "Modrá stezka"
           }
         },
         {
@@ -137,7 +211,9 @@
             "en": "Red trail",
             "de": "Roter Weg",
             "fr": "Sentier rouge",
-            "da": "Rød sti"
+            "da": "Rød sti",
+            "ca": "Ruta vermella",
+            "cs": "Červená stezka"
           }
         },
         {
@@ -147,7 +223,9 @@
             "en": "Green trail",
             "de": "Grüner Weg",
             "fr": "Sentier vert",
-            "da": "Grøn sti"
+            "da": "Grøn sti",
+            "ca": "Ruta verda",
+            "cs": "Zelená stezka"
           }
         },
         {
@@ -157,7 +235,9 @@
             "en": "Yellow trail",
             "de": "Gelber Weg",
             "fr": "Sentier jaune",
-            "da": "Gul sti"
+            "da": "Gul sti",
+            "ca": "Ruta groga",
+            "cs": "Žlutá stezka"
           }
         }
       ],
@@ -165,18 +245,24 @@
     },
     {
       "question": {
-        "nl": "Is deze wandeling toegankelijk met de rolstoel?"
+        "en": "Is this trail wheelchair accessible?",
+        "nl": "Is deze wandeling toegankelijk met de rolstoel?",
+        "de": "Ist dieser Weg rollstuhlgerecht?"
       },
       "mappings": [
         {
           "then": {
-            "nl": "deze wandeltocht is toegankelijk met de rolstoel"
+            "en": "This trail is wheelchair-accessible",
+            "nl": "deze wandeltocht is toegankelijk met de rolstoel",
+            "de": "Dieser Weg ist rollstuhlgerecht"
           },
           "if": "wheelchair=yes"
         },
         {
           "then": {
-            "nl": "deze wandeltocht is niet toegankelijk met de rolstoel"
+            "en": "This trail is not wheelchair accessible",
+            "nl": "deze wandeltocht is niet toegankelijk met de rolstoel",
+            "de": "Dieser Weg ist nicht rollstuhlgerecht"
           },
           "if": "wheelchair=no"
         }
@@ -185,61 +271,29 @@
     },
     {
       "question": {
-        "nl": "Is deze wandeltocht toegankelijk met de buggy?"
+        "en": "Is this trail accessible with a pushchair?",
+        "nl": "Is deze wandeltocht toegankelijk met de buggy?",
+        "de": "Ist dieser Weg mit einem Kinderwagen zugänglich?"
       },
       "mappings": [
         {
           "then": {
-            "nl": "deze wandeltocht is toegankelijk met de buggy"
+            "en": "This trail is accessible with a pushchair",
+            "nl": "deze wandeltocht is toegankelijk met de buggy",
+            "de": "Dieser Weg ist mit einem Kinderwagen zugänglich"
           },
           "if": "pushchair=yes"
         },
         {
           "then": {
-            "nl": "deze wandeltocht is niet toegankelijk met de buggy"
+            "en": "This trail is not accessible with a pushchair",
+            "nl": "deze wandeltocht is niet toegankelijk met de buggy",
+            "de": "Dieser Weg ist nicht mit einem Kinderwagen zugänglich"
           },
           "if": "pushchair=no"
         }
       ],
       "id": "pushchair access"
-    }
-  ],
-  "description": {
-    "nl": "Aangeduide wandeltochten"
-  },
-  "mapRendering": [
-    {
-      "icon": {
-        "render": "./assets/layers/trail/trail.svg",
-        "mappings": [
-          {
-            "if": "wheelchair=yes",
-            "then": "./assets/layers/trail/wheelchair.svg"
-          },
-          {
-            "if": "pushchair=yes",
-            "then": "./assets/layers/trail/pushchair.svg"
-          }
-        ]
-      },
-      "iconSize": "35,35",
-      "location": [
-        "point"
-      ],
-      "anchor": "center"
-    },
-    {
-      "color": {
-        "render": "#335D9F",
-        "mappings": [
-          {
-            "if": "colour~*",
-            "then": "{colour}"
-          }
-        ]
-      },
-      "width": "3",
-      "dashArray": "5 5"
     }
   ]
 }

@@ -3,7 +3,7 @@ import SmallLicense from "../src/Models/smallLicense"
 import ScriptUtils from "./ScriptUtils"
 import Script from "./Script"
 import { Utils } from "../src/Utils"
-
+const prompt = require("prompt-sync")()
 export class GenerateLicenseInfo extends Script {
     private static readonly needsLicenseRef = new Set(
         ScriptUtils.readDirRecSync("./LICENSES")
@@ -64,13 +64,19 @@ export class GenerateLicenseInfo extends Script {
             license: "CC0",
             sources: [],
         })
+        knownLicenses.set("carto", {
+            authors: ["OSM-Carto"],
+            path: undefined,
+            license: "CC0",
+            sources: [""],
+        })
         knownLicenses.set("tv", {
             authors: ["Toerisme Vlaanderen"],
             path: undefined,
             license: "CC0",
             sources: [
                 "https://toerismevlaanderen.be/pinjepunt",
-                "https://mapcomplete.osm.be/toerisme_vlaanderenn",
+                "https://mapcomplete.org/toerisme_vlaanderenn",
             ],
         })
         knownLicenses.set("tvf", {
@@ -171,10 +177,6 @@ export class GenerateLicenseInfo extends Script {
         }
         if (author == "Q" || author == "q" || author == "") {
             throw "Quitting now!"
-        }
-        let authors = author.split(";")
-        if (author.toLowerCase() == "none") {
-            authors = []
         }
         return {
             authors: author.split(";"),

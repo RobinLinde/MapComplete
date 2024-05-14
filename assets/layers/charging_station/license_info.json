@@ -100,6 +100,16 @@
     "sources": []
   },
   {
+    "path": "as3112.svg",
+    "license": "CC-BY-SA-4.0",
+    "authors": [
+      "Yanpas"
+    ],
+    "sources": [
+      "https://commons.wikimedia.org/wiki/File:Plug_types.svg"
+    ]
+  },
+  {
     "path": "bosch-3pin.svg",
     "license": "CC0-1.0",
     "authors": [
@@ -114,6 +124,46 @@
       "Pieter Vander Vennet"
     ],
     "sources": []
+  },
+  {
+    "path": "bs1363.svg",
+    "license": "CC-BY-SA-4.0",
+    "authors": [
+      "Yanpas"
+    ],
+    "sources": [
+      "https://commons.wikimedia.org/wiki/File:Plug_types.svg"
+    ]
+  },
+  {
+    "path": "nema-5-15.svg",
+    "license": "CC-BY-SA-4.0",
+    "authors": [
+      "Yanpas"
+    ],
+    "sources": [
+      "https://commons.wikimedia.org/wiki/File:Plug_types.svg"
+    ]
+  },
+  {
+    "path": "nema-5-20.svg",
+    "license": "CC-BY-SA-4.0",
+    "authors": [
+      "Modified from Yanpas"
+    ],
+    "sources": [
+      "https://commons.wikimedia.org/wiki/File:Plug_types.svg"
+    ]
+  },
+  {
+    "path": "typej.svg",
+    "license": "CC-BY-SA-4.0",
+    "authors": [
+      "Modified from Yanpas"
+    ],
+    "sources": [
+      "https://commons.wikimedia.org/wiki/File:Plug_types.svg"
+    ]
   },
   {
     "path": "under_construction.svg",

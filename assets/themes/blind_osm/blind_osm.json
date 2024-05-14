@@ -9,7 +9,10 @@
     "ca": "OSM per als cecs",
     "cs": "Mapování systému objektů pro nevidomé",
     "ru": "OSM для слепых и слабовидящих",
-    "es": "OSM para ciegos"
+    "es": "OSM para ciegos",
+    "eu": "OSM itsuentzat",
+    "it": "OSM per i non vedenti",
+    "pl": "OSM dla niewidomych"
   },
   "description": {
     "en": "Help to map features relevant for the blind",
@@ -19,13 +22,16 @@
     "ca": "Ajuda a mapejar elements rellevants per a persones amb discapacitat visual",
     "cs": "Pomozte zmapovat objekty důležité pro nevidomé",
     "nb_NO": "Relevante funksjoner for blinde",
-    "es": "Ayuda para cartografiar elementos relevantes para invidentes"
+    "es": "Ayuda para cartografiar elementos relevantes para invidentes",
+    "eu": "Itsuentzako elementu garrantzitsuak kartografiatzeko laguntza",
+    "it": "Aiuta a mappare le caratteristiche importanti per i non vedenti",
+    "pl": "Pomóż umieszczać na mapie obiekty ważne dla niewidomych"
   },
   "icon": "./assets/themes/blind_osm/Blindicon.svg",
+  "startZoom": 20,
   "startLat": 52.99238,
   "startLon": 6.570614,
-  "startZoom": 20,
-  "defaultBackgroundId": "CartoDB.Positron",
+  "defaultBackgroundId": "protomaps.white",
   "layers": [
     {
       "builtin": "cycleways_and_roads",
@@ -40,7 +46,7 @@
     {
       "builtin": "crossings",
       "override": {
-        "mapRendering": [
+        "pointRendering": [
           {
             "iconBadges": [
               {
@@ -62,8 +68,8 @@
     {
       "builtin": "kerbs",
       "override": {
-        "minzoom": 19,
-        "mapRendering": [
+        "minzoom": 18,
+        "pointRendering": [
           {
             "iconBadges": [
               {
@@ -82,7 +88,7 @@
     {
       "builtin": "transit_stops",
       "override": {
-        "mapRendering": [
+        "pointRendering": [
           {
             "iconBadges": [
               {

@@ -244,18 +244,6 @@
                                 }
                             }
                         }
-                    },
-                    "units+": {
-                        "0": {
-                            "applicableUnits": {
-                                "0": {
-                                    "human": " meter"
-                                },
-                                "1": {
-                                    "human": " fot"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -283,7 +271,12 @@
             "1": {
                 "name": "noder",
                 "title": {
-                    "render": "sykkelnode <strong>{rcn_ref}</strong>"
+                    "mappings": {
+                        "0": {
+                            "then": "sykkelnode <strong>{rcn_ref}</strong>"
+                        }
+                    },
+                    "render": "sykkelnode"
                 }
             }
         },
@@ -467,17 +460,6 @@
     "ghostbikes": {
         "title": "Spøkelsessykler"
     },
-    "grb_fixme": {
-        "layers": {
-            "0": {
-                "tagRenderings": {
-                    "building type": {
-                        "question": "Hva slags bygning er dette?"
-                    }
-                }
-            }
-        }
-    },
     "hailhydrant": {
         "title": "Hydranter, brannslukkere, brannstasjoner, og ambulansestasjoner."
     },
@@ -512,19 +494,6 @@
     },
     "onwheels": {
         "layers": {
-            "4": {
-                "override": {
-                    "filter": {
-                        "0": {
-                            "options": {
-                                "1": {
-                                    "question": "Uten breddeinfo"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
             "19": {
                 "override": {
                     "=title": {
@@ -546,6 +515,19 @@
                             "render": {
                                 "special": {
                                     "message": "Legg til alle foreslåtte"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "4": {
+                "override": {
+                    "filter": {
+                        "0": {
+                            "options": {
+                                "1": {
+                                    "question": "Uten breddeinfo"
                                 }
                             }
                         }
@@ -644,10 +626,6 @@
     },
     "stations": {
         "layers": {
-            "3": {
-                "description": "Lag som viser togstasjoner",
-                "name": "Togstasjoner"
-            },
             "16": {
                 "tagRenderings": {
                     "type": {
@@ -658,6 +636,10 @@
                         }
                     }
                 }
+            },
+            "3": {
+                "description": "Lag som viser togstasjoner",
+                "name": "Togstasjoner"
             }
         },
         "title": "Togstasjoner"
@@ -735,6 +717,13 @@
         "description": "Kartlegg trærne.",
         "shortDescription": "Kartlegg alle trærne",
         "title": "Trær"
+    },
+    "walkingnodes": {
+        "layers": {
+            "1": {
+                "name": "noder"
+            }
+        }
     },
     "walls_and_buildings": {
         "title": "Murer og bygninger"

@@ -20,7 +20,7 @@ export default class OsmFeatureSource extends FeatureSourceMerger {
     private options: {
         bounds: Store<BBox>
         readonly allowedFeatures: TagsFilter
-        backend?: "https://openstreetmap.org/" | string
+        backend?: "https://api.openstreetmap.org/" | string
         /**
          * If given: this featureSwitch will not update if the store contains 'false'
          */
@@ -41,7 +41,7 @@ export default class OsmFeatureSource extends FeatureSourceMerger {
     constructor(options: {
         bounds: Store<BBox>
         readonly allowedFeatures: TagsFilter
-        backend?: "https://openstreetmap.org/" | string
+        backend?: "https://api.openstreetmap.org/" | string
         /**
          * If given: this featureSwitch will not update if the store contains 'false'
          */
@@ -54,14 +54,13 @@ export default class OsmFeatureSource extends FeatureSourceMerger {
         this._bounds = options.bounds
         this.allowedTags = options.allowedFeatures
         this.isActive = options.isActive ?? new ImmutableStore(true)
-        this._backend = options.backend ?? "https://www.openstreetmap.org"
+        this._backend = options.backend ?? "https://api.openstreetmap.org"
         this._bounds.addCallbackAndRunD((bbox) => this.loadData(bbox))
         this._patchRelations = options?.patchRelations ?? true
     }
 
     private async loadData(bbox: BBox) {
         if (this.isActive?.data === false) {
-            console.log("OsmFeatureSource: not triggering: inactive")
             return
         }
 

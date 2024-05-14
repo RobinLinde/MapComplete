@@ -4,16 +4,15 @@
    * The questions can either be shown all at once or one at a time (in which case they can be skipped)
    */
   import TagRenderingConfig from "../../../Models/ThemeConfig/TagRenderingConfig"
-  import { UIEventSource } from "../../../Logic/UIEventSource"
+  import { Store, UIEventSource } from "../../../Logic/UIEventSource"
   import type { Feature } from "geojson"
   import type { SpecialVisualizationState } from "../../SpecialVisualization"
   import LayerConfig from "../../../Models/ThemeConfig/LayerConfig"
-  import If from "../../Base/If.svelte"
-  import { onDestroy } from "svelte"
   import TagRenderingQuestion from "./TagRenderingQuestion.svelte"
   import Tr from "../../Base/Tr.svelte"
   import Translations from "../../i18n/Translations.js"
   import { Utils } from "../../../Utils"
+  import { onDestroy } from "svelte"
 
   export let layer: LayerConfig
   export let tags: UIEventSource<Record<string, string>>
@@ -30,6 +29,7 @@
    */
   export let notForLabels: string[] | undefined = undefined
   const _notForLabels = new Set(notForLabels)
+  let showAllQuestionsAtOnce = state.userRelatedState.showAllQuestionsAtOnce
 
   function allowed(labels: string[]) {
     if (onlyForLabels?.length > 0 && !labels.some((l) => _onlyForLabels.has(l))) {
@@ -42,7 +42,7 @@
   }
 
   let skippedQuestions = new UIEventSource<Set<string>>(new Set<string>())
-  let questionboxElem: HTMLBaseElement
+  let questionboxElem: HTMLDivElement
   let questionsToAsk = tags.map(
     (tags) => {
       const baseQuestions = (layer.tagRenderings ?? [])?.filter(
@@ -50,7 +50,7 @@
       )
       const questionsToAsk: TagRenderingConfig[] = []
       for (const baseQuestion of baseQuestions) {
-        if (skippedQuestions.data.has(baseQuestion.id) > 0) {
+        if (skippedQuestions.data.has(baseQuestion.id)) {
           continue
         }
         if (
@@ -68,20 +68,31 @@
     },
     [skippedQuestions]
   )
-
-  let _questionsToAsk: TagRenderingConfig[]
-  let _firstQuestion: TagRenderingConfig
-  onDestroy(
-    questionsToAsk.subscribe((qta) => {
-      _questionsToAsk = qta
-      _firstQuestion = qta[0]
-    })
+  let firstQuestion: UIEventSource<TagRenderingConfig> = new UIEventSource<TagRenderingConfig>(
+    undefined
   )
+  let allQuestionsToAsk: UIEventSource<TagRenderingConfig[]> = new UIEventSource<
+    TagRenderingConfig[]
+  >([])
+
+  async function calculateQuestions() {
+    console.log("Applying questions to ask")
+    const qta = questionsToAsk.data
+    firstQuestion.setData(undefined)
+    //allQuestionsToAsk.setData([])
+    await Utils.awaitAnimationFrame()
+    firstQuestion.setData(qta[0])
+    allQuestionsToAsk.setData(qta)
+  }
+
+  onDestroy(questionsToAsk.addCallback(() => calculateQuestions()))
+  onDestroy(showAllQuestionsAtOnce.addCallback(() => calculateQuestions()))
+  calculateQuestions()
 
   let answered: number = 0
   let skipped: number = 0
 
-  function skip(question: TagRenderingConfig, didAnswer: boolean = false) {
+  function skip(question: { id: string }, didAnswer: boolean = false) {
     skippedQuestions.data.add(question.id)
     skippedQuestions.ping()
     if (didAnswer) {
@@ -95,8 +106,13 @@
   }
 </script>
 
-<div bind:this={questionboxElem}>
-  {#if _questionsToAsk.length === 0}
+<div
+  bind:this={questionboxElem}
+  aria-live="polite"
+  class="marker-questionbox-root"
+  class:hidden={$questionsToAsk.length === 0 && skipped === 0 && answered === 0}
+>
+  {#if $allQuestionsToAsk.length === 0}
     {#if skipped + answered > 0}
       <div class="thanks">
         <Tr t={Translations.t.general.questionBox.done} />
@@ -142,36 +158,34 @@
     {/if}
   {:else}
     <div>
-      <If condition={state.userRelatedState.showAllQuestionsAtOnce}>
-        <div>
-          {#each _questionsToAsk as question (question.id)}
+      {#if $showAllQuestionsAtOnce}
+        <div class="flex flex-col gap-y-1">
+          {#each $allQuestionsToAsk as question (question.id)}
             <TagRenderingQuestion config={question} {tags} {selectedElement} {state} {layer} />
           {/each}
         </div>
-
-        <div slot="else">
-          <TagRenderingQuestion
-            config={_firstQuestion}
-            {layer}
-            {selectedElement}
-            {state}
-            {tags}
-            on:saved={() => {
-              skip(_firstQuestion, true)
+      {:else if $firstQuestion !== undefined}
+        <TagRenderingQuestion
+          config={$firstQuestion}
+          {layer}
+          {selectedElement}
+          {state}
+          {tags}
+          on:saved={() => {
+            skip($firstQuestion, true)
+          }}
+        >
+          <button
+            class="secondary"
+            on:click={() => {
+              skip($firstQuestion)
             }}
+            slot="cancel"
           >
-            <button
-              class="secondary"
-              on:click={() => {
-                skip(_firstQuestion)
-              }}
-              slot="cancel"
-            >
-              <Tr t={Translations.t.general.skip} />
-            </button>
-          </TagRenderingQuestion>
-        </div>
-      </If>
+            <Tr t={Translations.t.general.skip} />
+          </button>
+        </TagRenderingQuestion>
+      {/if}
     </div>
   {/if}
 </div>

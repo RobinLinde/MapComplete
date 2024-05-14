@@ -1,63 +1,96 @@
 {
   "id": "maproulette",
-  "source": {
-    "geoJson": "https://maproulette.org/api/v2/tasks/box/{x_min}/{y_min}/{x_max}/{y_max}",
-    "geoJsonZoomLevel": 16,
-    "osmTags": "title~*"
+  "name": {
+    "en": "MapRoulette Tasks",
+    "de": "MapRoulette-Aufgaben",
+    "nl": "MapRoulette Taken",
+    "pl": "Zadania MapRoulette",
+    "ca": "Tasques de MapRoulette",
+    "cs": "Úkoly MapRoulette"
   },
   "description": {
     "en": "Layer showing all tasks in MapRoulette",
     "de": "Ebene, die alle MapRoulette-Aufgaben zeigt",
     "nl": "Laag met alle taken uit MapRoulette",
-    "ca": "Capa que mostra totes les tasques de MapRoulette"
+    "ca": "Capa que mostra totes les tasques de MapRoulette",
+    "pl": "Warstwa pokazująca wszystkie zadania w MapRoulette",
+    "cs": "Vrstva zobrazující všechny úlohy v MapRoulette",
+    "es": "Capa mostrando todas las tareas en MapRoulette"
   },
-  "mapRendering": [
+  "source": {
+    "geoJson": "https://maproulette.org/api/v2/tasks/box/{x_min}/{y_min}/{x_max}/{y_max}",
+    "geoJsonZoomLevel": 16,
+    "osmTags": "title~*"
+  },
+  "minzoom": 15,
+  "title": {
+    "render": {
+      "en": "MapRoulette Item: {parentName}",
+      "de": "MapRoulette-Element: {parentName}",
+      "nl": "MapRoulette Item: {parentName}",
+      "pl": "Obiekt MapRoulette: {parentName}",
+      "cs": "Položka MapRoulette: {parentName}"
+    }
+  },
+  "titleIcons": [
+    {
+      "id": "maproulette",
+      "render": "<a href='https://maproulette.org/challenge/{parentId}/task/{id}' target='_blank'><img src='./assets/layers/maproulette/logomark.svg'/></a>"
+    }
+  ],
+  "pointRendering": [
     {
       "location": [
         "point",
         "centroid"
       ],
-      "icon": {
-        "render": "./assets/layers/maproulette/logomark.svg",
-        "mappings": [
-          {
-            "if": "status=0",
-            "then": "pin:#959DFF"
-          },
-          {
-            "if": "status=1",
-            "then": "pin:#65D2DA"
-          },
-          {
-            "if": "status=2",
-            "then": "pin:#F7BB59"
-          },
-          {
-            "if": "status=3",
-            "then": "pin:#F7BB59"
-          },
-          {
-            "if": "status=4",
-            "then": "pin:#737373"
-          },
-          {
-            "if": "status=5",
-            "then": "pin:#CCB186"
-          },
-          {
-            "if": "status=6",
-            "then": "pin:#FF5E63"
-          },
-          {
-            "if": "status=9",
-            "then": "pin:#FF349C"
+      "marker": [
+        {
+          "icon": "pin",
+          "color": {
+            "render": "#00",
+            "mappings": [
+              {
+                "if": "status=0",
+                "then": "#959DFF"
+              },
+              {
+                "if": "status=1",
+                "then": "#65D2DA"
+              },
+              {
+                "if": "status=2",
+                "then": "#F7BB59"
+              },
+              {
+                "if": "status=3",
+                "then": "#F7BB59"
+              },
+              {
+                "if": "status=4",
+                "then": "#737373"
+              },
+              {
+                "if": "status=5",
+                "then": "#CCB186"
+              },
+              {
+                "if": "status=6",
+                "then": "#FF5E63"
+              },
+              {
+                "if": "status=9",
+                "then": "#FF349C"
+              }
+            ]
           }
-        ]
-      },
+        }
+      ],
       "iconSize": "40,40",
       "anchor": "bottom"
     }
   ],
+  "lineRendering": [],
   "tagRenderings": [
     {
       "id": "status",
@@ -68,7 +101,9 @@
             "en": "Task is created",
             "de": "Aufgabe wurde erstellt",
             "nl": "Taak werd gecreëerd",
-            "ca": "Es crea la tasca"
+            "ca": "Es crea la tasca",
+            "pl": "Zadanie jest stworzone",
+            "cs": "Úkol je vytvořen"
           }
         },
         {
@@ -76,7 +111,10 @@
           "then": {
             "en": "Task is fixed",
             "de": "Aufgabe wurde erledigt",
-            "nl": "Taak werd opgelost"
+            "nl": "Taak werd opgelost",
+            "pl": "Zadanie jest naprawione",
+            "ca": "La tasca està arreglada",
+            "cs": "Úkol je opraven"
           }
         },
         {
@@ -84,7 +122,10 @@
           "then": {
             "en": "Task is a false positive",
             "de": "Aufgabe ist ein falsches Positiv",
-            "nl": "Taak was vals positief"
+            "nl": "Taak was vals positief",
+            "pl": "Zadanie jest fałszywie pozytywne",
+            "ca": "La tasca és un fals positiu",
+            "cs": "Úkol je falešně pozitivní"
           }
         },
         {
@@ -92,7 +133,10 @@
           "then": {
             "en": "Task is skipped",
             "de": "Aufgabe wurde übersprungen",
-            "nl": "Taak werd overgeslagen"
+            "nl": "Taak werd overgeslagen",
+            "pl": "Zadanie jest pominięte",
+            "ca": "La tasca s'ha botat",
+            "cs": "Úkol je přeskočen"
           }
         },
         {
@@ -100,7 +144,10 @@
           "then": {
             "en": "Task is deleted",
             "de": "Aufgabe wurde gelöscht",
-            "nl": "Taak werd verwijderd"
+            "nl": "Taak werd verwijderd",
+            "pl": "Zadania jest usunięte",
+            "ca": "La tasca s'ha eliminat",
+            "cs": "Úkol je odstraněn"
           }
         },
         {
@@ -108,7 +155,10 @@
           "then": {
             "en": "Task is already fixed",
             "de": "Aufgabe wurde bereits erledigt",
-            "nl": "Taak was al opgelost"
+            "nl": "Taak was al opgelost",
+            "pl": "Zadania jest już wykonane",
+            "ca": "La tasca ja està arreglada",
+            "cs": "Úkol je již opraveno"
           }
         },
         {
@@ -116,7 +166,10 @@
           "then": {
             "en": "Task is marked as too hard",
             "de": "Aufgabe wurde als zu schwer markiert",
-            "nl": "Taak werd als te moeilijk ervaren"
+            "nl": "Taak werd als te moeilijk ervaren",
+            "pl": "Zadanie jest oznaczone jako zbyt trudne",
+            "ca": "La tasca s'ha marcat com a molt difícil",
+            "cs": "Úkol je označen jako příliš těžký"
           }
         },
         {
@@ -124,7 +177,10 @@
           "then": {
             "en": "Task is disabled",
             "de": "Aufgabe wurde deaktiviert",
-            "nl": "Taak is uitgeschakeld"
+            "nl": "Taak is uitgeschakeld",
+            "pl": "Zadanie jest wyłączone",
+            "ca": "La tasca està deshabilitada",
+            "cs": "Úloha je zakázána"
           }
         }
       ]
@@ -140,7 +196,9 @@
           "message": {
             "en": "Mark as fixed",
             "de": "Als behoben markieren",
-            "ca": "Marca com a solucionat"
+            "ca": "Marca com a solucionat",
+            "pl": "Oznacz jako naprawione",
+            "cs": "Označit jako opravené"
           }
         }
       }
@@ -156,7 +214,9 @@
           "message": {
             "en": "Mark as not found or false positive",
             "de": "Als nicht gefunden oder Falschmeldung markieren",
-            "ca": "Marca com a no trobat o com a fals positiu"
+            "ca": "Marca com a no trobat o com a fals positiu",
+            "pl": "Oznacz jako nieznalezione lub fałszywie pozytywne",
+            "cs": "Označit jako nenalezeno nebo falešně pozitivní"
           },
           "status": "2",
           "image": "close"
@@ -174,31 +234,14 @@
           "message": {
             "en": "Mark as too hard",
             "de": "Als zu schwer markieren",
-            "ca": "Marca com a massa complicat"
+            "ca": "Marca com a massa complicat",
+            "pl": "Oznacz jako zbyt trudne",
+            "cs": "Označit jako příliš těžké"
           },
           "status": "6",
-          "image": "not_found"
+          "image": "./assets/svg/not_found.svg"
         }
       }
-    }
-  ],
-  "minzoom": 15,
-  "name": {
-    "en": "MapRoulette Tasks",
-    "de": "MapRoulette-Aufgaben",
-    "nl": "MapRoulette Taken"
-  },
-  "title": {
-    "render": {
-      "en": "MapRoulette Item: {parentName}",
-      "de": "MapRoulette-Element: {parentName}",
-      "nl": "MapRoulette Item: {parentName}"
-    }
-  },
-  "titleIcons": [
-    {
-      "id": "maproulette",
-      "render": "<a href='https://maproulette.org/challenge/{parentId}/task/{id}' target='_blank'><img src='./assets/layers/maproulette/logomark.svg'/></a>"
     }
   ],
   "filter": [
@@ -209,14 +252,20 @@
           "question": {
             "en": "Show tasks with all statuses",
             "de": "Aufgaben mit allen Status anzeigen",
-            "nl": "Toon taken met alle statussen"
+            "nl": "Toon taken met alle statussen",
+            "pl": "Pokaż zadania z wszystkimi statusami",
+            "ca": "Mostra les tasques amb tots els estats",
+            "cs": "Zobrazit úkoly se všemi stavy"
           }
         },
         {
           "question": {
             "en": "Show tasks that are created",
             "de": "Aufgaben anzeigen, die erstellt wurden",
-            "nl": "Toon aangemaakte taken"
+            "nl": "Toon aangemaakte taken",
+            "pl": "Pokaż zadania, które zostały stworzone",
+            "ca": "Mostra les tasques que es creen",
+            "cs": "Zobrazit vytvořené úlohy"
           },
           "osmTags": "status=0"
         },
@@ -224,7 +273,10 @@
           "question": {
             "en": "Show tasks that are fixed",
             "de": "Aufgaben anzeigen, die erledigt wurden",
-            "nl": "Toon opgeloste taken"
+            "nl": "Toon opgeloste taken",
+            "ca": "Mostra les tasques que estan arreglades",
+            "cs": "Zobrazit úkoly, které jsou opravené",
+            "pl": "Pokaż zadania, które zostały naprawione"
           },
           "osmTags": "status=1"
         },
@@ -232,7 +284,10 @@
           "question": {
             "en": "Show tasks that are false positives",
             "de": "Aufgaben anzeigen, die falsch positiv sind",
-            "nl": "Toon vals-positieve taken"
+            "nl": "Toon vals-positieve taken",
+            "ca": "Mostra tasques que són falsos positius",
+            "cs": "Ukažte úkoly, které jsou falešně pozitivní",
+            "pl": "Pokaż zadania, które dały fałszywie pozytywne wyniki"
           },
           "osmTags": "status=2"
         },
@@ -240,7 +295,10 @@
           "question": {
             "en": "Show tasks that are skipped",
             "de": "Aufgaben anzeigen, die übersprungen wurden",
-            "nl": "Toon overgeslagen taken"
+            "nl": "Toon overgeslagen taken",
+            "ca": "Mostra les tasques que s'han omès",
+            "cs": "Zobrazit úkoly, které byly přeskočeny",
+            "pl": "Pokaż pominięte zadania"
           },
           "osmTags": "status=3"
         },
@@ -248,7 +306,10 @@
           "question": {
             "en": "Show tasks that are deleted",
             "de": "Aufgaben anzeigen, die gelöscht wurden",
-            "nl": "Toon verwijderde taken"
+            "nl": "Toon verwijderde taken",
+            "ca": "Mostra les tasques que s'han suprimit",
+            "cs": "Zobrazit úkoly, které byly odstraněny",
+            "pl": "Pokaż zadania, które zostały usunięte"
           },
           "osmTags": "status=4"
         },
@@ -256,7 +317,10 @@
           "question": {
             "en": "Show tasks that are already fixed",
             "de": "Aufgaben anzeigen, die bereits erledigt wurden",
-            "nl": "Toon al opgeloste taken"
+            "nl": "Toon al opgeloste taken",
+            "pl": "Pokaż zadania, które zostały już naprawione",
+            "ca": "Mostra les tasques que ja estan arreglades",
+            "cs": "Zobrazit úkoly, které jsou již opraveny"
           },
           "osmTags": "status=5"
         },
@@ -264,7 +328,10 @@
           "question": {
             "en": "Show tasks that are marked as too hard",
             "de": "Aufgaben anzeigen, die als zu schwierig markiert wurden",
-            "nl": "Toon taken die als te lastig gemarkeerd zijn"
+            "nl": "Toon taken die als te lastig gemarkeerd zijn",
+            "pl": "Pokaż zadania oznaczone jako zbyt trudne",
+            "ca": "Mostra les tasques marcades com a massa difícils",
+            "cs": "Zobrazit úkoly, které jsou označeny jako příliš těžké"
           },
           "osmTags": "status=6"
         },
@@ -272,7 +339,10 @@
           "question": {
             "en": "Show tasks that are disabled",
             "de": "Aufgaben anzeigen, die deaktiviert wurden",
-            "nl": "Toon uitgeschakelde taken"
+            "nl": "Toon uitgeschakelde taken",
+            "pl": "Pokaż zadania, które są wyłączone",
+            "ca": "Mostra les tasques que estan desactivades",
+            "cs": "Zobrazit úkoly, které jsou zakázány"
           },
           "osmTags": "status=9"
         }
@@ -291,7 +361,10 @@
           "question": {
             "en": "Challenge name contains {search}",
             "de": "Name der Kampagne enthält {search}",
-            "nl": "Naam uitdaging bevat {search}"
+            "nl": "Naam uitdaging bevat {search}",
+            "pl": "Nazwa wyzwania zawiera {search}",
+            "ca": "El nom del repte conté {search}",
+            "cs": "Název výzvy obsahuje {search}"
           }
         }
       ]
@@ -309,7 +382,10 @@
           "question": {
             "en": "Challenge ID matches {search}",
             "de": "Kampagnen ID stimmt mit {search} überein",
-            "nl": "ID uitdaging is {search}"
+            "nl": "ID uitdaging is {search}",
+            "pl": "ID wyzwania pasuje do {search}",
+            "ca": "L'identificador de desafiament coincideix amb {search}",
+            "cs": "ID výzvy odpovídá {search}"
           }
         }
       ]

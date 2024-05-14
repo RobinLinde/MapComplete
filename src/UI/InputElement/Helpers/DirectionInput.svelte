@@ -4,8 +4,7 @@
   import { Map as MlMap } from "maplibre-gl"
   import { MapLibreAdaptor } from "../../Map/MapLibreAdaptor"
   import MaplibreMap from "../../Map/MaplibreMap.svelte"
-  import ToSvelte from "../../Base/ToSvelte.svelte"
-  import Svg from "../../../Svg.js"
+  import Direction_stroke from "../../../assets/svg/Direction_stroke.svelte"
 
   /**
    * A visualisation to pick a direction on a map background.
@@ -27,6 +26,7 @@
   })
 
   let mainElem: HTMLElement
+
   function onPosChange(x: number, y: number) {
     const rect = mainElem.getBoundingClientRect()
     const dx = -(rect.left + rect.right) / 2 + x
@@ -63,10 +63,10 @@
   on:touchstart={(e) => onPosChange(e.touches[0].clientX, e.touches[0].clientY)}
 >
   <div class="absolute top-0 left-0 h-full w-full cursor-pointer">
-    <MaplibreMap {map} attribution={false} />
+    <MaplibreMap mapProperties={mla} {map} />
   </div>
 
   <div bind:this={directionElem} class="absolute top-0 left-0 h-full w-full">
-    <ToSvelte construct={Svg.direction_stroke_svg} />
+    <Direction_stroke />
   </div>
 </div>

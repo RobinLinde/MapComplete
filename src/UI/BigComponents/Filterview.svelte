@@ -7,11 +7,10 @@
   import ToSvelte from "../Base/ToSvelte.svelte"
   import Checkbox from "../Base/Checkbox.svelte"
   import FilterConfig from "../../Models/ThemeConfig/FilterConfig"
-  import type { Writable } from "svelte/store"
   import If from "../Base/If.svelte"
   import Dropdown from "../Base/Dropdown.svelte"
   import { onDestroy } from "svelte"
-  import { ImmutableStore, Store } from "../../Logic/UIEventSource"
+  import { ImmutableStore, Store, UIEventSource } from "../../Logic/UIEventSource"
   import FilterviewWithFields from "./FilterviewWithFields.svelte"
   import Tr from "../Base/Tr.svelte"
   import Translations from "../i18n/Translations"
@@ -20,12 +19,12 @@
   export let highlightedLayer: Store<string | undefined> = new ImmutableStore(undefined)
   export let zoomlevel: Store<number> = new ImmutableStore(22)
   let layer: LayerConfig = filteredLayer.layerDef
-  let isDisplayed: Store<boolean> = filteredLayer.isDisplayed
+  let isDisplayed: UIEventSource<boolean> = filteredLayer.isDisplayed
 
   /**
    * Gets a UIEventSource as boolean for the given option, to be used with a checkbox
    */
-  function getBooleanStateFor(option: FilterConfig): Writable<boolean> {
+  function getBooleanStateFor(option: FilterConfig): UIEventSource<boolean> {
     const state = filteredLayer.appliedFilters.get(option.id)
     return state.sync(
       (f) => f === 0,
@@ -37,7 +36,7 @@
   /**
    * Gets a UIEventSource as number for the given option, to be used with a dropdown or radiobutton
    */
-  function getStateFor(option: FilterConfig): Writable<number> {
+  function getStateFor(option: FilterConfig): UIEventSource<number | string> {
     return filteredLayer.appliedFilters.get(option.id)
   }
 
@@ -55,8 +54,7 @@
 
 {#if filteredLayer.layerDef.name}
   <div bind:this={mainElem} class="mb-1.5">
-    <label class="no-image-background flex gap-1">
-      <Checkbox selected={isDisplayed} />
+    <Checkbox selected={isDisplayed}>
       <If condition={filteredLayer.isDisplayed}>
         <ToSvelte
           construct={() => layer.defaultIcon()?.SetClass("block h-6 w-6 no-image-background")}
@@ -68,14 +66,14 @@
         />
       </If>
 
-      {filteredLayer.layerDef.name}
+      <Tr t={filteredLayer.layerDef.name} />
 
       {#if $zoomlevel < layer.minzoom}
         <span class="alert">
           <Tr t={Translations.t.general.layerSelection.zoomInToSeeThisLayer} />
         </span>
       {/if}
-    </label>
+    </Checkbox>
 
     {#if $isDisplayed && filteredLayer.layerDef.filters?.length > 0}
       <div id="subfilters" class="ml-4 flex flex-col gap-y-1">
@@ -83,10 +81,9 @@
           <div>
             <!-- There are three (and a half) modes of filters: a single checkbox, a radio button/dropdown or with searchable fields -->
             {#if filter.options.length === 1 && filter.options[0].fields.length === 0}
-              <label>
-                <Checkbox selected={getBooleanStateFor(filter)} />
-                {filter.options[0].question}
-              </label>
+              <Checkbox selected={getBooleanStateFor(filter)}>
+                <Tr t={filter.options[0].question} />
+              </Checkbox>
             {/if}
 
             {#if filter.options.length === 1 && filter.options[0].fields.length > 0}
@@ -97,7 +94,7 @@
               <Dropdown value={getStateFor(filter)}>
                 {#each filter.options as option, i}
                   <option value={i}>
-                    {option.question}
+                    <Tr t={option.question} />
                   </option>
                 {/each}
               </Dropdown>

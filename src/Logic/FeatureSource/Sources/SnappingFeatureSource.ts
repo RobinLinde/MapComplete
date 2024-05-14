@@ -6,11 +6,14 @@ import { BBox } from "../../BBox"
 
 export interface SnappingOptions {
     /**
-     * If the distance is bigger then this amount, don't snap.
+     * If the distance to the line is bigger then this amount, don't snap.
      * In meter
      */
     maxDistance: number
 
+    /**
+     * If set to true, no value will be given if no snapping was made
+     */
     allowUnsnapped?: false | boolean
 
     /**
@@ -29,8 +32,10 @@ export interface SnappingOptions {
     reusePointWithin?: number
 }
 
-export default class SnappingFeatureSource implements FeatureSource {
-    public readonly features: Store<Feature<Point>[]>
+export default class SnappingFeatureSource
+    implements FeatureSource<Feature<Point, { "snapped-to": string; dist: number }>>
+{
+    public readonly features: Store<[Feature<Point, { "snapped-to": string; dist: number }>]>
     /*Contains the id of the way it snapped to*/
     public readonly snappedTo: Store<string>
     private readonly _snappedTo: UIEventSource<string>

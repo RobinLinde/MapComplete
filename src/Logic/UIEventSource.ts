@@ -10,6 +10,9 @@ export class Stores {
 
         function run() {
             source.setData(new Date())
+            if (Utils.runningFromConsole) {
+                return
+            }
             if (asLong === undefined || asLong()) {
                 window.setTimeout(run, millis)
             }
@@ -31,7 +34,7 @@ export class Stores {
      * @param promise
      * @constructor
      */
-    public static FromPromise<T>(promise: Promise<T>): Store<T> {
+    public static FromPromise<T>(promise: Promise<T>): Store<T | undefined> {
         const src = new UIEventSource<T>(undefined)
         promise?.then((d) => src.setData(d))
         promise?.catch((err) => console.warn("Promise failed:", err))
@@ -96,8 +99,17 @@ export abstract class Store<T> implements Readable<T> {
 
     abstract map<J>(f: (t: T) => J): Store<J>
     abstract map<J>(f: (t: T) => J, extraStoresToWatch: Store<any>[]): Store<J>
-
-    public mapD<J>(f: (t: T) => J, extraStoresToWatch?: Store<any>[]): Store<J> {
+    abstract map<J>(
+        f: (t: T) => J,
+        extraStoresToWatch: Store<any>[],
+        callbackDestroyFunction: (f: () => void) => void
+    ): Store<J>
+    M
+    public mapD<J>(
+        f: (t: Exclude<T, undefined | null>) => J,
+        extraStoresToWatch?: Store<any>[],
+        callbackDestroyFunction?: (f: () => void) => void
+    ): Store<J> {
         return this.map((t) => {
             if (t === undefined) {
                 return undefined
@@ -105,7 +117,7 @@ export abstract class Store<T> implements Readable<T> {
             if (t === null) {
                 return null
             }
-            return f(t)
+            return f(<Exclude<T, undefined | null>>t)
         }, extraStoresToWatch)
     }
 
@@ -201,24 +213,39 @@ export abstract class Store<T> implements Readable<T> {
         mapped.addCallbackAndRun((newEventSource) => {
             if (newEventSource === null) {
                 sink.setData(null)
-            } else if (newEventSource === undefined) {
+                return
+            }
+            if (newEventSource === undefined) {
                 sink.setData(undefined)
-            } else if (!seenEventSources.has(newEventSource)) {
-                seenEventSources.add(newEventSource)
-                newEventSource.addCallbackAndRun((resultData) => {
-                    if (mapped.data === newEventSource) {
-                        sink.setData(resultData)
-                    }
-                })
-            } else {
+                return
+            }
+            if (seenEventSources.has(newEventSource)) {
                 // Already seen, so we don't have to add a callback, just update the value
                 sink.setData(newEventSource.data)
+                return
             }
+            seenEventSources.add(newEventSource)
+            newEventSource.addCallbackAndRun((resultData) => {
+                if (mapped.data === newEventSource) {
+                    sink.setData(resultData)
+                }
+            })
         })
 
         return sink
     }
 
+    public bindD<X>(f: (t: Exclude<T, undefined | null>) => Store<X>): Store<X> {
+        return this.bind((t) => {
+            if (t === null) {
+                return null
+            }
+            if (t === undefined) {
+                return undefined
+            }
+            return f(<Exclude<T, undefined | null>>t)
+        })
+    }
     public stabilized(millisToStabilize): Store<T> {
         if (Utils.runningFromConsole) {
             return this
@@ -243,7 +270,7 @@ export abstract class Store<T> implements Readable<T> {
     /**
      * Converts the uiEventSource into a promise.
      * The promise will return the value of the store if the given condition evaluates to true
-     * @param condition: an optional condition, default to 'store.value !== undefined'
+     * @param condition an optional condition, default to 'store.value !== undefined'
      * @constructor
      */
     public AsPromise(condition?: (t: T) => boolean): Promise<T> {
@@ -282,7 +309,8 @@ export abstract class Store<T> implements Readable<T> {
 
 export class ImmutableStore<T> extends Store<T> {
     public readonly data: T
-
+    static FALSE = new ImmutableStore<boolean>(false)
+    static TRUE = new ImmutableStore<boolean>(true)
     constructor(data: T) {
         super()
         this.data = data
@@ -314,9 +342,13 @@ export class ImmutableStore<T> extends Store<T> {
         return ImmutableStore.pass
     }
 
-    map<J>(f: (t: T) => J, extraStores: Store<any>[] = undefined): ImmutableStore<J> {
+    map<J>(
+        f: (t: T) => J,
+        extraStores: Store<any>[] = undefined,
+        ondestroyCallback?: (f: () => void) => void
+    ): ImmutableStore<J> {
         if (extraStores?.length > 0) {
-            return new MappedStore(this, f, extraStores, undefined, f(this.data))
+            return new MappedStore(this, f, extraStores, undefined, f(this.data), ondestroyCallback)
         }
         return new ImmutableStore<J>(f(this.data))
     }
@@ -357,14 +389,18 @@ class ListenerTracker<T> {
         let toDelete = undefined
         let startTime = new Date().getTime() / 1000
         for (const callback of this._callbacks) {
-            if (callback(data) === true) {
-                // This callback wants to be deleted
-                // Note: it has to return precisely true in order to avoid accidental deletions
-                if (toDelete === undefined) {
-                    toDelete = [callback]
-                } else {
-                    toDelete.push(callback)
+            try {
+                if (callback(data) === true) {
+                    // This callback wants to be deleted
+                    // Note: it has to return precisely true in order to avoid accidental deletions
+                    if (toDelete === undefined) {
+                        toDelete = [callback]
+                    } else {
+                        toDelete.push(callback)
+                    }
                 }
+            } catch (e) {
+                console.error("Got an error while running a callback:", e)
             }
         }
         let endTime = new Date().getTime() / 1000
@@ -431,7 +467,6 @@ class MappedStore<TIn, T> extends Store<T> {
      * const mapped = src.map(i => i * 2)
      * src.setData(3)
      * mapped.data // => 6
-     *
      */
     get data(): T {
         if (!this._callbacksAreRegistered) {
@@ -445,13 +480,17 @@ class MappedStore<TIn, T> extends Store<T> {
         return this._data
     }
 
-    map<J>(f: (t: T) => J, extraStores: Store<any>[] = undefined): Store<J> {
+    map<J>(
+        f: (t: T) => J,
+        extraStores: Store<any>[] = undefined,
+        ondestroyCallback?: (f: () => void) => void
+    ): Store<J> {
         let stores: Store<any>[] = undefined
         if (extraStores?.length > 0 || this._extraStores?.length > 0) {
             stores = []
         }
         if (extraStores?.length > 0) {
-            stores.push(...extraStores)
+            stores?.push(...extraStores)
         }
         if (this._extraStores?.length > 0) {
             this._extraStores?.forEach((store) => {
@@ -465,7 +504,8 @@ class MappedStore<TIn, T> extends Store<T> {
             f, // we could fuse the functions here (e.g. data => f(this._f(data), but this might result in _f being calculated multiple times, breaking things
             stores,
             this._callbacks,
-            f(this.data)
+            f(this.data),
+            ondestroyCallback
         )
     }
 
@@ -511,7 +551,6 @@ class MappedStore<TIn, T> extends Store<T> {
     }
 
     private unregisterFromUpstream() {
-        console.log("Unregistering callbacks for", this.tag)
         this._callbacksAreRegistered = false
         this._unregisterFromUpstream()
         this._unregisterFromExtraStores?.forEach((unr) => unr())
@@ -530,7 +569,7 @@ class MappedStore<TIn, T> extends Store<T> {
     private update(): void {
         const newData = this._f(this._upstream.data)
         this._upstreamPingCount = this._upstreamCallbackHandler?.pingCount
-        if (this._data == newData) {
+        if (this._data === newData) {
             return
         }
         this._data = newData
@@ -601,12 +640,55 @@ export class UIEventSource<T> extends Store<T> implements Writable<T> {
      */
     public static FromPromiseWithErr<T>(
         promise: Promise<T>
-    ): UIEventSource<{ success: T } | { error: any }> {
+    ): UIEventSource<{ success: T } | { error: any } | undefined> {
         const src = new UIEventSource<{ success: T } | { error: any }>(undefined)
-        promise?.then((d) => src.setData({ success: d }))
-        promise?.catch((err) => src.setData({ error: err }))
+        promise
+            ?.then((d) => src.setData({ success: d }))
+            ?.catch((err) => src.setData({ error: err }))
         return src
     }
+
+    /**
+     *
+     * @param source
+     * UIEventSource.asInt(new UIEventSource("123")).data // => 123
+     * UIEventSource.asInt(new UIEventSource("123456789")).data // => 123456789
+     *
+     * const srcStr = new UIEventSource("123456789"))
+     * const srcInt = UIEventSource.asInt(srcStr)
+     * srcInt.setData(987654321)
+     * srcStr.data // => "987654321"
+     */
+    public static asInt(source: UIEventSource<string>): UIEventSource<number> {
+        return source.sync(
+            (str) => {
+                let parsed = parseInt(str)
+                return isNaN(parsed) ? undefined : parsed
+            },
+            [],
+            (fl) => {
+                if (fl === undefined || isNaN(fl)) {
+                    return undefined
+                }
+                return "" + fl
+            }
+        )
+    }
+
+    /**
+     * UIEventSource.asFloat(new UIEventSource("123")).data // => 123
+     * UIEventSource.asFloat(new UIEventSource("123456789")).data // => 123456789
+     * UIEventSource.asFloat(new UIEventSource("0.5")).data // => 0.5
+     * UIEventSource.asFloat(new UIEventSource("0.125")).data // => 0.125
+     * UIEventSource.asFloat(new UIEventSource("0.0000000001")).data // => 0.0000000001
+     *
+     *
+     * const srcStr = new UIEventSource("123456789"))
+     * const srcInt = UIEventSource.asFloat(srcStr)
+     * srcInt.setData(987654321)
+     * srcStr.data // => "987654321"
+     * @param source
+     */
 
     public static asFloat(source: UIEventSource<string>): UIEventSource<number> {
         return source.sync(
@@ -619,12 +701,12 @@ export class UIEventSource<T> extends Store<T> implements Writable<T> {
                 if (fl === undefined || isNaN(fl)) {
                     return undefined
                 }
-                return ("" + fl).substr(0, 8)
+                return "" + fl
             }
         )
     }
 
-    static asBoolean(stringUIEventSource: UIEventSource<string>) {
+    static asBoolean(stringUIEventSource: UIEventSource<string>): UIEventSource<boolean> {
         return stringUIEventSource.sync(
             (str) => str === "true",
             [],
@@ -694,9 +776,9 @@ export class UIEventSource<T> extends Store<T> implements Writable<T> {
     /**
      * Monoidal map which results in a read-only store
      * Given a function 'f', will construct a new UIEventSource where the contents will always be "f(this.data)'
-     * @param f: The transforming function
-     * @param extraSources: also trigger the update if one of these sources change
-     * @param onDestroy: a callback that can trigger the destroy function
+     * @param f The transforming function
+     * @param extraSources also trigger the update if one of these sources change
+     * @param onDestroy a callback that can trigger the destroy function
      *
      * const src = new UIEventSource<number>(10)
      * const store = src.map(i => i * 2)
@@ -727,28 +809,42 @@ export class UIEventSource<T> extends Store<T> implements Writable<T> {
      * Monoidal map which results in a read-only store. 'undefined' is passed 'as is'
      * Given a function 'f', will construct a new UIEventSource where the contents will always be "f(this.data)'
      */
-    public mapD<J>(f: (t: T) => J, extraSources: Store<any>[] = []): Store<J | undefined> {
+    public mapD<J>(
+        f: (t: Exclude<T, undefined | null>) => J,
+        extraSources: Store<any>[] = [],
+        callbackDestroyFunction?: (f: () => void) => void
+    ): Store<J | undefined> {
         return new MappedStore(
             this,
             (t) => {
                 if (t === undefined) {
                     return undefined
                 }
-                return f(t)
+                if (t === null) {
+                    return null
+                }
+                return f(<Exclude<T, undefined | null>>t)
             },
             extraSources,
             this._callbacks,
-            this.data === undefined ? undefined : f(this.data)
+            this.data === undefined || this.data === null
+                ? <undefined | null>this.data
+                : f(<any>this.data),
+            callbackDestroyFunction
         )
+    }
+
+    public mapAsyncD<J>(f: (t: T) => Promise<J>): Store<J> {
+        return this.bindD(t => UIEventSource.FromPromise(f(t)))
     }
 
     /**
      * Two way sync with functions in both directions
      * Given a function 'f', will construct a new UIEventSource where the contents will always be "f(this.data)'
-     * @param f: The transforming function
-     * @param extraSources: also trigger the update if one of these sources change
-     * @param g: a 'backfunction to let the sync run in two directions. (data of the new UIEVEntSource, currentData) => newData
-     * @param allowUnregister: if set, the update will be halted if no listeners are registered
+     * @param f The transforming function
+     * @param extraSources also trigger the update if one of these sources change
+     * @param g a 'backfunction to let the sync run in two directions. (data of the new UIEVEntSource, currentData) => newData
+     * @param allowUnregister if set, the update will be halted if no listeners are registered
      */
     public sync<J>(
         f: (t: T) => J,
@@ -805,4 +901,5 @@ export class UIEventSource<T> extends Store<T> implements Writable<T> {
     update(f: Updater<T> & ((value: T) => T)): void {
         this.setData(f(this.data))
     }
+
 }

@@ -1,27 +1,51 @@
-import { Translation } from "../UI/i18n/Translation"
+import { Translation, TypedTranslation } from "../UI/i18n/Translation"
 import { DenominationConfigJson } from "./ThemeConfig/Json/UnitConfigJson"
 import Translations from "../UI/i18n/Translations"
-import { Store } from "../Logic/UIEventSource"
-import BaseUIElement from "../UI/BaseUIElement"
-import Toggle from "../UI/Input/Toggle"
+import { Validator } from "../UI/InputElement/Validator"
 
+/**
+ * A 'denomination' is one way to write a certain quantity.
+ * For example, 'meter', 'kilometer', 'mile' and 'foot' are all possible ways to quantify 'length'
+ */
 export class Denomination {
     public readonly canonical: string
     public readonly _canonicalSingular: string
-    public readonly useAsDefaultInput: boolean | string[]
     public readonly useIfNoUnitGiven: boolean | string[]
     public readonly prefix: boolean
+    public readonly addSpace: boolean
     public readonly alternativeDenominations: string[]
-    private readonly _human: Translation
-    private readonly _humanSingular?: Translation
+    public readonly human: TypedTranslation<{ quantity: string }>
+    public readonly humanSingular?: Translation
+    private readonly _validator: Validator
 
-    constructor(json: DenominationConfigJson, useAsDefaultInput: boolean, context: string) {
+    private constructor(
+        canonical: string,
+        _canonicalSingular: string,
+        useIfNoUnitGiven: boolean | string[],
+        prefix: boolean,
+        addSpace: boolean,
+        alternativeDenominations: string[],
+        _human: TypedTranslation<{ quantity: string }>,
+        _humanSingular: Translation,
+        validator: Validator
+    ) {
+        this.canonical = canonical
+        this._canonicalSingular = _canonicalSingular
+        this.useIfNoUnitGiven = useIfNoUnitGiven
+        this.prefix = prefix
+        this.addSpace = addSpace
+        this.alternativeDenominations = alternativeDenominations
+        this.human = _human
+        this.humanSingular = _humanSingular
+        this._validator = validator
+    }
+
+    public static fromJson(json: DenominationConfigJson, validator: Validator, context: string) {
         context = `${context}.unit(${json.canonicalDenomination})`
-        this.canonical = json.canonicalDenomination.trim()
-        if (this.canonical === undefined) {
+        const canonical = json.canonicalDenomination.trim()
+        if (canonical === undefined) {
             throw `${context}: this unit has no decent canonical value defined`
         }
-        this._canonicalSingular = json.canonicalDenominationSingular?.trim()
 
         json.alternativeDenomination?.forEach((v, i) => {
             if ((v?.trim() ?? "") === "") {
@@ -29,67 +53,105 @@ export class Denomination {
             }
         })
 
-        this.alternativeDenominations = json.alternativeDenomination?.map((v) => v.trim()) ?? []
-
         if (json["default" /* @code-quality: ignore*/] !== undefined) {
             throw `${context} uses the old 'default'-key. Use "useIfNoUnitGiven" or "useAsDefaultInput" instead`
         }
-        this.useIfNoUnitGiven = json.useIfNoUnitGiven
-        this.useAsDefaultInput = useAsDefaultInput ?? json.useIfNoUnitGiven
 
-        this._human = Translations.T(json.human, context + "human")
-        this._humanSingular = Translations.T(json.humanSingular, context + "humanSingular")
-
-        this.prefix = json.prefix ?? false
+        const humanTexts = Translations.T(json.human, context + "human")
+        humanTexts.OnEveryLanguage((text, language) => {
+            if (text.indexOf("{quantity}") < 0) {
+                throw `In denomination: a human text should contain {quantity} (at ${context}.human.${language})`
+            }
+            return text
+        })
+        return new Denomination(
+            canonical,
+            json.canonicalDenominationSingular?.trim(),
+            json.useIfNoUnitGiven,
+            json.prefix ?? false,
+            json.addSpace ?? false,
+            json.alternativeDenomination?.map((v) => v.trim()) ?? [],
+            humanTexts,
+            Translations.T(json.humanSingular, context + "humanSingular"),
+            validator
+        )
     }
 
-    get human(): Translation {
-        return this._human.Clone()
+    public clone() {
+        return new Denomination(
+            this.canonical,
+            this._canonicalSingular,
+            this.useIfNoUnitGiven,
+            this.prefix,
+            this.addSpace,
+            this.alternativeDenominations,
+            this.human,
+            this.humanSingular,
+            this._validator
+        )
     }
 
-    get humanSingular(): Translation {
-        return (this._humanSingular ?? this._human).Clone()
+    public withBlankCanonical() {
+        return new Denomination(
+            "",
+            this._canonicalSingular,
+            this.useIfNoUnitGiven,
+            this.prefix,
+            this.addSpace,
+            [this.canonical, ...this.alternativeDenominations],
+            this.human,
+            this.humanSingular,
+            this._validator
+        )
     }
 
     /**
-     * Create a representation of the given value
-     * @param value: the value from OSM
-     * @param actAsDefault: if set and the value can be parsed as number, will be parsed and trimmed
+     * Create the canonical, human representation of the given value
+     * @param value the value from OSM
+     * @param actAsDefault if set and the value can be parsed as number, will be parsed and trimmed
      *
-     * const unit = new Denomination({
+     * import Validators from "../UI/InputElement/Validators"
+     *
+     * const unit = Denomination.fromJson({
      *               canonicalDenomination: "m",
      *               alternativeDenomination: ["meter"],
      *               human: {
-     *                   en: "meter"
+     *                   en: "{quantity} meter"
      *               }
-     *           }, false, "test")
-     * unit.canonicalValue("42m", true) // =>"42 m"
-     * unit.canonicalValue("42", true) // =>"42 m"
-     * unit.canonicalValue("42 m", true) // =>"42 m"
-     * unit.canonicalValue("42 meter", true) // =>"42 m"
-     * unit.canonicalValue("42m", true) // =>"42 m"
-     * unit.canonicalValue("42", true) // =>"42 m"
+     *           }, Validators.get("float"), "test")
+     * unit.canonicalValue("42m", true, false) // =>"42 m"
+     * unit.canonicalValue("42", true, false) // =>"42 m"
+     * unit.canonicalValue("42 m", true, false) // =>"42 m"
+     * unit.canonicalValue("42 meter", true, false) // =>"42 m"
+     * unit.canonicalValue("42m", true, false) // =>"42 m"
+     * unit.canonicalValue("42", true, false) // =>"42 m"
      *
      * // Should be trimmed if canonical is empty
-     * const unit = new Denomination({
+     * const unit = Denomination.fromJson({
      *               canonicalDenomination: "",
      *               alternativeDenomination: ["meter","m"],
      *               human: {
-     *                   en: "meter"
+     *                   en: "{quantity} meter"
      *               }
-     *           }, false, "test")
-     * unit.canonicalValue("42m", true) // =>"42"
-     * unit.canonicalValue("42", true) // =>"42"
-     * unit.canonicalValue("42 m", true) // =>"42"
-     * unit.canonicalValue("42 meter", true) // =>"42"
+     *           }, Validators.get("float"), "test")
+     * unit.canonicalValue("42m", true, false) // =>"42"
+     * unit.canonicalValue("42", true, false) // =>"42"
+     * unit.canonicalValue("42 m", true, false) // =>"42"
+     * unit.canonicalValue("42 meter", true, false) // =>"42"
+     *
+     *
      */
-    public canonicalValue(value: string, actAsDefault: boolean): string {
+    public canonicalValue(value: string, actAsDefault: boolean, inverted: boolean): string {
         if (value === undefined) {
             return undefined
         }
-        const stripped = this.StrippedValue(value, actAsDefault)
+        const stripped = this.StrippedValue(value, actAsDefault, inverted)
         if (stripped === null) {
             return null
+        }
+        if(inverted){
+            return (stripped + "/" + this.canonical).trim()
+
         }
         if (stripped === "1" && this._canonicalSingular !== undefined) {
             return ("1 " + this._canonicalSingular).trim()
@@ -104,8 +166,8 @@ export class Denomination {
      *
      * Returns null if it doesn't match this unit
      */
-    public StrippedValue(value: string, actAsDefault: boolean): string {
-        if (value === undefined) {
+    public StrippedValue(value: string, actAsDefault: boolean, inverted: boolean): string {
+        if (value === undefined || value === "") {
             return undefined
         }
 
@@ -122,10 +184,16 @@ export class Denomination {
 
         function substr(key) {
             if (self.prefix) {
-                return value.substr(key.length).trim()
-            } else {
-                return value.substring(0, value.length - key.length).trim()
+                return value.substring(key.length).trim()
             }
+            let trimmed = value.substring(0, value.length - key.length).trim()
+            if(!inverted){
+                return trimmed
+            }
+            if(trimmed.endsWith("/")){
+                trimmed = trimmed.substring(0, trimmed.length - 1).trim()
+            }
+            return trimmed
         }
 
         if (this.canonical !== "" && startsWith(this.canonical.toLowerCase())) {
@@ -150,21 +218,13 @@ export class Denomination {
             return null
         }
 
-        const parsed = Number(value.trim())
-        if (!isNaN(parsed)) {
-            return value.trim()
+        if(!this._validator.isValid(value.trim())){
+            return null
         }
-
-        return null
+        return this._validator.reformat(value.trim())
     }
 
-    isDefaultDenomination(country: () => string) {
-        if (this.useIfNoUnitGiven === true) {
-            return true
-        }
-        if (this.useIfNoUnitGiven === false) {
-            return false
-        }
-        return this.useIfNoUnitGiven.indexOf(country()) >= 0
+    withValidator(validator: Validator) {
+        return new Denomination(this.canonical, this._canonicalSingular, this.useIfNoUnitGiven, this.prefix, this.addSpace, this.alternativeDenominations, this.human, this.humanSingular, validator)
     }
 }

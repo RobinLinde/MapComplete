@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Translation } from "../../i18n/Translation"
   import SpecialVisualizations from "../../SpecialVisualizations"
-  import { onDestroy } from "svelte"
   import Locale from "../../i18n/Locale"
   import type {
     RenderingSpecification,
@@ -23,19 +22,21 @@
   export let state: SpecialVisualizationState
   export let tags: UIEventSource<Record<string, string>>
   export let feature: Feature
-  export let layer: LayerConfig
+  export let layer: LayerConfig | undefined
 
-  let txt: string
-  $: onDestroy(
-    Locale.language.addCallbackAndRunD((l) => {
-      txt = t.textFor(l)
-    })
-  )
+  let language = Locale.language
+  let txt: string = t.textFor($language)
   let specs: RenderingSpecification[] = []
   $: {
     try {
+      txt = t.textFor($language)
       if (txt !== undefined) {
-        specs = SpecialVisualizations.constructSpecification(txt)
+        let key = "cached_special_spec_" + $language
+        specs = t[key]
+        if (specs === undefined) {
+          specs = SpecialVisualizations.constructSpecification(txt)
+          t[key] = specs
+        }
       }
     } catch (e) {
       console.error("Could not construct a specification and with arguments", txt, "due to", e)
@@ -67,6 +68,6 @@
       <WeblateLink context={t.context} />
     </span>
   {:else if $tags !== undefined}
-    <ToSvelte construct={createVisualisation(specpart)} />
+    <ToSvelte construct={() => createVisualisation(specpart)} />
   {/if}
 {/each}

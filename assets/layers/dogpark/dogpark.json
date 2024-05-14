@@ -1,5 +1,14 @@
 {
   "id": "dogpark",
+  "name": {
+    "en": "dog parks",
+    "da": "hundeskove",
+    "de": "Hundeparks",
+    "es": "parques de perros",
+    "nl": "hondenweides",
+    "ca": "parcs de gossos",
+    "cs": "psí parky"
+  },
   "description": "A layer showing dogparks, which are areas where dog are allowed to run without a leash",
   "source": {
     "osmTags": {
@@ -15,42 +24,15 @@
     }
   },
   "minzoom": 10,
-  "presets": [
-    {
-      "title": {
-        "en": "a dog park",
-        "da": "en hundeskov",
-        "de": "Ein Hundepark",
-        "es": "un parque para perros",
-        "nl": "een hondenweide",
-        "ca": "un parc per a gossos"
-      },
-      "tags": [
-        "leisure=dog_park"
-      ],
-      "description": {
-        "en": "A place for dogs, where they can run unleashed",
-        "da": "En hundeskov eller hundeg&aring;rd beregnet til hunde, hvor de kan l&oslash;be uden snor",
-        "de": "Ein Ort ohne Leinenzwang für Hunde",
-        "es": "Un lugar para perros, donde pueden correr sin correa",
-        "nl": "Een plaats waar honden vrij mogen rondlopen"
-      }
-    }
-  ],
-  "name": {
-    "en": "dog parks",
-    "da": "hundeskove",
-    "de": "Hundeparks",
-    "es": "parques de perros",
-    "nl": "hondenweides"
-  },
   "title": {
     "render": {
       "en": "dog park",
       "da": "hundeskov",
       "de": "Hundepark",
       "es": "parque para perros",
-      "nl": "hondenweide"
+      "nl": "hondenweide",
+      "ca": "parc per a gossos",
+      "cs": "psí park"
     },
     "mappings": [
       {
@@ -61,13 +43,12 @@
       }
     ]
   },
-  "mapRendering": [
+  "pointRendering": [
     {
       "location": [
         "point",
         "centroid"
       ],
-      "icon": "./assets/layers/dogpark/dog-park.svg",
       "iconSize": "40,40",
       "label": {
         "mappings": [
@@ -77,11 +58,43 @@
           }
         ]
       },
-      "anchor": "center"
-    },
+      "anchor": "center",
+      "marker": [
+        {
+          "icon": "./assets/layers/dogpark/dog-park.svg"
+        }
+      ]
+    }
+  ],
+  "lineRendering": [
     {
       "color": "#ff0",
       "width": 5
+    }
+  ],
+  "presets": [
+    {
+      "title": {
+        "en": "a dog park",
+        "da": "en hundeskov",
+        "de": "Ein Hundepark",
+        "es": "un parque para perros",
+        "nl": "een hondenweide",
+        "ca": "un parc per a gossos",
+        "cs": "psí park"
+      },
+      "tags": [
+        "leisure=dog_park"
+      ],
+      "description": {
+        "en": "A place for dogs, where they can run unleashed",
+        "da": "En hundeskov eller hundeg&aring;rd beregnet til hunde, hvor de kan l&oslash;be uden snor",
+        "de": "Ein Ort ohne Leinenzwang für Hunde",
+        "es": "Un lugar para perros, donde pueden correr sin correa",
+        "nl": "Een plaats waar honden vrij mogen rondlopen",
+        "ca": "Un lloc per a gossos, on poden correr sense corretja",
+        "cs": "Místo pro psy, kde mohou volně běhat"
+      }
     }
   ],
   "tagRenderings": [
@@ -96,7 +109,8 @@
             "de": "Dieser Hundepark ist komplett umzäunt",
             "es": "Este parque para perros está cerrado todo alrededor",
             "nl": "Deze hondenweide is volledig omheind",
-            "ca": "Aquest parc per a gossos està tancat per tot arreu"
+            "ca": "Aquest parc per a gossos està tancat per tot arreu",
+            "cs": "Tento psí park je kolem dokola oplocený"
           }
         },
         {
@@ -106,7 +120,9 @@
             "da": "Denne hundskov er ikke indhegnet",
             "de": "Dieser Hundepark ist nicht komplett umzäunt",
             "es": "Este parque para perros no está cerrado todo alrededor",
-            "nl": "Deze hondenweide is <strong>niet</strong> volledig omheind"
+            "nl": "Deze hondenweide is <strong>niet</strong> volledig omheind",
+            "ca": "Aquest parc de gossos no està tancat per tot el voltant",
+            "cs": "Tento psí park není kolem dokola oplocený"
           }
         }
       ],
@@ -115,7 +131,9 @@
         "da": "Er denne hundeskov indhegnet?",
         "de": "Ist dieser Hundepark umzäunt?",
         "es": "¿Este parque para perros está vallado?",
-        "nl": "Is deze hondenweide volledig omheind?"
+        "nl": "Is deze hondenweide volledig omheind?",
+        "ca": "Aquest parc de gossos està tancat?",
+        "cs": "Je tento psí park oplocený?"
       }
     },
     {
@@ -128,7 +146,9 @@
             "da": "Har en indhegning til hvalpe og sm&aring; hunde",
             "de": "Hat einen separaten Bereich für Hundewelpen und kleine Hunde",
             "es": "Tiene un espacio separado para cachorros y perros pequeños",
-            "nl": "Heeft gescheiden deel voor puppy's en kleine honden"
+            "nl": "Heeft gescheiden deel voor puppy's en kleine honden",
+            "ca": "Té un espai separat per a cadells i gossos petits",
+            "cs": "Má oddělený prostor pro štěňata a malé psy"
           }
         },
         {
@@ -138,7 +158,9 @@
             "da": "Har <strong>ikke</strong> en indhegning til hvalpe og sm&aring; hunde",
             "de": "Hat <strong>keinen</strong> separaten Bereich für Hundewelpen und kleine Hunde",
             "es": "<strong>No</strong> tiene un espacio separado para cachorros y perros pequeños",
-            "nl": "Heeft <strong>geen</strong> gescheiden deel voor puppy's en kleine honden"
+            "nl": "Heeft <strong>geen</strong> gescheiden deel voor puppy's en kleine honden",
+            "ca": "<strong>No</strong> té un espai separat per a cadells i gossos petits",
+            "cs": "<strong>Nemá</strong>oddělený prostor pro štěňata a malé psy"
           }
         }
       ],
@@ -147,7 +169,9 @@
         "da": "Har denne hundeskov et separat indhegnet omr&aring;de for sm&aring; hunde og hvalpe (hvalpeg&aring;rd)?",
         "de": "Hat der Hundepark einen separaten Bereich für Hundewelpen und kleine Hunde?",
         "es": "¿Este parque para perros tiene una zona separada vallada para perros pequeños y cachorros?",
-        "nl": "Heeft deze hondenweide een gescheiden en omheind deel voor puppy's en kleine honden?"
+        "nl": "Heeft deze hondenweide een gescheiden en omheind deel voor puppy's en kleine honden?",
+        "ca": "Aquest parc per a gossos té una zona tancada per a gossos petits i cadells?",
+        "cs": "Má tento psí park samostatný oplocený areál pro malé psy a štěňata?"
       }
     },
     {
@@ -157,14 +181,16 @@
         "de": "Wie lautet der Name dieses Hundeparks?",
         "es": "¿Cual es el nombre de este parque para perros?",
         "nl": "Wat is de naam van deze hondenweide?",
-        "ca": "Com s'anomena aquest parc per a gossos?"
+        "ca": "Com s'anomena aquest parc per a gossos?",
+        "cs": "Jak se jmenuje tento psí park?"
       },
       "render": {
         "en": "The name of this dog park is {name}",
         "de": "Denne hundeskov hedder {name}",
         "es": "El nombre de este parque para perros es {name}",
         "nl": "Deze hondenweide heet {name}",
-        "ca": "Aquest parc per a gossos s'anomena {name}"
+        "ca": "Aquest parc per a gossos s'anomena {name}",
+        "cs": "Název tohoto psího parku je {name}"
       },
       "freeform": {
         "key": "name"
@@ -179,7 +205,8 @@
         "de": "Der Hundepark ist {_surface:ha} ha groß",
         "es": "Este parque para perros tiene {_surface:ha} ha",
         "nl": "Deze hondenweide is {_surface:ha} hectaren groot",
-        "ca": "Aquest parc per a gossos té {_surface:ha} ha"
+        "ca": "Aquest parc per a gossos té {_surface:ha} ha",
+        "cs": "Tento psí park je {_surface:ha} ha velký"
       },
       "condition": "_surface:ha!=0"
     },

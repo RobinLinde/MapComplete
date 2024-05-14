@@ -1,19 +1,38 @@
 import { UIEventSource } from "../UIEventSource"
 import UserDetails, { OsmConnection } from "./OsmConnection"
 import { Utils } from "../../Utils"
+import { LocalStorageSource } from "../Web/LocalStorageSource"
+// @ts-ignore
+import { osmAuth } from "osm-auth"
+import OSMAuthInstance = OSMAuth.OSMAuthInstance
 
 export class OsmPreferences {
-    public preferences = new UIEventSource<Record<string, string>>({}, "all-osm-preferences")
+    /**
+     * A dictionary containing all the preferences. The 'preferenceSources' will be initialized from this
+     * We keep a local copy of them, to init mapcomplete with the previous choices and to be able to get the open changesets right away
+     */
+    public preferences = LocalStorageSource.GetParsed<Record<string, string>>(
+        "all-osm-preferences",
+        {}
+    )
+    /**
+     * A map containing the individual preference sources
+     * @private
+     */
     private readonly preferenceSources = new Map<string, UIEventSource<string>>()
-    private auth: any
+    private readonly auth: OSMAuthInstance
     private userDetails: UIEventSource<UserDetails>
     private longPreferences = {}
+    private readonly _fakeUser: boolean
 
-    constructor(auth, osmConnection: OsmConnection) {
+    constructor(auth: OSMAuthInstance, osmConnection: OsmConnection, fakeUser: boolean = false) {
         this.auth = auth
+        this._fakeUser = fakeUser
         this.userDetails = osmConnection.userDetails
-        const self = this
-        osmConnection.OnLoggedIn(() => self.UpdatePreferences())
+        osmConnection.OnLoggedIn(() => {
+            this.UpdatePreferences(true)
+            return true
+        })
     }
 
     /**
@@ -64,7 +83,18 @@ export class OsmPreferences {
             let i = 0
             while (str !== "") {
                 if (str === undefined || str === "undefined") {
-                    throw "Long pref became undefined?"
+                    source.setData(undefined)
+                    throw (
+                        "Got 'undefined' or a literal string containing 'undefined' for a long preference with name " +
+                        key
+                    )
+                }
+                if (str === "undefined") {
+                    source.setData(undefined)
+                    throw (
+                        "Got a literal string containing 'undefined' for a long preference with name " +
+                        key
+                    )
                 }
                 if (i > 100) {
                     throw "This long preference is getting very long... "
@@ -186,8 +216,21 @@ export class OsmPreferences {
         })
     }
 
-    private UpdatePreferences() {
+    removeAllWithPrefix(prefix: string) {
+        for (const key in this.preferences.data) {
+            if (key.startsWith(prefix)) {
+                this.GetPreference(key, "", { prefix: "" }).setData(undefined)
+                console.log("Clearing preference", key)
+            }
+        }
+        this.preferences.ping()
+    }
+
+    private UpdatePreferences(forceUpdate?: boolean) {
         const self = this
+        if (this._fakeUser) {
+            return
+        }
         this.auth.xhr(
             {
                 method: "GET",
@@ -199,11 +242,22 @@ export class OsmPreferences {
                     return
                 }
                 const prefs = value.getElementsByTagName("preference")
+                const seenKeys = new Set<string>()
                 for (let i = 0; i < prefs.length; i++) {
                     const pref = prefs[i]
                     const k = pref.getAttribute("k")
                     const v = pref.getAttribute("v")
                     self.preferences.data[k] = v
+                    seenKeys.add(k)
+                }
+                if (forceUpdate) {
+                    for (let key in self.preferences.data) {
+                        if (seenKeys.has(key)) {
+                            continue
+                        }
+                        console.log("Deleting key", key, "as we didn't find it upstream")
+                        delete self.preferences.data[key]
+                    }
                 }
 
                 // We merge all the preferences: new keys are uploaded
@@ -235,13 +289,15 @@ export class OsmPreferences {
         }
         const self = this
         console.debug("Updating preference", k, " to ", Utils.EllipsesAfter(v, 15))
-
+        if (this._fakeUser) {
+            return
+        }
         if (v === undefined || v === "") {
             this.auth.xhr(
                 {
                     method: "DELETE",
                     path: "/api/0.6/user/preferences/" + encodeURIComponent(k),
-                    options: { header: { "Content-Type": "text/plain" } },
+                    headers: { "Content-Type": "text/plain" },
                 },
                 function (error) {
                     if (error) {
@@ -260,7 +316,7 @@ export class OsmPreferences {
             {
                 method: "PUT",
                 path: "/api/0.6/user/preferences/" + encodeURIComponent(k),
-                options: { header: { "Content-Type": "text/plain" } },
+                headers: { "Content-Type": "text/plain" },
                 content: v,
             },
             function (error) {

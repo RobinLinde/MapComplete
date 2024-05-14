@@ -18,7 +18,17 @@ import ColorValidator from "./Validators/ColorValidator"
 import BaseUIElement from "../BaseUIElement"
 import Combine from "../Base/Combine"
 import Title from "../Base/Title"
-import FediverseValidator from "./Validators/FediverseValidator";
+import SimpleTagValidator from "./Validators/SimpleTagValidator"
+import ImageUrlValidator from "./Validators/ImageUrlValidator"
+import TagKeyValidator from "./Validators/TagKeyValidator"
+import TranslationValidator from "./Validators/TranslationValidator"
+import FediverseValidator from "./Validators/FediverseValidator"
+import IconValidator from "./Validators/IconValidator"
+import TagValidator from "./Validators/TagValidator"
+import IdValidator from "./Validators/IdValidator"
+import SlopeValidator from "./Validators/SlopeValidator"
+import VeloparkValidator from "./Validators/VeloparkValidator"
+import CurrencyValidator from "./Validators/CurrencyValidator"
 
 export type ValidatorType = (typeof Validators.availableTypes)[number]
 
@@ -40,7 +50,18 @@ export default class Validators {
         "phone",
         "opening_hours",
         "color",
-        "fediverse"
+        "image",
+        "simple_tag",
+        "key",
+        "translation",
+        "icon",
+        "fediverse",
+        "tag",
+        "fediverse",
+        "id",
+        "slope",
+        "velopark",
+        "currency"
     ] as const
 
     public static readonly AllValidators: ReadonlyArray<Validator> = [
@@ -60,18 +81,21 @@ export default class Validators {
         new PhoneValidator(),
         new OpeningHoursValidator(),
         new ColorValidator(),
-        new FediverseValidator()
+        new ImageUrlValidator(),
+        new SimpleTagValidator(),
+        new TagValidator(),
+        new TagKeyValidator(),
+        new TranslationValidator(),
+        new IconValidator(),
+        new FediverseValidator(),
+        new IdValidator(),
+        new SlopeValidator(),
+        new VeloparkValidator(),
+        new CurrencyValidator()
     ]
 
     private static _byType = Validators._byTypeConstructor()
 
-    private static _byTypeConstructor(): Map<ValidatorType, Validator> {
-        const map = new Map<ValidatorType, Validator>()
-        for (const validator of Validators.AllValidators) {
-            map.set(<ValidatorType>validator.name, validator)
-        }
-        return map
-    }
     public static HelpText(): BaseUIElement {
         const explanations: BaseUIElement[] = Validators.AllValidators.map((type) =>
             new Combine([new Title(type.name, 3), type.explanation]).SetClass("flex flex-col")
@@ -81,6 +105,14 @@ export default class Validators {
             "The listed types here trigger a special input element. Use them in `tagrendering.freeform.type` of your tagrendering to activate them",
             ...explanations,
         ]).SetClass("flex flex-col")
+    }
+
+    private static _byTypeConstructor(): Map<ValidatorType, Validator> {
+        const map = new Map<ValidatorType, Validator>()
+        for (const validator of Validators.AllValidators) {
+            map.set(<ValidatorType>validator.name, validator)
+        }
+        return map
     }
 
     static get(type: ValidatorType): Validator {

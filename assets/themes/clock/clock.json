@@ -7,21 +7,21 @@
     "es": "Relojes",
     "ca": "Rellotges",
     "cs": "Hodiny",
-    "fr": "Horloges"
+    "fr": "Horloges",
+    "eu": "Erlojuak",
+    "pl": "Zegary"
   },
   "description": {
     "en": "Map showing all public clocks",
     "nl": "Kaart met alle openbare klokken",
     "ca": "Mapa amb tots els rellotges públics",
-    "de": "Karte mit allen öffentlichen Uhren",
+    "de": "Eine Karte mit öffentlichen Uhren",
     "es": "Mapa con todos los relojes públicos",
-    "cs": "Mapa zobrazující všechny veřejné hodiny",
-    "fr": "Carte affichant toutes les horloges publiques"
+    "cs": "Mapa zobrazující veřejné hodiny",
+    "fr": "Carte affichant toutes les horloges publiques",
+    "pl": "Mapa pokazująca wszystkie zegary publiczne"
   },
   "icon": "./assets/layers/clock/clock.svg",
-  "startLat": 0,
-  "startLon": 0,
-  "startZoom": 0,
   "layers": [
     "clock"
   ]

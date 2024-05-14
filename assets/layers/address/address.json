@@ -19,42 +19,10 @@
     "pa_PK": "او‌ایس‌ایم وچ جاݨ پچھاݨے پتے",
     "ca": "Adreces conegudes a OSM",
     "zgh": "ⴰⵏⵙⵉⵡⵏ ⵉⵜⵜⵡⴰⵙⵙⵏⵏ ⴳ OSM",
-    "pt_BR": "Endereços conhecidos no OSM"
-  },
-  "minzoom": 18,
-  "source": {
-    "osmTags": {
-      "or": [
-        "addr:housenumber~*",
-        "addr:street~*"
-      ]
-    }
-  },
-  "calculatedTags": [
-    "_closest_3_street_names=closestn(feat)('named_streets',3, 'name').map(f => f.feat.properties.name)",
-    "_closest_street:0:name=JSON.parse(feat.properties._closest_3_street_names)[0]",
-    "_closest_street:1:name=JSON.parse(feat.properties._closest_3_street_names)[1]",
-    "_closest_street:2:name=JSON.parse(feat.properties._closest_3_street_names)[2]"
-  ],
-  "title": {
-    "render": {
-      "en": "Known address",
-      "de": "Bekannte Adresse",
-      "hu": "Ismert cím",
-      "nl": "Bekend adres",
-      "fr": "Adresse connue",
-      "pl": "Znany adres",
-      "ru": "Известный адрес",
-      "es": "Domicilio conocido",
-      "zh_Hans": "已知的地址",
-      "id": "Alamat yang diketahui",
-      "nb_NO": "Kjent adresse",
-      "da": "Kendt adresse",
-      "cs": "Známá adresa",
-      "ca": "Adreça coneguda",
-      "pt": "Endereço conhecido",
-      "pt_BR": "Endereço conhecido"
-    }
+    "pt_BR": "Endereços conhecidos no OSM",
+    "eu": "OSMko helbide ezagunak",
+    "pl": "Znane adresy w OSM",
+    "it": "Indirizzo presente su OSM"
   },
   "description": {
     "en": "Addresses",
@@ -76,8 +44,110 @@
     "cs": "Adresy",
     "pa_PK": "پتے",
     "zgh": "ⴰⵏⵙⵉⵡⵏ",
-    "pt_BR": "Endereços"
+    "pt_BR": "Endereços",
+    "he": "כתובות",
+    "eu": "Helbideak",
+    "it": "Indirizzi"
   },
+  "source": {
+    "osmTags": {
+      "or": [
+        "addr:housenumber~*",
+        "addr:street~*"
+      ]
+    }
+  },
+  "calculatedTags": [
+    "_closest_3_street_names=closestn(feat)('named_streets',3, 'name').map(f => f.feat.properties.name)",
+    "_closest_street:0:name=JSON.parse(feat.properties._closest_3_street_names)[0]",
+    "_closest_street:1:name=JSON.parse(feat.properties._closest_3_street_names)[1]",
+    "_closest_street:2:name=JSON.parse(feat.properties._closest_3_street_names)[2]"
+  ],
+  "minzoom": 18,
+  "title": {
+    "render": {
+      "en": "Known address",
+      "de": "Bekannte Adresse",
+      "hu": "Ismert cím",
+      "nl": "Bekend adres",
+      "fr": "Adresse connue",
+      "pl": "Znany adres",
+      "ru": "Известный адрес",
+      "es": "Domicilio conocido",
+      "zh_Hans": "已知的地址",
+      "id": "Alamat yang diketahui",
+      "nb_NO": "Kjent adresse",
+      "da": "Kendt adresse",
+      "cs": "Známá adresa",
+      "ca": "Adreça coneguda",
+      "pt": "Endereço conhecido",
+      "pt_BR": "Endereço conhecido",
+      "he": "כתובת ידועה",
+      "eu": "Helbide ezaguna",
+      "it": "Indirizzo conosciuto"
+    }
+  },
+  "pointRendering": [
+    {
+      "label": {
+        "render": "<div style='margin-top: -42px; color: white' class='rounded-full p-1 font-bold relative'>{addr:housenumber}</div>",
+        "condition": "addr:housenumber~*"
+      },
+      "iconSize": "50,50",
+      "marker": [
+        {
+          "icon": {
+            "render": "./assets/layers/address/housenumber_blank.svg",
+            "mappings": [
+              {
+                "if": {
+                  "or": [
+                    {
+                      "and": [
+                        "addr:housenumber=",
+                        "nohousenumber!=yes"
+                      ]
+                    },
+                    "addr:street="
+                  ]
+                },
+                "then": "./assets/themes/uk_addresses/housenumber_unknown.svg"
+              }
+            ]
+          }
+        }
+      ],
+      "location": [
+        "point",
+        "centroid"
+      ],
+      "anchor": "center"
+    }
+  ],
+  "lineRendering": [
+    {
+      "color": {
+        "render": "#00f",
+        "mappings": [
+          {
+            "if": {
+              "or": [
+                {
+                  "and": [
+                    "addr:housenumber=",
+                    "nohousenumber!=yes"
+                  ]
+                },
+                "addr:street="
+              ]
+            },
+            "then": "#ff0"
+          }
+        ]
+      },
+      "width": "8"
+    }
+  ],
   "tagRenderings": [
     {
       "id": "housenumber",
@@ -97,7 +167,11 @@
         "pt": "O número da casa é <b>{addr:housenumber}</b>",
         "nb_NO": "Husnummeret er <b>{addr:housenumber}</b>",
         "ca": "El número de porta és <b>{addr:housenumber}</b>",
-        "pt_BR": "O número da casa é <b>{addr:housenumber}</b>"
+        "pt_BR": "O número da casa é <b>{addr:housenumber}</b>",
+        "he": "מספר הבית הוא <b>{addr:housenumber}</b>",
+        "eu": "Etxearen zenbakia <b>{addr:housenumber}</b> da",
+        "it": "Il numero civico della casa è <b>{addr:housenumber}</b>",
+        "zh_Hant": "門牌號碼是 <b>{addr:housenumber}</b>"
       },
       "question": {
         "en": "What is the number of this house?",
@@ -115,7 +189,11 @@
         "pt": "Qual é o número desta casa?",
         "nb_NO": "Hvilket husnummer har dette huset?",
         "ca": "Quin és el número d'aquesta casa?",
-        "pt_BR": "Qual é o número desta casa?"
+        "pt_BR": "Qual é o número desta casa?",
+        "he": "מה המספר של הבית הזה?",
+        "eu": "Zein da etxe honen zenbakia?",
+        "it": "Qual è il numero civico di questa casa?",
+        "zh_Hant": "這間房子的門牌號碼是多少？"
       },
       "freeform": {
         "key": "addr:housenumber",
@@ -130,6 +208,9 @@
               "nohousenumber=yes"
             ]
           },
+          "addExtraTags": [
+            "addr:housenumber="
+          ],
           "then": {
             "en": "This building has no house number",
             "nl": "Dit gebouw heeft geen huisnummer",
@@ -147,7 +228,10 @@
             "pt": "Este prédio não tem número",
             "nb_NO": "Denne bygningen har ikke noe husnummer",
             "ca": "Aquest edifici no té número",
-            "pt_BR": "Este prédio não tem número"
+            "pt_BR": "Este prédio não tem número",
+            "he": "למבנה זה אין מספר בית",
+            "eu": "Eraikin honek ez du etxe zenbakirik",
+            "it": "Questo edificio non ha indirizzo"
           }
         }
       ]
@@ -168,7 +252,10 @@
         "cs": "Tato adresa se nachází v ulici <b>{addr:street}</b>",
         "ca": "L'adreça està a aquest carrer <b>{addr:street}</b>",
         "pt": "Este endereço é na rua <b>{addr:street}</b>",
-        "pt_BR": "Este endereço fica na rua <b>{addr:street}</b>"
+        "pt_BR": "Este endereço fica na rua <b>{addr:street}</b>",
+        "he": "כתובת זו נמצאת ברחוב <b>{addr:street}</b>",
+        "eu": "Helbide hau <b>{addr:street}</b> kalean dago",
+        "it": "L’indirizzo è in via <b>{addr:street}</b>"
       },
       "question": {
         "en": "What street is this address located in?",
@@ -185,7 +272,11 @@
         "cs": "V jaké ulici se nachází tato adresa?",
         "ca": "A quin carrer es troba l'adreça?",
         "pt": "Em que rua fica esse endereço?",
-        "pt_BR": "Em que rua fica esse endereço?"
+        "pt_BR": "Em que rua fica esse endereço?",
+        "he": "באיזה רחוב נמצאת הכתובת הזו?",
+        "eu": "Zein kaletan dago helbide hori?",
+        "it": "Qual è la via in cui si trova?",
+        "zh_Hant": "地址所在的道路是？"
       },
       "freeform": {
         "key": "addr:street"
@@ -232,7 +323,10 @@
         "pt": "O que deve ser corrigido aqui? Explique",
         "nb_NO": "Hva bør fikses her? Forklar.",
         "ca": "Què s’hauria de corregir aquí? Exposa-ho",
-        "pt_BR": "O que deve ser corrigido aqui? Explique"
+        "pt_BR": "O que deve ser corrigido aqui? Explique",
+        "he": "מה צריך לתקן כאן? אנא הסבר",
+        "eu": "Zer konpondu behar da hemen? Azaldu mesedez",
+        "it": "Indica cosa deve essere corretto qui"
       },
       "freeform": {
         "key": "fixme"
@@ -243,61 +337,6 @@
           "then": "No fixme - write something here to explain complicated cases"
         }
       ]
-    }
-  ],
-  "mapRendering": [
-    {
-      "label": {
-        "render": "<div style='margin-top: -42px; color: white' class='rounded-full p-1 font-bold relative'>{addr:housenumber}</div>",
-        "condition": "addr:housenumber~*"
-      },
-      "iconSize": "50,50",
-      "icon": {
-        "render": "./assets/layers/address/housenumber_blank.svg",
-        "mappings": [
-          {
-            "if": {
-              "or": [
-                {
-                  "and": [
-                    "addr:housenumber=",
-                    "nohousenumber!=yes"
-                  ]
-                },
-                "addr:street="
-              ]
-            },
-            "then": "./assets/themes/uk_addresses/housenumber_unknown.svg"
-          }
-        ]
-      },
-      "location": [
-        "point",
-        "centroid"
-      ],
-      "anchor": "center"
-    },
-    {
-      "color": {
-        "render": "#00f",
-        "mappings": [
-          {
-            "if": {
-              "or": [
-                {
-                  "and": [
-                    "addr:housenumber=",
-                    "nohousenumber!=yes"
-                  ]
-                },
-                "addr:street="
-              ]
-            },
-            "then": "#ff0"
-          }
-        ]
-      },
-      "width": "8"
     }
   ]
 }

@@ -1,6 +1,8 @@
 import { TagsFilter } from "./TagsFilter"
 import { TagUtils } from "./TagUtils"
 import { And } from "./And"
+import { TagConfigJson } from "../../Models/ThemeConfig/Json/TagConfigJson"
+import { ExpressionSpecification } from "maplibre-gl"
 
 export class Or extends TagsFilter {
     public or: TagsFilter[]
@@ -27,6 +29,10 @@ export class Or extends TagsFilter {
         return false
     }
 
+    asJson(): TagConfigJson {
+        return { or: this.or.map((o) => o.asJson()) }
+    }
+
     /**
      *
      * import {Tag} from "./Tag";
@@ -49,8 +55,16 @@ export class Or extends TagsFilter {
         return choices
     }
 
-    asHumanString(linkToWiki: boolean, shorten: boolean, properties) {
-        return this.or.map((t) => t.asHumanString(linkToWiki, shorten, properties)).join("|")
+    asHumanString(linkToWiki: boolean, shorten: boolean, properties: Record<string, string>) {
+        return this.or
+            .map((t) => {
+                let e = t.asHumanString(linkToWiki, shorten, properties)
+                if (t["and"]) {
+                    e = "(" + e + ")"
+                }
+                return e
+            })
+            .join(" | ")
     }
 
     isUsableAsAnswer(): boolean {
@@ -82,7 +96,7 @@ export class Or extends TagsFilter {
         return [].concat(...this.or.map((subkeys) => subkeys.usedTags()))
     }
 
-    asChange(properties: Record<string, string>): { k: string; v: string }[] {
+    asChange(properties: Readonly<Record<string, string>>): { k: string; v: string }[] {
         const result = []
         for (const tagsFilter of this.or) {
             result.push(...tagsFilter.asChange(properties))
@@ -149,6 +163,12 @@ export class Or extends TagsFilter {
         return Or.construct(newOrs)
     }
 
+    /**
+     * const raw = {"or": [{"and":["leisure=playground","playground!=forest"]},{"and":["leisure=playground","playground!=forest"]}]}
+     * const parsed = TagUtils.Tag(raw)
+     * parsed.optimize().asJson() // => {"and":["leisure=playground","playground!=forest"]}
+     *
+     */
     optimize(): TagsFilter | boolean {
         if (this.or.length === 0) {
             return false
@@ -166,9 +186,9 @@ export class Or extends TagsFilter {
         const newOrs: TagsFilter[] = []
         let containedAnds: And[] = []
         for (const tf of optimized) {
-            if (tf instanceof Or) {
+            if (tf["or"]) {
                 // expand all the nested ors...
-                newOrs.push(...tf.or)
+                newOrs.push(...tf["or"])
             } else if (tf instanceof And) {
                 // partition of all the ands
                 containedAnds.push(tf)
@@ -183,7 +203,7 @@ export class Or extends TagsFilter {
                 const cleanedContainedANds: And[] = []
                 outer: for (let containedAnd of containedAnds) {
                     for (const known of newOrs) {
-                        // input for optimazation: (K=V | (X=Y & K=V))
+                        // input for optimization: (K=V | (X=Y & K=V))
                         // containedAnd: (X=Y & K=V)
                         // newOrs (and thus known): (K=V) --> false
                         const cleaned = containedAnd.removePhraseConsideredKnown(known, false)
@@ -228,16 +248,21 @@ export class Or extends TagsFilter {
                     const elements = containedAnd.and.filter(
                         (candidate) => !commonValues.some((cv) => cv.shadows(candidate))
                     )
+                    if (elements.length == 0) {
+                        continue
+                    }
                     newAnds.push(And.construct(elements))
                 }
+                if (newAnds.length > 0) {
+                    commonValues.push(Or.construct(newAnds))
+                }
 
-                commonValues.push(Or.construct(newAnds))
                 const result = new And(commonValues).optimize()
                 if (result === true) {
                     return true
                 } else if (result === false) {
                     // neutral element: skip
-                } else {
+                } else if (commonValues.length > 0) {
                     newOrs.push(And.construct(commonValues))
                 }
             }
@@ -263,5 +288,9 @@ export class Or extends TagsFilter {
     visit(f: (tagsFilter: TagsFilter) => void) {
         f(this)
         this.or.forEach((t) => t.visit(f))
+    }
+
+    asMapboxExpression(): ExpressionSpecification {
+        return ["any", ...this.or.map((t) => t.asMapboxExpression())]
     }
 }

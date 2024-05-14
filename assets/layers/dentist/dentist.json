@@ -5,25 +5,67 @@
     "nl": "Tandarts",
     "de": "Zahnärzte",
     "es": "Dentista",
-    "ca": "Dentista"
+    "ca": "Dentista",
+    "pl": "Dentysta",
+    "cs": "Zubař"
   },
   "description": {
     "en": "This layer shows dentist offices",
     "de": "Diese Ebene zeigt Zahnarztpraxen",
-    "nl": "Deze laag toont tandartsen"
+    "nl": "Deze laag toont tandartsen",
+    "pl": "Ta warstwa pokazuje gabinety dentystyczne",
+    "ca": "Aquesta capa mostra clíniques dentals",
+    "cs": "Tato vrstva zobrazuje ordinace zubních lékařů"
   },
   "source": {
     "osmTags": "amenity=dentist"
   },
+  "minzoom": 13,
   "title": {
     "render": {
       "en": "Dentist Office {name}",
       "de": "Zahnarztpraxis {name}",
       "nl": "Tandartspraktijk {name}",
-      "fr": "Cabinet medical {name}"
+      "fr": "Cabinet medical {name}",
+      "ca": "Clínica Dental {name}",
+      "cs": "Zubní ordinace {name}"
     }
   },
-  "minzoom": 13,
+  "pointRendering": [
+    {
+      "iconSize": "40,40",
+      "location": [
+        "point",
+        "centroid"
+      ],
+      "anchor": "center",
+      "marker": [
+        {
+          "icon": "circle",
+          "color": "white"
+        },
+        {
+          "icon": "./assets/layers/dentist/dentist.svg"
+        }
+      ]
+    }
+  ],
+  "lineRendering": [],
+  "presets": [
+    {
+      "title": {
+        "en": "a dentists office",
+        "de": "eine Zahnarztpraxis",
+        "nl": "een tandartspraktijk",
+        "fr": "un cabinet de dentistes",
+        "ca": "una clínica dental",
+        "cs": "zubní ordinace"
+      },
+      "tags": [
+        "amenity=dentist"
+      ]
+    }
+  ],
   "tagRenderings": [
     "images",
     "opening_hours",
@@ -35,13 +77,17 @@
         "en": "What is the name of this dentist?",
         "de": "Wie lautet der Name dieses Zahnarztes?",
         "nl": "Hoe heet deze tandarts?",
-        "ca": "Com s'anomena aquest dentista?"
+        "ca": "Com s'anomena aquest dentista?",
+        "pl": "Jaka jest nazwa tego gabinetu dentystycznego?",
+        "cs": "Jak se jmenuje tento zubař?"
       },
       "render": {
         "en": "This dentist is called {name}",
         "de": "Dieser Zahnarzt heißt {name}",
         "nl": "Deze tandarts heet {name}",
-        "ca": "El dentista s'anomena {name}"
+        "ca": "El dentista s'anomena {name}",
+        "pl": "Nazwa tego gabinetu dentystycznego to {name}",
+        "cs": "Tento zubař se jmenuje {name}"
       },
       "freeform": {
         "key": "name"
@@ -49,32 +95,8 @@
       "id": "name"
     }
   ],
-  "presets": [
-    {
-      "title": {
-        "en": "a dentists office",
-        "de": "eine Zahnarztpraxis",
-        "nl": "een tandartspraktijk",
-        "fr": "un cabinet de dentistes"
-      },
-      "tags": [
-        "amenity=dentist"
-      ]
-    }
-  ],
   "filter": [
     "open_now"
-  ],
-  "mapRendering": [
-    {
-      "icon": "circle:white;./assets/layers/dentist/dentist.svg",
-      "iconSize": "40,40",
-      "location": [
-        "point",
-        "centroid"
-      ],
-      "anchor": "center"
-    }
   ],
   "deletion": true,
   "allowMove": true

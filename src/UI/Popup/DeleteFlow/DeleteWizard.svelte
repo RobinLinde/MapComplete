@@ -1,24 +1,23 @@
 <script lang="ts">
-  import LoginToggle from "../../Base/LoginToggle.svelte";
-  import type { SpecialVisualizationState } from "../../SpecialVisualization";
-  import Translations from "../../i18n/Translations";
-  import Tr from "../../Base/Tr.svelte";
-  import { TrashIcon } from "@babeard/svelte-heroicons/mini";
-  import type { OsmId, OsmTags } from "../../../Models/OsmFeature";
-  import DeleteConfig from "../../../Models/ThemeConfig/DeleteConfig";
-  import TagRenderingQuestion from "../TagRendering/TagRenderingQuestion.svelte";
-  import type { Feature } from "geojson";
-  import { UIEventSource } from "../../../Logic/UIEventSource";
-  import LayerConfig from "../../../Models/ThemeConfig/LayerConfig";
-  import { TagsFilter } from "../../../Logic/Tags/TagsFilter";
-  import { XCircleIcon } from "@rgossiaux/svelte-heroicons/solid";
-  import { TagUtils } from "../../../Logic/Tags/TagUtils";
-  import OsmChangeAction from "../../../Logic/Osm/Actions/OsmChangeAction";
-  import DeleteAction from "../../../Logic/Osm/Actions/DeleteAction";
-  import ChangeTagAction from "../../../Logic/Osm/Actions/ChangeTagAction";
-  import Loading from "../../Base/Loading.svelte";
-  import { DeleteFlowState } from "./DeleteFlowState";
-  import { twJoin } from "tailwind-merge";
+  import LoginToggle from "../../Base/LoginToggle.svelte"
+  import type { SpecialVisualizationState } from "../../SpecialVisualization"
+  import Translations from "../../i18n/Translations"
+  import Tr from "../../Base/Tr.svelte"
+  import { TrashIcon } from "@babeard/svelte-heroicons/mini"
+  import type { OsmId, OsmTags } from "../../../Models/OsmFeature"
+  import DeleteConfig from "../../../Models/ThemeConfig/DeleteConfig"
+  import TagRenderingQuestion from "../TagRendering/TagRenderingQuestion.svelte"
+  import type { Feature } from "geojson"
+  import { UIEventSource } from "../../../Logic/UIEventSource"
+  import LayerConfig from "../../../Models/ThemeConfig/LayerConfig"
+  import { TagUtils } from "../../../Logic/Tags/TagUtils"
+  import type { UploadableTag } from "../../../Logic/Tags/TagUtils"
+  import OsmChangeAction from "../../../Logic/Osm/Actions/OsmChangeAction"
+  import DeleteAction from "../../../Logic/Osm/Actions/DeleteAction"
+  import ChangeTagAction from "../../../Logic/Osm/Actions/ChangeTagAction"
+  import Loading from "../../Base/Loading.svelte"
+  import { DeleteFlowState } from "./DeleteFlowState"
+  import { twJoin } from "tailwind-merge"
 
   export let state: SpecialVisualizationState
   export let deleteConfig: DeleteConfig
@@ -38,24 +37,25 @@
   const hasSoftDeletion = deleteConfig.softDeletionTags !== undefined
   let currentState: "start" | "confirm" | "applying" | "deleted" = "start"
   $: {
-    console.log("Current state is", currentState, $canBeDeleted, canBeDeletedReason)
     deleteAbility.CheckDeleteability(true)
   }
 
   const t = Translations.t.delete
 
-  let selectedTags: TagsFilter
+  let selectedTags: UploadableTag
   let changedProperties = undefined
   $: changedProperties = TagUtils.changeAsProperties(selectedTags?.asChange(tags?.data ?? {}) ?? [])
   let isHardDelete = undefined
   $: isHardDelete = changedProperties[DeleteConfig.deleteReasonKey] !== undefined
 
   async function onDelete() {
+    if (selectedTags === undefined) {
+      return
+    }
     currentState = "applying"
     let actionToTake: OsmChangeAction
     const changedProperties = TagUtils.changeAsProperties(selectedTags.asChange(tags?.data ?? {}))
     const deleteReason = changedProperties[DeleteConfig.deleteReasonKey]
-    console.log("Deleting! Hard?:", canBeDeleted.data, deleteReason)
     if (deleteReason) {
       // This is a proper, hard deletion
       actionToTake = new DeleteAction(
@@ -82,77 +82,71 @@
   }
 </script>
 
-{#if $canBeDeleted === false && !hasSoftDeletion}
-  <div class="low-interaction flex flex-col">
-    <Tr t={$canBeDeletedReason} />
-    <Tr cls="subtle" t={t.useSomethingElse} />
-  </div>
-{:else}
-  <LoginToggle ignoreLoading={true} {state}>
-    {#if currentState === "start"}
+<LoginToggle ignoreLoading={true} {state}>
+  {#if $canBeDeleted === false && !hasSoftDeletion}
+    <div class="low-interaction flex flex-col">
+      <Tr t={$canBeDeletedReason} />
+      <Tr cls="subtle" t={t.useSomethingElse} />
+    </div>
+  {:else if currentState === "start"}
+    <button
+      class="flex items-center"
+      on:click={() => {
+        currentState = "confirm"
+      }}
+    >
+      <TrashIcon class="h-6 w-6" />
+      <Tr t={t.delete} />
+    </button>
+  {:else if currentState === "confirm"}
+    <TagRenderingQuestion
+      bind:selectedTags
+      {tags}
+      config={deleteConfig.constructTagRendering()}
+      {state}
+      selectedElement={feature}
+      {layer}
+    >
       <button
-        class="flex"
-        on:click={() => {
-          currentState = "confirm"
-        }}
+        slot="save-button"
+        on:click={onDelete}
+        class={twJoin(
+          selectedTags === undefined && "disabled",
+          "primary flex items-center bg-red-600"
+        )}
       >
-        <TrashIcon class="h-6 w-6" />
+        <TrashIcon
+          class={twJoin(
+            "ml-1 mr-2 h-6 w-6 rounded-full p-1",
+            selectedTags !== undefined && "bg-red-600"
+          )}
+        />
         <Tr t={t.delete} />
       </button>
-    {:else if currentState === "confirm"}
-      <TagRenderingQuestion
-        bind:selectedTags
-        {tags}
-        config={deleteConfig.constructTagRendering()}
-        {state}
-        selectedElement={feature}
-        {layer}
-      >
-        <button
-          slot="save-button"
-          on:click={onDelete}
-          class={twJoin(selectedTags === undefined && "disabled", "primary flex bg-red-600")}
-        >
-          <TrashIcon
-            class={twJoin(
-              "ml-1 mr-2 h-6 w-6 rounded-full p-1",
-              selectedTags !== undefined && "bg-red-600"
-            )}
-          />
-          <Tr t={t.delete} />
-        </button>
-        <button slot="cancel" on:click={() => (currentState = "start")}>
-          <Tr t={t.cancel} />
-        </button>
-        <XCircleIcon
-          slot="upper-right"
-          class="h-8 w-8 cursor-pointer"
-          on:click={() => {
-            currentState = "start"
-          }}
-        />
+      <button slot="cancel" class="items-center" on:click={() => (currentState = "start")}>
+        <Tr t={t.cancel} />
+      </button>
 
-        <div slot="under-buttons">
-          {#if selectedTags !== undefined}
-            {#if canBeDeleted && isHardDelete}
-              <!-- This is a hard delete - explain that this is a hard delete...-->
-              <Tr t={t.explanations.hardDelete} />
-            {:else}
-              <!-- This is a soft deletion: we explain _why_ the deletion is soft -->
-              <Tr t={t.explanations.softDelete.Subs({ reason: $canBeDeletedReason })} />
-            {/if}
+      <div slot="under-buttons">
+        {#if selectedTags !== undefined}
+          {#if canBeDeleted && isHardDelete}
+            <!-- This is a hard delete - explain that this is a hard delete...-->
+            <Tr t={t.explanations.hardDelete} />
+          {:else}
+            <!-- This is a soft deletion: we explain _why_ the deletion is soft -->
+            <Tr t={t.explanations.softDelete.Subs({ reason: $canBeDeletedReason })} />
           {/if}
-        </div>
-      </TagRenderingQuestion>
-    {:else if currentState === "applying"}
-      <Loading />
-    {:else}
-      <!-- currentState === 'deleted' -->
-
-      <div class="low-interaction flex">
-        <TrashIcon class="h-6 w-6" />
-        <Tr t={t.isDeleted} />
+        {/if}
       </div>
-    {/if}
-  </LoginToggle>
-{/if}
+    </TagRenderingQuestion>
+  {:else if currentState === "applying"}
+    <Loading />
+  {:else}
+    <!-- currentState === 'deleted' -->
+
+    <div class="low-interaction flex">
+      <TrashIcon class="h-6 w-6" />
+      <Tr t={t.isDeleted} />
+    </div>
+  {/if}
+</LoginToggle>

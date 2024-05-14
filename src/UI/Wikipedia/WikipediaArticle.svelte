@@ -9,29 +9,34 @@
   import WikidataPreviewBox from "./WikidataPreviewBox"
   import Tr from "../Base/Tr.svelte"
   import Translations from "../i18n/Translations"
+  import Wikipedia from "../../assets/svg/Wikipedia.svelte"
 
   /**
-   * Small helper
+   * Shows a wikipedia-article + wikidata preview for the given item
    */
   export let wikipediaDetails: Store<FullWikipediaDetails>
 </script>
 
-<a class="flex" href={$wikipediaDetails.articleUrl} rel="noreferrer" target="_blank">
-  <img class="h-6 w-6" src="./assets/svg/wikipedia.svg" />
-  <Tr t={Translations.t.general.wikipedia.fromWikipedia} />
-</a>
-
-{#if $wikipediaDetails.wikidata}
-  <ToSvelte construct={WikidataPreviewBox.WikidataResponsePreview($wikipediaDetails.wikidata)} />
+{#if $wikipediaDetails.articleUrl}
+  <a class="flex" href={$wikipediaDetails.articleUrl} rel="noreferrer" target="_blank">
+    <Wikipedia class="h-6 w-6" />
+    <Tr t={Translations.t.general.wikipedia.fromWikipedia} />
+  </a>
 {/if}
 
-{#if $wikipediaDetails.firstParagraph === "" || $wikipediaDetails.firstParagraph === undefined}
-  <Loading>
-    <Tr t={Translations.t.general.wikipedia.loading} />
-  </Loading>
-{:else}
-  <span class="wikipedia-article">
-    <FromHtml src={$wikipediaDetails.firstParagraph} />
+{#if $wikipediaDetails.wikidata}
+  <ToSvelte
+    construct={() => WikidataPreviewBox.WikidataResponsePreview($wikipediaDetails.wikidata)}
+  />
+{/if}
+
+{#if $wikipediaDetails.articleUrl}
+  {#if $wikipediaDetails.firstParagraph === "" || $wikipediaDetails.firstParagraph === undefined}
+    <Loading>
+      <Tr t={Translations.t.general.wikipedia.loading} />
+    </Loading>
+  {:else}
+    <FromHtml clss="wikipedia-article" src={$wikipediaDetails.firstParagraph} />
     <Disclosure let:open>
       <DisclosureButton>
         <span class="flex">
@@ -39,12 +44,12 @@
             style={(open ? "transform: rotate(90deg); " : "") +
               "  transition: all .25s linear; width: 1.5rem; height: 1.5rem"}
           />
-          Read the rest of the article
+          <Tr t={Translations.t.general.wikipedia.readMore} />
         </span>
       </DisclosureButton>
       <DisclosurePanel>
-        <FromHtml src={$wikipediaDetails.restOfArticle} />
+        <FromHtml clss="wikipedia-article" src={$wikipediaDetails.restOfArticle} />
       </DisclosurePanel>
     </Disclosure>
-  </span>
+  {/if}
 {/if}

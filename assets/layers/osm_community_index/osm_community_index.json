@@ -3,23 +3,60 @@
   "name": {
     "en": "OSM Community Index",
     "de": "OSM-Community-Index",
-    "ca": "Índex de comunitats d'OSM"
+    "ca": "Índex de comunitats d'OSM",
+    "fr": "Index des communautés OSM",
+    "pl": "Indeks społeczności OSM",
+    "cs": "OSM Community Index"
   },
-  "title": {
-    "render": {
-      "en": "OSM Community Index",
-      "de": "OSM-Community-Index",
-      "ca": "Índex de comunitats d'OSM"
-    }
+  "description": {
+    "en": "A layer showing the OpenStreetMap Communities",
+    "de": "Eine Ebene aller OpenStreetMap-Communities",
+    "ca": "Una capa que mostra les comunitats d'OpenStreetMap",
+    "fr": "Une couche affichant les communautés OpenStreetMap",
+    "pl": "Warstwa pokazująca społeczności OpenStreetMap",
+    "cs": "Vrstva zobrazující komunity OpenStreetMap"
   },
   "source": {
     "geoJson": "https://raw.githubusercontent.com/pietervdvn/MapComplete-data/main/community_index/tile_{z}_{x}_{y}.geojson",
     "geoJsonZoomLevel": 6,
-    "osmTags": "resources~*",
-    "isOsmCache": false
+    "osmTags": "resources~*"
   },
   "calculatedTags": [
     "_community_links=Object.values(JSON.parse(feat.properties.resources || '{}')).map(value =>{return value.resolved.nameHTML + '<br>&emsp;' + value.resolved.descriptionHTML}).join('<br>')"
+  ],
+  "title": {
+    "render": {
+      "en": "OSM Community Index",
+      "de": "OSM-Community-Index",
+      "ca": "Índex de comunitats d'OSM",
+      "fr": "Index des communautés OSM",
+      "pl": "Indeks społeczności OSM",
+      "cs": "OSM Community Index"
+    }
+  },
+  "pointRendering": [
+    {
+      "iconSize": "40,40",
+      "location": [
+        "point"
+      ],
+      "anchor": "bottom",
+      "marker": [
+        {
+          "icon": "pin",
+          "color": "#6BC4F7"
+        },
+        {
+          "icon": "./assets/layers/osm_community_index/osm.svg"
+        }
+      ]
+    }
+  ],
+  "lineRendering": [
+    {
+      "color": "#444444",
+      "width": "1"
+    }
   ],
   "tagRenderings": [
     {
@@ -35,20 +72,6 @@
       "description": "Community Links (Discord, meetups, Slack groups, IRC channels, mailing lists etc...)"
     }
   ],
-  "mapRendering": [
-    {
-      "icon": "pin:#6BC4F7;./assets/layers/osm_community_index/osm.svg",
-      "iconSize": "40,40",
-      "location": [
-        "point"
-      ],
-      "anchor": "bottom"
-    },
-    {
-      "color": "#444444",
-      "width": "1"
-    }
-  ],
   "filter": [
     {
       "id": "country",
@@ -58,7 +81,10 @@
             "en": "Country",
             "de": "Land",
             "nl": "Land",
-            "ca": "País"
+            "ca": "País",
+            "fr": "Pays",
+            "pl": "Kraj",
+            "cs": "Země"
           },
           "osmTags": "level=country"
         }
@@ -71,7 +97,8 @@
           "question": {
             "en": "Sub Country Group",
             "de": "Regionale Gruppe",
-            "ca": "Subgrup de països"
+            "ca": "Subgrup de països",
+            "cs": "Skupina dílčích zemí"
           },
           "osmTags": "level=subcountryGroup"
         }
@@ -85,7 +112,10 @@
             "en": "Region",
             "de": "Region",
             "nl": "Regio",
-            "ca": "Regió"
+            "ca": "Regió",
+            "fr": "Région",
+            "pl": "Region",
+            "cs": "Region"
           },
           "osmTags": "level=region"
         }
@@ -98,7 +128,8 @@
           "question": {
             "en": "Intermediate Region",
             "de": "Mittlere Region",
-            "ca": "Regió intermèdia"
+            "ca": "Regió intermèdia",
+            "cs": "Střední region"
           },
           "osmTags": "level=intermediateRegion"
         }
@@ -111,7 +142,10 @@
           "question": {
             "en": "Territory",
             "de": "Gebiet",
-            "ca": "Territori"
+            "ca": "Territori",
+            "fr": "Territoire",
+            "pl": "Terytorium",
+            "cs": "Území"
           },
           "osmTags": "level=territory"
         }
@@ -125,7 +159,10 @@
             "en": "World",
             "de": "Welt",
             "nl": "Wereld",
-            "ca": "Món"
+            "ca": "Món",
+            "fr": "Monde",
+            "pl": "Świat",
+            "cs": "Svět"
           },
           "osmTags": "level=world"
         }
@@ -138,16 +175,14 @@
           "question": {
             "en": "Other Communities",
             "de": "Andere Communities",
-            "ca": "Altres Comunitats"
+            "ca": "Altres Comunitats",
+            "fr": "Autres communautés",
+            "pl": "Inne społeczności",
+            "cs": "Ostatní komunity"
           },
           "osmTags": "level="
         }
       ]
     }
-  ],
-  "description": {
-    "en": "A layer showing the OpenStreetMap Communities",
-    "de": "Eine Ebene aller OpenStreetMap-Communities",
-    "ca": "Una capa que mostra les comunitats d'OpenStreetMap"
-  }
+  ]
 }

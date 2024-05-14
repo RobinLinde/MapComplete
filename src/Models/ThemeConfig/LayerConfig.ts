@@ -12,8 +12,6 @@ import MoveConfig from "./MoveConfig"
 import PointRenderingConfig from "./PointRenderingConfig"
 import WithContextLoader from "./WithContextLoader"
 import LineRenderingConfig from "./LineRenderingConfig"
-import PointRenderingConfigJson from "./Json/PointRenderingConfigJson"
-import LineRenderingConfigJson from "./Json/LineRenderingConfigJson"
 import { TagRenderingConfigJson } from "./Json/TagRenderingConfigJson"
 import BaseUIElement from "../../UI/BaseUIElement"
 import Combine from "../../UI/Base/Combine"
@@ -24,13 +22,12 @@ import { Utils } from "../../Utils"
 import { TagsFilter } from "../../Logic/Tags/TagsFilter"
 import Table from "../../UI/Base/Table"
 import FilterConfigJson from "./Json/FilterConfigJson"
-import { And } from "../../Logic/Tags/And"
 import { Overpass } from "../../Logic/Osm/Overpass"
 import { FixedUiElement } from "../../UI/Base/FixedUiElement"
-import Svg from "../../Svg"
 import { ImmutableStore } from "../../Logic/UIEventSource"
 import { OsmTags } from "../OsmFeature"
 import Constants from "../Constants"
+import { QuestionableTagRenderingConfigJson } from "./Json/QuestionableTagRenderingConfigJson"
 
 export default class LayerConfig extends WithContextLoader {
     public static readonly syncSelectionAllowed = ["no", "local", "theme-only", "global"] as const
@@ -47,7 +44,6 @@ export default class LayerConfig extends WithContextLoader {
     public readonly isShown: TagsFilter
     public minzoom: number
     public minzoomVisible: number
-    public readonly maxzoom: number
     public readonly title?: TagRenderingConfig
     public readonly titleIcons: TagRenderingConfig[]
     public readonly mapRendering: PointRenderingConfig[]
@@ -57,6 +53,7 @@ export default class LayerConfig extends WithContextLoader {
     public readonly allowMove: MoveConfig | null
     public readonly allowSplit: boolean
     public readonly shownByDefault: boolean
+    public readonly doCount: boolean
     /**
      * In seconds
      */
@@ -69,7 +66,8 @@ export default class LayerConfig extends WithContextLoader {
     public readonly syncSelection: (typeof LayerConfig.syncSelectionAllowed)[number] // this is a trick to conver a constant array of strings into a type union of these values
 
     public readonly _needsFullNodeDatabase: boolean
-    public readonly popupInFloatover
+    public readonly popupInFloatover: boolean | string
+    public readonly enableMorePrivacy: boolean
 
     constructor(json: LayerConfigJson, context?: string, official: boolean = true) {
         context = context + "." + json.id
@@ -77,65 +75,16 @@ export default class LayerConfig extends WithContextLoader {
         super(json, context)
         this.id = json.id
 
-        if (typeof json === "string") {
-            throw `Not a valid layer: the layerConfig is a string. 'npm run generate:layeroverview' might be needed (at ${context})`
-        }
-
-        if (json.id === undefined) {
-            throw `Not a valid layer: id is undefined: ${JSON.stringify(json)} (At ${context})`
-        }
-
-        if (json.source === undefined) {
-            throw "Layer " + this.id + " does not define a source section (" + context + ")"
-        }
-
         if (json.source === "special" || json.source === "special:library") {
             this.source = null
-        } else if (json.source["osmTags"] === undefined) {
-            throw (
-                "Layer " +
-                this.id +
-                " does not define a osmTags in the source section - these should always be present, even for geojson layers (" +
-                context +
-                ")"
-            )
         }
 
-        if (json.id.toLowerCase() !== json.id) {
-            throw `${context}: The id of a layer should be lowercase: ${json.id}`
-        }
-        if (json.id.match(/[a-z0-9-_]/) == null) {
-            throw `${context}: The id of a layer should match [a-z0-9-_]*: ${json.id}`
-        }
-
-        if (
-            json.syncSelection !== undefined &&
-            LayerConfig.syncSelectionAllowed.indexOf(json.syncSelection) < 0
-        ) {
-            throw (
-                context +
-                " Invalid sync-selection: must be one of " +
-                LayerConfig.syncSelectionAllowed.map((v) => `'${v}'`).join(", ") +
-                " but got '" +
-                json.syncSelection +
-                "'"
-            )
-        }
         this.syncSelection = json.syncSelection ?? "no"
         if (typeof json.source !== "string") {
             this.maxAgeOfCache = json.source["maxCacheAge"] ?? 24 * 60 * 60 * 30
-            const osmTags = TagUtils.Tag(json.source["osmTags"], context + "source.osmTags")
-            if (osmTags.isNegative()) {
-                throw (
-                    context +
-                    "The source states tags which give a very wide selection: it only uses negative expressions, which will result in too much and unexpected data. Add at least one required tag. The tags are:\n\t" +
-                    osmTags.asHumanString(false, false, {})
-                )
-            }
-
             this.source = new SourceConfig(
                 {
-                    osmTags: osmTags,
+                    osmTags: TagUtils.Tag(json.source["osmTags"], context + "source.osmTags"),
                     geojsonSource: json.source["geoJson"],
                     geojsonSourceLevel: json.source["geoJsonZoomLevel"],
                     overpassScript: json.source["overpassScript"],
@@ -147,26 +96,8 @@ export default class LayerConfig extends WithContextLoader {
             )
         }
 
-        if (json.source["geoJsonSource"] !== undefined) {
-            throw context + "Use 'geoJson' instead of 'geoJsonSource'"
-        }
-
-        if (json.source["geojson"] !== undefined) {
-            throw context + "Use 'geoJson' instead of 'geojson' (the J is a capital letter)"
-        }
-
         this.allowSplit = json.allowSplit ?? false
         this.name = Translations.T(json.name, translationContext + ".name")
-        if (json.units !== undefined && !Array.isArray(json.units)) {
-            throw (
-                "At " +
-                context +
-                ".units: the 'units'-section should be a list; you probably have an object there"
-            )
-        }
-        this.units = (json.units ?? []).map((unitJson, i) =>
-            Unit.fromJson(unitJson, `${context}.unit[${i}]`)
-        )
 
         if (json.description !== undefined) {
             if (Object.keys(json.description).length === 0) {
@@ -204,12 +135,6 @@ export default class LayerConfig extends WithContextLoader {
                 }
                 const code = kv.substring(index + 1)
 
-                try {
-                    new Function("feat", "return " + code + ";")
-                } catch (e) {
-                    throw `Invalid function definition: the custom javascript is invalid:${e} (at ${context}). The offending javascript code is:\n    ${code}`
-                }
-
                 this.calculatedTags.push([key, code, isStrict])
             }
         }
@@ -223,7 +148,9 @@ export default class LayerConfig extends WithContextLoader {
         }
         this.minzoomVisible = json.minzoomVisible ?? this.minzoom
         this.shownByDefault = json.shownByDefault ?? true
+        this.doCount = json.isCounted ?? this.shownByDefault ?? true
         this.forceLoad = json.forceLoad ?? false
+        this.enableMorePrivacy = json.enableMorePrivacy ?? false
         if (json.presets === null) json.presets = undefined
         if (json.presets !== undefined && json.presets?.map === undefined) {
             throw "Presets should be a list of items (at " + context + ")"
@@ -235,26 +162,18 @@ export default class LayerConfig extends WithContextLoader {
                 maxSnapDistance: undefined,
             }
             if (pr["preciseInput"] !== undefined) {
-                throw "Layer " + this.id + " still uses the old 'preciseInput'-field"
+                throw (
+                    "Layer " +
+                    this.id +
+                    " still uses the old 'preciseInput'-field. For snapping to layers, use 'snapToLayer' instead"
+                )
             }
             if (pr.snapToLayer !== undefined) {
-                let snapToLayers: string[]
-                if (typeof pr.snapToLayer === "string") {
-                    snapToLayers = [pr.snapToLayer]
-                } else {
-                    snapToLayers = pr.snapToLayer
-                }
-
+                let snapToLayers = pr.snapToLayer
                 preciseInput = {
                     snapToLayers,
                     maxSnapDistance: pr.maxSnapDistance ?? 10,
                 }
-            } else if (pr.maxSnapDistance !== undefined) {
-                throw (
-                    "Layer " +
-                    this.id +
-                    " defines a maxSnapDistance, but does not include a `snapToLayer`"
-                )
             }
 
             const config: PresetConfig = {
@@ -270,34 +189,27 @@ export default class LayerConfig extends WithContextLoader {
             return config
         })
 
-        if (json.mapRendering === undefined) {
-            throw "MapRendering is undefined in " + context
+        if (json.pointRendering === undefined && json.lineRendering === undefined) {
+            throw "Both pointRendering and lineRendering are undefined in " + context
         }
 
-        if (json.mapRendering === null) {
-            this.mapRendering = []
-            this.lineRendering = []
+        if (json.lineRendering) {
+            this.lineRendering = Utils.NoNull(json.lineRendering).map(
+                (r, i) => new LineRenderingConfig(r, `${context}[${i}]`)
+            )
         } else {
-            this.mapRendering = Utils.NoNull(json.mapRendering)
-                .filter((r) => r["location"] !== undefined)
-                .map(
-                    (r, i) =>
-                        new PointRenderingConfig(
-                            <PointRenderingConfigJson>r,
-                            context + ".mapRendering[" + i + "]"
-                        )
-                )
+            this.lineRendering = []
+        }
 
-            this.lineRendering = Utils.NoNull(json.mapRendering)
-                .filter((r) => r["location"] === undefined)
-                .map(
-                    (r, i) =>
-                        new LineRenderingConfig(
-                            <LineRenderingConfigJson>r,
-                            context + ".mapRendering[" + i + "]"
-                        )
-                )
+        if (json.pointRendering) {
+            this.mapRendering = Utils.NoNull(json.pointRendering).map(
+                (r, i) => new PointRenderingConfig(r, `${context}[${i}](${this.id})`)
+            )
+        } else {
+            this.mapRendering = []
+        }
 
+        {
             const hasCenterRendering = this.mapRendering.some(
                 (r) =>
                     r.location.has("centroid") ||
@@ -306,16 +218,24 @@ export default class LayerConfig extends WithContextLoader {
                     r.location.has("end")
             )
 
-            if (this.lineRendering.length === 0 && this.mapRendering.length === 0) {
+            if (
+                json.pointRendering !== null &&
+                json.lineRendering !== null &&
+                this.lineRendering.length === 0 &&
+                this.mapRendering.length === 0
+            ) {
                 throw (
                     "The layer " +
                     this.id +
-                    " does not have any maprenderings defined and will thus not show up on the map at all. If this is intentional, set maprenderings to 'null' instead of '[]'"
+                    ` does not have any maprenderings defined and will thus not show up on the map at all:
+\t ${this.lineRendering?.length} linerenderings and ${this.mapRendering?.length} pointRenderings.
+\t If this is intentional, set \`pointRendering\` and \`lineRendering\` to 'null' instead of '[]'`
                 )
             } else if (
                 !hasCenterRendering &&
                 this.lineRendering.length === 0 &&
                 Constants.priviliged_layers.indexOf(<any>this.id) < 0 &&
+                this.source !== null /*library layer*/ &&
                 !this.source?.geojsonSource?.startsWith(
                     "https://api.openstreetmap.org/api/0.6/notes.json"
                 )
@@ -346,9 +266,21 @@ export default class LayerConfig extends WithContextLoader {
         this.tagRenderings = (Utils.NoNull(json.tagRenderings) ?? []).map(
             (tr, i) =>
                 new TagRenderingConfig(
-                    <TagRenderingConfigJson>tr,
+                    <QuestionableTagRenderingConfigJson>tr,
                     this.id + ".tagRenderings[" + i + "]"
                 )
+        )
+        if (json.units !== undefined && !Array.isArray(json.units)) {
+            throw (
+                "At " +
+                context +
+                ".units: the 'units'-section should be a list; you probably have an object there"
+            )
+        }
+        this.units = [].concat(
+            ...(json.units ?? []).map((unitJson, i) =>
+                Unit.fromJson(unitJson, this.tagRenderings,`${context}.unit[${i}]`)
+            )
         )
 
         if (
@@ -365,7 +297,7 @@ export default class LayerConfig extends WithContextLoader {
         }
 
         {
-            const duplicateIds = Utils.Dupiclates(this.filters.map((f) => f.id))
+            const duplicateIds = Utils.Duplicates(this.filters.map((f) => f.id))
             if (duplicateIds.length > 0) {
                 throw `Some filters have a duplicate id: ${duplicateIds} (at ${context}.filters)`
             }
@@ -417,7 +349,7 @@ export default class LayerConfig extends WithContextLoader {
         if (mapRendering === undefined) {
             return undefined
         }
-        return mapRendering.GetBaseIcon(this.GetBaseTags(), { noFullWidth: true })
+        return mapRendering.GetBaseIcon(this.GetBaseTags())
     }
 
     public GetBaseTags(): Record<string, string> {
@@ -438,7 +370,6 @@ export default class LayerConfig extends WithContextLoader {
         canBeIncluded = true
     ): BaseUIElement {
         const extraProps: (string | BaseUIElement)[] = []
-
         extraProps.push("This layer is shown at zoomlevel **" + this.minzoom + "** and higher")
 
         if (canBeIncluded) {
@@ -491,15 +422,19 @@ export default class LayerConfig extends WithContextLoader {
         }
 
         let usingLayer: BaseUIElement[] = []
-        if (usedInThemes?.length > 0 && !addedByDefault) {
-            usingLayer = [
-                new Title("Themes using this layer", 4),
-                new List(
-                    (usedInThemes ?? []).map(
-                        (id) => new Link(id, "https://mapcomplete.osm.be/" + id)
-                    )
-                ),
-            ]
+        if (!addedByDefault) {
+            if (usedInThemes?.length > 0) {
+                usingLayer = [
+                    new Title("Themes using this layer", 2),
+                    new List(
+                        (usedInThemes ?? []).map(
+                            (id) => new Link(id, "https://mapcomplete.org/" + id)
+                        )
+                    ),
+                ]
+            } else if (this.source !== null) {
+                usingLayer = [new FixedUiElement("No themes use this layer")]
+            }
         }
 
         for (const dep of dependencies) {
@@ -523,12 +458,7 @@ export default class LayerConfig extends WithContextLoader {
             )
         }
 
-        let neededTags: TagsFilter[] = Utils.NoNull([this.source?.osmTags])
-        if (this.source?.osmTags["and"] !== undefined) {
-            neededTags = this.source.osmTags["and"]
-        }
-
-        let tableRows = Utils.NoNull(
+        const tableRows = Utils.NoNull(
             this.tagRenderings
                 .map((tr) => tr.FreeformValues())
                 .map((values) => {
@@ -541,9 +471,7 @@ export default class LayerConfig extends WithContextLoader {
                     return [
                         new Combine([
                             new Link(
-                                Utils.runningFromConsole
-                                    ? "<img src='https://mapcomplete.osm.be/assets/svg/statistics.svg' height='18px'>"
-                                    : Svg.statistics_svg().SetClass("w-4 h-4 mr-2"),
+                                "<img src='https://mapcomplete.org/assets/svg/statistics.svg' height='18px'>",
                                 "https://taginfo.openstreetmap.org/keys/" + values.key + "#values",
                                 true
                             ),
@@ -571,23 +499,12 @@ export default class LayerConfig extends WithContextLoader {
 
         let iconImg: BaseUIElement = new FixedUiElement("")
 
-        if (Utils.runningFromConsole) {
-            const icon = this.mapRendering
-                .filter((mr) => mr.location.has("point"))
-                .map((mr) => mr.icon?.render?.txt)
-                .find((i) => i !== undefined)
-            // This is for the documentation in a markdown-file, so we have to use raw HTML
-            if (icon !== undefined) {
-                iconImg = new FixedUiElement(
-                    `<img src='https://mapcomplete.osm.be/${icon}' height="100px"> `
-                )
-            }
-        } else {
+        if (!Utils.runningFromConsole) {
             iconImg = this.mapRendering
                 .filter((mr) => mr.location.has("point"))
                 .map(
                     (mr) =>
-                        mr.RenderIcon(new ImmutableStore<OsmTags>({ id: "node/-1" }), false, {
+                        mr.RenderIcon(new ImmutableStore<OsmTags>({ id: "node/-1" }), {
                             includeBadges: false,
                         }).html
                 )
@@ -599,7 +516,9 @@ export default class LayerConfig extends WithContextLoader {
             try {
                 overpassLink = new Link(
                     "Execute on overpass",
-                    Overpass.AsOverpassTurboLink(<TagsFilter>new And(neededTags).optimize())
+                    Overpass.AsOverpassTurboLink(<TagsFilter>this.source.osmTags.optimize())
+                        .replaceAll("(", "%28")
+                        .replaceAll(")", "%29")
                 )
             } catch (e) {
                 console.error("Could not generate overpasslink for " + this.id)
@@ -613,13 +532,31 @@ export default class LayerConfig extends WithContextLoader {
         }
 
         const tagsDescription = []
-        if (this.source === null) {
-            tagsDescription.push(
-                new Title("Basic tags for this layer", 2),
-                "Elements must have the all of following tags to be shown on this layer:",
-                new List(neededTags.map((t) => t.asHumanString(true, false, {}))),
-                overpassLink
-            )
+        if (this.source !== null) {
+            tagsDescription.push(new Title("Basic tags for this layer", 2))
+
+            const neededTags = <TagsFilter>this.source.osmTags.optimize()
+            if (neededTags["and"]) {
+                const parts = neededTags["and"]
+                tagsDescription.push(
+                    "Elements must match **all** of the following expressions:",
+                    parts.map((p, i) => i + ". " + p.asHumanString(true, false, {})).join("\n")
+                )
+            } else if (neededTags["or"]) {
+                const parts = neededTags["or"]
+                tagsDescription.push(
+                    "Elements must match **any** of the following expressions:",
+                    parts.map((p) => " - " + p.asHumanString(true, false, {})).join("\n")
+                )
+            } else {
+                tagsDescription.push(
+                    "Elements must match the expression **" +
+                        neededTags.asHumanString(true, false, {}) +
+                        "**"
+                )
+            }
+
+            tagsDescription.push(overpassLink)
         } else {
             tagsDescription.push("This is a special layer - data is not sourced from OpenStreetMap")
         }

@@ -101,7 +101,11 @@
             },
             "artwork-website": {
                 "question": "Finnes det en nettside med mer info om dette kunstverket?",
-                "render": "Mer info er å finne på <a href='{website}' target='_blank'>denne nettsiden</a>"
+                "render": {
+                    "special": {
+                        "text": "Mer info er å finne på denne nettsiden"
+                    }
+                }
             },
             "artwork_subject": {
                 "render": "Dette kunstverket viser {wikidata_label(subject:wikidata)}{wikipedia(subject:wikidata)}"
@@ -505,7 +509,7 @@
         }
     },
     "last_click": {
-        "mapRendering": {
+        "pointRendering": {
             "0": {
                 "label": {
                     "render": "Legg til nytt element"
@@ -638,27 +642,6 @@
                 "question": "Hva er nettverksnavnet for det trådløse nettverket?",
                 "render": "Nettverksnavnet er <b>{internet_access:ssid}</b>"
             },
-            "level": {
-                "mappings": {
-                    "0": {
-                        "then": "Under bakken"
-                    },
-                    "1": {
-                        "then": "På gateplan"
-                    },
-                    "2": {
-                        "then": "På gateplan"
-                    },
-                    "3": {
-                        "then": "I andre etasje"
-                    },
-                    "4": {
-                        "then": "Er å finne på første kjellernivå"
-                    }
-                },
-                "question": "Hvilken etasje befinner funksjonen seg i?",
-                "render": "Ligger i {level} etasje"
-            },
             "multilevels": {
                 "override": {
                     "question": "Hvilke etasjer går heisen til?",
@@ -671,7 +654,7 @@
             },
             "opening_hours_24_7": {
                 "override": {
-                    "mappings": {
+                    "+mappings": {
                         "0": {
                             "then": "Døgnåpent (inkludert helligdager)"
                         }
@@ -751,6 +734,27 @@
                 },
                 "question": "Har denne fasiliteten stikkontakter, tilgjengelig for kunder innendørs?"
             },
+            "single_level": {
+                "mappings": {
+                    "0": {
+                        "then": "Under bakken"
+                    },
+                    "1": {
+                        "then": "På gateplan"
+                    },
+                    "2": {
+                        "then": "På gateplan"
+                    },
+                    "3": {
+                        "then": "I andre etasje"
+                    },
+                    "4": {
+                        "then": "Er å finne på første kjellernivå"
+                    }
+                },
+                "question": "Hvilken etasje befinner funksjonen seg i?",
+                "render": "Ligger i {level} etasje"
+            },
             "smoking": {
                 "mappings": {
                     "0": {
@@ -798,21 +802,48 @@
             }
         }
     },
-    "usersettings": {
+    "trolley_bay": {
         "tagRenderings": {
-            "translation-completeness": {
-                "render": "Oversettelsen for {_theme} i {_language} har {_translation_percentage}% dekning: {_translation_translated_count} strenger av {_translation_total} har blitt oversatt"
+            "denominations": {
+                "mappings": {
+                    "0": {
+                        "then": "50-cent mynter aksepteres"
+                    },
+                    "1": {
+                        "then": "1-euro mynter aksepteres"
+                    },
+                    "2": {
+                        "then": "2-euro mynter aksepteres"
+                    }
+                }
             }
         }
     },
-    "windturbine": {
+    "unit": {
         "units": {
             "0": {
                 "applicableUnits": {
                     "1": {
-                        "human": " kilowatt"
+                        "human": "{quantity} kilowatt"
                     }
                 }
+            },
+            "3": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} meter"
+                    },
+                    "3": {
+                        "human": "{quantity} fot"
+                    }
+                }
+            }
+        }
+    },
+    "usersettings": {
+        "tagRenderings": {
+            "translation-completeness": {
+                "render": "Oversettelsen for {_theme} i {_language} har {_translation_percentage}% dekning: {_translation_translated_count} strenger av {_translation_total} har blitt oversatt"
             }
         }
     }

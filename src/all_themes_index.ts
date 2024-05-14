@@ -1,6 +1,6 @@
-import { Utils } from "./Utils"
-import AllThemesGui from "./UI/AllThemesGui"
 import { QueryParameters } from "./Logic/Web/QueryParameters"
+import SvelteUIElement from "./UI/Base/SvelteUIElement"
+import AllThemesGui from "./UI/AllThemesGui.svelte"
 
 const layout = QueryParameters.GetQueryParameter("layout", undefined).data ?? ""
 const customLayout = QueryParameters.GetQueryParameter("userlayout", undefined).data ?? ""
@@ -28,4 +28,4 @@ if (layout !== "") {
     )
 }
 
-new AllThemesGui().setup()
+new SvelteUIElement(AllThemesGui, {}).AttachTo("main")

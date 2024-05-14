@@ -8,7 +8,8 @@
     "id": "Tempat Pembuangan Limbah",
     "da": "Affaldsspande",
     "ca": "Contenidor de brossa",
-    "fr": "Réceptacles destinés à recevoir des déchets"
+    "fr": "Réceptacles destinés à recevoir des déchets",
+    "cs": "Odpadkové koše"
   },
   "description": {
     "en": "Waste Disposal Bin, medium to large bin for disposal of (household) waste",
@@ -16,7 +17,9 @@
     "de": "Entsorgungsbehälter, mittlerer bis großer Behälter zur Entsorgung von (Haushalts-)Abfällen",
     "it": "Cestino per lo smaltimento dei rifiuti, contenitore di dimensioni medio grandi per lo smaltimento dei rifiuti (domestici)",
     "da": "Affaldsspande, mellemstor til stor skraldespand til bortskaffelse af (husholdnings)affald",
-    "fr": "Réceptacle destiné à recevoir des déchets (domestiques) enveloppés dans des sacs en plastique"
+    "fr": "Réceptacle destiné à recevoir des déchets (domestiques) enveloppés dans des sacs en plastique",
+    "ca": "Contenidor de fem, contenidor mitjà o gran per a l'eliminació de residus (domèstics)",
+    "cs": "Odpadkový koš, střední až velký koš na likvidaci (domácího) odpadu"
   },
   "source": {
     "osmTags": "amenity=waste_disposal"
@@ -30,19 +33,30 @@
       "de": "Mülltonne",
       "it": "Smaltimento rifiuti",
       "id": "Pembuangan Limbah",
-      "da": "Bortskaffelse af affald"
+      "da": "Bortskaffelse af affald",
+      "ca": "Contenidor de fem",
+      "cs": "Nakládání s odpady"
     }
   },
-  "mapRendering": [
+  "pointRendering": [
     {
       "location": [
         "point",
         "centroid"
       ],
-      "icon": "circle:white;./assets/layers/waste_disposal/waste_disposal.svg",
-      "iconSize": "20,20"
+      "iconSize": "20,20",
+      "marker": [
+        {
+          "icon": "circle",
+          "color": "white"
+        },
+        {
+          "icon": "./assets/layers/waste_disposal/waste_disposal.svg"
+        }
+      ]
     }
   ],
+  "lineRendering": [],
   "presets": [
     {
       "title": {
@@ -52,7 +66,9 @@
         "it": "un raccoglitore per lo smaltimento rifiuti",
         "id": "tempat pembuangan sampahh",
         "da": "en affaldsbeholder",
-        "ca": "un contenidor de basura"
+        "ca": "un contenidor de basura",
+        "cs": "koš na odpadky",
+        "pl": "kosz na śmieci"
       },
       "tags": [
         "amenity=waste_disposal"
@@ -64,7 +80,8 @@
         "it": "Cestino di dimensioni medio-grandi per lo smaltimento dei rifiuti (domestici)",
         "id": "Tempat sampah sedang hingga besar untuk pembuangan limbah (rumah tangga)",
         "da": "Mellemstor til stor skraldespand til bortskaffelse af (husholdnings)affald",
-        "ca": "Contenidor mitjà o gran per a dipositar residus (domèstics)"
+        "ca": "Contenidor mitjà o gran per a dipositar residus (domèstics)",
+        "cs": "Střední až velký kontejner na odpad (z domácností)"
       }
     }
   ],
@@ -76,7 +93,9 @@
       "question": {
         "en": "What kind of waste disposal bin is this?",
         "de": "Was für ein Abfalleimer ist das?",
-        "ca": "Quin tipus de contenidor de brossa és aquest?"
+        "ca": "Quin tipus de contenidor de brossa és aquest?",
+        "cs": "Co je to za odpadkový koš?",
+        "pl": "Co to za pojemnik na śmieci?"
       },
       "mappings": [
         {
@@ -84,7 +103,8 @@
           "then": {
             "en": "This is a medium to large bin for disposal of (household) waste",
             "de": "Dies ist eine Mülltonne oder ein Müllcontainer für (Haushalts-)Abfälle",
-            "ca": "Es tracta d'un contenidor mitjà o gran per a dipositar residus (domèstics)"
+            "ca": "Es tracta d'un contenidor mitjà o gran per a dipositar residus (domèstics)",
+            "cs": "Jedná se o střední až velkou popelnici na (domovní) odpad"
           }
         },
         {
@@ -92,7 +112,9 @@
           "then": {
             "en": "This is actually a recycling container",
             "de": "Dies ist eigentlich ein Recyclingcontainer",
-            "ca": "En realitat es tracta d'un contenidor de reciclatge"
+            "ca": "En realitat es tracta d'un contenidor de reciclatge",
+            "cs": "To je vlastně recyklační kontejner",
+            "pl": "W rzeczywistości jest to pojemnik do recyklingu"
           },
           "addExtraTags": [
             "recycling_type=container"
@@ -109,7 +131,8 @@
         "it": "Accesso: {access}",
         "id": "Akses: {access}",
         "da": "Adgang: {access}",
-        "ca": "Accés: {access}"
+        "ca": "Accés: {access}",
+        "cs": "Přístup: {access}"
       },
       "question": {
         "en": "Who can use this waste disposal bin?",
@@ -118,7 +141,9 @@
         "it": "Chi può utilizzare questo cestino per lo smaltimento dei rifiuti?",
         "id": "Siapa yang bisa menggunakan tempat sampah ini?",
         "da": "Hvem kan bruge denne affaldsbeholder?",
-        "ca": "Qui pot utilitzar aquest contenidor de brossa?"
+        "ca": "Qui pot utilitzar aquest contenidor de brossa?",
+        "cs": "Kdo může používat tento koš na odpadky?",
+        "pl": "Kto może korzystać z tego pojemnika na odpady?"
       },
       "freeform": {
         "key": "access",
@@ -134,7 +159,9 @@
             "it": "Questo cestino può essere usato da chiunque",
             "id": "Tempat sampah ini bisa digunakan oleh siapa saja",
             "da": "Denne skraldespand kan bruges af alle",
-            "ca": "Aquest contenidor es pot utilitzat per qualsevol"
+            "ca": "Aquest contenidor es pot utilitzat per qualsevol",
+            "cs": "Tento koš může používat kdokoli",
+            "pl": "Z tego pojemnika może korzystać każdy"
           }
         },
         {
@@ -146,7 +173,9 @@
             "it": "Questo cestino è privato",
             "id": "Tempat sampah ini bersifat pribadi",
             "da": "Denne skraldespand er privat",
-            "ca": "Aquest contenidor és privat"
+            "ca": "Aquest contenidor és privat",
+            "cs": "Tento koš je soukromý",
+            "pl": "Ten kosz jest prywatny"
           }
         },
         {
@@ -158,7 +187,9 @@
             "it": "Questo cestino è solo per residenti",
             "id": "Tempat sampah ini hanya untuk penghuni",
             "da": "Denne skraldespand er kun for beboere",
-            "ca": "Aquest contenidor és només per als residents"
+            "ca": "Aquest contenidor és només per als residents",
+            "cs": "Tento koš je určen pouze pro obyvatele",
+            "pl": "Ten kosz jest przeznaczony wyłącznie dla mieszkańców"
           }
         }
       ]
@@ -172,7 +203,9 @@
         "it": "Dove si trova questo contenitore?",
         "id": "Di manakah lokasi kontainer ini?",
         "da": "Hvor er denne container placeret?",
-        "ca": "On es troba aquest contenidor?"
+        "ca": "On es troba aquest contenidor?",
+        "cs": "Kde se nachází tento kontejner?",
+        "pl": "Gdzie znajduje się ten kontener?"
       },
       "mappings": [
         {
@@ -184,7 +217,9 @@
             "it": "Questo è un contenitore sotterraneo",
             "id": "Ini adalah kontainer bawah tanah",
             "da": "Dette er en underjordisk container",
-            "ca": "Aquest contenidor està soterrat"
+            "ca": "Aquest contenidor està soterrat",
+            "cs": "Jedná se o podzemní kontejner",
+            "pl": "To jest podziemny kontener"
           }
         },
         {
@@ -196,7 +231,9 @@
             "it": "Questo contenitore è al chiuso",
             "id": "Kontainer ini terletak di dalam ruangan",
             "da": "Denne container er placeret indendørs",
-            "ca": "Aquest contenidor està situat a l'interior"
+            "ca": "Aquest contenidor està situat a l'interior",
+            "cs": "Tento kontejner se nachází uvnitř",
+            "pl": "Kontener ten znajduje się w pomieszczeniu zamkniętym"
           }
         },
         {
@@ -208,17 +245,14 @@
             "it": "Questo contenitore è all'aperto",
             "id": "Kontainer ini terletak di luar ruangan",
             "da": "Denne container er placeret udendørs",
-            "ca": "Aquest contenidor està situat a l'aire lliure"
+            "ca": "Aquest contenidor està situat a l'aire lliure",
+            "cs": "Tento kontejner se nachází venku",
+            "pl": "Kontener ten znajduje się na zewnątrz"
           }
         }
       ]
     }
   ],
-  "allowMove": {
-    "enableImproveAccuracy": true,
-    "enableRelocation": true
-  },
-  "deletion": true,
   "filter": [
     {
       "#": "ignore-possible-duplicate",
@@ -232,11 +266,17 @@
             "it": "Solo accesso pubblico",
             "id": "Hanya akses publik",
             "da": "Kun offentlig adgang",
-            "ca": "Només amb accés públic"
+            "ca": "Només amb accés públic",
+            "cs": "Pouze veřejný přístup"
           },
           "osmTags": "access=yes"
         }
       ]
     }
-  ]
+  ],
+  "deletion": true,
+  "allowMove": {
+    "enableImproveAccuracy": true,
+    "enableRelocation": true
+  }
 }

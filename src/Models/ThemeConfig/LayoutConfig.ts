@@ -10,24 +10,31 @@ import LanguageUtils from "../../Utils/LanguageUtils"
 
 import { RasterLayerProperties } from "../RasterLayerProperties"
 
+import { ConversionContext } from "./Conversion/ConversionContext"
+import { Translatable } from "./Json/Translatable"
+
 /**
  * Minimal information about a theme
  **/
 export class LayoutInformation {
     id: string
     icon: string
-    title: any
-    shortDescription: any
-    definition?: any
+    title: Translatable | Translation
+    shortDescription: Translatable| Translation
+    definition?: Translatable| Translation
     mustHaveLanguage?: boolean
     hideFromOverview?: boolean
-    keywords?: any[]
+    keywords?: (Translatable| Translation)[]
 }
 
 export default class LayoutConfig implements LayoutInformation {
     public static readonly defaultSocialImage = "assets/SocialImage.png"
     public readonly id: string
     public readonly credits?: string
+    /**
+     * The languages this theme supports.
+     * Defaults to all languages the title has
+     */
     public readonly language: string[]
     public readonly title: Translation
     public readonly shortDescription: Translation
@@ -55,6 +62,9 @@ export default class LayoutConfig implements LayoutInformation {
     public readonly enableShowAllQuestions: boolean
     public readonly enableExportButton: boolean
     public readonly enablePdfDownload: boolean
+    public readonly enableTerrain: boolean
+    public readonly enableMorePrivacy: boolean
+
 
     public readonly customCss?: string
 
@@ -64,13 +74,14 @@ export default class LayoutConfig implements LayoutInformation {
     public readonly osmApiTileSize: number
     public readonly official: boolean
 
-    public readonly usedImages: string[]
+    private usedImages: string[]
     public readonly extraLink?: ExtraLinkConfig
 
     public readonly definedAtUrl?: string
     public readonly definitionRaw?: string
 
     private readonly layersDict: Map<string, LayerConfig>
+    private readonly source: LayoutConfigJson
 
     constructor(
         json: LayoutConfigJson,
@@ -80,6 +91,10 @@ export default class LayoutConfig implements LayoutInformation {
             definitionRaw?: string
         }
     ) {
+        if (json === undefined) {
+            throw "Cannot construct a layout config, the parameter 'json' is undefined"
+        }
+        this.source = json
         this.official = official
         this.id = json.id
         this.definedAtUrl = options?.definedAtUrl
@@ -93,16 +108,12 @@ export default class LayoutConfig implements LayoutInformation {
             }
         }
         const context = this.id
-        this.credits = json.credits
+        this.credits = Array.isArray(json.credits) ? json.credits.join("; ") : json.credits
+        if (!json.title) {
+            throw `The theme ${json.id} does not have a title defined.`
+        }
         this.language = json.mustHaveLanguage ?? Object.keys(json.title)
-        this.usedImages = Array.from(
-            new ExtractImages(official, undefined)
-                .convertStrict(
-                    json,
-                    "while extracting the images of " + json.id + " " + context ?? ""
-                )
-                .map((i) => i.path)
-        ).sort()
+
         {
             if (typeof json.title === "string") {
                 throw `The title of a theme should always be a translation, as it sets the corresponding languages (${context}.title). The themenID is ${
@@ -112,7 +123,7 @@ export default class LayoutConfig implements LayoutInformation {
                 )} which is a ${typeof json.title})`
             }
             if (this.language.length == 0) {
-                throw `No languages defined. Define at least one language. (${context}.languages)`
+                throw `No languages defined. Define at least one language. You can do this by adding a title`
             }
             if (json.title === undefined) {
                 throw "Title not defined in " + this.id
@@ -120,17 +131,7 @@ export default class LayoutConfig implements LayoutInformation {
             if (json.description === undefined) {
                 throw "Description not defined in " + this.id
             }
-            if (json.widenFactor <= 0) {
-                throw "Widenfactor too small, shoud be > 0"
-            }
-            if (json.widenFactor > 20) {
-                throw (
-                    "Widenfactor is very big, use a value between 1 and 5 (current value is " +
-                    json.widenFactor +
-                    ") at " +
-                    context
-                )
-            }
+
             if (json["hideInOverview"]) {
                 throw (
                     "The json for " +
@@ -162,7 +163,7 @@ export default class LayoutConfig implements LayoutInformation {
         this.startZoom = json.startZoom
         this.startLat = json.startLat
         this.startLon = json.startLon
-        this.widenFactor = json.widenFactor ?? 1.5
+        this.widenFactor = 1.5
 
         this.defaultBackgroundId = json.defaultBackgroundId
         this.tileLayerSources = json.tileLayerSources ?? []
@@ -199,18 +200,13 @@ export default class LayoutConfig implements LayoutInformation {
         this.enableShowAllQuestions = json.enableShowAllQuestions ?? false
         this.enableExportButton = json.enableDownload ?? true
         this.enablePdfDownload = json.enablePdfDownload ?? true
+        this.enableTerrain = json.enableTerrain ?? false
         this.customCss = json.customCss
-        this.overpassUrl = Constants.defaultOverpassUrls
-        if (json.overpassUrl !== undefined) {
-            if (typeof json.overpassUrl === "string") {
-                this.overpassUrl = [json.overpassUrl]
-            } else {
-                this.overpassUrl = json.overpassUrl
-            }
-        }
+        this.overpassUrl = json.overpassUrl ?? Constants.defaultOverpassUrls
         this.overpassTimeout = json.overpassTimeout ?? 30
         this.overpassMaxZoom = json.overpassMaxZoom ?? 16
         this.osmApiTileSize = json.osmApiTileSize ?? this.overpassMaxZoom + 1
+        this.enableMorePrivacy = json.enableMorePrivacy || json.layers.some(l => (<LayerConfigJson> l).enableMorePrivacy)
 
         this.layersDict = new Map<string, LayerConfig>()
         for (const layer of this.layers) {
@@ -243,16 +239,23 @@ export default class LayoutConfig implements LayoutInformation {
         return this.layers.some((l) => l.isLeftRightSensitive())
     }
 
-    public missingTranslations(): {
+    public hasNoteLayer() {
+        return this.layers.some((l) => l.id === "note")
+    }
+
+    public hasPresets() {
+        return this.layers.some((l) => l.presets?.length > 0)
+    }
+
+    public missingTranslations(extraInspection: any): {
         untranslated: Map<string, string[]>
         total: number
     } {
-        const layout = this
         let total = 0
         const untranslated = new Map<string, string[]>()
 
         Utils.WalkObject(
-            layout,
+            [this, extraInspection],
             (o) => {
                 const translation = <Translation>(<any>o)
                 if (translation.translations["*"] !== undefined) {
@@ -301,14 +304,36 @@ export default class LayoutConfig implements LayoutInformation {
         if (tags === undefined) {
             return undefined
         }
+        if (tags.id.startsWith("current_view")) {
+            return this.getLayer("current_view")
+        }
         for (const layer of this.layers) {
             if (!layer.source) {
+                if (layer.isShown?.matchesProperties(tags)) {
+                    return layer
+                }
                 continue
             }
             if (layer.source.osmTags.matchesProperties(tags)) {
                 return layer
             }
         }
+        console.log("Fallthrough", this, tags)
         return undefined
+    }
+
+    public getUsedImages(){
+        if(this.usedImages){
+            return this.usedImages
+        }
+        const json = this.source
+        // The 'favourite'-layer contains pretty much all images as it bundles all layers, so we exclude it
+        const jsonNoFavourites = {...json, layers: json.layers.filter(l => l["id"] !== "favourite")}
+        this.usedImages = Array.from(
+            new ExtractImages(this.official, undefined)
+                .convertStrict(jsonNoFavourites, ConversionContext.construct([json.id], ["ExtractImages"]))
+                .map((i) => i.path)
+        ).sort()
+        return this.usedImages
     }
 }

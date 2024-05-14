@@ -5,6 +5,7 @@ import Locale from "../../UI/i18n/Locale"
 import Constants from "../../Models/Constants"
 import { Changes } from "./Changes"
 import { Utils } from "../../Utils"
+import FeaturePropertiesStore from "../FeatureSource/Actors/FeaturePropertiesStore"
 
 export interface ChangesetTag {
     key: string
@@ -13,7 +14,7 @@ export interface ChangesetTag {
 }
 
 export class ChangesetHandler {
-    private readonly allElements: { addAlias: (id0: String, id1: string) => void }
+    private readonly allElements: FeaturePropertiesStore
     private osmConnection: OsmConnection
     private readonly changes: Changes
     private readonly _dryRun: Store<boolean>
@@ -29,17 +30,20 @@ export class ChangesetHandler {
     constructor(
         dryRun: Store<boolean>,
         osmConnection: OsmConnection,
-        allElements: { addAlias: (id0: string, id1: string) => void } | undefined,
+        allElements:
+            | FeaturePropertiesStore
+            | { addAlias: (id0: string, id1: string) => void }
+            | undefined,
         changes: Changes
     ) {
         this.osmConnection = osmConnection
-        this.allElements = allElements
+        this.allElements = <FeaturePropertiesStore>allElements
         this.changes = changes
         this._dryRun = dryRun
         this.userDetails = osmConnection.userDetails
         this.backend = osmConnection._oauth_config.url
 
-        if (dryRun) {
+        if (dryRun.data) {
             console.log("DRYRUN ENABLED")
         }
     }
@@ -220,7 +224,7 @@ export class ChangesetHandler {
             if (newMetaTag === undefined) {
                 extraMetaTags.push({
                     key: key,
-                    value: oldCsTags[key],
+                    value: oldCsTags[key]
                 })
                 continue
             }
@@ -349,21 +353,22 @@ export class ChangesetHandler {
     }
 
     private defaultChangesetTags(): ChangesetTag[] {
+        const usedGps = this.changes.state["currentUserLocation"]?.features?.data?.length > 0
+        const hasMorePrivacy = !!this.changes.state?.featureSwitches?.featureSwitchMorePrivacy?.data
+        const setSourceAsSurvey = !hasMorePrivacy && usedGps
         return [
             ["created_by", `MapComplete ${Constants.vNumber}`],
             ["locale", Locale.language.data],
             ["host", `${window.location.origin}${window.location.pathname}`],
             [
                 "source",
-                this.changes.state["currentUserLocation"]?.features?.data?.length > 0
-                    ? "survey"
-                    : undefined,
+                setSourceAsSurvey                    ? "survey"                    : undefined
             ],
-            ["imagery", this.changes.state["backgroundLayer"]?.data?.id],
+            ["imagery", this.changes.state["backgroundLayer"]?.data?.id]
         ].map(([key, value]) => ({
             key,
             value,
-            aggretage: false,
+            aggregate: false
         }))
     }
 

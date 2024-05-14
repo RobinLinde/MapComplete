@@ -2,12 +2,14 @@ import Locale from "./Locale"
 import { Utils } from "../../Utils"
 import BaseUIElement from "../BaseUIElement"
 import LinkToWeblate from "../Base/LinkToWeblate"
+import { Store } from "../../Logic/UIEventSource"
 
 export class Translation extends BaseUIElement {
     public static forcedLanguage = undefined
 
     public readonly translations: Record<string, string>
     public readonly context?: string
+    private onDestroy: () => void
 
     constructor(translations: string | Record<string, string>, context?: string) {
         super()
@@ -39,9 +41,11 @@ export class Translation extends BaseUIElement {
                 console.error(
                     "Non-string object at",
                     context,
+                    "of type",
+                    typeof translations[translationsKey],
                     `for language`,
                     translationsKey,
-                    `in translation: `,
+                    `. The offending object is: `,
                     translations[translationsKey],
                     "\n    current translations are: ",
                     translations
@@ -57,10 +61,24 @@ export class Translation extends BaseUIElement {
         if (count === 0) {
             console.error(
                 "Constructing a translation, but the object containing translations is empty " +
-                    context
+                    (context ?? "No context given")
             )
-            throw `Constructing a translation, but the object containing translations is empty (${context})`
         }
+    }
+
+    private _current: Store<string>
+
+    get current(): Store<string> {
+        if (!this._current) {
+            this._current = Locale.language.map(
+                (l) => this.textFor(l),
+                [],
+                (f) => {
+                    this.onDestroy = f
+                }
+            )
+        }
+        return this._current
     }
 
     get txt(): string {
@@ -109,6 +127,7 @@ export class Translation extends BaseUIElement {
 
     Destroy() {
         super.Destroy()
+        this.onDestroy()
         this.isDestroyed = true
     }
 
@@ -226,16 +245,27 @@ export class Translation extends BaseUIElement {
         return new Translation(this.translations, this.context)
     }
 
-    FirstSentence() {
+    /**
+     * Build a new translation which only contains the first sentence of every language
+     * A sentence stops at either a dot (`.`) or a HTML-break ('<br/>').
+     * The dot or linebreak are _not_ returned.
+     *
+     * new Translation({"en": "This is a sentence. This is another sentence"}).FirstSentence().textFor("en") // "This is a sentence"
+     * new Translation({"en": "This is a sentence <br/> This is another sentence"}).FirstSentence().textFor("en") // "This is a sentence"
+     * new Translation({"en": "This is a sentence <br> This is another sentence"}).FirstSentence().textFor("en") // "This is a sentence"
+     * new Translation({"en": "This is a sentence with a <b>bold</b> word. This is another sentence"}).FirstSentence().textFor("en") // "This is a sentence with a <b>bold</b> word"
+     * @constructor
+     */
+    public FirstSentence(): Translation {
         const tr = {}
         for (const lng in this.translations) {
             if (!this.translations.hasOwnProperty(lng)) {
                 continue
             }
             let txt = this.translations[lng]
-            txt = txt.replace(/[.<].*/, "")
+            txt = txt.replace(/(\.|<br\/>|<br>|。).*/, "")
             txt = Utils.EllipsesAfter(txt, 255)
-            tr[lng] = txt
+            tr[lng] = txt.trim()
         }
 
         return new Translation(tr)
@@ -340,5 +370,33 @@ export class TypedTranslation<T extends Record<string, any>> extends Translation
         }
 
         return new TypedTranslation<Omit<T, X>>(newTranslations, this.context)
+    }
+
+    PartialSubsTr<K extends string>(
+        key: string,
+        replaceWith: Translation
+    ): TypedTranslation<Omit<T, K>> {
+        const newTranslations: Record<string, string> = {}
+        const toSearch = "{" + key + "}"
+        const missingLanguages = new Set<string>(Object.keys(this.translations))
+        for (const lang in this.translations) {
+            missingLanguages.delete(lang)
+            const template = this.translations[lang]
+            if (lang === "_context") {
+                newTranslations[lang] = template
+                continue
+            }
+            const v = replaceWith.textFor(lang)
+            newTranslations[lang] = template.replaceAll(toSearch, v)
+        }
+        const baseTemplate = this.textFor("en")
+        for (const missingLanguage of missingLanguages) {
+            newTranslations[missingLanguage] = baseTemplate.replaceAll(
+                toSearch,
+                replaceWith.textFor(missingLanguage)
+            )
+        }
+
+        return new TypedTranslation<Omit<T, K>>(newTranslations, this.context)
     }
 }

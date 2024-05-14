@@ -6,7 +6,19 @@
     "ca": "Velocitat",
     "de": "Höchstgeschwindigkeiten",
     "nl": "Maximumsnelheid",
-    "pa_PK": "حد رفتار"
+    "pa_PK": "حد رفتار",
+    "fr": "Vitesse maximale",
+    "cs": "Maximální rychlost"
+  },
+  "description": {
+    "en": "Shows the allowed speed for every road",
+    "de": "Zeigt die zulässige Geschwindigkeit für jede Straße an",
+    "nl": "Toont de toegestane snelheid voor elke weg",
+    "cs": "Zobrazuje povolenou rychlost pro každou silnici",
+    "ca": "Mostra la velocitat permesa per a cada carretera",
+    "fr": "Affiche les vitesses autorisées sur toutes les routes",
+    "pl": "Pokazuje dozwoloną prędkość na każdej drodze",
+    "es": "Muestra la velocidad permitida para cada carretera"
   },
   "source": {
     "osmTags": {
@@ -45,18 +57,55 @@
         "then": {
           "en": "Road without a name",
           "de": "Straße ohne Namen",
-          "nl": "Weg zonder een naam"
+          "nl": "Weg zonder een naam",
+          "fr": "Route sans nom",
+          "ca": "Carretera sense nom",
+          "cs": "Silnice bez názvu"
         }
       }
     ]
   },
-  "description": {
-    "en": "Shows the allowed speed for every road",
-    "de": "Zeigt die zulässige Geschwindigkeit für jede Straße an",
-    "nl": "Toont de toegestane snelheid voor elke weg",
-    "cs": "Zobrazuje povolenou rychlost pro každou silnici",
-    "ca": "Mostra la velocitat permesa per a cada carretera"
-  },
+  "pointRendering": [
+    {
+      "marker": [
+        {
+          "icon": {
+            "render": null,
+            "mappings": [
+              {
+                "if": "maxspeed~[1-9]0|1[0-4]0",
+                "then": "./assets/themes/maxspeed/maxspeed_{maxspeed} mph.svg"
+              },
+              {
+                "if": "maxspeed~[1-9]0|1[0-4]0 mph",
+                "then": "./assets/themes/maxspeed/maxspeed_{maxspeed}.svg"
+              }
+            ]
+          }
+        }
+      ],
+      "iconSize": "32,32",
+      "location": [
+        "point",
+        "projected_centerpoint"
+      ],
+      "anchor": "center"
+    }
+  ],
+  "lineRendering": [
+    {
+      "color": {
+        "render": "#000000",
+        "mappings": [
+          {
+            "if": "maxspeed=",
+            "then": "#ff0000"
+          }
+        ]
+      },
+      "width": "3"
+    }
+  ],
   "tagRenderings": [
     {
       "render": {
@@ -64,15 +113,17 @@
         "de": "Die zulässige Höchstgeschwindigkeit auf dieser Straße beträgt {canonical(maxspeed)}",
         "nl": "De maximum toegestane snelheid op deze weg is {canonical(maxspeed)}",
         "ca": "La velocitat màxima permesa a aquesta via és {canonical(maxspeed)}",
-        "fr": "La vitesse maximum autorisée sur cette route est {canonical(maxspeed)}"
+        "fr": "La vitesse maximum autorisée sur cette route est {canonical(maxspeed)}",
+        "cs": "Maximální povolená rychlost na této cestě je {canonical(maxspeed)}"
       },
       "question": {
-        "es": "Qué velocidad tiene",
+        "es": "Qué es la velocidad máxima legal uno está permitido conducir en esta carretera?",
         "ca": "Quina és la velocitat màxima legal que es permet conduir en aquesta carretera?",
         "en": "What is the legal maximum speed one is allowed to drive on this road?",
         "de": "Wie hoch ist die zulässige Höchstgeschwindigkeit, die man auf dieser Straße fahren darf?",
         "nl": "Wat is de legale maximumsnelheid voor deze weg?",
-        "fr": "Quelle est la vitesse maximum autorisée sur cette route ?"
+        "fr": "Quelle est la vitesse maximum autorisée sur cette route ?",
+        "cs": "Jaká je zákonná maximální povolená rychlost na této silnici?"
       },
       "freeform": {
         "key": "maxspeed",
@@ -80,11 +131,19 @@
       },
       "mappings": [
         {
-          "if": "highway=living_street",
+          "if": {
+            "and": [
+              "highway=living_street",
+              "_country=be"
+            ]
+          },
           "then": {
             "en": "This is a living street, which has a maxspeed of 20km/h",
             "nl": "Dit is een woonerf en heeft dus een maximale snelheid van 20km/h",
-            "de": "Dies ist eine Wohnstraße, auf der eine Höchstgeschwindigkeit von 20 km/h gilt"
+            "de": "Dies ist eine Wohnstraße, auf der eine Höchstgeschwindigkeit von 20 km/h gilt",
+            "fr": "C'est une zone de rencontre, avec une vitesse maximale de 20 km/h",
+            "ca": "Aquest és un carrer residencial, que té una velocitat màxima de 20 km/h",
+            "cs": "Toto je obytná zóna, která má maximální rychlost 20 km/h"
           },
           "icon": {
             "path": "./assets/layers/maxspeed/living_street_be.svg",
@@ -100,102 +159,15 @@
     }
   ],
   "allowSplit": true,
-  "mapRendering": [
-    {
-      "icon": {
-        "render": null,
-        "mappings": [
-          {
-            "if": "maxspeed~[1-9]0|1[0-4]0",
-            "then": "./assets/themes/maxspeed/maxspeed_{maxspeed} mph.svg"
-          },
-          {
-            "if": "maxspeed~[1-9]0|1[0-4]0 mph",
-            "then": "./assets/themes/maxspeed/maxspeed_{maxspeed}.svg"
-          }
-        ]
-      },
-      "iconSize": "32,32",
-      "location": [
-        "point",
-        "projected_centerpoint"
-      ],
-      "anchor": "center"
-    },
-    {
-      "color": {
-        "render": "#000000",
-        "mappings": [
-          {
-            "if": "maxspeed=",
-            "then": "#ff0000"
-          }
-        ]
-      },
-      "width": "3"
-    }
-  ],
   "units": [
     {
-      "applicableUnits": [
-        {
-          "#": "km/h is the default for a maxspeed; should be empty string",
-          "canonicalDenomination": "",
-          "alternativeDenomination": [
-            "km/u",
-            "kmh",
-            "kph"
-          ],
-          "human": {
-            "en": "kilometers/hour",
-            "ca": "quilòmetres/hora",
-            "es": "kilómetros/hora",
-            "nl": "kilometers/uur",
-            "de": "Kilometer/Stunde",
-            "pa_PK": "ہر گھنٹہ وچ کیلومیٹر"
-          },
-          "humanShort": {
-            "en": "km/h",
-            "ca": "km/h",
-            "es": "km/h",
-            "nl": "km/u",
-            "de": "km/h",
-            "pa_PK": "ہر گھنٹے وچ کیلومیٹر",
-            "ru": "км/ч"
-          }
-        },
-        {
-          "canonicalDenomination": "mph",
-          "useIfNoUnitGiven": [
-            "gb",
-            "us"
-          ],
-          "alternativeDenomination": [
-            "m/u",
-            "mh",
-            "m/ph"
-          ],
-          "human": {
-            "en": "miles/hour",
-            "ca": "milles/hora",
-            "es": "millas/hora",
-            "nl": "miles/uur",
-            "de": "Meilen/Stunde",
-            "pa_PK": "ہر گھنٹہ وچ میل"
-          },
-          "humanShort": {
-            "en": "mph",
-            "ca": "mph",
-            "es": "mph",
-            "nl": "mph",
-            "de": "mph",
-            "pa_PK": "ہر گھنٹہ وچ میل"
-          }
-        }
-      ],
-      "appliesToKey": [
-        "maxspeed"
-      ]
+      "maxspeed": {
+        "quantity": "speed",
+        "canonical": "kmh",
+        "denominations": [
+          "mph"
+        ]
+      }
     }
   ]
 }

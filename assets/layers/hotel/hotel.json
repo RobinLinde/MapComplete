@@ -5,12 +5,18 @@
     "nl": "Hotels",
     "de": "Hotels",
     "pa_PK": "ہوٹل",
-    "ru": "Гостиницы"
+    "ru": "Гостиницы",
+    "fr": "Hôtels",
+    "ca": "Hotels",
+    "cs": "Hotely"
   },
   "description": {
     "en": "Layer showing all hotels",
     "nl": "Laag die alle hotels toont",
-    "de": "Eine Ebene mit Hotels"
+    "de": "Eine Ebene mit Hotels",
+    "fr": "Couche affichant les hôtels",
+    "ca": "Capa que mostra tots els hotels",
+    "cs": "Vrstva zobrazující všechny hotely"
   },
   "source": {
     "osmTags": "tourism=hotel"
@@ -21,7 +27,10 @@
       "en": "Hotel",
       "nl": "Hotel",
       "de": "Hotel",
-      "pa_PK": "ہوٹل"
+      "pa_PK": "ہوٹل",
+      "fr": "Hôtel",
+      "ca": "Hotel",
+      "cs": "Hotel"
     },
     "mappings": [
       {
@@ -29,11 +38,34 @@
         "then": {
           "en": "Hotel {name}",
           "nl": "Hotel {name}",
-          "de": "Hotel {name}"
+          "de": "Hotel {name}",
+          "fr": "Hôtel {name}",
+          "ca": "Hotel {name}",
+          "cs": "Hotel {name}"
         }
       }
     ]
   },
+  "pointRendering": [
+    {
+      "location": [
+        "point",
+        "centroid"
+      ],
+      "iconSize": "40,40",
+      "anchor": "center",
+      "marker": [
+        {
+          "icon": "circle",
+          "color": "white"
+        },
+        {
+          "icon": "./assets/layers/hotel/hotel.svg"
+        }
+      ]
+    }
+  ],
+  "lineRendering": [],
   "presets": [
     {
       "title": {
@@ -41,22 +73,13 @@
         "nl": "een hotel",
         "de": "ein Hotel",
         "ca": "un hotel",
-        "ru": "гостиница"
+        "ru": "гостиница",
+        "fr": "un hôtel",
+        "cs": "hotel"
       },
       "tags": [
         "tourism=hotel"
       ]
-    }
-  ],
-  "mapRendering": [
-    {
-      "location": [
-        "point",
-        "centroid"
-      ],
-      "icon": "circle:white;./assets/layers/hotel/hotel.svg",
-      "iconSize": "40,40",
-      "anchor": "center"
     }
   ],
   "tagRenderings": [
@@ -70,20 +93,28 @@
           "en": "Name of the hotel",
           "nl": "Naam van het hotel",
           "de": "Name des Hotels",
-          "ru": "Название гостиницы"
+          "ru": "Название гостиницы",
+          "fr": "Nom de l'hôtel",
+          "ca": "Nom de l'hotel",
+          "cs": "Název hotelu"
         }
       },
       "question": {
         "en": "What is the name of this hotel?",
         "nl": "Wat is de naam van dit hotel?",
         "de": "Wie lautet der Name des Hotels?",
-        "ru": "Как называется эта гостиница?"
+        "ru": "Как называется эта гостиница?",
+        "fr": "Quel est le nom de cet hôtel ?",
+        "ca": "Quin és el nom d'aquest hotel?",
+        "cs": "Jak se tento hotel jmenuje?"
       },
       "render": {
         "en": "This hotel is called {name}",
         "nl": "Dit hotel heet {name}",
         "de": "Der Name des Hotels lautet {name}",
-        "ca": "Aquest hotel es diu {name}"
+        "ca": "Aquest hotel es diu {name}",
+        "fr": "Cet hôtel s'appelle {name}",
+        "cs": "Tento hotel se jmenuje {name}"
       }
     },
     "phone",

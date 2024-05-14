@@ -4,6 +4,7 @@
   import { Translation } from "../i18n/Translation"
   import Tr from "../Base/Tr.svelte"
   import type { SpecialVisualizationState } from "../SpecialVisualization"
+  import Translations from "../i18n/Translations"
 
   /**
    * A 'TagHint' will show the given tags in a human readable form.
@@ -17,15 +18,15 @@
    * If given, this function will be called to embed the given tags hint into this translation
    */
   export let embedIn: ((string: string) => Translation) | undefined = undefined
-  const userDetails = state.osmConnection.userDetails
+  const userDetails = state?.osmConnection?.userDetails
   let tagsExplanation = ""
   $: tagsExplanation = tags?.asHumanString(true, false, currentProperties)
 </script>
 
-{#if $userDetails.loggedIn}
-  <div>
+{#if !userDetails || $userDetails.loggedIn}
+  <div class="break-words" style="word-break: break-word">
     {#if tags === undefined}
-      <slot name="no-tags">No tags</slot>
+      <slot name="no-tags"><Tr cls="subtle" t={Translations.t.general.noTagsSelected} /></slot>
     {:else if embedIn === undefined}
       <FromHtml src={tagsExplanation} />
     {:else}

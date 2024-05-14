@@ -1,16 +1,17 @@
 import GeoJsonSource from "./GeoJsonSource"
 import LayerConfig from "../../../Models/ThemeConfig/LayerConfig"
-import { FeatureSource } from "../FeatureSource"
+import { UpdatableFeatureSource } from "../FeatureSource"
 import { Or } from "../../Tags/Or"
 import FeatureSwitchState from "../../State/FeatureSwitchState"
 import OverpassFeatureSource from "./OverpassFeatureSource"
 import { Store, UIEventSource } from "../../UIEventSource"
 import OsmFeatureSource from "./OsmFeatureSource"
-import FeatureSourceMerger from "./FeatureSourceMerger"
 import DynamicGeoJsonTileSource from "../TiledFeatureSource/DynamicGeoJsonTileSource"
 import { BBox } from "../../BBox"
 import LocalStorageFeatureSource from "../TiledFeatureSource/LocalStorageFeatureSource"
 import FullNodeDatabaseSource from "../TiledFeatureSource/FullNodeDatabaseSource"
+import DynamicMvtileSource from "../TiledFeatureSource/DynamicMvtTileSource"
+import FeatureSourceMerger from "./FeatureSourceMerger"
 
 /**
  * This source will fetch the needed data from various sources for the given layout.
@@ -18,40 +19,54 @@ import FullNodeDatabaseSource from "../TiledFeatureSource/FullNodeDatabaseSource
  * Note that special layers (with `source=null` will be ignored)
  */
 export default class LayoutSource extends FeatureSourceMerger {
-    private readonly _isLoading: UIEventSource<boolean> = new UIEventSource<boolean>(false)
     /**
      * Indicates if a data source is loading something
      */
-    public readonly isLoading: Store<boolean> = this._isLoading
+    public readonly isLoading: Store<boolean>
+
+    private readonly supportsForceDownload: UpdatableFeatureSource[]
+
+    private readonly fromCache: Map<string, LocalStorageFeatureSource>
+    public static readonly fromCacheZoomLevel = 15
     constructor(
         layers: LayerConfig[],
         featureSwitches: FeatureSwitchState,
         mapProperties: { bounds: Store<BBox>; zoom: Store<number> },
         backend: string,
         isDisplayed: (id: string) => Store<boolean>,
+        mvtAvailableLayers: Set<string>,
         fullNodeDatabaseSource?: FullNodeDatabaseSource
     ) {
+        const supportsForceDownload: UpdatableFeatureSource[] = []
+
         const { bounds, zoom } = mapProperties
         // remove all 'special' layers
         layers = layers.filter((layer) => layer.source !== null && layer.source !== undefined)
 
         const geojsonlayers = layers.filter((layer) => layer.source.geojsonSource !== undefined)
         const osmLayers = layers.filter((layer) => layer.source.geojsonSource === undefined)
-        const fromCache = osmLayers.map(
-            (l) =>
-                new LocalStorageFeatureSource(backend, l.id, 15, mapProperties, {
-                    isActive: isDisplayed(l.id),
-                    maxAge: l.maxAgeOfCache,
-                })
-        )
+        const fromCache = new Map<string, LocalStorageFeatureSource>()
+        for (const layer of osmLayers) {
+            const src = new LocalStorageFeatureSource(
+                backend,
+                layer,
+                LayoutSource.fromCacheZoomLevel,
+                mapProperties,
+                {
+                    isActive: isDisplayed(layer.id),
+                    maxAge: layer.maxAgeOfCache,
+                }
+            )
+            fromCache.set(layer.id, src)
+        }
 
-        const overpassSource = LayoutSource.setupOverpass(
-            backend,
-            osmLayers,
-            bounds,
-            zoom,
-            featureSwitches
-        )
+        const mvtSources: UpdatableFeatureSource[] = osmLayers
+            .filter((f) => mvtAvailableLayers.has(f.id))
+            .map((l) => LayoutSource.setupMvtSource(l, mapProperties, isDisplayed(l.id)))
+        const nonMvtSources = []
+        const nonMvtLayers = osmLayers.filter((l) => !mvtAvailableLayers.has(l.id))
+
+        const isLoading = new UIEventSource(false)
 
         const osmApiSource = LayoutSource.setupOsmApiSource(
             osmLayers,
@@ -61,31 +76,58 @@ export default class LayoutSource extends FeatureSourceMerger {
             featureSwitches,
             fullNodeDatabaseSource
         )
-        const geojsonSources: FeatureSource[] = geojsonlayers.map((l) =>
+        nonMvtSources.push(osmApiSource)
+
+        let overpassSource: OverpassFeatureSource = undefined
+        if (nonMvtLayers.length > 0) {
+            console.log(
+                "Layers ",
+                nonMvtLayers.map((l) => l.id),
+                " cannot be fetched from the cache server, defaulting to overpass/OSM-api"
+            )
+            overpassSource = LayoutSource.setupOverpass(osmLayers, bounds, zoom, featureSwitches)
+            nonMvtSources.push(overpassSource)
+            supportsForceDownload.push(overpassSource)
+        }
+
+        function setIsLoading() {
+            const loading = overpassSource?.runningQuery?.data || osmApiSource?.isRunning?.data
+            isLoading.setData(loading)
+        }
+
+        overpassSource?.runningQuery?.addCallbackAndRun(() => setIsLoading())
+        osmApiSource?.isRunning?.addCallbackAndRun(() => setIsLoading())
+
+        const geojsonSources: UpdatableFeatureSource[] = geojsonlayers.map((l) =>
             LayoutSource.setupGeojsonSource(l, mapProperties, isDisplayed(l.id))
         )
 
-        super(overpassSource, osmApiSource, ...geojsonSources, ...fromCache)
+        super(...geojsonSources, ...Array.from(fromCache.values()), ...mvtSources, ...nonMvtSources)
 
-        const self = this
-        function setIsLoading() {
-            const loading = overpassSource?.runningQuery?.data || osmApiSource?.isRunning?.data
-            self._isLoading.setData(loading)
-        }
+        this.isLoading = isLoading
+        this.fromCache = fromCache
+        supportsForceDownload.push(...geojsonSources)
+        supportsForceDownload.push(...mvtSources) // Non-mvt sources are handled by overpass
+        this.supportsForceDownload = supportsForceDownload
+    }
 
-        overpassSource?.runningQuery?.addCallbackAndRun((_) => setIsLoading())
-        osmApiSource?.isRunning?.addCallbackAndRun((_) => setIsLoading())
+    private static setupMvtSource(
+        layer: LayerConfig,
+        mapProperties: { zoom: Store<number>; bounds: Store<BBox> },
+        isActive?: Store<boolean>
+    ): UpdatableFeatureSource {
+        return new DynamicMvtileSource(layer, mapProperties, { isActive })
     }
 
     private static setupGeojsonSource(
         layer: LayerConfig,
         mapProperties: { zoom: Store<number>; bounds: Store<BBox> },
-        isActive?: Store<boolean>
-    ): FeatureSource {
+        isActiveByFilter?: Store<boolean>
+    ): UpdatableFeatureSource {
         const source = layer.source
-        isActive = mapProperties.zoom.map(
-            (z) => (isActive?.data ?? true) && z >= layer.minzoom,
-            [isActive]
+        const isActive = mapProperties.zoom.map(
+            (z) => (isActiveByFilter?.data ?? true) && z >= layer.minzoom,
+            [isActiveByFilter]
         )
         if (source.geojsonZoomLevel === undefined) {
             // This is a 'load everything at once' geojson layer
@@ -132,7 +174,6 @@ export default class LayoutSource extends FeatureSourceMerger {
     }
 
     private static setupOverpass(
-        backend: string,
         osmLayers: LayerConfig[],
         bounds: Store<BBox>,
         zoom: Store<number>,
@@ -167,5 +208,11 @@ export default class LayoutSource extends FeatureSourceMerger {
                 isActive,
             }
         )
+    }
+
+    public async downloadAll() {
+        console.log("Downloading all data")
+        await Promise.all(this.supportsForceDownload.map((i) => i.updateAsync()))
+        console.log("Done")
     }
 }

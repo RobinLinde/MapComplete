@@ -81,7 +81,11 @@
             },
             "artwork-website": {
                 "question": "Adakah situs web mengenai informasi lebih lanjut tentang karya seni ini?",
-                "render": "Info lanjut tersedia di <a href='{website}' target='_blank'>laman web</a> ini"
+                "render": {
+                    "special": {
+                        "text": "Info lanjut tersedia di laman web ini"
+                    }
+                }
             }
         },
         "title": {
@@ -341,7 +345,11 @@
                 "render": "<i>{inscription}</i>"
             },
             "ghost_bike-source": {
-                "render": "<a href='{source}' target='_blank'>Informasi lanjut tersedia</a>"
+                "render": {
+                    "special": {
+                        "text": "Informasi lanjut tersedia"
+                    }
+                }
             }
         }
     },
@@ -357,18 +365,11 @@
         }
     },
     "last_click": {
-        "mapRendering": {
+        "pointRendering": {
             "0": {
                 "label": {
                     "render": "Klik di sini untuk menambahkan item baru"
                 }
-            }
-        }
-    },
-    "nature_reserve": {
-        "tagRenderings": {
-            "Email": {
-                "render": "<a href='mailto:{email}' target='_blank'>{email}</a>"
             }
         }
     },
@@ -502,27 +503,6 @@
                 "question": "Apa nama jaringan internet nirkabelnya?",
                 "render": "Nama jaringan ini adalah <b>{internet_access:ssid}</b>"
             },
-            "level": {
-                "mappings": {
-                    "0": {
-                        "then": "Terletak di bawah tanah"
-                    },
-                    "1": {
-                        "then": "Terletak di lantai dasar"
-                    },
-                    "2": {
-                        "then": "Terletak di lantai dasar"
-                    },
-                    "3": {
-                        "then": "Berlokasi di lantai pertama"
-                    },
-                    "4": {
-                        "then": "Terletak di lantai basement pertama"
-                    }
-                },
-                "question": "Pada tingkat apa fitur ini diletakkan?",
-                "render": "Terletak di lantai {level}"
-            },
             "multilevels": {
                 "override": {
                     "question": "Pada lantai berapa saja lift ini berjalan?",
@@ -535,7 +515,7 @@
             },
             "opening_hours_24_7": {
                 "override": {
-                    "mappings": {
+                    "+mappings": {
                         "0": {
                             "then": "Buka 24 jam (termasuk hari libur)"
                         }
@@ -567,6 +547,27 @@
             },
             "phone": {
                 "question": "Berapa nomor telepon dari {title()}?"
+            },
+            "single_level": {
+                "mappings": {
+                    "0": {
+                        "then": "Terletak di bawah tanah"
+                    },
+                    "1": {
+                        "then": "Terletak di lantai dasar"
+                    },
+                    "2": {
+                        "then": "Terletak di lantai dasar"
+                    },
+                    "3": {
+                        "then": "Berlokasi di lantai pertama"
+                    },
+                    "4": {
+                        "then": "Terletak di lantai basement pertama"
+                    }
+                },
+                "question": "Pada tingkat apa fitur ini diletakkan?",
+                "render": "Terletak di lantai {level}"
             },
             "smoking": {
                 "mappings": {
@@ -626,6 +627,58 @@
             }
         }
     },
+    "sports_centre": {
+        "presets": {
+            "0": {
+                "title": "pusat olahraga"
+            }
+        },
+        "title": {
+            "render": "Pusat olahraga"
+        }
+    },
+    "stairs": {
+        "description": "Lapisan ini menunjukkan tangga dan eskalator",
+        "name": "Tangga",
+        "tagRenderings": {
+            "conveying": {
+                "mappings": {
+                    "0": {
+                        "then": "Ini adalah eskalator"
+                    },
+                    "1": {
+                        "then": "Ini bukan eskalator"
+                    },
+                    "2": {
+                        "then": "Ini bukan eskalator"
+                    }
+                }
+            },
+            "handrail": {
+                "mappings": {
+                    "0": {
+                        "then": "Tangga ini memiliki pegangan tangan"
+                    },
+                    "1": {
+                        "then": "Tangga ini <b>tidak </b>memiliki pegangan tangan"
+                    }
+                },
+                "question": "Apakah tangga ini memiliki pegangan?"
+            },
+            "incline": {
+                "mappings": {
+                    "0": {
+                        "then": "Arah ke atas adalah {direction_absolute()}"
+                    },
+                    "1": {
+                        "then": "Arah ke bawah adalah {direction_absolute()}"
+                    }
+                },
+                "question": "Berapa kemiringan tangga ini?",
+                "render": "Tangga ini memiliki kemiringan sebesar {incline}"
+            }
+        }
+    },
     "tree_node": {
         "presets": {
             "2": {
@@ -680,6 +733,44 @@
             }
         }
     },
+    "trolley_bay": {
+        "tagRenderings": {
+            "denominations": {
+                "mappings": {
+                    "0": {
+                        "then": "Koin 50 sen diterima"
+                    }
+                }
+            }
+        }
+    },
+    "unit": {
+        "units": {
+            "0": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} megawat"
+                    },
+                    "1": {
+                        "human": "{quantity} kilowat"
+                    },
+                    "2": {
+                        "human": "{quantity} watt"
+                    },
+                    "3": {
+                        "human": "{quantity} gigawatt"
+                    }
+                }
+            },
+            "3": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} meter"
+                    }
+                }
+            }
+        }
+    },
     "usersettings": {
         "tagRenderings": {
             "translation-completeness": {
@@ -720,17 +811,6 @@
         }
     },
     "waste_basket": {
-        "mapRendering": {
-            "0": {
-                "iconSize": {
-                    "mappings": {
-                        "0": {
-                            "then": "Keranjang Sampah"
-                        }
-                    }
-                }
-            }
-        },
         "name": "Keranjang Sampah",
         "presets": {
             "0": {
@@ -774,6 +854,9 @@
                     },
                     "6": {
                         "then": "Keranjang sampah untuk plastik"
+                    },
+                    "7": {
+                        "then": "Keranjang sampah untuk kertas"
                     }
                 },
                 "question": "Keranjang sampah macam apa ini?"
@@ -857,31 +940,6 @@
                 }
             },
             "render": "turbin angin"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " megawat"
-                    },
-                    "1": {
-                        "human": " kilowat"
-                    },
-                    "2": {
-                        "human": " watt"
-                    },
-                    "3": {
-                        "human": " gigawatt"
-                    }
-                }
-            },
-            "1": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " meter"
-                    }
-                }
-            }
         }
     }
 }

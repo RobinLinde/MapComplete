@@ -4,6 +4,9 @@ import BaseUIElement from "../BaseUIElement"
 import CompiledTranslations from "../../assets/generated/CompiledTranslations"
 import LanguageUtils from "../../Utils/LanguageUtils"
 import { ClickableToggle } from "../Input/Toggle"
+import { Store } from "../../Logic/UIEventSource"
+import Locale from "./Locale"
+import { Utils } from "../../Utils"
 
 export default class Translations {
     static readonly t: Readonly<typeof CompiledTranslations.t> = CompiledTranslations.t
@@ -130,8 +133,31 @@ export default class Translations {
         }
     }
 
+    public static DynamicSubstitute<T extends Record<string, string | Translation>>(
+        translation: TypedTranslation<T>,
+        t: Store<T>
+    ): Store<string> {
+        return Locale.language.map(
+            (lang) => {
+                const tags: Record<string, string> = {}
+                for (const k in t.data) {
+                    let v = t.data[k]
+                    if (!v) {
+                        continue
+                    }
+                    if (v["textFor"] !== undefined) {
+                        v = v["textFor"](lang)
+                    }
+                    tags[k] = <string>v
+                }
+                return Utils.SubstituteKeys(translation.textFor(lang), t.data)
+            },
+            [t]
+        )
+    }
+
     static isProbablyATranslation(transl: any) {
-        if (typeof transl !== "object") {
+        if (!transl || typeof transl !== "object") {
             return false
         }
         if (Object.keys(transl).length == 0) {

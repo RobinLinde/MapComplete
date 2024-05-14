@@ -1,12 +1,15 @@
 import { Validator } from "../Validator"
 
 export default class UrlValidator extends Validator {
-    constructor() {
+    private readonly _forceHttps: boolean
+    constructor(name?: string, explanation?: string, forceHttps?: boolean) {
         super(
-            "url",
-            "The validatedTextField will format URLs to always be valid and have a https://-header (even though the 'https'-part will be hidden from the user. Furthermore, some tracking parameters will be removed",
+            name ?? "url",
+            explanation ??
+                "The validatedTextField will format URLs to always be valid and have a https://-header (even though the 'https'-part will be hidden from the user. Furthermore, some tracking parameters will be removed",
             "url"
         )
+        this._forceHttps = forceHttps ?? false
     }
     reformat(str: string): string {
         try {
@@ -20,6 +23,9 @@ export default class UrlValidator extends Validator {
                 url = new URL("https://" + str)
             } else {
                 url = new URL(str)
+            }
+            if (this._forceHttps) {
+                url.protocol = "https:"
             }
             const blacklistedTrackingParams = [
                 "fbclid", // Oh god, how I hate the fbclid. Let it burn, burn in hell!
@@ -35,6 +41,11 @@ export default class UrlValidator extends Validator {
                 "AdGroup",
                 "TargetId",
                 "msclkid",
+                "pk_source",
+                "pk_medium",
+                "pk_campaign",
+                "pk_content",
+                "pk_kwd",
             ]
             for (const dontLike of blacklistedTrackingParams) {
                 url.searchParams.delete(dontLike.toLowerCase())

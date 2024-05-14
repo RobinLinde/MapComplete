@@ -17,8 +17,10 @@
     "ca": "Biblioteques de bicicletes",
     "da": "Cykelbiblioteker",
     "pa_PK": "سائیکلاں دیاں لائیبریریاں",
-    "cs": "Půjčovny kol",
-    "es": "Bibliotecas de bicicletas"
+    "cs": "Bicycle libraries",
+    "es": "Bibliotecas de bicicletas",
+    "eu": "Bizikleta liburutegia",
+    "pt": "Bibliotecas de bicicletas"
   },
   "description": {
     "nl": "Een fietsbibliotheek is een plaats waar men een fiets kan lenen, vaak voor een klein bedrag per jaar. Een typisch voorbeeld zijn kinderfietsbibliotheken, waar men een fiets op maat van het kind kan lenen. Is het kind de fiets ontgroeid, dan kan het te kleine fietsje omgeruild worden voor een grotere.",
@@ -34,13 +36,11 @@
     "ca": "Una biblioteca de bicicletes és un lloc on es poden prestar bicicletes, sovint per una petita quota anual. Un cas d'ús notable són les biblioteques de bicicletes per als nens, que els permet canviar per una bicicleta més gran quan han superat la seva bicicleta actual",
     "da": "Et cykelbibliotek er et sted, hvor cykler kan udlånes, ofte mod et mindre årligt gebyr. Et bemærkelsesværdigt eksempel er cykelbiblioteker til børn, som giver dem mulighed for at skifte til en større cykel, når de er vokset fra deres nuværende cykel",
     "cs": "\"Bicycle library\" je místo, kde si lze půjčit jízdní kola, často za malý roční poplatek. Významným případem použití jsou \"bicycle libraries\" pro děti, které jim umožňují vyměnit kolo za větší, když ze svého stávajícího kola vyrostou",
-    "es": "Una biblioteca de bicicletas es un lugar donde se prestan bicicletas, a menudo por una pequeña cuota anual. Un caso de uso notable son las bibliotecas de bicicletas para niños, que les permiten cambiar por una bicicleta más grande cuando les queda pequeña"
+    "es": "Una biblioteca de bicicletas es un lugar donde se prestan bicicletas, a menudo por una pequeña cuota anual. Un caso de uso notable son las bibliotecas de bicicletas para niños, que les permiten cambiar por una bicicleta más grande cuando les queda pequeña",
+    "eu": "Bizikletak uzteko lekua da bizikleta-liburutegia, askotan urteko kuota txiki baten truke. Kasu aipagarri bat haurrentzako bizikleta-liburutegiak dira, egungo bizikleta gainditu dutenean bizikleta handiago baterako aldatzeko aukera ematen dietenak",
+    "pl": "Biblioteka rowerowa to miejsce, w którym można wypożyczyć rowery, często za niewielką opłatą roczną. Godnym uwagi przypadkiem zastosowania są biblioteki rowerowe dla dzieci, które pozwalają im zmienić rower na większy, gdy wyrosną z obecnego roweru"
   },
   "icon": "./assets/themes/bicyclelib/logo.svg",
-  "startLat": 0,
-  "startLon": 0,
-  "startZoom": 1,
-  "widenFactor": 1.5,
   "layers": [
     {
       "builtin": "bicycle_library",
@@ -48,5 +48,6 @@
         "minzoom": 0
       }
     }
-  ]
+  ],
+  "widenFactor": 1.5
 }

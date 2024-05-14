@@ -117,7 +117,11 @@
             },
             "artwork-website": {
                 "question": "Есть ли сайт с более подробной информацией об этой работе?",
-                "render": "Больше информации на <a href='{website}' target='_blank'>этом сайте</a>"
+                "render": {
+                    "special": {
+                        "text": "Больше информации на этом сайте"
+                    }
+                }
             }
         },
         "title": {
@@ -703,43 +707,6 @@
             }
         }
     },
-    "charging_station": {
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " минут",
-                        "humanSingular": " минута"
-                    },
-                    "1": {
-                        "human": " часов",
-                        "humanSingular": " час"
-                    },
-                    "2": {
-                        "human": " дней",
-                        "humanSingular": " день"
-                    }
-                }
-            },
-            "1": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "Вольт"
-                    }
-                }
-            },
-            "3": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "киловатт"
-                    },
-                    "1": {
-                        "human": "мегаватт"
-                    }
-                }
-            }
-        }
-    },
     "climbing": {
         "tagRenderings": {
             "sportclimbing": {
@@ -996,7 +963,11 @@
                 "render": "В знак памяти о {subject}"
             },
             "ghost_bike-source": {
-                "render": "<a href='{source}' target='_blank'>Доступна более подробная информация</a>"
+                "render": {
+                    "special": {
+                        "text": "Доступна более подробная информация"
+                    }
+                }
             },
             "ghost_bike-start_date": {
                 "render": "Установлен {start_date}"
@@ -1140,16 +1111,6 @@
         },
         "title": {
             "render": "Гидрант"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "миллиметры",
-                        "humanSingular": "миллиметр"
-                    }
-                }
-            }
         }
     },
     "indoors": {
@@ -1239,20 +1200,6 @@
         },
         "title": {
             "render": "Бордюр"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": "сантиметры",
-                        "humanSingular": "сантиметр"
-                    },
-                    "1": {
-                        "human": "метры",
-                        "humanSingular": "метр"
-                    }
-                }
-            }
         }
     },
     "kindergarten_childcare": {
@@ -1284,21 +1231,10 @@
             "render": "Карта"
         }
     },
-    "maxspeed": {
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "humanShort": "км/ч"
-                    }
-                }
-            }
-        }
-    },
-    "nature_reserve": {
+    "memorial": {
         "tagRenderings": {
-            "Email": {
-                "render": "<a href='mailto:{email}' target='_blank'>{email}</a>"
+            "start_date": {
+                "render": "Установлен {start_date}"
             }
         }
     },
@@ -1311,15 +1247,6 @@
                 }
             },
             "render": "Смотровая башня"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " метр"
-                    }
-                }
-            }
         }
     },
     "picnic_table": {
@@ -1515,7 +1442,11 @@
             },
             "public_bookcase-website": {
                 "question": "Есть ли веб-сайт с более подробной информацией об этом общественном книжном шкафе?",
-                "render": "Более подробная информация <a href='{website}' target='_blank'>на сайте</a>"
+                "render": {
+                    "special": {
+                        "text": "Более подробная информация на сайте"
+                    }
+                }
             }
         },
         "title": {
@@ -1553,24 +1484,6 @@
             "email": {
                 "question": "Какой адрес электронной почты у {title()}?"
             },
-            "level": {
-                "mappings": {
-                    "0": {
-                        "then": "Расположено под землей"
-                    },
-                    "1": {
-                        "then": "Расположено на первом этаже"
-                    },
-                    "2": {
-                        "then": "Расположено на первом этаже"
-                    },
-                    "3": {
-                        "then": "Расположено на первом этаже"
-                    }
-                },
-                "question": "На каком этаже находится этот объект?",
-                "render": "Расположено на {level}ом этаже"
-            },
             "opening_hours": {
                 "question": "Какое время работы у {title()}?",
                 "render": "<h3>Часы работы</h3>{opening_hours_table(opening_hours)}"
@@ -1588,6 +1501,24 @@
             },
             "phone": {
                 "question": "Какой номер телефона у {title()}?"
+            },
+            "single_level": {
+                "mappings": {
+                    "0": {
+                        "then": "Расположено под землей"
+                    },
+                    "1": {
+                        "then": "Расположено на первом этаже"
+                    },
+                    "2": {
+                        "then": "Расположено на первом этаже"
+                    },
+                    "3": {
+                        "then": "Расположено на первом этаже"
+                    }
+                },
+                "question": "На каком этаже находится этот объект?",
+                "render": "Расположено на {level}ом этаже"
             },
             "website": {
                 "question": "Какой сайт у {title()}?"
@@ -1937,6 +1868,46 @@
             "render": "Дерево"
         }
     },
+    "unit": {
+        "units": {
+            "0": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} мегаватт"
+                    },
+                    "1": {
+                        "human": "{quantity} киловатт"
+                    },
+                    "2": {
+                        "human": "{quantity} ватт"
+                    },
+                    "3": {
+                        "human": "{quantity} гигаватт"
+                    }
+                }
+            },
+            "3": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} метр"
+                    },
+                    "1": {
+                        "human": "{quantity} сантиметры"
+                    },
+                    "2": {
+                        "human": "{quantity} миллиметры"
+                    }
+                }
+            },
+            "4": {
+                "applicableUnits": {
+                    "0": {
+                        "humanShort": "{quantity} км/ч"
+                    }
+                }
+            }
+        }
+    },
     "usersettings": {
         "tagRenderings": {
             "picture-license": {
@@ -1975,17 +1946,6 @@
         }
     },
     "waste_basket": {
-        "mapRendering": {
-            "0": {
-                "iconSize": {
-                    "mappings": {
-                        "0": {
-                            "then": "Контейнер для мусора"
-                        }
-                    }
-                }
-            }
-        },
         "name": "Контейнер для мусора",
         "presets": {
             "0": {
@@ -2006,31 +1966,6 @@
             "mappings": {
                 "0": {
                     "then": "{name}"
-                }
-            }
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " мегаватт"
-                    },
-                    "1": {
-                        "human": " киловатт"
-                    },
-                    "2": {
-                        "human": " ватт"
-                    },
-                    "3": {
-                        "human": " гигаватт"
-                    }
-                }
-            },
-            "1": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " метр"
-                    }
                 }
             }
         }

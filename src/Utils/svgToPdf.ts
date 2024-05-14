@@ -1,7 +1,6 @@
 import jsPDF, { Matrix } from "jspdf"
 import { Translation, TypedTranslation } from "../UI/i18n/Translation"
 import { PngMapCreator } from "./pngMapCreator"
-import { AllKnownLayouts } from "../Customizations/AllKnownLayouts"
 import "../../public/assets/fonts/Ubuntu-M-normal.js"
 import "../../public/assets/fonts/Ubuntu-L-normal.js"
 import "../../public/assets/fonts/UbuntuMono-B-bold.js"
@@ -209,7 +208,7 @@ class SvgToPdfInternals {
                 if (element.childElementCount == 0) {
                     this.drawTspan(element)
                 } else {
-                    for (let child of Array.from(element.children)) {
+                    for (const child of Array.from(element.children)) {
                         this.handleElement(child)
                     }
                 }
@@ -224,7 +223,7 @@ class SvgToPdfInternals {
             }
 
             if (element.tagName === "g" || element.tagName === "text") {
-                for (let child of Array.from(element.children)) {
+                for (const child of Array.from(element.children)) {
                     this.handleElement(child)
                 }
             }
@@ -256,7 +255,7 @@ class SvgToPdfInternals {
         const css = SvgToPdfInternals.css(element)
         this.doc.saveGraphicsState()
         if (css["fill-opacity"] !== "0" && css["fill"] !== "none") {
-            let color = css["fill"] ?? "black"
+            const color = css["fill"] ?? "black"
             let opacity = 1
             if (css["fill-opacity"]) {
                 opacity = Number(css["fill-opacity"])
@@ -314,30 +313,35 @@ class SvgToPdfInternals {
             console.log("Creating image with key", key, "searching rect in", x, y)
             const rectangle: SVGRectElement = this.page.findSmallestRectContaining(x, y, false)
             console.log("Got rect", rectangle)
-            let w = SvgToPdfInternals.attrNumber(rectangle, "width")
-            let h = SvgToPdfInternals.attrNumber(rectangle, "height")
+            if (!rectangle) {
+                throw new Error("No rectangle found for tspan with text:" + txt)
+            }
+            const w = SvgToPdfInternals.attrNumber(rectangle, "width")
+            const h = SvgToPdfInternals.attrNumber(rectangle, "height")
             x = SvgToPdfInternals.attrNumber(rectangle, "x")
             y = SvgToPdfInternals.attrNumber(rectangle, "y")
 
             // Actually, dots per mm, not dots per inch ;)
-            let dpi = 60
+            const dpi = 60
+
             const img = this.page.options.createImage(key, dpi * w + "px", dpi * h + "px")
-
-            const canvas = document.createElement("canvas")
-            const ctx = canvas.getContext("2d")
-
-            canvas.width = w * dpi
-            canvas.height = h * dpi
-            img.style.width = `${w * dpi}px`
-            img.style.height = `${h * dpi}px`
-
-            ctx.drawImage(img, 0, 0, w * dpi, h * dpi)
-            const base64img = canvas.toDataURL("image/png")
-            // Don't ask me why this magicFactor transformation is needed - but it works
-            const magicFactor = 3.8
-            this.addMatrix(this.doc.Matrix(1 / magicFactor, 0, 0, 1 / magicFactor, 0, 0))
-            this.doc.addImage(base64img, "png", x, y, w, h)
-            this.undoTransform()
+            if (typeof img === "string") {
+                this.doc.addImage(img, "png", x, y, w, h)
+            } else {
+                const canvas = document.createElement("canvas")
+                canvas.width = w * dpi
+                canvas.height = h * dpi
+                const ctx = canvas.getContext("2d")
+                img.style.width = `${w * dpi}px`
+                img.style.height = `${h * dpi}px`
+                ctx.drawImage(img, 0, 0, w * dpi, h * dpi)
+                const base64img = canvas.toDataURL("image/png")
+                // Don't ask me why this magicFactor transformation is needed - but it works
+                const magicFactor = 3.8
+                this.addMatrix(this.doc.Matrix(1 / magicFactor, 0, 0, 1 / magicFactor, 0, 0))
+                this.doc.addImage(base64img, "png", x, y, w, h)
+                this.undoTransform()
+            }
             this.usedRectangles.add(rectangle.id)
             return
         }
@@ -363,7 +367,7 @@ class SvgToPdfInternals {
             fontFamily = "Ubuntu"
         }
 
-        let fontWeight = css["font-weight"] ?? "normal"
+        const fontWeight = css["font-weight"] ?? "normal"
         this.doc.setFont(fontFamily, fontWeight)
 
         const fontColor = css["fill"]
@@ -372,13 +376,13 @@ class SvgToPdfInternals {
         } else {
             this.doc.setTextColor("black")
         }
-        let fontsize = parseFloat(css["font-size"])
+        const fontsize = parseFloat(css["font-size"])
         this.doc.setFontSize(fontsize * 2.5)
 
-        let textTemplate = tspan.textContent.split(" ")
+        const textTemplate = tspan.textContent.split(" ")
         let result: string = ""
         let addSpace = false
-        for (let text of textTemplate) {
+        for (const text of textTemplate) {
             if (text === "\\n") {
                 result += "\n"
                 addSpace = false
@@ -446,7 +450,7 @@ class SvgToPdfInternals {
         const svgWidth = SvgToPdfInternals.attrNumber(svgRoot, "width")
         const svgHeight = SvgToPdfInternals.attrNumber(svgRoot, "height")
 
-        let img = this.page.images[base64src]
+        const img = this.page.images[base64src]
         // This is an svg image, we use the canvas to convert it to a png
         const canvas = document.createElement("canvas")
         const ctx = canvas.getContext("2d")
@@ -549,7 +553,7 @@ class SvgToPdfInternals {
 export interface SvgToPdfOptions {
     freeComponentId: string
     disableMaps?: false | true
-    textSubstitutions?: Record<string, string>
+    textSubstitutions?: Record<string, string | Translation>
     beforePage?: (i: number) => void
     overrideLocation?: { lat: number; lon: number }
     disableDataLoading?: boolean | false
@@ -558,7 +562,7 @@ export interface SvgToPdfOptions {
      */
     state?: ThemeViewState
 
-    createImage(key: string, width: string, height: string): HTMLImageElement
+    createImage(key: string, width: string, height: string): HTMLImageElement | string
 }
 
 class SvgToPdfPage {
@@ -566,6 +570,7 @@ class SvgToPdfPage {
     images: Record<string, HTMLImageElement> = {}
     rects: Record<string, { rect: SVGRectElement; isInDef: boolean }> = {}
     readonly options: SvgToPdfOptions
+    public readonly status: UIEventSource<string>
     private readonly importedTranslations: Record<string, string> = {}
     private readonly layerTranslations: Record<string, Record<string, any>> = {}
     /**
@@ -574,7 +579,6 @@ class SvgToPdfPage {
      */
     private readonly _state: UIEventSource<string>
     private _isPrepared = false
-    public readonly status: UIEventSource<string>
 
     constructor(
         page: string,
@@ -607,7 +611,7 @@ class SvgToPdfPage {
             const parts = tc.split(" ").filter((p) => p.startsWith("$") && p.indexOf("(") < 0)
             for (let part of parts) {
                 part = part.substring(1) // Drop the $
-                let path = part.split(".")
+                const path = part.split(".")
                 const importPath = this.importedTranslations[path[0]]
                 if (importPath) {
                     translations.add(importPath + "." + path.slice(1).join("."))
@@ -636,7 +640,7 @@ class SvgToPdfPage {
 
         if (element.tagName === "tspan" && element.childElementCount == 0) {
             const specialValues = element.textContent.split(" ").filter((t) => t.startsWith("$"))
-            for (let specialValue of specialValues) {
+            for (const specialValue of specialValues) {
                 const importMatch = element.textContent.match(
                     /\$import ([a-zA-Z-_0-9.? ]+) as ([a-zA-Z0-9]+)/
                 )
@@ -665,27 +669,22 @@ class SvgToPdfPage {
             element.tagName === "tspan" ||
             element.tagName === "defs"
         ) {
-            for (let child of Array.from(element.children)) {
+            for (const child of Array.from(element.children)) {
                 await this.prepareElement(child, mapTextSpecs, inDefs || element.tagName === "defs")
             }
         }
     }
 
     public async PrepareLanguage(language: string) {
+        let host = window.location.host
+        if (host.startsWith("127.0.0.1")) {
+            host = "mapcomplete.org"
+        }
         // Always fetch the remote data - it's cached anyway
         this.layerTranslations[language] = await Utils.downloadJsonCached(
-            "https://raw.githubusercontent.com/pietervdvn/MapComplete/develop/langs/layers/" +
-                language +
-                ".json",
+            window.location.protocol + "//" + host + "/assets/langs/layers/" + language + ".json",
             24 * 60 * 60 * 1000
         )
-        const shared_questions = await Utils.downloadJsonCached(
-            "https://raw.githubusercontent.com/pietervdvn/MapComplete/develop/langs/shared-questions/" +
-                language +
-                ".json",
-            24 * 60 * 60 * 1000
-        )
-        this.layerTranslations[language]["shared-questions"] = shared_questions["shared_questions"]
     }
 
     public async Prepare() {
@@ -694,12 +693,12 @@ class SvgToPdfPage {
         }
         this._isPrepared = true
         const mapSpecs: SVGTSpanElement[] = []
-        for (let child of Array.from(this._svgRoot.children)) {
+        for (const child of Array.from(this._svgRoot.children)) {
             await this.prepareElement(<any>child, mapSpecs, child.tagName === "defs")
         }
 
         for (const mapSpec of mapSpecs) {
-            await this.prepareMap(mapSpec, !this.options?.disableDataLoading)
+            await this.prepareMap(mapSpec)
         }
     }
 
@@ -712,10 +711,14 @@ class SvgToPdfPage {
             this.options.beforePage(i)
         }
         const self = this
-        const internal = new SvgToPdfInternals(advancedApi, this, (key) =>
-            self.extractTranslation(key, language)
-        )
-        for (let child of Array.from(this._svgRoot.children)) {
+        const internal = new SvgToPdfInternals(advancedApi, this, (key) => {
+            const tr = self.extractTranslation(key, language)
+            if (typeof tr === "string") {
+                return tr
+            }
+            return tr.txt
+        })
+        for (const child of Array.from(this._svgRoot.children)) {
             internal.handleElement(<any>child)
         }
     }
@@ -805,11 +808,11 @@ class SvgToPdfPage {
 
     private loadImage(element: Element | string): Promise<void> {
         const xlink = typeof element === "string" ? element : element.getAttribute("xlink:href")
-        let img = document.createElement("img")
+        const img = document.createElement("img")
 
         if (xlink.startsWith("data:image/svg+xml;")) {
             const base64src = xlink
-            let svgXml = atob(
+            const svgXml = atob(
                 base64src.substring(base64src.indexOf(";base64,") + ";base64,".length)
             )
             const parser = new DOMParser()
@@ -841,7 +844,7 @@ class SvgToPdfPage {
     /**
      * Replaces a mapSpec with the appropriate map
      */
-    private async prepareMap(mapSpec: SVGTSpanElement, loadData: boolean): Promise<void> {
+    private async prepareMap(mapSpec: SVGTSpanElement): Promise<void> {
         if (this.options.disableMaps) {
             return
         }
@@ -878,108 +881,11 @@ class SvgToPdfPage {
                 width,
                 height,
             }).CreatePng(this.options.freeComponentId, this._state)
-        } else {
-            const match = spec.match(/\$map\(([^)]*)\)$/)
-            if (match === null) {
-                throw "Invalid mapspec:" + spec
-            }
-            const params = SvgToPdfInternals.parseCss(match[1], ",")
-            let layout = AllKnownLayouts.allKnownLayouts.get(params["theme"])
-            if (layout === undefined) {
-                console.error("Could not show map with parameters", params)
-                throw (
-                    "Theme not found:" +
-                    params["theme"] +
-                    ". Use theme: to define which theme to use. "
-                )
-            }
-            layout.widenFactor = 0
-            layout.overpassTimeout = 600
-            layout.defaultBackgroundId = params["background"] ?? layout.defaultBackgroundId
-            for (const paramsKey in params) {
-                if (paramsKey.startsWith("layer-")) {
-                    const layerName = paramsKey.substring("layer-".length)
-                    const key = params[paramsKey].toLowerCase().trim()
-                    const layer = layout.layers.find((l) => l.id === layerName)
-                    if (layer === undefined) {
-                        throw "No layer found for " + paramsKey
-                    }
-                    if (key === "force") {
-                        layer.minzoom = 0
-                        layer.minzoomVisible = 0
-                    }
-                }
-            }
-            const zoom = Number(params["zoom"] ?? params["z"] ?? 14)
-
-            const state = new ThemeViewState(layout)
-            state.mapProperties.location.setData({
-                lat: this.options?.overrideLocation?.lat ?? Number(params["lat"] ?? 51.05016),
-                lon: this.options?.overrideLocation?.lon ?? Number(params["lon"] ?? 3.717842),
-            })
-            state.mapProperties.zoom.setData(zoom)
-
-            const fl = Array.from(state.layerState.filteredLayers.values())
-            for (const filteredLayer of fl) {
-                if (params["layer-" + filteredLayer.layerDef.id] !== undefined) {
-                    filteredLayer.isDisplayed.setData(
-                        loadData &&
-                            params["layer-" + filteredLayer.layerDef.id].trim().toLowerCase() !==
-                                "false"
-                    )
-                } else if (params["layers"] === "none") {
-                    filteredLayer.isDisplayed.setData(false)
-                } else if (filteredLayer.layerDef.id.startsWith("note_import")) {
-                    filteredLayer.isDisplayed.setData(false)
-                }
-            }
-
-            for (const paramsKey in params) {
-                if (paramsKey.startsWith("layer-")) {
-                    const layerName = paramsKey.substring("layer-".length)
-                    const key = params[paramsKey].toLowerCase().trim()
-                    const isDisplayed = loadData && (key === "true" || key === "force")
-                    const layer = fl.find((l) => l.layerDef.id === layerName)
-                    if (!loadData) {
-                        console.log(
-                            "Not loading map data as 'loadData' is falsed, this is probably a test run"
-                        )
-                    } else {
-                        console.log(
-                            "Setting ",
-                            layer?.layerDef?.id,
-                            " to visibility",
-                            isDisplayed,
-                            "(minzoom:",
-                            layer?.layerDef?.minzoomVisible,
-                            layer?.layerDef?.minzoom,
-                            ")"
-                        )
-                    }
-                    layer.isDisplayed.setData(loadData && isDisplayed)
-                    if (key === "force" && loadData) {
-                        layer.layerDef.minzoom = 0
-                        layer.layerDef.minzoomVisible = 0
-                        layer.isDisplayed.addCallback((isDisplayed) => {
-                            if (!isDisplayed) {
-                                console.warn("Forcing layer " + paramsKey + " as true")
-                                layer.isDisplayed.setData(true)
-                            }
-                        })
-                    }
-                }
-            }
-            const pngCreator = new PngMapCreator(state, {
-                width: 4 * width,
-                height: 4 * height,
-            })
-            png = await pngCreator.CreatePng(this.options.freeComponentId, this._state)
-            if (!png) {
-                throw "PngCreator did not output anything..."
-            }
         }
-
         svgImage.setAttribute("xlink:href", await SvgToPdfPage.blobToBase64(png))
+        svgImage.style.width = width + "mm"
+        svgImage.style.height = height + "mm"
+        console.log("Adding map element to PDF", svgImage)
         smallestRect.parentElement.insertBefore(svgImage, smallestRect)
         await this.prepareElement(svgImage, [], false)
         const smallestRectCss = SvgToPdfInternals.parseCss(smallestRect.getAttribute("style"))
@@ -997,14 +903,20 @@ class SvgToPdfPage {
 
 export interface PdfTemplateInfo {
     pages: string[]
-    description: string | Translation
+    description?: string | Translation
     format: "a3" | "a4" | "a2"
     orientation: "portrait" | "landscape"
     isPublic: boolean
 }
+
 export class SvgToPdf {
     public static readonly templates: Record<
-        "flyer_a4" | "poster_a3" | "poster_a2" | "current_view_a4" | "current_view_a3",
+        | "flyer_a4"
+        | "poster_a3"
+        | "poster_a2"
+        | "current_view_a4"
+        | "current_view_a3_portrait"
+        | "current_view_a3_landscape",
         PdfTemplateInfo
     > = {
         flyer_a4: {
@@ -1035,15 +947,18 @@ export class SvgToPdf {
             format: "a4",
             orientation: "landscape",
             pages: ["./assets/templates/CurrentMapWithHeaderA4.svg"],
-            description: Translations.t.general.download.pdf.current_view_a4,
-
             isPublic: true,
         },
-        current_view_a3: {
+        current_view_a3_landscape: {
+            format: "a3",
+            orientation: "landscape",
+            pages: ["./assets/templates/CurrentMapWithHeader_A3_Landscape.svg"],
+            isPublic: true,
+        },
+        current_view_a3_portrait: {
             format: "a3",
             orientation: "portrait",
-            pages: ["./assets/templates/CurrentMapWithHeaderA3.svg"],
-            description: Translations.t.general.download.pdf.current_view_a3,
+            pages: ["./assets/templates/CurrentMapWithHeader_A3_Portrait.svg"],
             isPublic: true,
         },
     }
@@ -1055,11 +970,6 @@ export class SvgToPdf {
     constructor(title: string, pages: string[], options: SvgToPdfOptions) {
         this._title = title
         options.textSubstitutions = options.textSubstitutions ?? {}
-        options.textSubstitutions["mapCount"] =
-            "" +
-            Array.from(AllKnownLayouts.allKnownLayouts.values()).filter(
-                (th) => !th.hideFromOverview
-            ).length
 
         const state = new UIEventSource<string>("Initializing...")
         this.status = state

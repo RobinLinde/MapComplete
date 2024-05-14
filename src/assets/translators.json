@@ -1,23 +1,23 @@
 {
   "contributors": [
     {
-      "commits": 289,
+      "commits": 337,
       "contributor": "kjon"
     },
     {
-      "commits": 277,
+      "commits": 336,
       "contributor": "Pieter Vander Vennet"
     },
     {
-      "commits": 142,
+      "commits": 186,
       "contributor": "paunofu"
     },
     {
-      "commits": 94,
+      "commits": 95,
       "contributor": "Allan Nordhøy"
     },
     {
-      "commits": 69,
+      "commits": 72,
       "contributor": "Robin van der Linde"
     },
     {
@@ -25,39 +25,43 @@
       "contributor": "danieldegroot2"
     },
     {
-      "commits": 45,
+      "commits": 49,
+      "contributor": "mcliquid"
+    },
+    {
+      "commits": 47,
       "contributor": "Anonymous"
+    },
+    {
+      "commits": 42,
+      "contributor": "Supaplex"
     },
     {
       "commits": 36,
       "contributor": "Iago"
     },
     {
+      "commits": 34,
+      "contributor": "Lucas"
+    },
+    {
+      "commits": 33,
+      "contributor": "Jiří Podhorecký"
+    },
+    {
       "commits": 32,
       "contributor": "Babos Gábor"
-    },
-    {
-      "commits": 31,
-      "contributor": "Supaplex"
-    },
-    {
-      "commits": 30,
-      "contributor": "Jiří Podhorecký"
     },
     {
       "commits": 29,
       "contributor": "Artem"
     },
     {
-      "commits": 25,
-      "contributor": "Lucas"
-    },
-    {
-      "commits": 25,
+      "commits": 26,
       "contributor": "Reza Almanda"
     },
     {
-      "commits": 22,
+      "commits": 23,
       "contributor": "Marco"
     },
     {
@@ -69,8 +73,16 @@
       "contributor": "el_libre como el chaval"
     },
     {
+      "commits": 17,
+      "contributor": "Štefan Baebler"
+    },
+    {
       "commits": 16,
-      "contributor": "mcliquid"
+      "contributor": "gallegonovato"
+    },
+    {
+      "commits": 15,
+      "contributor": "macpac"
     },
     {
       "commits": 15,
@@ -95,6 +107,18 @@
     {
       "commits": 13,
       "contributor": "Joost"
+    },
+    {
+      "commits": 12,
+      "contributor": "Ettore Atalan"
+    },
+    {
+      "commits": 12,
+      "contributor": "Piotr Strebski"
+    },
+    {
+      "commits": 11,
+      "contributor": "Jaime Marquínez Ferrándiz"
     },
     {
       "commits": 11,
@@ -126,11 +150,15 @@
     },
     {
       "commits": 9,
-      "contributor": "deep map"
+      "contributor": "Lasse Liehu"
     },
     {
       "commits": 9,
-      "contributor": "Jaime Marquínez Ferrándiz"
+      "contributor": "快乐的老鼠宝宝"
+    },
+    {
+      "commits": 9,
+      "contributor": "deep map"
     },
     {
       "commits": 9,
@@ -146,19 +174,15 @@
     },
     {
       "commits": 8,
-      "contributor": "Ettore Atalan"
-    },
-    {
-      "commits": 8,
       "contributor": "Vinicius"
     },
     {
       "commits": 7,
-      "contributor": "Joost Schouppe"
+      "contributor": "NetworkedPoncho"
     },
     {
       "commits": 7,
-      "contributor": "快乐的老鼠宝宝"
+      "contributor": "Joost Schouppe"
     },
     {
       "commits": 7,
@@ -167,6 +191,14 @@
     {
       "commits": 7,
       "contributor": "Niels Elgaard Larsen"
+    },
+    {
+      "commits": 6,
+      "contributor": "Jeff Huang"
+    },
+    {
+      "commits": 6,
+      "contributor": "Juele juele"
     },
     {
       "commits": 6,
@@ -190,10 +222,6 @@
     },
     {
       "commits": 6,
-      "contributor": "Štefan Baebler"
-    },
-    {
-      "commits": 6,
       "contributor": "seppesantens"
     },
     {
@@ -210,11 +238,11 @@
     },
     {
       "commits": 5,
-      "contributor": "Piotr Strebski"
+      "contributor": "Emory Shaw"
     },
     {
       "commits": 5,
-      "contributor": "gallegonovato"
+      "contributor": "nilocram"
     },
     {
       "commits": 5,
@@ -250,7 +278,7 @@
     },
     {
       "commits": 4,
-      "contributor": "Emory Shaw"
+      "contributor": "Krzysztof Chorzempa"
     },
     {
       "commits": 4,
@@ -266,10 +294,6 @@
     },
     {
       "commits": 4,
-      "contributor": "Jeff Huang"
-    },
-    {
-      "commits": 4,
       "contributor": "Adolfo Jayme Barrientos"
     },
     {
@@ -279,6 +303,26 @@
     {
       "commits": 4,
       "contributor": "Jan Zabel"
+    },
+    {
+      "commits": 3,
+      "contributor": "Paolo Mauri"
+    },
+    {
+      "commits": 3,
+      "contributor": "Franco"
+    },
+    {
+      "commits": 3,
+      "contributor": "Peter Brodersen"
+    },
+    {
+      "commits": 3,
+      "contributor": "ssantos"
+    },
+    {
+      "commits": 3,
+      "contributor": "Stéphane De Greef"
     },
     {
       "commits": 3,
@@ -335,6 +379,34 @@
     {
       "commits": 3,
       "contributor": "SiegbjornSitumeang"
+    },
+    {
+      "commits": 2,
+      "contributor": "CaldeiraG"
+    },
+    {
+      "commits": 2,
+      "contributor": "Henry00572"
+    },
+    {
+      "commits": 2,
+      "contributor": "larusalka"
+    },
+    {
+      "commits": 2,
+      "contributor": "Smith Brown"
+    },
+    {
+      "commits": 2,
+      "contributor": "Michel"
+    },
+    {
+      "commits": 2,
+      "contributor": "Kelson Vibber"
+    },
+    {
+      "commits": 2,
+      "contributor": "מוימוי טרייצקי"
     },
     {
       "commits": 2,
@@ -422,6 +494,34 @@
     },
     {
       "commits": 1,
+      "contributor": "Roosa Huovinen"
+    },
+    {
+      "commits": 1,
+      "contributor": "Berete Baba"
+    },
+    {
+      "commits": 1,
+      "contributor": "Federica Gaspari"
+    },
+    {
+      "commits": 1,
+      "contributor": "Julio Salas"
+    },
+    {
+      "commits": 1,
+      "contributor": "Michal Čermák"
+    },
+    {
+      "commits": 1,
+      "contributor": "Juan"
+    },
+    {
+      "commits": 1,
+      "contributor": "Traladarer"
+    },
+    {
+      "commits": 1,
       "contributor": "LuPa"
     },
     {
@@ -439,10 +539,6 @@
     {
       "commits": 1,
       "contributor": "Hungarian_user"
-    },
-    {
-      "commits": 1,
-      "contributor": "Stéphane De Greef"
     },
     {
       "commits": 1,
@@ -475,10 +571,6 @@
     {
       "commits": 1,
       "contributor": "Janina Ellinghaus"
-    },
-    {
-      "commits": 1,
-      "contributor": "ssantos"
     },
     {
       "commits": 1,

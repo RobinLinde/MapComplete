@@ -9,7 +9,8 @@
     "da": "Pommes frites butik",
     "pa_PK": "فرائیاں دیاں دکاناں",
     "cs": "Obchody s hranolky",
-    "es": "Tiendas de patatas fritas"
+    "es": "Tiendas de patatas fritas",
+    "pl": "Sklepy z frytkami"
   },
   "description": {
     "en": "On this map, you'll find your favourite fries shop!",
@@ -19,13 +20,10 @@
     "da": "På dette kort finder du din foretrukne pomfrits-butik!",
     "cs": "Na této mapě najdete své oblíbené obchody s hranolky!",
     "ca": "A aquest mapa, trobaràs la teva botiga preferida de patates!",
-    "es": "¡En este mapa encontrarás tu tienda de patatas fritas favorita!"
+    "es": "¡En este mapa encontrarás tu tienda de patatas fritas favorita!",
+    "pl": "Na tej mapie znajdziesz swój ulubiony sklep z frytkami!"
   },
   "icon": "./assets/themes/fritures/logo.svg",
-  "startLat": 0,
-  "startLon": 0,
-  "startZoom": 1,
-  "widenFactor": 3,
   "layers": [
     {
       "builtin": "food",
@@ -42,7 +40,8 @@
           "da": "Pommes frites butik",
           "pa_PK": "فرائیاں دی دکان",
           "cs": "Obchod s hranolky",
-          "es": "Tienda de patatas fritas"
+          "es": "Tienda de patatas fritas",
+          "pl": "Sklep z frytkami"
         },
         "=presets": [],
         "source": {
@@ -57,7 +56,39 @@
               }
             ]
           }
-        }
+        },
+        "filter+": [
+          {
+            "id": "oil-type",
+            "options": [
+              {
+                "question": {
+                  "en": "No oil type preference",
+                  "de": "Kein Öltyp bevorzugt",
+                  "es": "No se prefiere ningún tipo de aceite"
+                }
+              },
+              {
+                "question": {
+                  "en": "Only show fritures using vegetable oil",
+                  "de": "Nur Friteusen mit Pflanzenöl anzeigen",
+                  "ca": "Només mostra freiduries que utilitzen oli vegetal",
+                  "es": "Solo muestra freiduras que utilizan aceite vegetal"
+                },
+                "osmTags": "friture:oil=vegetable"
+              },
+              {
+                "question": {
+                  "en": "Only show fritures using animal oil",
+                  "de": "Nur Friteusen mit tierischem Öl anzeigen",
+                  "ca": "Només mostra freiduries que utilitzen oli animal",
+                  "es": "Solo muestra freiduras que utilizan aceite animal"
+                },
+                "osmTags": "friture:oil=animal"
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -65,8 +96,10 @@
       "override": {
         "minzoom": 18,
         "filter": null,
-        "name": null
+        "name": null,
+        "isCounted": false
       }
     }
-  ]
+  ],
+  "widenFactor": 3
 }

@@ -2,8 +2,8 @@ import { Conversion } from "./Conversion"
 import LayerConfig from "../LayerConfig"
 import { LayerConfigJson } from "../Json/LayerConfigJson"
 import Translations from "../../../UI/i18n/Translations"
-import PointRenderingConfigJson from "../Json/PointRenderingConfigJson"
 import { Translation, TypedTranslation } from "../../../UI/i18n/Translation"
+import { ConversionContext } from "./ConversionContext"
 
 export default class CreateNoteImportLayer extends Conversion<LayerConfigJson, LayerConfigJson> {
     /**
@@ -24,7 +24,7 @@ export default class CreateNoteImportLayer extends Conversion<LayerConfigJson, L
         this._includeClosedNotesDays = includeClosedNotesDays
     }
 
-    convert(layerJson: LayerConfigJson, context: string): { result: LayerConfigJson } {
+    convert(layerJson: LayerConfigJson, _: ConversionContext): LayerConfigJson {
         const t = Translations.t.importLayer
 
         /**
@@ -45,13 +45,6 @@ export default class CreateNoteImportLayer extends Conversion<LayerConfigJson, L
             isShownIfAny.push({ and: mustMatchAll })
         }
 
-        const pointRenderings = (layerJson.mapRendering ?? []).filter(
-            (r) => r !== null && r["location"] !== undefined
-        )
-        const firstRender = <PointRenderingConfigJson>pointRenderings[0]
-        if (firstRender === undefined) {
-            throw `Layer ${layerJson.id} does not have a pointRendering: ` + context
-        }
         const title = layer.presets[0].title
 
         const importButton = {}
@@ -86,24 +79,23 @@ export default class CreateNoteImportLayer extends Conversion<LayerConfigJson, L
             return { ...translation.Subs(subs).translations, _context: translation.context }
         }
 
-        const result: LayerConfigJson = {
+        return {
             id: "note_import_" + layer.id,
             // By disabling the name, the import-layers won't pollute the filter view "name": t.layerName.Subs({title: layer.title.render}).translations,
             description: trs(t.description, { title: layer.title.render }),
             source: {
                 osmTags: {
-                    and: ["id~*"],
+                    and: ["id~[0-9]+", "comment_url~.*notes/[0-9]*/comment.json"],
                 },
                 geoJson:
                     "https://api.openstreetmap.org/api/0.6/notes.json?limit=10000&closed=" +
                     this._includeClosedNotesDays +
                     "&bbox={x_min},{y_min},{x_max},{y_max}",
                 geoJsonZoomLevel: 10,
-                maxCacheAge: 0,
             },
             /* We need to set 'pass_all_features'
-             There are probably many note_import-layers, and we don't want the first one to gobble up all notes and then discard them...
-             */
+       There are probably many note_import-layers, and we don't want the first one to gobble up all notes and then discard them...
+       */
             passAllFeatures: true,
             minzoom: Math.min(12, layerJson.minzoom - 2),
             title: {
@@ -111,7 +103,7 @@ export default class CreateNoteImportLayer extends Conversion<LayerConfigJson, L
             },
             calculatedTags: [
                 "_first_comment=get(feat)('comments')[0].text.toLowerCase()",
-                "_trigger_index=(() => {const lines = feat.properties['_first_comment'].split('\\n'); const matchesMapCompleteURL = lines.map(l => l.match(\".*https://mapcomplete.osm.be/\\([a-zA-Z_-]+\\)\\(.html\\)?.*#import\")); const matchedIndexes = matchesMapCompleteURL.map((doesMatch, i) => [doesMatch !== null, i]).filter(v => v[0]).map(v => v[1]); return matchedIndexes[0] })()",
+                "_trigger_index=(() => {const lines = feat.properties['_first_comment'].split('\\n'); const matchesMapCompleteURL = lines.map(l => l.match(\".*https://mapcomplete.\\(org|osm.be\\)/\\([a-zA-Z_-]+\\)\\(.html\\)?.*#import\")); const matchedIndexes = matchesMapCompleteURL.map((doesMatch, i) => [doesMatch !== null, i]).filter(v => v[0]).map(v => v[1]); return matchedIndexes[0] })()",
                 "_comments_count=get(feat)('comments').length",
                 "_intro=(() => {const lines = get(feat)('comments')[0].text.split('\\n'); lines.splice(get(feat)('_trigger_index')-1, lines.length); return lines.filter(l => l !== '').join('<br/>');})()",
                 "_tags=(() => {let lines = get(feat)('comments')[0].text.split('\\n').map(l => l.trim()); lines.splice(0, get(feat)('_trigger_index') + 1); lines = lines.filter(l => l != ''); return lines.join(';');})()",
@@ -186,26 +178,31 @@ export default class CreateNoteImportLayer extends Conversion<LayerConfigJson, L
                     },
                 },
             ],
-            mapRendering: [
+            pointRendering: [
                 {
                     location: ["point"],
-                    icon: {
-                        render: "circle:white;help:black",
-                        mappings: [
-                            {
-                                if: { or: ["closed_at~*", "_imported=yes"] },
-                                then: "circle:white;checkmark:black",
+                    marker: [
+                        {
+                            icon: "circle",
+                            color: "#fff",
+                        },
+                        {
+                            icon: {
+                                render: "help",
+                                mappings: [
+                                    {
+                                        if: { or: ["closed_at~*", "_imported=yes"] },
+                                        then: "checkmark",
+                                    },
+                                ],
                             },
-                        ],
-                    },
+                            color: "#00",
+                        },
+                    ],
                     iconSize: "40,40",
                     anchor: "center",
                 },
             ],
-        }
-
-        return {
-            result,
         }
     }
 }

@@ -6,6 +6,7 @@ scratch
 assets/editor-layer-index.json
 assets/generated/*
 src/assets/generated/
+assets/layers/favourite/favourite.json
 public/*.webmanifest
 /*.html
 !/index.html
@@ -23,6 +24,9 @@ index_*.ts
 .~lock.*
 *.doctest.ts
 service-worker.js
+.env
+src/assets/editor-layer-index.json
+
 
 .vscode/*
 !.vscode/settings.json
@@ -38,3 +42,4 @@ service-worker.js
 *.vsix
 public/*.webmanifest
 public/assets/generated/
+public/assets/langs/*

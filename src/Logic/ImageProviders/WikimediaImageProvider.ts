@@ -1,21 +1,21 @@
 import ImageProvider, { ProvidedImage } from "./ImageProvider"
 import BaseUIElement from "../../UI/BaseUIElement"
-import Svg from "../../Svg"
-import Link from "../../UI/Base/Link"
 import { Utils } from "../../Utils"
 import { LicenseInfo } from "./LicenseInfo"
 import Wikimedia from "../Web/Wikimedia"
+import SvelteUIElement from "../../UI/Base/SvelteUIElement"
+import Wikimedia_commons_white from "../../assets/svg/Wikimedia_commons_white.svelte"
 
 /**
  * This module provides endpoints for wikimedia and others
  */
 export class WikimediaImageProvider extends ImageProvider {
     public static readonly singleton = new WikimediaImageProvider()
-    public static readonly commonsPrefixes = [
+    public static readonly apiUrls = [
         "https://commons.wikimedia.org/wiki/",
         "https://upload.wikimedia.org",
-        "File:",
     ]
+    public static readonly commonsPrefixes = [...WikimediaImageProvider.apiUrls, "File:"]
     private readonly commons_key = "wikimedia_commons"
     public readonly defaultKeyPrefixes = [this.commons_key, "image"]
 
@@ -31,13 +31,17 @@ export class WikimediaImageProvider extends ImageProvider {
         return path.substring(path.lastIndexOf("/") + 1)
     }
 
-    private static PrepareUrl(value: string): string {
+    private static PrepareUrl(value: string, useHd = false): string {
         if (value.toLowerCase().startsWith("https://commons.wikimedia.org/wiki/")) {
             return value
         }
-        return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(
+        const baseUrl = `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(
             value
-        )}?width=500&height=400`
+        )}`
+        if (useHd) {
+            return baseUrl
+        }
+        return baseUrl + `?width=500&height=400`
     }
 
     private static startsWithCommonsPrefix(value: string): boolean {
@@ -66,17 +70,12 @@ export class WikimediaImageProvider extends ImageProvider {
         return value
     }
 
-    SourceIcon(backlink: string): BaseUIElement {
-        const img = Svg.wikimedia_commons_white_svg().SetStyle("width:2em;height: 2em")
-        if (backlink === undefined) {
-            return img
-        }
+    apiUrls(): string[] {
+        return WikimediaImageProvider.apiUrls
+    }
 
-        return new Link(
-            Svg.wikimedia_commons_white_svg(),
-            `https://commons.wikimedia.org/wiki/${backlink}`,
-            true
-        )
+    SourceIcon(): BaseUIElement {
+        return new SvelteUIElement(Wikimedia_commons_white).SetStyle("width:2em;height: 2em")
     }
 
     public PrepUrl(value: string): ProvidedImage {
@@ -114,8 +113,8 @@ export class WikimediaImageProvider extends ImageProvider {
         return [Promise.resolve(this.UrlForImage("File:" + value))]
     }
 
-    public async DownloadAttribution(filename: string): Promise<LicenseInfo> {
-        filename = WikimediaImageProvider.ExtractFileName(filename)
+    public async DownloadAttribution(img: ProvidedImage): Promise<LicenseInfo> {
+        const filename = WikimediaImageProvider.ExtractFileName(img.url)
 
         if (filename === "") {
             return undefined
@@ -169,6 +168,12 @@ export class WikimediaImageProvider extends ImageProvider {
         if (!image.startsWith("File:")) {
             image = "File:" + image
         }
-        return { url: WikimediaImageProvider.PrepareUrl(image), key: undefined, provider: this }
+        return {
+            url: WikimediaImageProvider.PrepareUrl(image),
+            url_hd: WikimediaImageProvider.PrepareUrl(image, true),
+            key: undefined,
+            provider: this,
+            id: image,
+        }
     }
 }

@@ -3,12 +3,18 @@
   "name": {
     "en": "Vending Machines",
     "nl": "Verkoopautomaten",
-    "de": "Verkaufsautomaten"
+    "de": "Verkaufsautomaten",
+    "fr": "Distributeurs",
+    "ca": "Màquines expenedores",
+    "cs": "Prodejní automaty"
   },
   "description": {
     "en": "Layer showing vending machines",
     "nl": "Laag met verkoopautomaten",
-    "de": "Ebene mit Verkaufsautomaten"
+    "de": "Ebene mit Verkaufsautomaten",
+    "fr": "Couche affichant les distributeurs",
+    "ca": "Capa que mostra màquines expenedores",
+    "cs": "Vrstva zobrazující prodejní automaty"
   },
   "source": {
     "osmTags": {
@@ -18,11 +24,17 @@
       ]
     }
   },
+  "calculatedTags": [
+    "_vending_count=feat.properties.vending.split(';').length"
+  ],
   "title": {
     "render": {
       "en": "Vending machine",
       "nl": "Verkoopautomaat",
-      "de": "Verkaufsautomat"
+      "de": "Verkaufsautomat",
+      "fr": "Distributeur",
+      "ca": "Màquina expenedora",
+      "cs": "Prodejní automat"
     },
     "mappings": [
       {
@@ -30,7 +42,10 @@
         "then": {
           "en": "Vending machine {name}",
           "nl": "Verkoopautomaat {name}",
-          "de": "Verkaufsautomat {name}"
+          "de": "Verkaufsautomat {name}",
+          "fr": "Distributeur {name}",
+          "ca": "Maquina expenedora {name}",
+          "cs": "Prodejní automat {name}"
         }
       },
       {
@@ -38,317 +53,101 @@
         "then": {
           "en": "Vending machine {brand}",
           "nl": "Verkoopautomaat {brand}",
-          "de": "Verkaufsautomat {brand}"
+          "de": "Verkaufsautomat {brand}",
+          "fr": "Distributeur {brand}",
+          "ca": "Màquina expenedora {brand}",
+          "cs": "Prodejní automat {brand}"
         }
       }
     ]
   },
-  "tagRenderings": [
-    "images",
+  "pointRendering": [
     {
-      "id": "vending",
-      "question": {
-        "en": "What does this vending machine sell?",
-        "nl": "Wat verkoopt deze verkoopautomaat?",
-        "de": "Was wird in diesem Automaten verkauft?"
-      },
-      "freeform": {
-        "key": "vending",
-        "addExtraTags": [
-          "fixme=Freeform input used, value may need to be checked"
-        ]
-      },
-      "render": {
-        "en": "This vending machine sells {vending}",
-        "nl": "Deze verkoopautomaat verkoopt {vending}",
-        "de": "Dieser Automat verkauft {vending}"
-      },
-      "mappings": [
+      "marker": [
         {
-          "if": "vending=drinks",
-          "then": {
-            "en": "Drinks are sold",
-            "nl": "Dranken worden verkocht",
-            "de": "Getränke werden verkauft"
-          },
-          "icon": "./assets/layers/id_presets/temaki-bottles.svg"
+          "icon": "circle",
+          "color": "white"
         },
         {
-          "if": "vending=sweets",
-          "then": {
-            "en": "Sweets are sold",
-            "nl": "Snoep wordt verkocht",
-            "de": "Süßigkeiten werden verkauft"
-          },
-          "icon": "./assets/layers/id_presets/maki-confectionery.svg"
-        },
-        {
-          "if": "vending=food",
-          "then": {
-            "en": "Food is sold",
-            "nl": "Eten wordt verkocht",
-            "de": "Lebensmittel werden verkauft"
-          },
-          "icon": "./assets/layers/vending_machine/utensils.svg"
-        },
-        {
-          "if": "vending=cigarettes",
-          "then": {
-            "en": "Cigarettes are sold",
-            "nl": "Sigaretten worden verkocht",
-            "de": "Zigaretten werden verkauft"
-          },
-          "icon": "./assets/layers/vending_machine/smoking.svg"
-        },
-        {
-          "if": "vending=condoms",
-          "then": {
-            "en": "Condoms are sold",
-            "nl": "Condooms worden verkocht",
-            "de": "Kondome werden verkauft"
+          "icon": {
+            "render": "./assets/layers/vending_machine/vending_machine.svg",
+            "mappings": [
+              {
+                "if": "vending=drinks",
+                "then": "./assets/layers/id_presets/temaki-bottles.svg"
+              },
+              {
+                "if": "vending=sweets",
+                "then": "./assets/layers/id_presets/maki-confectionery.svg"
+              },
+              {
+                "if": "vending=food",
+                "then": "./assets/layers/vending_machine/utensils.svg"
+              },
+              {
+                "if": "vending=cigarettes",
+                "then": "./assets/layers/vending_machine/smoking.svg"
+              },
+              {
+                "if": "vending=coffee",
+                "then": "./assets/layers/vending_machine/mug-saucer.svg"
+              },
+              {
+                "if": "vending=water",
+                "then": "./assets/layers/id_presets/temaki-water_bottle.svg"
+              },
+              {
+                "if": "vending=newspapers",
+                "then": "./assets/layers/id_presets/fas-newspaper.svg"
+              },
+              {
+                "if": "vending=milk",
+                "then": "./assets/layers/vending_machine/cow.svg"
+              },
+              {
+                "if": "vending=bread",
+                "then": "./assets/layers/id_presets/maki-bakery.svg"
+              },
+              {
+                "if": "vending=eggs",
+                "then": "./assets/layers/vending_machine/egg.svg"
+              },
+              {
+                "if": "vending=cheese",
+                "then": "./assets/layers/id_presets/fas-cheese.svg"
+              },
+              {
+                "if": "vending=honey",
+                "then": "./assets/layers/vending_machine/honey.svg"
+              },
+              {
+                "if": "vending=potatoes",
+                "then": "./assets/layers/vending_machine/potato.svg"
+              },
+              {
+                "if": "vending=meat",
+                "then": "./assets/layers/id_presets/temaki-meat.svg"
+              },
+              {
+                "if": "vending=fruit",
+                "then": "./assets/layers/vending_machine/fruits.svg"
+              },
+              {
+                "if": "vending=strawberries",
+                "then": "./assets/layers/vending_machine/strawberry.svg"
+              },
+              {
+                "if": "vending=flowers",
+                "then": "./assets/layers/id_presets/maki-florist.svg"
+              },
+              {
+                "if": "vending=condoms",
+                "then": "./assets/layers/vending_machine/condom.svg"
+              }
+            ]
           }
-        },
-        {
-          "if": "vending=coffee",
-          "then": {
-            "en": "Coffee is sold",
-            "nl": "Koffie wordt verkocht",
-            "de": "Kaffee wird verkauft"
-          },
-          "icon": "./assets/layers/vending_machine/mug-saucer.svg"
-        },
-        {
-          "if": "vending=water",
-          "then": {
-            "en": "Drinking water is sold",
-            "nl": "Drinkwater wordt verkocht",
-            "de": "Trinkwasser wird verkauft"
-          },
-          "icon": "./assets/layers/id_presets/temaki-water_bottle.svg"
-        },
-        {
-          "if": "vending=newspapers",
-          "then": {
-            "en": "Newspapers are sold",
-            "nl": "Kranten worden verkocht",
-            "de": "Zeitungen werden verkauft"
-          },
-          "icon": "./assets/layers/id_presets/fas-newspaper.svg"
-        },
-        {
-          "if": "vending=bicycle_tube",
-          "then": {
-            "en": "Bicycle inner tubes are sold",
-            "nl": "Binnenbanden voor fietsen worden verkocht",
-            "de": "Fahrradschläuche werden verkauft"
-          }
-        },
-        {
-          "if": "vending=milk",
-          "then": {
-            "en": "Milk is sold",
-            "nl": "Melk wordt verkocht",
-            "de": "Milch wird verkauft"
-          },
-          "icon": "./assets/layers/vending_machine/cow.svg"
-        },
-        {
-          "if": "vending=bread",
-          "then": {
-            "en": "Bread is sold",
-            "nl": "Brood wordt verkocht",
-            "de": "Brot wird verkauft"
-          },
-          "icon": "./assets/layers/id_presets/maki-bakery.svg"
-        },
-        {
-          "if": "vending=eggs",
-          "then": {
-            "en": "Eggs are sold",
-            "nl": "Eieren worden verkocht",
-            "de": "Eier werden verkauft"
-          },
-          "icon": "./assets/layers/vending_machine/egg.svg"
-        },
-        {
-          "if": "vending=cheese",
-          "then": {
-            "en": "Cheese is sold",
-            "nl": "Kaas wordt verkocht",
-            "de": "Käse wird verkauft"
-          },
-          "icon": "./assets/layers/id_presets/fas-cheese.svg"
-        },
-        {
-          "if": "vending=honey",
-          "then": {
-            "en": "Honey is sold",
-            "nl": "Honing wordt verkocht",
-            "de": "Honig wird verkauft"
-          },
-          "icon": "./assets/layers/vending_machine/honey.svg"
-        },
-        {
-          "if": "vending=potatoes",
-          "then": {
-            "en": "Potatoes are sold",
-            "nl": "Aardappelen worden verkocht",
-            "de": "Kartoffeln werden verkauft"
-          },
-          "icon": "./assets/layers/vending_machine/potato.svg"
-        },
-        {
-          "if": "vending=flowers",
-          "then": {
-            "en": "Flowers are sold",
-            "nl": "Bloemen worden verkocht",
-            "de": "Blumen werden verkauft"
-          },
-          "icon": "./assets/layers/id_presets/maki-florist.svg"
         }
       ],
-      "multiAnswer": true
-    },
-    "opening_hours_24_7",
-    "payment-options-split",
-    "denominations-coins",
-    "denominations-notes",
-    {
-      "id": "operator",
-      "question": {
-        "en": "Who operates this vending machine?",
-        "nl": "Wie beheert deze verkoopautomaat?",
-        "de": "Wer betreibt diesen Verkaufsautomaten?"
-      },
-      "freeform": {
-        "key": "operator",
-        "placeholder": {
-          "en": "Name of operator",
-          "nl": "Naam van beheerder",
-          "de": "Name des Betreibers"
-        }
-      },
-      "render": {
-        "en": "This vending machine is operated by {operator}",
-        "nl": "Deze verkoopautomaat wordt beheerd door {operator}",
-        "de": "Dieser Verkaufsautomat wird betrieben von {operator}"
-      }
-    },
-    {
-      "id": "indoor",
-      "question": {
-        "en": "Is this vending machine indoors?",
-        "nl": "Is deze verkoopautomaat binnen?",
-        "de": "Ist dieser Automat in einem Gebäude untergebracht?"
-      },
-      "mappings": [
-        {
-          "if": "indoor=",
-          "then": {
-            "en": "This vending machine is outdoors",
-            "nl": "Deze verkoopautomaat is buiten",
-            "de": "Dieser Automat befindet sich im Freien"
-          },
-          "hideInAnswer": true
-        },
-        {
-          "if": "indoor=yes",
-          "then": {
-            "en": "This vending machine is indoors",
-            "nl": "Deze verkoopautomaat is binnen",
-            "de": "Dieser Verkaufsautomat befindet sich im Innenbereich"
-          }
-        },
-        {
-          "if": "indoor=no",
-          "then": {
-            "en": "This vending machine is outdoors",
-            "nl": "Deze verkoopautomaat is buiten",
-            "de": "Dieser Automat befindet sich im Freien"
-          }
-        }
-      ]
-    },
-    "level"
-  ],
-  "calculatedTags": [
-    "_vending_count=feat.properties.vending.split(';').length"
-  ],
-  "presets": [
-    {
-      "title": {
-        "en": "a vending machine",
-        "nl": "een verkoopautomaat",
-        "de": "ein Verkaufsautomat"
-      },
-      "tags": [
-        "amenity=vending_machine"
-      ]
-    }
-  ],
-  "mapRendering": [
-    {
-      "icon": {
-        "render": "./assets/layers/vending_machine/vending_machine.svg",
-        "mappings": [
-          {
-            "if": "vending=drinks",
-            "then": "circle:white;./assets/layers/id_presets/temaki-bottles.svg"
-          },
-          {
-            "if": "vending=sweets",
-            "then": "circle:white;./assets/layers/id_presets/maki-confectionery.svg"
-          },
-          {
-            "if": "vending=food",
-            "then": "circle:white;./assets/layers/vending_machine/utensils.svg"
-          },
-          {
-            "if": "vending=cigarettes",
-            "then": "circle:white;./assets/layers/vending_machine/smoking.svg"
-          },
-          {
-            "if": "vending=coffee",
-            "then": "circle:white;./assets/layers/vending_machine/mug-saucer.svg"
-          },
-          {
-            "if": "vending=water",
-            "then": "circle:white;./assets/layers/id_presets/temaki-water_bottle.svg"
-          },
-          {
-            "if": "vending=newspapers",
-            "then": "circle:white;./assets/layers/id_presets/fas-newspaper.svg"
-          },
-          {
-            "if": "vending=milk",
-            "then": "circle:white;./assets/layers/vending_machine/cow.svg"
-          },
-          {
-            "if": "vending=bread",
-            "then": "circle:white;./assets/layers/id_presets/maki-bakery.svg"
-          },
-          {
-            "if": "vending=eggs",
-            "then": "circle:white;./assets/layers/vending_machine/egg.svg"
-          },
-          {
-            "if": "vending=cheese",
-            "then": "circle:white;./assets/layers/id_presets/fas-cheese.svg"
-          },
-          {
-            "if": "vending=honey",
-            "then": "circle:white;./assets/layers/vending_machine/honey.svg"
-          },
-          {
-            "if": "vending=potatoes",
-            "then": "circle:white;./assets/layers/vending_machine/potato.svg"
-          },
-          {
-            "if": "vending=flowers",
-            "then": "circle:white;./assets/layers/id_presets/maki-florist.svg"
-          }
-        ]
-      },
       "location": [
         "point",
         "centroid"
@@ -479,13 +278,520 @@
           "if": {
             "and": [
               "_vending_count>1",
+              "vending~.*meat.*"
+            ]
+          },
+          "then": "circle:white;./assets/layers/id_presets/temaki-meat.svg"
+        },
+        {
+          "if": {
+            "and": [
+              "_vending_count>1",
+              "vending~.*fruit.*"
+            ]
+          },
+          "then": "circle:white;./assets/layers/vending_machine/fruits.svg"
+        },
+        {
+          "if": {
+            "and": [
+              "_vending_count>1",
+              "vending~.*strawberries.*"
+            ]
+          },
+          "then": "circle:white;./assets/layers/vending_machine/strawberry.svg"
+        },
+        {
+          "if": {
+            "and": [
+              "_vending_count>1",
               "vending~.*flowers.*"
             ]
           },
           "then": "circle:white;./assets/layers/id_presets/maki-florist.svg"
+        },
+        {
+          "if": {
+            "and": [
+              "_vending_count>1",
+              "vending~.*parking_tickets.*"
+            ]
+          },
+          "then": "circle:white;./assets/layers/parking_ticket_machine/parking_tickets.svg"
+        },
+        {
+          "if": {
+            "and": [
+              "_vending_count>1",
+              "vending~.*elongated_coin.*"
+            ]
+          },
+          "then": "circle:white;./assets/themes/elongated_coin/penny.svg"
+        },
+        {
+          "if": {
+            "and": [
+              "_vending_count>1",
+              "vending~.*public_transport_tickets.*"
+            ]
+          },
+          "then": "circle:white;./assets/themes/stations/public_transport_tickets.svg"
         }
       ]
     }
+  ],
+  "lineRendering": [],
+  "presets": [
+    {
+      "title": {
+        "en": "a vending machine",
+        "nl": "een verkoopautomaat",
+        "de": "ein Verkaufsautomat",
+        "fr": "un distributeur",
+        "ca": "una màquina expenedora",
+        "cs": "prodejní automat"
+      },
+      "tags": [
+        "amenity=vending_machine"
+      ]
+    }
+  ],
+  "tagRenderings": [
+    "images",
+    {
+      "id": "vending",
+      "question": {
+        "en": "What does this vending machine sell?",
+        "nl": "Wat verkoopt deze verkoopautomaat?",
+        "de": "Was wird in diesem Automaten verkauft?",
+        "fr": "Que vent ce distributeur ?",
+        "ca": "Que ven aquesta màquina expenedora?",
+        "cs": "Co tento automat prodává?"
+      },
+      "freeform": {
+        "key": "vending",
+        "addExtraTags": [
+          "fixme=Freeform input used, value may need to be checked"
+        ]
+      },
+      "render": {
+        "en": "This vending machine sells {vending}",
+        "nl": "Deze verkoopautomaat verkoopt {vending}",
+        "de": "Dieser Automat verkauft {vending}",
+        "fr": "Ce distributeur vent {vending}",
+        "ca": "Aquesta màquina expenedora ven {vending}",
+        "cs": "Tento automat prodává {vending}"
+      },
+      "mappings": [
+        {
+          "if": "vending=drinks",
+          "then": {
+            "en": "Drinks are sold",
+            "nl": "Dranken worden verkocht",
+            "de": "Getränke werden verkauft",
+            "fr": "Vent des boissons",
+            "ca": "Es venen begudes",
+            "cs": "Prodává nápoje"
+          },
+          "icon": "./assets/layers/id_presets/temaki-bottles.svg"
+        },
+        {
+          "if": "vending=sweets",
+          "then": {
+            "en": "Sweets are sold",
+            "nl": "Snoep wordt verkocht",
+            "de": "Süßigkeiten werden verkauft",
+            "fr": "Vent des confiseries",
+            "ca": "Es venen llaminadures",
+            "cs": "Prodává sladkosti"
+          },
+          "icon": "./assets/layers/id_presets/maki-confectionery.svg"
+        },
+        {
+          "if": "vending=food",
+          "then": {
+            "en": "Food is sold",
+            "nl": "Eten wordt verkocht",
+            "de": "Lebensmittel werden verkauft",
+            "fr": "Vent de la nourriture",
+            "ca": "Es ven menjar",
+            "cs": "Prodává jídlo"
+          },
+          "icon": "./assets/layers/vending_machine/utensils.svg"
+        },
+        {
+          "if": "vending=cigarettes",
+          "then": {
+            "en": "Cigarettes are sold",
+            "nl": "Sigaretten worden verkocht",
+            "de": "Zigaretten werden verkauft",
+            "fr": "Vent des cigarettes",
+            "ca": "Es ven tabaco",
+            "cs": "Prodává cigarety"
+          },
+          "icon": "./assets/layers/vending_machine/smoking.svg"
+        },
+        {
+          "if": "vending=condoms",
+          "then": {
+            "en": "Condoms are sold",
+            "nl": "Condooms worden verkocht",
+            "de": "Kondome werden verkauft",
+            "fr": "Vent des préservatifs",
+            "ca": "Es venen preservatius",
+            "cs": "Prodává kondomy"
+          },
+          "icon": "./assets/layers/vending_machine/condom.svg"
+        },
+        {
+          "if": "vending=coffee",
+          "then": {
+            "en": "Coffee is sold",
+            "nl": "Koffie wordt verkocht",
+            "de": "Kaffee wird verkauft",
+            "fr": "Vent du café",
+            "ca": "Es ven cafè",
+            "cs": "Prodává kafe"
+          },
+          "icon": "./assets/layers/vending_machine/mug-saucer.svg"
+        },
+        {
+          "if": "vending=water",
+          "then": {
+            "en": "Drinking water is sold",
+            "nl": "Drinkwater wordt verkocht",
+            "de": "Trinkwasser wird verkauft",
+            "fr": "Vent de l'eau",
+            "ca": "Es ven aigua",
+            "cs": "Prodává pitnou vodu"
+          },
+          "icon": "./assets/layers/id_presets/temaki-water_bottle.svg"
+        },
+        {
+          "if": "vending=newspapers",
+          "then": {
+            "en": "Newspapers are sold",
+            "nl": "Kranten worden verkocht",
+            "de": "Zeitungen werden verkauft",
+            "fr": "Vent des journaux",
+            "ca": "Es venen diaris",
+            "cs": "Prodává noviny"
+          },
+          "icon": "./assets/layers/id_presets/fas-newspaper.svg"
+        },
+        {
+          "if": "vending=bicycle_tube",
+          "then": {
+            "en": "Bicycle inner tubes are sold",
+            "nl": "Binnenbanden voor fietsen worden verkocht",
+            "de": "Fahrradschläuche werden verkauft",
+            "fr": "Vent des chambres à air pour vélo",
+            "ca": "Es venen càmeres interiors de bicicletes",
+            "cs": "Prodává duše na kola"
+          }
+        },
+        {
+          "if": "vending=milk",
+          "then": {
+            "en": "Milk is sold",
+            "nl": "Melk wordt verkocht",
+            "de": "Milch wird verkauft",
+            "fr": "Vent du lait",
+            "ca": "Es ven llet",
+            "cs": "Prodává mléko"
+          },
+          "icon": "./assets/layers/vending_machine/cow.svg"
+        },
+        {
+          "if": "vending=bread",
+          "then": {
+            "en": "Bread is sold",
+            "nl": "Brood wordt verkocht",
+            "de": "Brot wird verkauft",
+            "fr": "Vent du pain",
+            "ca": "Es ven pa",
+            "cs": "Prodává chléb"
+          },
+          "icon": "./assets/layers/id_presets/maki-bakery.svg"
+        },
+        {
+          "if": "vending=eggs",
+          "then": {
+            "en": "Eggs are sold",
+            "nl": "Eieren worden verkocht",
+            "de": "Eier werden verkauft",
+            "fr": "Vent des œufs",
+            "ca": "Es venen ous",
+            "cs": "Prodává vejce"
+          },
+          "icon": "./assets/layers/vending_machine/egg.svg"
+        },
+        {
+          "if": "vending=cheese",
+          "then": {
+            "en": "Cheese is sold",
+            "nl": "Kaas wordt verkocht",
+            "de": "Käse wird verkauft",
+            "fr": "Vent du fromage",
+            "ca": "Es ven formatge",
+            "cs": "Prodává sýr"
+          },
+          "icon": "./assets/layers/id_presets/fas-cheese.svg"
+        },
+        {
+          "if": "vending=honey",
+          "then": {
+            "en": "Honey is sold",
+            "nl": "Honing wordt verkocht",
+            "de": "Honig wird verkauft",
+            "fr": "Vent du miel",
+            "ca": "Es ven mel",
+            "cs": "Prodává med"
+          },
+          "icon": "./assets/layers/vending_machine/honey.svg"
+        },
+        {
+          "if": "vending=potatoes",
+          "then": {
+            "en": "Potatoes are sold",
+            "nl": "Aardappelen worden verkocht",
+            "de": "Kartoffeln werden verkauft",
+            "fr": "Vent des pommes de terre",
+            "ca": "Es venen papes",
+            "cs": "Prodává brambory"
+          },
+          "icon": "./assets/layers/vending_machine/potato.svg"
+        },
+        {
+          "if": "vending=meat",
+          "then": {
+            "en": "Meat is sold",
+            "nl": "Vlees wordt verkocht",
+            "ca": "Es venen productes carnis",
+            "de": "Fleisch wird verkauft",
+            "cs": "Prodává maso"
+          },
+          "icon": "./assets/layers/id_presets/temaki-meat.svg"
+        },
+        {
+          "if": "vending=fruit",
+          "then": {
+            "en": "Fruit is sold",
+            "nl": "Fruit wordt verkocht",
+            "de": "Obst wird verkauft",
+            "cs": "Prodává ovoce",
+            "ca": "Es ven fruita"
+          },
+          "icon": "./assets/layers/vending_machine/fruits.svg"
+        },
+        {
+          "if": "vending=strawberries",
+          "then": {
+            "en": "Strawberries are sold",
+            "nl": "Aardbeien worden verkocht",
+            "de": "Erdbeeren werden verkauft",
+            "cs": "Prodává jahody",
+            "ca": "Es venen maduixes"
+          },
+          "icon": "./assets/layers/vending_machine/strawberry.svg"
+        },
+        {
+          "if": "vending=flowers",
+          "then": {
+            "en": "Flowers are sold",
+            "nl": "Bloemen worden verkocht",
+            "de": "Blumen werden verkauft",
+            "fr": "Vent des fleurs",
+            "ca": "Es venen flors",
+            "cs": "Prodává květiny"
+          },
+          "icon": "./assets/layers/id_presets/maki-florist.svg"
+        },
+        {
+          "if": "vending=parking_tickets",
+          "then": {
+            "en": "Parking tickets are sold",
+            "nl": "Parkeerkaarten worden verkocht",
+            "de": "Parkscheine werden verkauft",
+            "ca": "Es venen tiquets d'aparcament",
+            "cs": "Prodává parkovací lístky"
+          },
+          "icon": "./assets/layers/parking_ticket_machine/parking_tickets.svg"
+        },
+        {
+          "if": "vending=elongated_coin",
+          "then": {
+            "en": "Pressed pennies are sold",
+            "ca": "Es venen cèntims premsats",
+            "de": "Souvenirmünzen werden verkauft",
+            "cs": "Prodává pamětní mince/lisované"
+          },
+          "icon": "./assets/themes/elongated_coin/penny.svg"
+        },
+        {
+          "if": "vending=public_transport_tickets",
+          "then": {
+            "en": "Public transport tickets are sold",
+            "nl": "Openbaar vervoerkaartjes worden verkocht",
+            "de": "Fahrscheine werden verkauft",
+            "ca": "Es venen bitllets de transport públic",
+            "cs": "Prodává lístky na MHD"
+          },
+          "icon": "./assets/themes/stations/public_transport_tickets.svg"
+        },
+        {
+          "if": "vending=bicycle_light",
+          "then": {
+            "en": "Bicycle lights are sold",
+            "nl": "Fietslampjes worden verkocht",
+            "de": "Fahrradlampen werden verkauft",
+            "cs": "Prodává světla na kolo",
+            "ca": "Es venen llums per a bicicletes"
+          }
+        },
+        {
+          "if": "vending=gloves",
+          "then": {
+            "en": "Gloves are sold",
+            "nl": "Handschoenen worden verkocht",
+            "de": "Fahrradhandschuhe werden verkauft",
+            "cs": "Prodává rukavice",
+            "ca": "Es venen guants"
+          }
+        },
+        {
+          "if": "vending=bicycle_repair_kit",
+          "then": {
+            "en": "Bicycle repair kits are sold",
+            "nl": "Fietsreparatiesets worden verkocht",
+            "de": "Fahrrad-Reparaturset werden verkauft",
+            "cs": "Prodává sady na opravu jízdních kol",
+            "ca": "Es venen kits de reparació de bicicletes"
+          }
+        },
+        {
+          "if": "vending=bicycle_pump",
+          "then": {
+            "en": "Bicycle pumps are sold",
+            "nl": "Fietspompen worden verkocht",
+            "de": "Fahrradpumpen werden verkauft",
+            "cs": "Prodává pumpy na kolo",
+            "ca": "Es venen bombes de bicicletes"
+          }
+        },
+        {
+          "if": "vending=bicycle_lock",
+          "then": {
+            "en": "Bicycle locks are sold",
+            "nl": "Fietssloten worden verkocht",
+            "de": "Fahrradschlösser werden verkauft",
+            "cs": "Prodává zámky na kolo",
+            "ca": "Es venen cadenats per a bicicletes"
+          }
+        }
+      ],
+      "multiAnswer": true
+    },
+    "opening_hours_24_7",
+    "payment-options-split",
+    "denominations-coins",
+    "denominations-notes",
+    {
+      "id": "operator",
+      "question": {
+        "en": "Who operates this vending machine?",
+        "nl": "Wie beheert deze verkoopautomaat?",
+        "de": "Wer betreibt diesen Verkaufsautomaten?",
+        "fr": "Qui exploite ce distributeur ?",
+        "ca": "Qui opera aquesta màquina expenedora?",
+        "cs": "Kdo provozuje tento automat?"
+      },
+      "freeform": {
+        "key": "operator",
+        "placeholder": {
+          "en": "Name of operator",
+          "nl": "Naam van beheerder",
+          "de": "Name des Betreibers",
+          "fr": "Nom de l'exploitant",
+          "ca": "Nom de l'operadora",
+          "cs": "Jméno provozovatele"
+        }
+      },
+      "render": {
+        "en": "This vending machine is operated by {operator}",
+        "nl": "Deze verkoopautomaat wordt beheerd door {operator}",
+        "de": "Dieser Verkaufsautomat wird betrieben von {operator}",
+        "fr": "Ce distributeur est exploité par {operator}",
+        "ca": "{operator} gestiona aquesta màquina expenedora",
+        "cs": "Tento prodejní automat provozuje {operator}"
+      }
+    },
+    {
+      "id": "indoor",
+      "question": {
+        "en": "Is this vending machine indoors?",
+        "nl": "Is deze verkoopautomaat binnen?",
+        "de": "Ist der Automat in einem Gebäude untergebracht?",
+        "fr": "Est-ce que ce distributeur est en intérieur ?",
+        "ca": "Aquesta màquina expenedora està a l'exterior?",
+        "cs": "Je tento automat uvnitř?"
+      },
+      "mappings": [
+        {
+          "if": "indoor=",
+          "then": {
+            "en": "This vending machine is outdoors",
+            "nl": "Deze verkoopautomaat is buiten",
+            "de": "Der Automat befindet sich im Freien",
+            "fr": "Ce distributeur est à l'extérieur",
+            "ca": "Aquesta màquina expenedora està a l'exterior",
+            "cs": "Tento prodejní automat je venku"
+          },
+          "hideInAnswer": true
+        },
+        {
+          "if": "indoor=yes",
+          "then": {
+            "en": "This vending machine is indoors",
+            "nl": "Deze verkoopautomaat is binnen",
+            "de": "Der Automat befindet sich im Innenbereich",
+            "fr": "Ce distributeur est à l'intérieur",
+            "ca": "Aquesta màquina expenedora està a l'interior",
+            "cs": "Tento prodejní automat je uvnitř"
+          }
+        },
+        {
+          "if": "indoor=no",
+          "then": {
+            "en": "This vending machine is outdoors",
+            "nl": "Deze verkoopautomaat is buiten",
+            "de": "Dieser Automat befindet sich im Freien",
+            "fr": "Ce distributeur est à l'extérieur",
+            "ca": "Aquesta màquina expenedora està a l'exterior",
+            "cs": "Tento prodejní automat je venku"
+          }
+        }
+      ]
+    },
+    "level",
+    {
+      "builtin": "phone",
+      "override": {
+        "question": {
+          "en": "What is the phone number of the operator of this vending machine?",
+          "ca": "Quin és el número de telèfon de l'operador d'aquesta màquina expenedora?",
+          "de": "Wie lautet die Telefonnummer des Automatenbetreibers?",
+          "cs": "Jaké je telefonní číslo na provozovatele tohoto automatu?"
+        },
+        "questionHint": {
+          "en": "This is the number you can call in case of problems with the vending machine",
+          "ca": "Aquest és el número al qual podeu trucar en cas de problemes amb la màquina expenedora",
+          "de": "Die ist die Telefonnummer, die bei Problemen mit dem Automaten kontaktiert werden kann",
+          "cs": "Toto je číslo, na které můžete zavolat v případě problémů s automatem"
+        }
+      }
+    },
+    "website"
   ],
   "filter": [
     "open_now",
@@ -496,14 +802,20 @@
           "question": {
             "en": "All vending machines",
             "nl": "Alle verkoopautomaten",
-            "de": "Alle Verkaufsautomaten"
+            "de": "Alle Verkaufsautomaten",
+            "fr": "Tous les distributeurs",
+            "ca": "Totes les màquines expenedores",
+            "cs": "Všechny prodejní automaty"
           }
         },
         {
           "question": {
             "en": "Sale of drinks",
             "nl": "Verkoop van dranken",
-            "de": "Verkauf von Getränken"
+            "de": "Verkauf von Getränken",
+            "fr": "Vente de boissons",
+            "ca": "Venda de begudes",
+            "cs": "Prodej nápojů"
           },
           "osmTags": "vending~i~.*drinks.*"
         },
@@ -511,7 +823,10 @@
           "question": {
             "en": "Sale of sweets",
             "nl": "Verkoop van snoep",
-            "de": "Verkauf von Süßigkeiten"
+            "de": "Verkauf von Süßigkeiten",
+            "fr": "Ventre de confiseries",
+            "ca": "Venda de llaminadures",
+            "cs": "Prodej sladkostí"
           },
           "osmTags": "vending~i~.*sweets.*"
         },
@@ -519,7 +834,10 @@
           "question": {
             "en": "Sale of food",
             "nl": "Verkoop van eten",
-            "de": "Verkauf von Lebensmitteln"
+            "de": "Verkauf von Lebensmitteln",
+            "fr": "Ventre de nourriture",
+            "ca": "Venda de menjar",
+            "cs": "Prodej potravin"
           },
           "osmTags": "vending~i~.*food.*"
         },
@@ -527,7 +845,10 @@
           "question": {
             "en": "Sale of cigarettes",
             "nl": "Verkoop van sigaretten",
-            "de": "Verkauf von Zigaretten"
+            "de": "Verkauf von Zigaretten",
+            "fr": "Vente de cigarettes",
+            "ca": "Venda de tabaco",
+            "cs": "Prodej cigaret"
           },
           "osmTags": "vending~i~.*cigarettes.*"
         },
@@ -535,7 +856,10 @@
           "question": {
             "en": "Sale of condoms",
             "nl": "Verkoop van condooms",
-            "de": "Verkauf von Kondomen"
+            "de": "Verkauf von Kondomen",
+            "fr": "Vente de préservatifs",
+            "ca": "Venda de preservatius",
+            "cs": "Prodej kondomů"
           },
           "osmTags": "vending~i~.*condoms.*"
         },
@@ -543,7 +867,10 @@
           "question": {
             "en": "Sale of coffee",
             "nl": "Verkoop van koffie",
-            "de": "Verkauf von Kaffee"
+            "de": "Verkauf von Kaffee",
+            "fr": "Vente de café",
+            "ca": "Venda de cafè",
+            "cs": "Prodej kávy"
           },
           "osmTags": "vending~i~.*coffee.*"
         },
@@ -551,7 +878,10 @@
           "question": {
             "en": "Sale of water",
             "nl": "Verkoop van water",
-            "de": "Verkauf von Trinkwasser"
+            "de": "Verkauf von Trinkwasser",
+            "fr": "Vente d'eau",
+            "ca": "Venda d'aigua",
+            "cs": "Prodej vody"
           },
           "osmTags": "vending~i~.*water.*"
         },
@@ -559,7 +889,10 @@
           "question": {
             "en": "Sale of newspapers",
             "nl": "Verkoop van kranten",
-            "de": "Verkauf von Zeitungen"
+            "de": "Verkauf von Zeitungen",
+            "fr": "Vente de journaux",
+            "ca": "Venda de diaris",
+            "cs": "Prodej novin"
           },
           "osmTags": "vending~i~.*newspapers.*"
         },
@@ -567,7 +900,10 @@
           "question": {
             "en": "Sale of bicycle inner tubes",
             "nl": "Verkoop van fietsbinnenbanden",
-            "de": "Verkauf von Fahrradschläuchen"
+            "de": "Verkauf von Fahrradschläuchen",
+            "fr": "Vente de chambres à air pour vélo",
+            "ca": "Venda de càmeres interiors de bicicletes",
+            "cs": "Prodej duší na jízdní kola"
           },
           "osmTags": "vending~i~.*bicycle_tube.*"
         },
@@ -575,7 +911,10 @@
           "question": {
             "en": "Sale of milk",
             "nl": "Verkoop van melk",
-            "de": "Verkauf von Milch"
+            "de": "Verkauf von Milch",
+            "fr": "Vente de lait",
+            "ca": "Venda de llet",
+            "cs": "Prodej mléka"
           },
           "osmTags": "vending~i~.*milk.*"
         },
@@ -583,7 +922,10 @@
           "question": {
             "en": "Sale of bread",
             "nl": "Verkoop van brood",
-            "de": "Verkauf von Brot"
+            "de": "Verkauf von Brot",
+            "fr": "Vente de pain",
+            "ca": "Venda de pa",
+            "cs": "Prodej chleba"
           },
           "osmTags": "vending~i~.*bread.*"
         },
@@ -591,7 +933,10 @@
           "question": {
             "en": "Sale of eggs",
             "nl": "Verkoop van eieren",
-            "de": "Verkauf von Eiern"
+            "de": "Verkauf von Eiern",
+            "fr": "Vente d'œufs",
+            "ca": "Venda d'ous",
+            "cs": "Prodej vajec"
           },
           "osmTags": "vending~i~.*eggs.*"
         },
@@ -599,7 +944,10 @@
           "question": {
             "en": "Sale of cheese",
             "nl": "Verkoop van kaas",
-            "de": "Verkauf von Käse"
+            "de": "Verkauf von Käse",
+            "fr": "Vente de fromage",
+            "ca": "Venda de formatge",
+            "cs": "Prodej sýrů"
           },
           "osmTags": "vending~i~.*cheese.*"
         },
@@ -607,7 +955,10 @@
           "question": {
             "en": "Sale of honey",
             "nl": "Verkoop van honing",
-            "de": "Verkauf von Honig"
+            "de": "Verkauf von Honig",
+            "fr": "Vente de miel",
+            "ca": "Venda de mel",
+            "cs": "Prodej medu"
           },
           "osmTags": "vending~i~.*honey.*"
         },
@@ -615,24 +966,137 @@
           "question": {
             "en": "Sale of potatoes",
             "nl": "Verkoop van aardappelen",
-            "de": "Verkauf von Kartoffeln"
+            "de": "Verkauf von Kartoffeln",
+            "fr": "Vente de pommes de terre",
+            "ca": "Venda de patates",
+            "cs": "Prodej brambor"
           },
           "osmTags": "vending~i~.*potatoes.*"
         },
         {
           "question": {
+            "en": "Sale of meat",
+            "nl": "Verkoop van vlees",
+            "de": "Verkauf von Fleisch",
+            "ca": "Venda de productes carnis",
+            "cs": "Prodej masa"
+          },
+          "osmTags": "vending~i~.*meat.*"
+        },
+        {
+          "question": {
+            "en": "Sale of fruit",
+            "nl": "Verkoop van fruit",
+            "ca": "Venda de fruites",
+            "de": "Verkauf von Obst",
+            "cs": "Prodej ovoce"
+          },
+          "osmTags": "vending~i~.*fruit.*"
+        },
+        {
+          "question": {
+            "en": "Sale of strawberries",
+            "nl": "Verkoop van aardbeien",
+            "ca": "Venda de maduixes",
+            "de": "Verkauf von Erdbeeren",
+            "cs": "Prodej jahod"
+          },
+          "osmTags": "vending~i~.*strawberries.*"
+        },
+        {
+          "question": {
             "en": "Sale of flowers",
             "nl": "Verkoop van bloemen",
-            "de": "Verkauf von Blumen"
+            "de": "Verkauf von Blumen",
+            "fr": "Vente de fleurs",
+            "ca": "Venda de flors",
+            "cs": "Prodej květin"
           },
           "osmTags": "vending~i~.*flowers.*"
+        },
+        {
+          "osmTags": "vending~i~.*parking_tickets.*",
+          "question": {
+            "en": "Sale of parking tickets",
+            "ca": "Venda de tiquets d'aparcament",
+            "de": "Verkauf von Parkscheinen",
+            "cs": "Prodej parkovacích lístků"
+          }
+        },
+        {
+          "osmTags": "vending=elongated_coin",
+          "question": {
+            "en": "Sale of pressed pennies",
+            "ca": "Venda de monedes premsades",
+            "de": "Verkauf von Souvenirmünzen",
+            "cs": "Prodej pamětních mincí/lisované mince"
+          }
+        },
+        {
+          "osmTags": "vending~i~.*public_transport_tickets.*",
+          "question": {
+            "en": "Sale of public transport tickets",
+            "ca": "Venda de bitllets de transport públic",
+            "de": "Verkauf von Fahrscheinen",
+            "cs": "Prodej jízdenek MHD"
+          }
+        },
+        {
+          "osmTags": "vending=bicycle_light",
+          "question": {
+            "en": "Sale of bicycle lights",
+            "nl": "Verkoop van fietslampjes",
+            "de": "Verkauf von Fahrradlampen",
+            "cs": "Prodej světel na kolo",
+            "ca": "Venda de llums de bicicletes"
+          }
+        },
+        {
+          "osmTags": "vending=gloves",
+          "question": {
+            "en": "Sale of gloves",
+            "nl": "Verkoop van handschoenen",
+            "de": "Verkauf von Fahrradhandschuhen",
+            "cs": "Prodej rukavic",
+            "ca": "Venda de guants"
+          }
+        },
+        {
+          "osmTags": "vending=bicycle_repair_kit",
+          "question": {
+            "en": "Sale of bicycle repair kits",
+            "nl": "Verkoop van fietsreparatiesets",
+            "de": "Verkauf von Fahrrad-Reparatursets",
+            "cs": "Prodej sad na opravu jízdních kol",
+            "ca": "Venda de kits de reparació de bicicletes"
+          }
+        },
+        {
+          "osmTags": "vending=bicycle_pump",
+          "question": {
+            "en": "Sale of bicycle pumps",
+            "nl": "Verkoop van fietspompen",
+            "de": "Verkauf von Fahrradpumpen",
+            "cs": "Prodej pump na kolo",
+            "ca": "Venda de bombes de bicicletes"
+          }
+        },
+        {
+          "osmTags": "vending=bicycle_lock",
+          "question": {
+            "en": "Sale of bicycle locks",
+            "nl": "Verkoop van fietssloten",
+            "de": "Verkauf von Fahrradschlössern",
+            "cs": "Prodej zámků na kola",
+            "ca": "Venda de cadenat per a bicicletes"
+          }
         }
       ]
     }
   ],
+  "deletion": true,
   "allowMove": {
     "enableImproveAccuracy": true,
     "enableRelocation": true
-  },
-  "deletion": true
+  }
 }

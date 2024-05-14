@@ -14,8 +14,6 @@
   "startLat": 0,
   "startLon": 0,
   "startZoom": 1,
-  "widenFactor": 0.05,
-  "clustering": false,
   "layers": [
     {
       "id": "mapcomplete-changes",
@@ -26,8 +24,7 @@
       "source": {
         "osmTags": "editor~*",
         "geoJson": "https://raw.githubusercontent.com/pietervdvn/MapComplete-data/main/mapcomplete-changes/tile_{z}_{x}_{y}.geojson",
-        "geoJsonZoomLevel": 8,
-        "maxCacheAge": 0
+        "geoJsonZoomLevel": 8
       },
       "title": {
         "render": {
@@ -65,7 +62,7 @@
             "key": "theme"
           },
           "render": {
-            "en": "Change with theme <a href='https://mapcomplete.osm.be/{theme}'>{theme}</a>"
+            "en": "Change with theme <a href='https://mapcomplete.org/{theme}'>{theme}</a>"
           }
         },
         {
@@ -117,15 +114,19 @@
           }
         }
       ],
-      "mapRendering": [
+      "pointRendering": [
         {
           "location": [
             "point",
             "centroid"
           ],
-          "icon": {
-            "render": "teardrop:#00cc00"
-          },
+          "marker": [
+            {
+              "icon": {
+                "render": "teardrop:#00cc00"
+              }
+            }
+          ],
           "iconSize": "30,30",
           "anchor": "center"
         }
@@ -143,6 +144,22 @@
               ],
               "question": {
                 "en": "Themename contains {search}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "theme-not-search",
+          "options": [
+            {
+              "osmTags": "theme!~i~.*{search}.*",
+              "fields": [
+                {
+                  "name": "search"
+                }
+              ],
+              "question": {
+                "en": "Themename does <b>not</b> contain {search}"
               }
             }
           ]
@@ -255,6 +272,28 @@
               }
             }
           ]
+        },
+        {
+          "id": "exclude_grb",
+          "options": [
+            {
+              "osmTags": "theme!=grb",
+              "question": {
+                "en": "Exclude GRB theme"
+              }
+            }
+          ]
+        },
+        {
+          "id": "exclude_etymology",
+          "options": [
+            {
+              "osmTags": "theme!=etymology",
+              "question": {
+                "en": "Exclude etymology theme"
+              }
+            }
+          ]
         }
       ]
     },
@@ -283,12 +322,16 @@
           "_embedded_cs:themes=feat.get('_embedded_cs').map(cs => cs.theme)",
           "_embedded_cs:users=feat.get('_embedded_cs').map(cs => cs['_last_edit:contributor'])"
         ],
-        "+mapRendering": [
+        "+pointRendering": [
           {
             "location": [
               "point"
             ],
-            "icon": "statistics:black",
+            "marker": [
+              {
+                "icon": "./assets/svg/statistics.svg"
+              }
+            ],
             "iconSize": "30,30",
             "anchor": "center"
           }

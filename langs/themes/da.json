@@ -296,18 +296,6 @@
                             },
                             "question": "Hvem kan få adgang her?"
                         }
-                    },
-                    "units+": {
-                        "0": {
-                            "applicableUnits": {
-                                "0": {
-                                    "human": " meter"
-                                },
-                                "1": {
-                                    "human": " fod"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -575,17 +563,6 @@
             }
         }
     },
-    "grb_fixme": {
-        "layers": {
-            "0": {
-                "tagRenderings": {
-                    "building type": {
-                        "question": "Hvad er det for en bygning?"
-                    }
-                }
-            }
-        }
-    },
     "hackerspaces": {
         "description": "På dette kort kan du se hackerspaces, tilføje et nyt hackerspace eller opdatere data direkte",
         "shortDescription": "Et kort over hackerspaces",
@@ -654,6 +631,33 @@
     "onwheels": {
         "description": "På dette kort vises steder, der er offentligt tilgængelige for kørestolsbrugere, og de kan nemt tilføjes",
         "layers": {
+            "19": {
+                "override": {
+                    "=title": {
+                        "render": "Statistikker"
+                    }
+                }
+            },
+            "20": {
+                "override": {
+                    "+tagRenderings": {
+                        "0": {
+                            "render": {
+                                "special": {
+                                    "text": "Importere"
+                                }
+                            }
+                        },
+                        "1": {
+                            "render": {
+                                "special": {
+                                    "message": "Tilføj alle de foreslåede tags"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "4": {
                 "override": {
                     "filter": {
@@ -686,33 +690,6 @@
                                 },
                                 "3": {
                                     "question": "Skyl kantsten (~0 cm)"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "19": {
-                "override": {
-                    "=title": {
-                        "render": "Statistikker"
-                    }
-                }
-            },
-            "20": {
-                "override": {
-                    "+tagRenderings": {
-                        "0": {
-                            "render": {
-                                "special": {
-                                    "text": "Importere"
-                                }
-                            }
-                        },
-                        "1": {
-                            "render": {
-                                "special": {
-                                    "message": "Tilføj alle de foreslåede tags"
                                 }
                             }
                         }
@@ -817,10 +794,10 @@
                             "1": {
                                 "mappings": {
                                     "0": {
-                                        "then": "Ja, der er et fortov på denne side af vejen"
+                                        "then": "Der er et fortov på denne side af vejen"
                                     },
                                     "1": {
-                                        "then": "Nej, der er ikke noget fortov at gå på"
+                                        "then": "Der er ikke noget fortov at gå på"
                                     },
                                     "2": {
                                         "then": "Der er et særskilt kortlagt fortov at gå på"

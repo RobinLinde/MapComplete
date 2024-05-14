@@ -8,12 +8,16 @@
   import InputHelper from "../../InputElement/InputHelper.svelte"
   import type { Feature } from "geojson"
   import { Unit } from "../../../Models/Unit"
+  import InputHelpers from "../../InputElement/InputHelpers"
+  import type { SpecialVisualizationState } from "../../SpecialVisualization"
 
   export let value: UIEventSource<string>
+  export let unvalidatedText: UIEventSource<string> = new UIEventSource<string>(value.data)
   export let config: TagRenderingConfig
   export let tags: UIEventSource<Record<string, string>>
 
   export let feature: Feature = undefined
+  export let state: SpecialVisualizationState
   export let unit: Unit | undefined
 
   let placeholder = config.freeform?.placeholder
@@ -24,9 +28,8 @@
     inline = config.freeform?.inline
   }
 
-  export let feedback: UIEventSource<Translation> = new UIEventSource<Translation>(undefined)
-
-  let dispatch = createEventDispatcher<{ selected }>()
+  const dispatch = createEventDispatcher<{ selected }>()
+  export let feedback: UIEventSource<Translation>
   onDestroy(
     value.addCallbackD(() => {
       dispatch("selected")
@@ -45,23 +48,33 @@
         {feedback}
         {getCountry}
         {unit}
-        on:selected={() => dispatch("selected")}
+        on:selected
+        on:submit
         type={config.freeform.type}
         {placeholder}
         {value}
       />
     </Inline>
-  {:else}
+  {:else if InputHelpers.hideInputField.indexOf(config.freeform.type) < 0}
     <ValidatedInput
       {feedback}
       {getCountry}
       {unit}
-      on:selected={() => dispatch("selected")}
+      on:selected
+      on:submit
       type={config.freeform.type}
       {placeholder}
       {value}
+      {unvalidatedText}
     />
   {/if}
 
-  <InputHelper args={config.freeform.helperArgs} {feature} type={config.freeform.type} {value} />
+  <InputHelper
+    args={config.freeform.helperArgs}
+    {feature}
+    type={config.freeform.type}
+    {value}
+    {state}
+    on:submit
+  />
 </div>

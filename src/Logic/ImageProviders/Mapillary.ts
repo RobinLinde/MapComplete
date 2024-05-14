@@ -1,9 +1,10 @@
 import ImageProvider, { ProvidedImage } from "./ImageProvider"
 import BaseUIElement from "../../UI/BaseUIElement"
-import Svg from "../../Svg"
 import { Utils } from "../../Utils"
 import { LicenseInfo } from "./LicenseInfo"
 import Constants from "../../Models/Constants"
+import SvelteUIElement from "../../UI/Base/SvelteUIElement"
+import MapillaryIcon from "./MapillaryIcon.svelte"
 
 export class Mapillary extends ImageProvider {
     public static readonly singleton = new Mapillary()
@@ -53,16 +54,50 @@ export class Mapillary extends ImageProvider {
         return false
     }
 
+    static createLink(
+        location: {
+            lon: number
+            lat: number
+        } = undefined,
+        zoom: number = 17,
+        pKey?: string
+    ) {
+        const params = {
+            focus: pKey === undefined ? "map" : "photo",
+            lat: location?.lat,
+            lng: location?.lon,
+            z: location === undefined ? undefined : Math.max((zoom ?? 2) - 1, 1),
+            pKey,
+        }
+        const baselink = `https://www.mapillary.com/app/?`
+        const paramsStr = Utils.NoNull(
+            Object.keys(params).map((k) =>
+                params[k] === undefined ? undefined : k + "=" + params[k]
+            )
+        )
+        return baselink + paramsStr.join("&")
+    }
+
     /**
      * Returns the correct key for API v4.0
      */
     private static ExtractKeyFromURL(value: string): number {
         let key: string
 
-        const newApiFormat = value.match(/https?:\/\/www.mapillary.com\/app\/\?pKey=([0-9]*)/)
-        if (newApiFormat !== null) {
-            key = newApiFormat[1]
-        } else if (value.startsWith(Mapillary.valuePrefix)) {
+        if (value.startsWith("http")) {
+            try {
+                const url = new URL(value.toLowerCase())
+                if (url.searchParams.has("pkey")) {
+                    const pkey = Number(url.searchParams.get("pkey"))
+                    if (!isNaN(pkey)) {
+                        return pkey
+                    }
+                }
+            } catch (e) {
+                console.log("Could not parse value for mapillary:", value)
+            }
+        }
+        if (value.startsWith(Mapillary.valuePrefix)) {
             key = value.substring(0, value.lastIndexOf("?")).substring(value.lastIndexOf("/") + 1)
         } else if (value.match("[0-9]*")) {
             key = value
@@ -76,20 +111,43 @@ export class Mapillary extends ImageProvider {
         return undefined
     }
 
-    SourceIcon(backlinkSource?: string): BaseUIElement {
-        return Svg.mapillary_svg()
+    apiUrls(): string[] {
+        return ["https://mapillary.com", "https://www.mapillary.com", "https://graph.mapillary.com"]
+    }
+
+    SourceIcon(
+        id: string,
+        location?: {
+            lon: number
+            lat: number
+        }
+    ): BaseUIElement {
+        let url: string = undefined
+        if (id) {
+            url = Mapillary.createLink(location, 16, "" + id)
+        }
+        return new SvelteUIElement(MapillaryIcon, { url })
     }
 
     async ExtractUrls(key: string, value: string): Promise<Promise<ProvidedImage>[]> {
         return [this.PrepareUrlAsync(key, value)]
     }
 
-    public async DownloadAttribution(url: string): Promise<LicenseInfo> {
+    public async DownloadAttribution(providedImage: ProvidedImage): Promise<LicenseInfo> {
+        const mapillaryId = providedImage.id
+        const metadataUrl =
+            "https://graph.mapillary.com/" +
+            mapillaryId +
+            "?fields=thumb_1024_url,thumb_original_url,captured_at,creator&access_token=" +
+            Constants.mapillary_client_token_v4
+        const response = await Utils.downloadJsonCached(metadataUrl, 60 * 60)
+
         const license = new LicenseInfo()
-        license.artist = "Contributor name unavailable"
+        license.artist = response["creator"]["username"]
         license.license = "CC BY-SA 4.0"
         // license.license = "Creative Commons Attribution-ShareAlike 4.0 International License";
         license.attributionRequired = true
+        license.date = new Date(response["captured_at"])
         return license
     }
 
@@ -102,14 +160,20 @@ export class Mapillary extends ImageProvider {
         const metadataUrl =
             "https://graph.mapillary.com/" +
             mapillaryId +
-            "?fields=thumb_1024_url&&access_token=" +
+            "?fields=thumb_1024_url,thumb_original_url,captured_at,creator&access_token=" +
             Constants.mapillary_client_token_v4
         const response = await Utils.downloadJsonCached(metadataUrl, 60 * 60)
         const url = <string>response["thumb_1024_url"]
-        return {
-            url: url,
+        const url_hd = <string>response["thumb_original_url"]
+        const date = new Date()
+        date.setTime(response["captured_at"])
+        return <ProvidedImage>{
+            id: "" + mapillaryId,
+            url,
+            url_hd,
             provider: this,
-            key: key,
+            date,
+            key,
         }
     }
 }

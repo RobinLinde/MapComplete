@@ -9,7 +9,8 @@
     "ca": "Veterinaris, parcs canins i altres instal·lacions per a mascotes",
     "es": "Veterinarios, parques para perros y otros servicios para mascotas",
     "cs": "Veterináři, psí parky a další služby pro domácí zvířata",
-    "zh_Hant": "獸醫院、寵物公園以及其他寵物設施"
+    "zh_Hant": "獸醫院、寵物公園以及其他寵物設施",
+    "pl": "Kliniki weterynaryjne, parki dla psów i inne obiekty dla zwierząt"
   },
   "description": {
     "en": "On this map, you'll find various interesting places for you pets: veterinarians, dog parks, pet shops, dog-friendly restaurants, ...",
@@ -19,12 +20,16 @@
     "fr": "Retrouvez sur cette carte des points d’intérêts pour votre animal : vétérinaires, parcs à chien, animaleries, restaurants acceptant les chiens, etc.",
     "ca": "A aquest mapa, trobaràs diferents llocs interesants per a les teves mascotes: veterinaris, parcs per a gossos, botigues d'animals, restaurants amables amb gossos, ...",
     "es": "En este mapa, encontrarás varios lugares interesantes para tus mascotas: veterinarios, parques para perros, tiendas de mascotas, restaurantes aptos para perros, ...",
-    "cs": "Na této mapě najdete různá zajímavá místa pro vaše domácí mazlíčky: veterináře, psí parky, obchody pro zvířata, restaurace pro psy, ..."
+    "cs": "Na této mapě najdete různá zajímavá místa pro vaše domácí mazlíčky: veterináře, psí parky, obchody pro zvířata, restaurace pro psy, ...",
+    "pl": "Na tej mapie znajdziesz różne ciekawe miejsca dla swoich zwierząt: weterynarze, wybiegi dla psów, sklepy zoologiczne, restauracje przyjazne psom, ..."
   },
   "icon": "./assets/layers/dogpark/dog-park.svg",
   "startZoom": 10,
   "startLat": 55,
   "startLon": 12,
+  "credits": [
+    "Niels Elgaard Larsen"
+  ],
   "layers": [
     "dogpark",
     {
@@ -41,15 +46,20 @@
           "ca": "Restaurants que accepten gossos",
           "es": "Restaurantes que admiten perros",
           "cs": "Restaurace vhodné pro vstup se psy",
-          "zh_Hant": "寵物友善餐廳"
+          "zh_Hant": "寵物友善餐廳",
+          "pl": "Restauracje przyjazne psom"
         },
-        "mapRendering": [
+        "pointRendering": [
           {
             "location": [
               "point",
               "centroid"
             ],
-            "icon": "./assets/themes/pets/dog-food.svg",
+            "marker": [
+              {
+                "icon": "./assets/themes/pets/dog-food.svg"
+              }
+            ],
             "iconSize": "30,30"
           }
         ],
@@ -91,7 +101,8 @@
           "pa_PK": "کُتیاں دی اِجازت دیاں دکاناں",
           "es": "Tiendas aptas para perros",
           "cs": "Obchody vhodné pro vstup se psy",
-          "zh_Hant": "寵物友善商家"
+          "zh_Hant": "寵物友善商家",
+          "pl": "Sklepy przyjazne psom"
         },
         "title": {
           "render": {
@@ -105,7 +116,8 @@
             "pa_PK": "کُتیاں دی اِجازت دیاں دکاناں",
             "es": "Tiendas aptas para perros",
             "cs": "Obchody vhodné pro vstup se psy",
-            "zh_Hant": "寵物友善商家"
+            "zh_Hant": "寵物友善商家",
+            "pl": "Sklepy przyjazne psom"
           },
           "mappings": [
             {
@@ -116,41 +128,41 @@
             }
           ]
         },
-        "mapRendering": [
+        "pointRendering": [
           {
             "location": [
               "point",
               "centroid"
             ],
-            "icon": {
-              "render": "./assets/themes/pets/dogshop.svg",
-              "+mappings": [
-                {
-                  "if": {
-                    "and": [
-                      "shop=pet"
-                    ]
-                  },
-                  "then": "./assets/themes/pets/petshop.svg"
+            "marker": [
+              {},
+              {
+                "icon": {
+                  "render": "./assets/themes/pets/dogshop.svg",
+                  "+mappings": [
+                    {
+                      "if": {
+                        "and": [
+                          "shop=pet"
+                        ]
+                      },
+                      "then": "./assets/themes/pets/petshop.svg"
+                    }
+                  ]
                 }
-              ]
-            },
+              }
+            ],
             "iconSize": "30,30"
-          },
+          }
+        ],
+        "=lineRendering": [
           {
             "#": "Rendering of a line",
             "color": "#ff0",
             "width": 5
           }
         ],
-        "presets": [
-          {
-            "tags": [
-              "shop=yes",
-              "dog=yes"
-            ]
-          }
-        ],
+        "=presets": [],
         "source": {
           "=osmTags": {
             "and": [
@@ -171,7 +183,7 @@
     {
       "builtin": "food",
       "override": {
-        "minzoom": 19,
+        "minzoom": 18,
         "filter": null,
         "name": null
       }
@@ -187,7 +199,7 @@
     {
       "builtin": "shops",
       "override": {
-        "minzoom": 19,
+        "minzoom": 18,
         "filter": null,
         "presets": [
           {
@@ -202,7 +214,8 @@
               "pa_PK": "کُتیاں دی اِجازت دی دکان",
               "es": "Tienda adaptada para perros",
               "cs": "obchod vhodný pro vstup se psem",
-              "zh_Hant": "寵物友善商家"
+              "zh_Hant": "寵物友善商家",
+              "pl": "sklep przyjazny psom"
             },
             "tags": [
               "dog=yes",
@@ -217,13 +230,14 @@
               "ca": "Una botiga on pots dur al gos gairebé a tot arreu",
               "es": "Una tienda a la que se puede llevar un perro a casi todas partes",
               "cs": "Obchod, ve kterém si můžete vzít psa téměř kamkoli",
-              "zh_Hant": "你幾乎可以攜帶寵物到處去的商店"
+              "zh_Hant": "你幾乎可以攜帶寵物到處去的商店",
+              "pl": "Sklep, w którym niemal wszędzie można zabrać psa"
             }
           }
         ],
         "name": null
       }
-    }
-  ],
-  "credits": "Niels Elgaard Larsen"
+    },
+    "animal_shelter"
+  ]
 }

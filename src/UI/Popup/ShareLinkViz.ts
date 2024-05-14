@@ -14,13 +14,21 @@ export class ShareLinkViz implements SpecialVisualization {
             name: "url",
             doc: "The url to share (default: current URL)",
         },
+        {
+            name: "text",
+            doc: "The text to show on the button. If none is given, will act as a titleIcon",
+        },
     ]
+    needsUrls = []
+    svelteBased = true
 
     public constr(
         state: SpecialVisualizationState,
         tagSource: UIEventSource<Record<string, string>>,
         args: string[]
     ) {
+        const text = args[1]
+
         const generateShareData = () => {
             const title = state?.layout?.title?.txt ?? "MapComplete"
 
@@ -45,6 +53,8 @@ export class ShareLinkViz implements SpecialVisualization {
             }
         }
 
-        return new SvelteUIElement(ShareButton, { generateShareData })
+        return new SvelteUIElement(ShareButton, { generateShareData, text }).SetClass(
+            "w-full h-full"
+        )
     }
 }

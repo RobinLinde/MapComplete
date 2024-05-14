@@ -128,7 +128,6 @@
             "title": "Rétegek kijelölése",
             "zoomInToSeeThisLayer": "Nagyíts a réteg megtekintéséhez"
         },
-        "levelSelection": {},
         "loading": "Betöltés…",
         "loadingTheme": "{theme} betöltése…",
         "loginFailed": "Az OpenStreetMap-be való bejelentkezés nem sikerült",
@@ -172,7 +171,7 @@
         "pdf": {
             "attr": "Térképadatok: © OpenStreetMap-közreműködők; az ODbL licenc szerint újrafelhasználható",
             "attrBackground": "Háttérréteg: {background}",
-            "generatedWith": "Létrehozva a MapComplete.osm.be/{layoutid} segítségével",
+            "generatedWith": "Létrehozva a mapcomplete.org/{layoutid} segítségével",
             "versionInfo": "{version} verzió – létrehozva: {date}"
         },
         "pickLanguage": "Nyelv kiválasztása: ",
@@ -224,7 +223,6 @@
             "wednesday": "Szerda"
         },
         "welcomeBack": "Be vagy jelentkezve, üdv ismét!",
-        "welcomeExplanation": {},
         "wikipedia": {
             "createNewWikidata": "Új Wikidata-elem létrehozása",
             "doSearch": "Keress fent az eredmények megtekintéséhez",
@@ -232,7 +230,6 @@
             "loading": "Wikipédia betöltése…",
             "noResults": "Nincs találat erre: <i>{search}</i>",
             "noWikipediaPage": "Ennek a Wikidata-elemnek még nincs megfelelő Wikipédia-oldala.",
-            "previewbox": {},
             "searchWikidata": "Keresés a Wikidatán",
             "wikipediaboxTitle": "Wikipédia"
         }
@@ -242,7 +239,6 @@
         "doDelete": "Kép eltávolítása",
         "dontDelete": "Mégse",
         "isDeleted": "Törölve",
-        "nearbyPictures": {},
         "pleaseLogin": "Kép hozzáadásához be kell jelentkezni",
         "respectPrivacy": "Ne készíts fényképet emberekről és rendszámtáblákról. Ne tölts fel képet a Google Mapsről, a Google Streetview-ról (utcaképről) és egyéb szerzői jog által védett forrásokból.",
         "toBig": "A kép túl nagy ({actual_size}). Kérjük, legfeljebb {max_size} méretű képeket használj",
@@ -252,8 +248,6 @@
         "uploadingMultiple": "{count} kép feltöltése folyamatban…",
         "uploadingPicture": "Kép feltöltése folyamatban…"
     },
-    "importInspector": {},
-    "importLayer": {},
     "index": {
         "#": "Ezek a szövegek akkor jelennek meg a témagombok felett, ha nincs betöltve téma",
         "featuredThemeTitle": "Kiemelt ezen a héten",
@@ -290,7 +284,6 @@
     "multi_apply": {
         "autoApply": "A(z) {attr_names} tulajdonságok módosításával ezek a tulajdonságok automatikusan módosulnak {count} további objektumon is"
     },
-    "notes": {},
     "privacy": {
         "geodata": "Amikor a MapComplete lekéri a földrajzi helyed meghatározását, az – a korábban meglátogatott helyekkel együtt – az eszközödön marad. Helyadatokat soha nem küldünk el automatikusan máshová – kivéve, ha bizonyos funkciók egyértelműen másként rendelkeznek.",
         "geodataTitle": "Földrajzi helyed",
@@ -304,10 +297,7 @@
         "attribution": "A véleményeket <a href=\"https://mangrove.reviews/\" target=\"_blank\">Mangrove Reviews</a> tárolja, és a <a href=\"https://mangrove.reviews/terms#8-licensing-of-content\" target=\"_blank\">CC-BY 4.0 licenc</a> szerint érhetők el.",
         "i_am_affiliated": "<span>Kapcsolatban állok ezzel a létesítménnyel</span><br><span class=\"subtle\">Ellenőrizd, hogy tulajdonos, alkotó, alkalmazott vagy hasonló vagy-e.</span>",
         "name_required": "Vélemények megjelenítéséhez és létrehozásához névre van szükség",
-        "no_rating": "Még nem kapott értékelést",
         "no_reviews_yet": "Még nincs vélemény. Légy Te az első, aki ír, és ezzel támogasd a nyílt adatokat és az üzletet!",
-        "plz_login": "Értékelés írásához jelentkezz be",
-        "posting_as": "Közzétéve mint",
         "saved": "<span class=\"thanks\">Vélemény elmentve. Köszönjük a megosztást!</span>",
         "saving_review": "Mentés…",
         "title": "{count} vélemény",
@@ -322,24 +312,5 @@
         "loginToSplit": "Egy út szétvágásához be kell jelentkezni",
         "split": "Szétvágás",
         "splitTitle": "Válaszd ki a térképen, hogy az út hol legyen elvágva"
-    },
-    "translations": {},
-    "validation": {
-        "color": {},
-        "date": {},
-        "direction": {},
-        "distance": {},
-        "email": {},
-        "float": {},
-        "int": {},
-        "nat": {},
-        "opening_hours": {},
-        "pfloat": {},
-        "phone": {},
-        "pnat": {},
-        "string": {},
-        "text": {},
-        "url": {},
-        "wikidata": {}
     }
 }

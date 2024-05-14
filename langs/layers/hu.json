@@ -130,7 +130,11 @@
             },
             "artwork-website": {
                 "question": "Van-e olyan honlap, amely további információkat tartalmaz erről a műalkotásról?",
-                "render": "További információ <a href='{website}' target='_blank'>ezen a weboldalon</a>"
+                "render": {
+                    "special": {
+                        "text": "További információ ezen a weboldalon"
+                    }
+                }
             }
         },
         "title": {
@@ -336,9 +340,6 @@
         "description": "Létesítmény, ahonnan kerékpár kölcsönözhető hosszabb időre",
         "tagRenderings": {
             "bicycle-library-target-group": {
-                "mappings": {
-                    "0": {}
-                },
                 "question": "Ki kölcsönözhet itt kerékpárt?"
             },
             "bicycle_library-charge": {
@@ -615,7 +616,7 @@
         }
     },
     "last_click": {
-        "mapRendering": {
+        "pointRendering": {
             "0": {
                 "label": {
                     "render": "Új elem hozzáadásához kattints ide"
@@ -752,7 +753,11 @@
             },
             "public_bookcase-website": {
                 "question": "Van-e olyan weboldal, ahol további információ található erről a nyilvános könyvespolcról?",
-                "render": "További információ <a href='{website}' target='_blank'>ezen a weboldalon</a>"
+                "render": {
+                    "special": {
+                        "text": "További információ ezen a weboldalon"
+                    }
+                }
             }
         },
         "title": {
@@ -790,34 +795,13 @@
             "email": {
                 "question": "Mi a(z) {title()} e-mail címe?"
             },
-            "level": {
-                "mappings": {
-                    "0": {
-                        "then": "A föld alatt"
-                    },
-                    "1": {
-                        "then": "A földszinten"
-                    },
-                    "2": {
-                        "then": "A földszinten"
-                    },
-                    "3": {
-                        "then": "Az első emeleten"
-                    },
-                    "4": {
-                        "then": "Az első alagsori szinten"
-                    }
-                },
-                "question": "Melyik szinten található ez a létesítmény?",
-                "render": "A(z) {level}. emeleten"
-            },
             "opening_hours": {
                 "question": "Mikor van nyitva ez: {title()}?",
                 "render": "<h3>Nyitva tartás</h3>{opening_hours_table(opening_hours)}"
             },
             "opening_hours_24_7": {
                 "override": {
-                    "mappings": {
+                    "+mappings": {
                         "0": {
                             "then": "Éjjel-nappal nyitva (munkaszüneti napokon is)"
                         }
@@ -867,6 +851,27 @@
                 },
                 "question": "Van-e ebben a létesítményben olyan konnektor, amely a bent tartózkodó ügyfelek rendelkezésére áll?"
             },
+            "single_level": {
+                "mappings": {
+                    "0": {
+                        "then": "A föld alatt"
+                    },
+                    "1": {
+                        "then": "A földszinten"
+                    },
+                    "2": {
+                        "then": "A földszinten"
+                    },
+                    "3": {
+                        "then": "Az első emeleten"
+                    },
+                    "4": {
+                        "then": "Az első alagsori szinten"
+                    }
+                },
+                "question": "Melyik szinten található ez a létesítmény?",
+                "render": "A(z) {level}. emeleten"
+            },
             "website": {
                 "question": "Mi a weboldala ennek: {title()}?"
             },
@@ -903,6 +908,33 @@
     "shops": {
         "description": "Egy bolt"
     },
+    "unit": {
+        "units": {
+            "0": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} megawatt"
+                    },
+                    "1": {
+                        "human": "{quantity} kilowatt"
+                    },
+                    "2": {
+                        "human": "{quantity} watt"
+                    },
+                    "3": {
+                        "human": "{quantity} gigawatt"
+                    }
+                }
+            },
+            "3": {
+                "applicableUnits": {
+                    "0": {
+                        "human": "{quantity} méter"
+                    }
+                }
+            }
+        }
+    },
     "waste_basket": {
         "description": "Ez egy nyilvános szemétkosár vagy kuka, ahová kidobhatod a szemetedet."
     },
@@ -937,31 +969,6 @@
         },
         "title": {
             "render": "szélerőmű"
-        },
-        "units": {
-            "0": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " megawatt"
-                    },
-                    "1": {
-                        "human": " kilowatt"
-                    },
-                    "2": {
-                        "human": " watt"
-                    },
-                    "3": {
-                        "human": " gigawatt"
-                    }
-                }
-            },
-            "1": {
-                "applicableUnits": {
-                    "0": {
-                        "human": " méter"
-                    }
-                }
-            }
         }
     }
 }

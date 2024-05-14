@@ -1,6 +1,8 @@
 import { TagsFilter } from "./TagsFilter"
 import { Tag } from "./Tag"
 import { Utils } from "../../Utils"
+import { TagConfigJson } from "../../Models/ThemeConfig/Json/TagConfigJson"
+import { ExpressionSpecification } from "maplibre-gl"
 
 /**
  * The substituting-tag uses the tags of a feature a variables and replaces them.
@@ -11,15 +13,20 @@ import { Utils } from "../../Utils"
  * The 'key' is always fixed and should not contain substitutions.
  * This cannot be used to query features
  */
-export default class SubstitutingTag implements TagsFilter {
+export default class SubstitutingTag extends TagsFilter {
     private readonly _key: string
     private readonly _value: string
     private readonly _invert: boolean
 
     constructor(key: string, value: string, invert = false) {
+        super()
         this._key = key
         this._value = value
         this._invert = invert
+    }
+
+    asMapboxExpression(): ExpressionSpecification {
+        throw new Error("Method not implemented.")
     }
 
     private static substituteString(template: string, dict: Record<string, string>): string {
@@ -36,13 +43,17 @@ export default class SubstitutingTag implements TagsFilter {
         return new Tag(this._key, Utils.SubstituteKeys(this._value, currentProperties))
     }
 
-    asHumanString(linkToWiki: boolean, shorten: boolean, properties) {
+    asHumanString(linkToWiki?: boolean, shorten?: boolean, properties?: Record<string, string>) {
         return (
             this._key +
             (this._invert ? "!" : "") +
             "=" +
             SubstitutingTag.substituteString(this._value, properties)
         )
+    }
+
+    asJson(): TagConfigJson {
+        return this._key + (this._invert ? "!" : "") + ":=" + this._value
     }
 
     asOverpass(): string[] {
@@ -89,7 +100,7 @@ export default class SubstitutingTag implements TagsFilter {
         return []
     }
 
-    asChange(properties: Record<string, string>): { k: string; v: string }[] {
+    asChange(properties: Readonly<Record<string, string>>): { k: string; v: string }[] {
         if (this._invert) {
             throw "An inverted substituting tag can not be used to create a change"
         }

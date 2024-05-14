@@ -15,6 +15,29 @@
     "cs": "Služba mytí jízdních kol",
     "ca": "Servei de neteja de bicicletes"
   },
+  "description": {
+    "en": "A layer showing facilities where one can clean their bike",
+    "nl": "Een laag die plaatsen toont waar je je fiets kunt wassen",
+    "de": "Eine Ebene mit Einrichtungen, in denen man sein Fahrrad reinigen kann",
+    "es": "Una capa que muestra instalaciones en las que uno puede limpiar su bici",
+    "da": "Et lag med faciliteter, hvor man kan rengøre sin cykel",
+    "fr": "Une couche affichant les lieux où l'on peut nettoyer son vélo",
+    "cs": "Vrstva zobrazující zařízení, kde si můžete umýt kolo",
+    "ca": "Una capa que mostra les instal·lacions on pots netejar la teva bicicleta",
+    "pt_BR": "Uma camada que mostra instalações onde é possível limpar a sua bicicleta",
+    "pt": "Uma camada que mostra instalações onde é possível limpar a sua bicicleta"
+  },
+  "source": {
+    "osmTags": {
+      "or": [
+        "service:bicycle:cleaning=yes",
+        "service:bicycle:cleaning=diy",
+        "amenity=bicycle_wash",
+        "amenity=bike_wash"
+      ]
+    }
+  },
+  "minzoom": 13,
   "title": {
     "render": {
       "en": "Bike cleaning service",
@@ -51,17 +74,37 @@
       }
     ]
   },
-  "source": {
-    "osmTags": {
-      "or": [
-        "service:bicycle:cleaning=yes",
-        "service:bicycle:cleaning=diy",
-        "amenity=bicycle_wash",
-        "amenity=bike_wash"
+  "pointRendering": [
+    {
+      "iconBadges": [
+        {
+          "if": {
+            "and": [
+              "service:bicycle:cleaning~*",
+              "amenity!=bike_wash",
+              "amenity!=bicycle_wash"
+            ]
+          },
+          "then": {
+            "render": "./assets/layers/bike_cleaning/bike_cleaning_icon.svg",
+            "roaming": true
+          }
+        }
+      ],
+      "iconSize": "50,50",
+      "location": [
+        "point",
+        "centroid"
+      ],
+      "anchor": "bottom",
+      "marker": [
+        {
+          "icon": "./assets/layers/bike_cleaning/bike_cleaning.svg"
+        }
       ]
     }
-  },
-  "minzoom": 13,
+  ],
+  "lineRendering": [],
   "presets": [
     {
       "title": {
@@ -95,7 +138,8 @@
         "fr": "Combien coûte le service de nettoyage ?",
         "da": "Hvor meget koster det at bruge rengøringsservicen?",
         "cs": "Kolik stojí využívání služby mytí?",
-        "ca": "Molt costa utilitzar el servei de rentat?"
+        "ca": "Molt costa utilitzar el servei de rentat?",
+        "pt_BR": "Quanto custa para usar o serviço de limpeza?"
       },
       "render": {
         "en": "Using the cleaning service costs {service:bicycle:cleaning:charge}",
@@ -105,12 +149,16 @@
         "fr": "Le service de nettoyage coûte {service:bicycle:cleaning:charge}",
         "da": "Brug af rengøringsservice koster {service:bicycle:cleaning:charge}",
         "cs": "Využití služby mytí stojí {service:bicycle:cleaning:charge}",
-        "ca": "Utilitzar el servei de rentat costa {service:bicycle:cleaning:charge}"
+        "ca": "Utilitzar el servei de rentat costa {service:bicycle:cleaning:charge}",
+        "pt_BR": "Usar o serviço de limpeza custa {service:bicycle:cleaning:charge}",
+        "pt": "Usar o serviço de limpeza custa {service:bicycle:cleaning:charge}"
       },
       "condition": {
         "and": [
           "amenity!=bike_wash",
-          "amenity!=bicycle_wash"
+          "amenity!=bicycle_wash",
+          "service:bicycle:cleaning!=no",
+          "service:bicycle:cleaning!="
         ]
       },
       "freeform": {
@@ -131,7 +179,9 @@
             "fr": "Le service de nettoyage est gratuit",
             "da": "Rengøringsservicen er gratis at bruge",
             "cs": "Služba mytí je k dispozici zdarma",
-            "ca": "El servei de rentat és gratuït"
+            "ca": "El servei de rentat és gratuït",
+            "pt_BR": "O serviço de limpeza é grátis para usar",
+            "pt": "O serviço de limpeza é grátis para usar"
           },
           "addExtraTags": [
             "service:bicycle:cleaning:charge="
@@ -148,11 +198,12 @@
             "en": "Free to use",
             "de": "Kostenlose Nutzung",
             "nl": "Gratis te gebruiken",
-            "es": "Gratis",
+            "es": "Uso gratuito",
             "fr": "Utilisation gratuite",
             "da": "Gratis at bruge",
             "cs": "Bezplatné používání",
-            "ca": "Debades"
+            "ca": "Debades",
+            "pt_BR": "Grátis para usar"
           },
           "hideInAnswer": true
         }
@@ -168,7 +219,9 @@
         "fr": "Combien cela coûte-t-il d'utiliser le service de nettoyage ?",
         "da": "Hvor meget koster det at bruge rengøringsservicen?",
         "cs": "Kolik stojí využívání služby mytí?",
-        "ca": "Molt costa utilitzar aquest servei de neteja?"
+        "ca": "Molt costa utilitzar aquest servei de neteja?",
+        "pt_BR": "Quanto custa para usar esse serviço de limpeza?",
+        "pt": "Quanto custa para usar este serviço de limpeza?"
       },
       "render": {
         "en": "Using the cleaning service costs {charge}",
@@ -178,7 +231,9 @@
         "fr": "L’utilisation du service de nettoyage coûte {charge}",
         "da": "Brug af rengøringsservice koster {charge}",
         "cs": "Využití služby mytí stojí {charge}",
-        "ca": "L'ús del servei de neteja costa {charge}"
+        "ca": "L'ús del servei de neteja costa {charge}",
+        "pt_BR": "Usar o serviço de limpeza custa {charge}",
+        "pt": "Usar o serviço de limpeza custa {charge}"
       },
       "condition": {
         "or": [
@@ -199,11 +254,13 @@
             "en": "This cleaning service is free to use",
             "de": "Der Reinigungsservice ist kostenlos",
             "nl": "Dit fietsschoonmaakpunt is gratis te gebruiken",
-            "es": "Servicio de limpieza gratis",
+            "es": "Este servicio de limpieza es gratuito",
             "fr": "Service de nettoyage gratuit",
             "da": "Gratis at bruge rengøringsservice",
             "cs": "Tato mycí služba je bezplatná",
-            "ca": "Aquest servei de neteja és gratuït"
+            "ca": "Aquest servei de neteja és gratuït",
+            "pt_BR": "Esse serviço de limpeza é grátis para usar",
+            "pt": "Esst serviço de limpeza é grátis para usar"
           },
           "addExtraTags": [
             "charge="
@@ -215,9 +272,11 @@
             "en": "There is a fee to use this cleaning service",
             "nl": "Dit fietsschoonmaakpunt is betalend",
             "es": "Este servicio de limpieza es de pago",
-            "ca": "Aquest servei de neteja és de pagament",
+            "ca": "Hi ha un cost per utilitzar aquest servei de neteja",
             "de": "Dieser Reinigungsservice ist kostenpflichtig",
-            "cs": "Tato úklidová služba je placená"
+            "cs": "Využití úklidové služby je zpoplatněno",
+            "pt_BR": "Há uma taxa para utilizar esse serviço de limpeza",
+            "pt": "Há uma taxa para utilizar este serviço de limpeza"
           }
         }
       ],
@@ -235,42 +294,6 @@
   },
   "allowMove": {
     "enableRelocation": false,
-    "enableImproveAccuraccy": true
-  },
-  "mapRendering": [
-    {
-      "icon": "./assets/layers/bike_cleaning/bike_cleaning.svg",
-      "iconBadges": [
-        {
-          "if": {
-            "and": [
-              "service:bicycle:cleaning~*",
-              "amenity!=bike_wash",
-              "amenity!=bicycle_wash"
-            ]
-          },
-          "then": {
-            "render": "./assets/layers/bike_cleaning/bike_cleaning_icon.svg",
-            "roaming": true
-          }
-        }
-      ],
-      "iconSize": "50,50",
-      "location": [
-        "point",
-        "centroid"
-      ],
-      "anchor": "bottom"
-    }
-  ],
-  "description": {
-    "en": "A layer showing facilities where one can clean their bike",
-    "nl": "Een laag die plaatsen toont waar je je fiets kunt wassen",
-    "de": "Eine Ebene mit Einrichtungen, in denen man sein Fahrrad reinigen kann",
-    "es": "Una capa que muestra instalaciones en las que uno puede limpiar su bici",
-    "da": "Et lag med faciliteter, hvor man kan rengøre sin cykel",
-    "fr": "Une couche affichant les lieux où l'on peut nettoyer son vélo",
-    "cs": "Vrstva zobrazující zařízení, kde si můžete umýt kolo",
-    "ca": "Una capa que mostra les instal·lacions on pots netejar la teva bicicleta"
+    "enableImproveAccuracy": true
   }
 }

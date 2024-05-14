@@ -11,16 +11,15 @@ import { And } from "../../Logic/Tags/And"
 import Toggle from "../Input/Toggle"
 import { Utils } from "../../Utils"
 import { Tag } from "../../Logic/Tags/Tag"
-import LayoutConfig from "../../Models/ThemeConfig/LayoutConfig"
-import { Changes } from "../../Logic/Osm/Changes"
 import { SpecialVisualization, SpecialVisualizationState } from "../SpecialVisualization"
-import { IndexedFeatureSource } from "../../Logic/FeatureSource/FeatureSource"
 import { Feature } from "geojson"
-import LayerConfig from "../../Models/ThemeConfig/LayerConfig"
 import Maproulette from "../../Logic/Maproulette"
+import SvelteUIElement from "../Base/SvelteUIElement"
+import Icon from "../Map/Icon.svelte"
 
 export default class TagApplyButton implements AutoAction, SpecialVisualization {
     public readonly funcName = "tag_apply"
+    needsUrls = []
     public readonly docs =
         "Shows a big button; clicking this button will apply certain tags onto the feature.\n\nThe first argument takes a specification of which tags to add.\n" +
         Utils.Special_visualizations_tagsToApplyHelpText
@@ -44,9 +43,9 @@ export default class TagApplyButton implements AutoAction, SpecialVisualization 
             doc: "If specified, applies the the tags onto _another_ object. The id will be read from properties[id_of_object_to_apply_this_one] of the selected object. The tags are still calculated based on the tags of the _selected_ element",
         },
         {
-            name: "maproulette_task_id",
+            name: "maproulette_id",
             defaultValue: undefined,
-            doc: "If specified, this maproulette-challenge will be closed when the tags are applied",
+            doc: "If specified, this maproulette-challenge will be closed when the tags are applied. This should be the ID of the task, _not_ the task_id.",
         },
     ]
     public readonly example =
@@ -80,7 +79,7 @@ export default class TagApplyButton implements AutoAction, SpecialVisualization 
             for (const [key, value] of tgsSpec) {
                 if (value.indexOf("$") >= 0) {
                     let parts = value.split("$")
-                    // THe first of the split won't start with a '$', so no substitution needed
+                    // The first item of the split won't start with a '$', so no substitution needed
                     let actualValue = parts[0]
                     parts.shift()
 
@@ -131,12 +130,8 @@ export default class TagApplyButton implements AutoAction, SpecialVisualization 
     }
 
     public async applyActionOn(
-        feature: Feature,
-        state: {
-            layout: LayoutConfig
-            changes: Changes
-            indexedFeatures: IndexedFeatureSource
-        },
+        _: Feature,
+        state: SpecialVisualizationState,
         tags: UIEventSource<any>,
         args: string[]
     ): Promise<void> {
@@ -154,14 +149,21 @@ export default class TagApplyButton implements AutoAction, SpecialVisualization 
             }
         )
         await state.changes.applyAction(changeAction)
+        try {
+            state.selectedElement.setData(state.indexedFeatures.featuresById.data.get(targetId))
+        } catch (e) {
+            console.error(e)
+        }
         const maproulette_id_key = args[4]
         if (maproulette_id_key) {
-            const maproulette_id = Number(tags.data[maproulette_id_key])
-            await Maproulette.singleton.closeTask(maproulette_id, Maproulette.STATUS_FIXED, {
+            const maproulette_id = tags.data[maproulette_id_key]
+            const maproulette_feature = state.indexedFeatures.featuresById.data.get(maproulette_id)
+            const maproulette_task_id = Number(maproulette_feature.properties.mr_taskId)
+            await Maproulette.singleton.closeTask(maproulette_task_id, Maproulette.STATUS_FIXED, {
                 comment: "Tags are copied onto " + targetId + " with MapComplete",
             })
-            tags.data["mr_taskStatus"] = "Fixed"
-            tags.ping()
+            maproulette_feature.properties["mr_taskStatus"] = "Fixed"
+            state.featureProperties.getStore(maproulette_id).ping()
         }
     }
 
@@ -169,8 +171,7 @@ export default class TagApplyButton implements AutoAction, SpecialVisualization 
         state: SpecialVisualizationState,
         tags: UIEventSource<Record<string, string>>,
         args: string[],
-        feature: Feature,
-        _: LayerConfig
+        feature: Feature
     ): BaseUIElement {
         const tagsToApply = TagApplyButton.generateTagsToApply(args[0], tags)
         const msg = args[1]
@@ -178,6 +179,7 @@ export default class TagApplyButton implements AutoAction, SpecialVisualization 
         if (image === "" || image === "undefined") {
             image = undefined
         }
+
         const targetIdKey = args[3]
         const t = Translations.t.general.apply_button
 
@@ -192,14 +194,16 @@ export default class TagApplyButton implements AutoAction, SpecialVisualization 
                 return el
             })
         ).SetClass("subtle")
-        const self = this
-        const applied = new UIEventSource(tags?.data?.["mr_taskStatus"] !== "Created") // This will default to 'false' for non-maproulette challenges
+        const applied = new UIEventSource(
+            tags?.data?.["mr_taskStatus"] !== undefined &&
+                tags?.data?.["mr_taskStatus"] !== "Created"
+        ) // This will default to 'false' for non-maproulette challenges
         const applyButton = new SubtleButton(
-            image,
+            new SvelteUIElement(Icon, { icon: image }),
             new Combine([msg, tagsExplanation]).SetClass("flex flex-col")
         ).onClick(async () => {
             applied.setData(true)
-            await self.applyActionOn(feature, state, tags, args)
+            await this.applyActionOn(feature, state, tags, args)
         })
 
         return new Toggle(

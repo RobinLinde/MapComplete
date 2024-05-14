@@ -123,6 +123,12 @@ export interface WikidataAdvancedSearchoptions extends WikidataSearchoptions {
  * Utility functions around wikidata
  */
 export default class Wikidata {
+    public static readonly neededUrls = [
+        "https://www.wikidata.org/",
+        "https://wikidata.org/",
+        "https://query.wikidata.org",
+        "https://m.wikidata.org", // Important: a mobile browser will request m.wikidata.org instead of www.wikidata.org ; this URL needs to be listed for the CSP
+    ]
     private static readonly _identifierPrefixes = ["Q", "L"].map((str) => str.toLowerCase())
     private static readonly _prefixesToRemove = [
         "https://www.wikidata.org/wiki/Lexeme:",
@@ -130,11 +136,11 @@ export default class Wikidata {
         "http://www.wikidata.org/entity/",
         "Lexeme:",
     ].map((str) => str.toLowerCase())
-
     private static readonly _storeCache = new Map<
         string,
         Store<{ success: WikidataResponse } | { error: any }>
     >()
+
     /**
      * Same as LoadWikidataEntry, but wrapped into a UIEventSource
      * @param value
@@ -159,7 +165,7 @@ export default class Wikidata {
      */
     public static async searchAdvanced(
         text: string,
-        options: WikidataAdvancedSearchoptions
+        options?: WikidataAdvancedSearchoptions
     ): Promise<
         {
             id: string
@@ -185,7 +191,7 @@ export default class Wikidata {
                 ?num wikibase:apiOrdinal true .
                 bd:serviceParam wikibase:limit ${
                     Math.round(
-                        (options.maxCount ?? 20) * 1.5
+                        (options?.maxCount ?? 20) * 1.5
                     ) /*Some padding for disambiguation pages */
                 } .
                 ?label wikibase:apiOutput mwapi:label .
@@ -193,7 +199,7 @@ export default class Wikidata {
             }
             ${instanceOf}
             ${minusPhrases.join("\n    ")}
-        } ORDER BY ASC(?num) LIMIT ${options.maxCount ?? 20}`
+        } ORDER BY ASC(?num) LIMIT ${options?.maxCount ?? 20}`
         const url = wds.sparqlQuery(sparql)
 
         const result = await Utils.downloadJson(url)
@@ -388,6 +394,7 @@ export default class Wikidata {
     }
 
     private static _cache = new Map<string, Promise<WikidataResponse>>()
+
     public static async LoadWikidataEntryAsync(value: string | number): Promise<WikidataResponse> {
         const key = "" + value
         const cached = Wikidata._cache.get(key)
@@ -398,6 +405,7 @@ export default class Wikidata {
         Wikidata._cache.set(key, uncached)
         return uncached
     }
+
     /**
      * Loads a wikidata page
      * @returns the entity of the given value

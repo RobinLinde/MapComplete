@@ -3,6 +3,10 @@ import ImageProvider, { ProvidedImage } from "./ImageProvider"
 export default class GenericImageProvider extends ImageProvider {
     public defaultKeyPrefixes: string[] = ["image"]
 
+    public apiUrls(): string[] {
+        return []
+    }
+
     private readonly _valuePrefixBlacklist: string[]
 
     public constructor(valuePrefixBlacklist: string[]) {
@@ -27,15 +31,16 @@ export default class GenericImageProvider extends ImageProvider {
                 key: key,
                 url: value,
                 provider: this,
+                id: value,
             }),
         ]
     }
 
-    SourceIcon(backlinkSource?: string) {
+    SourceIcon() {
         return undefined
     }
 
-    public DownloadAttribution(url: string) {
+    public DownloadAttribution(_) {
         return undefined
     }
 }

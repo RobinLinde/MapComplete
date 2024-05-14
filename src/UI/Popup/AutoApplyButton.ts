@@ -9,7 +9,6 @@ import { Utils } from "../../Utils"
 import StaticFeatureSource from "../../Logic/FeatureSource/Sources/StaticFeatureSource"
 import { VariableUiElement } from "../Base/VariableUIElement"
 import Loading from "../Base/Loading"
-import { OsmConnection } from "../../Logic/Osm/OsmConnection"
 import Translations from "../i18n/Translations"
 import LayoutConfig from "../../Models/ThemeConfig/LayoutConfig"
 import { Changes } from "../../Logic/Osm/Changes"
@@ -111,7 +110,10 @@ class ApplyButton extends UIElement {
         mla.allowZooming.setData(false)
         mla.allowMoving.setData(false)
 
-        const previewMap = new SvelteUIElement(MaplibreMap, { map: mlmap }).SetClass("h-48")
+        const previewMap = new SvelteUIElement(MaplibreMap, {
+            mapProperties: mla,
+            map: mlmap,
+        }).SetClass("h-48")
 
         const features = this.target_feature_ids.map((id) =>
             this.state.indexedFeatures.featuresById.data.get(id)
@@ -160,7 +162,7 @@ class ApplyButton extends UIElement {
     private async Run() {
         try {
             console.log("Applying auto-action on " + this.target_feature_ids.length + " features")
-
+            const appliedOn: string[] = []
             for (let i = 0; i < this.target_feature_ids.length; i++) {
                 const targetFeatureId = this.target_feature_ids[i]
                 const feature = this.state.indexedFeatures.featuresById.data.get(targetFeatureId)
@@ -191,6 +193,7 @@ class ApplyButton extends UIElement {
                         specialRendering.args
                     )
                 }
+                appliedOn.push(targetFeatureId)
                 if (i % 50 === 0) {
                     await this.state.changes.flushChanges("Auto button: intermediate save")
                 }
@@ -199,6 +202,12 @@ class ApplyButton extends UIElement {
             console.log("Flushing changes...")
             await this.state.changes.flushChanges("Auto button: done")
             this.buttonState.setData("done")
+            console.log(
+                "Applied changes onto",
+                appliedOn.length,
+                "items, unique IDs:",
+                new Set(appliedOn).size
+            )
         } catch (e) {
             console.error("Error while running autoApply: ", e)
             this.buttonState.setData({ error: e })
@@ -207,8 +216,10 @@ class ApplyButton extends UIElement {
 }
 
 export default class AutoApplyButton implements SpecialVisualization {
-    public readonly docs: BaseUIElement
+    public readonly docs: string
     public readonly funcName: string = "auto_apply"
+    public readonly needsUrls = []
+
     public readonly args: {
         name: string
         defaultValue?: string
@@ -262,7 +273,7 @@ export default class AutoApplyButton implements SpecialVisualization {
                 "Then, use a calculated tag on the host feature to determine the overlapping object ids",
                 "At last, add this component",
             ]),
-        ])
+        ]).AsMarkdown()
     }
 
     constr(
@@ -271,14 +282,7 @@ export default class AutoApplyButton implements SpecialVisualization {
         argument: string[]
     ): BaseUIElement {
         try {
-            if (
-                !state.layout.official &&
-                !(
-                    state.featureSwitchIsTesting.data ||
-                    state.osmConnection._oauth_config.url ===
-                        OsmConnection.oauth_configs["osm-test"].url
-                )
-            ) {
+            if (!state.layout.official && !state.featureSwitchIsTesting.data) {
                 const t = Translations.t.general.add.import
                 return new Combine([
                     new FixedUiElement(

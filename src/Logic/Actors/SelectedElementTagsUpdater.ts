@@ -1,17 +1,13 @@
 /**
  * This actor will download the latest version of the selected element from OSM and update the tags if necessary.
  */
-import { UIEventSource } from "../UIEventSource"
-import { Changes } from "../Osm/Changes"
-import { OsmConnection } from "../Osm/OsmConnection"
-import LayoutConfig from "../../Models/ThemeConfig/LayoutConfig"
 import SimpleMetaTagger from "../SimpleMetaTagger"
-import FeaturePropertiesStore from "../FeatureSource/Actors/FeaturePropertiesStore"
-import { Feature } from "geojson"
 import { OsmTags } from "../../Models/OsmFeature"
-import OsmObjectDownloader from "../Osm/OsmObjectDownloader"
-import { IndexedFeatureSource } from "../FeatureSource/FeatureSource"
 import { Utils } from "../../Utils"
+import ThemeViewState from "../../Models/ThemeViewState"
+import { BBox } from "../BBox"
+import { Feature } from "geojson"
+import { SpecialVisualizationState } from "../../UI/SpecialVisualization"
 
 export default class SelectedElementTagsUpdater {
     private static readonly metatags = new Set([
@@ -22,26 +18,9 @@ export default class SelectedElementTagsUpdater {
         "uid",
         "id",
     ])
+    private readonly state: ThemeViewState
 
-    private readonly state: {
-        selectedElement: UIEventSource<Feature>
-        featureProperties: FeaturePropertiesStore
-        changes: Changes
-        osmConnection: OsmConnection
-        layout: LayoutConfig
-        osmObjectDownloader: OsmObjectDownloader
-        indexedFeatures: IndexedFeatureSource
-    }
-
-    constructor(state: {
-        selectedElement: UIEventSource<Feature>
-        featureProperties: FeaturePropertiesStore
-        indexedFeatures: IndexedFeatureSource
-        changes: Changes
-        osmConnection: OsmConnection
-        layout: LayoutConfig
-        osmObjectDownloader: OsmObjectDownloader
-    }) {
+    constructor(state: ThemeViewState) {
         this.state = state
         state.osmConnection.isLoggedIn.addCallbackAndRun((isLoggedIn) => {
             if (!isLoggedIn && !Utils.runningFromConsole) {
@@ -53,57 +32,7 @@ export default class SelectedElementTagsUpdater {
         })
     }
 
-    private installCallback() {
-        const state = this.state
-        state.selectedElement.addCallbackAndRunD(async (s) => {
-            let id = s.properties?.id
-            if (!id) {
-                return
-            }
-
-            const backendUrl = state.osmConnection._oauth_config.url
-            if (id.startsWith(backendUrl)) {
-                id = id.substring(backendUrl.length)
-            }
-
-            if (!(id.startsWith("way") || id.startsWith("node") || id.startsWith("relation"))) {
-                // This object is _not_ from OSM, so we skip it!
-                return
-            }
-
-            if (id.indexOf("-") >= 0) {
-                // This is a new object
-                return
-            }
-            try {
-                const osmObject = await state.osmObjectDownloader.DownloadObjectAsync(id)
-                if (osmObject === "deleted") {
-                    console.debug("The current selected element has been deleted upstream!", id)
-                    const currentTagsSource = state.featureProperties.getStore(id)
-                    currentTagsSource.data["_deleted"] = "yes"
-                    currentTagsSource.addCallbackAndRun((tags) => console.trace("Tags are", tags))
-                    currentTagsSource.ping()
-                    return
-                }
-                const latestTags = osmObject.tags
-                const newGeometry = osmObject.asGeoJson()?.geometry
-                const oldFeature = state.indexedFeatures.featuresById.data.get(id)
-                const oldGeometry = oldFeature?.geometry
-                if (oldGeometry !== undefined && !Utils.SameObject(newGeometry, oldGeometry)) {
-                    console.log("Detected a difference in geometry for ", id)
-                    oldFeature.geometry = newGeometry
-                    state.featureProperties.getStore(id)?.ping()
-                }
-                this.applyUpdate(latestTags, id)
-
-                console.log("Updated", id)
-            } catch (e) {
-                console.warn("Could not update", id, " due to", e)
-            }
-        })
-    }
-    private applyUpdate(latestTags: OsmTags, id: string) {
-        const state = this.state
+    public static applyUpdate(latestTags: OsmTags, id: string, state: SpecialVisualizationState) {
         try {
             const leftRightSensitive = state.layout.isLeftRightSensitive()
 
@@ -131,6 +60,10 @@ export default class SelectedElementTagsUpdater {
             // With the changes applied, we merge them onto the upstream object
             let somethingChanged = false
             const currentTagsSource = state.featureProperties.getStore(id)
+            if (currentTagsSource === undefined) {
+                console.warn("No tags store found for", id, "cannot update tags")
+                return
+            }
             const currentTags = currentTagsSource.data
             for (const key in latestTags) {
                 let osmValue = latestTags[key]
@@ -162,13 +95,73 @@ export default class SelectedElementTagsUpdater {
             }
 
             if (somethingChanged) {
-                console.log("Detected upstream changes to the object when opening it, updating...")
+                console.log(
+                    "Detected upstream changes to the object " +
+                        id +
+                        " when opening it, updating..."
+                )
                 currentTagsSource.ping()
             } else {
                 console.debug("Fetched latest tags for ", id, "but detected no changes")
             }
+            return currentTags
         } catch (e) {
             console.error("Updating the tags of selected element ", id, "failed due to", e)
         }
+    }
+    private invalidateCache(s: Feature) {
+        const state = this.state
+        const wasPartOfLayer = state.layout.getMatchingLayer(s.properties)
+        state.toCacheSavers.get(wasPartOfLayer.id).invalidateCacheAround(BBox.get(s))
+    }
+    private installCallback() {
+        const state = this.state
+        state.selectedElement.addCallbackAndRunD(async (s) => {
+            let id = s.properties?.id
+            if (!id) {
+                return
+            }
+
+            const backendUrl = state.osmConnection._oauth_config.url
+            if (id.startsWith(backendUrl)) {
+                id = id.substring(backendUrl.length)
+            }
+
+            if (!(id.startsWith("way") || id.startsWith("node") || id.startsWith("relation"))) {
+                // This object is _not_ from OSM, so we skip it!
+                return
+            }
+
+            if (id.indexOf("-") >= 0) {
+                // This is a new object
+                return
+            }
+            try {
+                const osmObject = await state.osmObjectDownloader.DownloadObjectAsync(id)
+                if (osmObject === "deleted") {
+                    console.debug("The current selected element has been deleted upstream!", id)
+                    this.invalidateCache(s)
+                    const currentTagsSource = state.featureProperties.getStore(id)
+                    currentTagsSource.data["_deleted"] = "yes"
+                    currentTagsSource.ping()
+                    return
+                }
+                const latestTags = osmObject.tags
+                const newGeometry = osmObject.asGeoJson()?.geometry
+                const oldFeature = state.indexedFeatures.featuresById.data.get(id)
+                const oldGeometry = oldFeature?.geometry
+                if (oldGeometry !== undefined && !Utils.SameObject(newGeometry, oldGeometry)) {
+                    console.log("Detected a difference in geometry for ", id)
+                    this.invalidateCache(s)
+                    oldFeature.geometry = newGeometry
+                    state.featureProperties.getStore(id)?.ping()
+                }
+                SelectedElementTagsUpdater.applyUpdate(latestTags, id, state)
+
+                console.log("Updated", id)
+            } catch (e) {
+                console.warn("Could not update", id, " due to", e)
+            }
+        })
     }
 }

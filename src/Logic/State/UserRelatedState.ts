@@ -16,13 +16,15 @@ import LinkToWeblate from "../../UI/Base/LinkToWeblate"
 import FeatureSwitchState from "./FeatureSwitchState"
 import Constants from "../../Models/Constants"
 import { QueryParameters } from "../Web/QueryParameters"
+import { ThemeMetaTagging } from "./UserSettingsMetaTagging"
+import { MapProperties } from "../../Models/MapProperties"
 
 /**
  * The part of the state which keeps track of user-related stuff, e.g. the OSM-connection,
  * which layers they enabled, ...
  */
 export default class UserRelatedState {
-    public static readonly usersettingsConfig = UserRelatedState.initUserRelatedState()
+    public static readonly usersettingsConfig = UserRelatedState.initUserSettingsState()
     public static readonly availableUserSettingsIds: string[] =
         UserRelatedState.usersettingsConfig?.tagRenderings?.map((tr) => tr.id) ?? []
     public static readonly SHOW_TAGS_VALUES = ["always", "yes", "full"] as const
@@ -37,9 +39,20 @@ export default class UserRelatedState {
     public readonly installedUserThemes: Store<string[]>
     public readonly showAllQuestionsAtOnce: UIEventSource<boolean>
     public readonly showTags: UIEventSource<"no" | undefined | "always" | "yes" | "full">
+    public readonly showCrosshair: UIEventSource<"yes" | "always" | "no" | undefined>
     public readonly fixateNorth: UIEventSource<undefined | "yes">
+    public readonly a11y: UIEventSource<undefined | "always" | "never" | "default">
     public readonly homeLocation: FeatureSource
+    public readonly morePrivacy: UIEventSource<undefined | "yes" | "no">
+    /**
+     * The language as saved into the preferences of the user, if logged in.
+     * Note that this is _different_ from the languages a user can set via the osm.org interface here: https://www.openstreetmap.org/preferences
+     */
     public readonly language: UIEventSource<string>
+    public readonly preferredBackgroundLayer: UIEventSource<
+        string | "photo" | "map" | "osmbasedmap" | undefined
+    >
+    public readonly imageLicense: UIEventSource<string>
     /**
      * The number of seconds that the GPS-locations are stored in memory.
      * Time in seconds
@@ -51,16 +64,22 @@ export default class UserRelatedState {
     /**
      * Preferences as tags exposes many preferences and state properties as record.
      * This is used to bridge the internal state with the usersettings.json layerconfig file
+     *
+     * Some metainformation that should not be edited starts with a single underscore
+     * Constants and query parameters start with two underscores
+     * Note: these are linked via OsmConnection.preferences which exports all preferences as UIEventSource
      */
     public readonly preferencesAsTags: UIEventSource<Record<string, string>>
+    private readonly _mapProperties: MapProperties
 
     constructor(
         osmConnection: OsmConnection,
-        availableLanguages?: string[],
         layout?: LayoutConfig,
-        featureSwitches?: FeatureSwitchState
+        featureSwitches?: FeatureSwitchState,
+        mapProperties?: MapProperties
     ) {
         this.osmConnection = osmConnection
+        this._mapProperties = mapProperties
         {
             const translationMode: UIEventSource<undefined | "true" | "false" | "mobile" | string> =
                 this.osmConnection.GetPreference("translation-mode", "false")
@@ -88,12 +107,29 @@ export default class UserRelatedState {
             })
         )
         this.language = this.osmConnection.GetPreference("language")
-        this.showTags = <UIEventSource<any>>this.osmConnection.GetPreference("show_tags")
-        this.fixateNorth = <any>this.osmConnection.GetPreference("fixate-north")
+        this.showTags = this.osmConnection.GetPreference("show_tags")
+        this.showCrosshair = this.osmConnection.GetPreference("show_crosshair")
+        this.fixateNorth = this.osmConnection.GetPreference("fixate-north")
+        this.morePrivacy = this.osmConnection.GetPreference("more_privacy", "no")
+
+        this.a11y = this.osmConnection.GetPreference("a11y")
+
         this.mangroveIdentity = new MangroveIdentity(
-            this.osmConnection.GetLongPreference("identity", "mangrove")
+            this.osmConnection.GetLongPreference("identity", "mangrove"),
+            this.osmConnection.GetPreference("identity-creation-date", "mangrove")
+        )
+        this.preferredBackgroundLayer = this.osmConnection.GetPreference(
+            "preferred-background-layer",
+            undefined,
+            {
+                documentation:
+                    "The ID of a layer or layer category that MapComplete uses by default",
+            }
         )
 
+        this.imageLicense = this.osmConnection.GetPreference("pictures-license", "CC0", {
+            documentation: "The license under which new images are uploaded",
+        })
         this.installedUserThemes = this.InitInstalledUserThemes()
 
         this.homeLocation = this.initHomeLocation()
@@ -108,10 +144,10 @@ export default class UserRelatedState {
             return
         }
 
-        this.language.addCallbackAndRunD((language) => Locale.language.setData(language))
+        this.language.syncWith(Locale.language)
     }
 
-    private static initUserRelatedState(): LayerConfig {
+    private static initUserSettingsState(): LayerConfig {
         try {
             return new LayerConfig(<LayerConfigJson>usersettings, "userinformationpanel")
         } catch (e) {
@@ -237,7 +273,7 @@ export default class UserRelatedState {
 
     /**
      * Initialize the 'amended preferences'.
-     * This is inherently a dirty and chaotic method, as it shoves many properties into this EventSourcd
+     * This is inherently a dirty and chaotic method, as it shoves many properties into this EventSource
      * */
     private initAmendedPrefs(
         layout?: LayoutConfig,
@@ -245,6 +281,7 @@ export default class UserRelatedState {
     ): UIEventSource<Record<string, string>> {
         const amendedPrefs = new UIEventSource<Record<string, string>>({
             _theme: layout?.id,
+            "_theme:backgroundLayer": layout?.defaultBackgroundId,
             _backend: this.osmConnection.Backend(),
             _applicationOpened: new Date().toISOString(),
             _supports_sharing:
@@ -263,6 +300,9 @@ export default class UserRelatedState {
         osmConnection.preferencesHandler.preferences.addCallback((newPrefs) => {
             for (const k in newPrefs) {
                 const v = newPrefs[k]
+                if (v === "undefined" || !v) {
+                    continue
+                }
                 if (k.endsWith("-combined-length")) {
                     const l = Number(v)
                     const key = k.substring(0, k.length - "length".length)
@@ -277,9 +317,7 @@ export default class UserRelatedState {
             }
 
             amendedPrefs.ping()
-            console.log("Amended prefs are:", amendedPrefs.data)
         })
-        const usersettingsConfig = UserRelatedState.usersettingsConfig
         const translationMode = osmConnection.GetPreference("translation-mode")
 
         Locale.language.mapD(
@@ -287,7 +325,8 @@ export default class UserRelatedState {
                 amendedPrefs.data["_language"] = language
                 const trmode = translationMode.data
                 if ((trmode === "true" || trmode === "mobile") && layout !== undefined) {
-                    const missing = layout.missingTranslations()
+                    const extraInspection = UserRelatedState.usersettingsConfig
+                    const missing = layout.missingTranslations(extraInspection)
                     const total = missing.total
 
                     const untranslated = missing.untranslated.get(language) ?? []
@@ -326,30 +365,19 @@ export default class UserRelatedState {
             },
             [translationMode]
         )
+
+        this.mangroveIdentity.getKeyId().addCallbackAndRun((kid) => {
+            amendedPrefs.data["mangrove_kid"] = kid
+            amendedPrefs.ping()
+        })
+
+        const usersettingMetaTagging = new ThemeMetaTagging()
         osmConnection.userDetails.addCallback((userDetails) => {
             for (const k in userDetails) {
                 amendedPrefs.data["_" + k] = "" + userDetails[k]
             }
 
-            for (const [name, code, _] of usersettingsConfig.calculatedTags) {
-                try {
-                    let result = new Function("feat", "return " + code + ";")({
-                        properties: amendedPrefs.data,
-                    })
-                    if (result !== undefined && result !== "" && result !== null) {
-                        if (typeof result !== "string") {
-                            result = JSON.stringify(result)
-                        }
-                        amendedPrefs.data[name] = result
-                    }
-                } catch (e) {
-                    console.error(
-                        "Calculating a tag for userprofile-settings failed for variable",
-                        name,
-                        e
-                    )
-                }
-            }
+            usersettingMetaTagging.metaTaggging_for_usersettings({ properties: amendedPrefs.data })
 
             const simplifiedName = userDetails.name.toLowerCase().replace(/\s+/g, "")
             const isTranslator = translators.contributors.find(
@@ -402,6 +430,11 @@ export default class UserRelatedState {
                 })
             }
         }
+
+        this._mapProperties?.rasterLayer?.addCallbackAndRun((l) => {
+            amendedPrefs.data["__current_background"] = l?.properties?.id
+            amendedPrefs.ping()
+        })
 
         return amendedPrefs
     }

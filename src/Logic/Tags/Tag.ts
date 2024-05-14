@@ -1,9 +1,13 @@
 import { Utils } from "../../Utils"
 import { TagsFilter } from "./TagsFilter"
+import { TagConfigJson } from "../../Models/ThemeConfig/Json/TagConfigJson"
+import { ExpressionSpecification } from "maplibre-gl"
+import { RegexTag } from "./RegexTag"
 
 export class Tag extends TagsFilter {
     public key: string
     public value: string
+
     constructor(key: string, value: string) {
         super()
         this.key = key
@@ -67,6 +71,10 @@ export class Tag extends TagsFilter {
         return [`["${this.key}"="${this.value}"]`]
     }
 
+    asJson(): TagConfigJson {
+        return this.key + "=" + this.value
+    }
+
     /**
 
      const t = new Tag("key", "value")
@@ -79,10 +87,18 @@ export class Tag extends TagsFilter {
         currentProperties?: Record<string, string>
     ) {
         let v = this.value
+        if (typeof v !== "string") {
+            v = JSON.stringify(v)
+        }
         if (shorten) {
             v = Utils.EllipsesAfter(v, 25)
         }
         if ((v === "" || v === undefined) && currentProperties !== undefined) {
+            if (!currentProperties || Object.keys(currentProperties).length === 0) {
+                // We are probably generating documentation
+                return this.key + "="
+            }
+
             // This tag will be removed if in the properties, so we indicate this with special rendering
             if ((currentProperties[this.key] ?? "") === "") {
                 // This tag is not present in the current properties, so this tag doesn't change anything
@@ -107,6 +123,7 @@ export class Tag extends TagsFilter {
     /**
      *
      * import {RegexTag} from "./RegexTag";
+     * import {And} from "./And";
      *
      * // should handle advanced regexes
      * new Tag("key", "aaa").shadows(new RegexTag("key", /a+/)) // => true
@@ -116,14 +133,20 @@ export class Tag extends TagsFilter {
      * new Tag("key","value").shadows(new RegexTag("key", "value", true)) // => false
      * new Tag("key","value").shadows(new RegexTag("otherkey", "value", true)) // => false
      * new Tag("key","value").shadows(new RegexTag("otherkey", "value", false)) // => false
+     * new Tag("key","value").shadows(new And([new Tag("x","y"), new RegexTag("a","b", true)]) // => false
      */
     shadows(other: TagsFilter): boolean {
-        if (other["key"] !== undefined) {
-            if (other["key"] !== this.key) {
-                return false
-            }
+        if ((other["key"] !== this.key)) {
+            return false
         }
-        return other.matchesProperties({ [this.key]: this.value })
+        if(other instanceof Tag){
+            // Other.key === this.key
+            return other.value === this.value
+        }
+        if(other instanceof RegexTag){
+            return other.matchesProperties({[this.key]: this.value})
+        }
+        return false
     }
 
     usedKeys(): string[] {
@@ -151,5 +174,12 @@ export class Tag extends TagsFilter {
 
     visit(f: (tagsFilter: TagsFilter) => void) {
         f(this)
+    }
+
+    asMapboxExpression(): ExpressionSpecification {
+        if (this.value === "") {
+            return ["any", ["!", ["has", this.key]], ["==", ["get", this.key], ""]]
+        }
+        return ["==", ["get", this.key], this.value]
     }
 }

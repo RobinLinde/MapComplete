@@ -12,6 +12,8 @@
   import * as turf from "@turf/turf"
   import LayerConfig from "../../../Models/ThemeConfig/LayerConfig"
   import { createEventDispatcher, onDestroy } from "svelte"
+  import Move_arrows from "../../../assets/svg/Move_arrows.svelte"
+  import SmallZoomButtons from "../../Map/SmallZoomButtons.svelte"
 
   /**
    * A visualisation to pick a location on a map background
@@ -51,10 +53,9 @@
   if (maxDistanceInMeters) {
     onDestroy(
       mla.location.addCallbackD((newLocation) => {
-        const l = [newLocation.lon, newLocation.lat]
+        const l: [number, number] = [newLocation.lon, newLocation.lat]
         const c: [number, number] = [initialCoordinate.lon, initialCoordinate.lat]
         const d = GeoOperations.distanceBetween(l, c)
-        console.log("distance is", d, l, c)
         if (d <= maxDistanceInMeters) {
           return
         }
@@ -66,7 +67,7 @@
 
         if (!rangeIsShown) {
           new ShowDataLayer(map, {
-            layer: new LayerConfig(boundsdisplay),
+            layer: new LayerConfig(<any>boundsdisplay),
             features: new StaticFeatureSource([
               turf.circle(c, maxDistanceInMeters, {
                 units: "meters",
@@ -83,14 +84,21 @@
 
 <div class="min-h-32 relative h-full cursor-pointer overflow-hidden">
   <div class="absolute top-0 left-0 h-full w-full cursor-pointer">
-    <MaplibreMap center={{ lng: initialCoordinate.lon, lat: initialCoordinate.lat }} {map} />
+    <MaplibreMap
+      center={{ lng: initialCoordinate.lon, lat: initialCoordinate.lat }}
+      {map}
+      mapProperties={mla}
+    />
   </div>
 
   <div
     class="pointer-events-none absolute top-0 left-0 flex h-full w-full items-center p-8 opacity-50"
   >
-    <img class="h-full max-h-24" src="./assets/svg/move-arrows.svg" />
+    <slot name="image">
+      <Move_arrows class="h-full max-h-24" />
+    </slot>
   </div>
 
   <DragInvitation hideSignal={mla.location} />
+  <SmallZoomButtons adaptor={mla} />
 </div>

@@ -1,6 +1,6 @@
 import { BBox } from "./BBox"
 import * as turf from "@turf/turf"
-import { AllGeoJSON, booleanWithin, Coord } from "@turf/turf"
+import { AllGeoJSON, booleanWithin, Coord, Lines } from "@turf/turf"
 import {
     Feature,
     FeatureCollection,
@@ -19,6 +19,35 @@ import { Utils } from "../Utils"
 export class GeoOperations {
     private static readonly _earthRadius = 6378137
     private static readonly _originShift = (2 * Math.PI * GeoOperations._earthRadius) / 2
+    private static readonly directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"] as const
+    private static readonly directionsRelative = [
+        "straight",
+        "slight_right",
+        "right",
+        "sharp_right",
+        "behind",
+        "sharp_left",
+        "left",
+        "slight_left",
+    ] as const
+    private static reverseBearing = {
+        N: 0,
+        NNE: 22.5,
+        NE: 45,
+        ENE: 67.5,
+        E: 90,
+        ESE: 112.5,
+        SE: 135,
+        SSE: 157.5,
+        S: 180,
+        SSW: 202.5,
+        SW: 225,
+        WSW: 247.5,
+        W: 270,
+        WNW: 292.5,
+        NW: 315,
+        NNW: 337.5,
+    }
 
     /**
      * Create a union between two features
@@ -124,7 +153,7 @@ export class GeoOperations {
                     continue
                 }
 
-                const intersection = GeoOperations.calculateInstersection(
+                const intersection = GeoOperations.calculateIntersection(
                     feature,
                     otherFeature,
                     featureBBox
@@ -155,7 +184,7 @@ export class GeoOperations {
 
                 // Calculate the surface area of the intersection
 
-                const intersection = this.calculateInstersection(feature, otherFeature, featureBBox)
+                const intersection = this.calculateIntersection(feature, otherFeature, featureBBox)
                 if (intersection === null) {
                     continue
                 }
@@ -172,7 +201,7 @@ export class GeoOperations {
     }
 
     /**
-     * Detect wether or not the given point is located in the feature
+     * Detect whether or not the given point is located in the feature
      *
      * // Should work with a normal polygon
      * const polygon = {"type": "Feature","properties": {},"geometry": {"type": "Polygon","coordinates": [[[1.8017578124999998,50.401515322782366],[-3.1640625,46.255846818480315],[5.185546875,44.74673324024678],[1.8017578124999998,50.401515322782366]]]}};
@@ -293,9 +322,11 @@ export class GeoOperations {
      * @param way
      */
     public static forceLineString(way: Feature<LineString | Polygon>): Feature<LineString>
+
     public static forceLineString(
         way: Feature<MultiLineString | MultiPolygon>
     ): Feature<MultiLineString>
+
     public static forceLineString(
         way: Feature<LineString | MultiLineString | Polygon | MultiPolygon>
     ): Feature<LineString | MultiLineString> {
@@ -314,11 +345,21 @@ export class GeoOperations {
         return <any>way
     }
 
-    public static toCSV(features: any[]): string {
+    public static toCSV(
+        features: Feature[] | FeatureCollection,
+        options?: {
+            ignoreTags?: RegExp
+        }
+    ): string {
         const headerValuesSeen = new Set<string>()
         const headerValuesOrdered: string[] = []
 
-        function addH(key) {
+        function addH(key: string) {
+            if (options?.ignoreTags) {
+                if (key.match(options.ignoreTags)) {
+                    return
+                }
+            }
             if (!headerValuesSeen.has(key)) {
                 headerValuesSeen.add(key)
                 headerValuesOrdered.push(key)
@@ -330,7 +371,14 @@ export class GeoOperations {
 
         const lines: string[] = []
 
-        for (const feature of features) {
+        let _features
+        if (Array.isArray(features)) {
+            _features = features
+        } else {
+            _features = features.features
+        }
+
+        for (const feature of _features) {
             const properties = feature.properties
             for (const key in properties) {
                 if (!properties.hasOwnProperty(key)) {
@@ -340,7 +388,7 @@ export class GeoOperations {
             }
         }
         headerValuesOrdered.sort()
-        for (const feature of features) {
+        for (const feature of _features) {
             const properties = feature.properties
             let line = ""
             for (const key of headerValuesOrdered) {
@@ -442,6 +490,7 @@ export class GeoOperations {
 
         return perBbox
     }
+
     public static toGpx(
         locations:
             | Feature<LineString>
@@ -482,7 +531,7 @@ export class GeoOperations {
             trackPoints.push(trkpt)
         }
         const header =
-            '<gpx version="1.1" creator="MapComplete.osm.be" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">'
+            '<gpx version="1.1" creator="mapcomplete.org" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">'
         return (
             header +
             "\n<name>" +
@@ -493,147 +542,43 @@ export class GeoOperations {
         )
     }
 
-    public static IdentifieCommonSegments(coordinatess: [number, number][][]): {
-        originalIndex: number
-        segmentShardWith: number[]
-        coordinates: []
-    }[] {
-        // An edge. Note that the edge might be reversed to fix the sorting condition:  start[0] < end[0] && (start[0] != end[0] || start[0] < end[1])
-        type edge = {
-            start: [number, number]
-            end: [number, number]
-            intermediate: [number, number][]
-            members: { index: number; isReversed: boolean }[]
+    /**
+     * Given a list of points, convert into a GPX-list, e.g. for favourites
+     * @param locations
+     * @param title
+     */
+    public static toGpxPoints(
+        locations: Feature<Point, { date?: string; altitude?: number | string }>[],
+        title?: string
+    ) {
+        title = title?.trim()
+        if (title === undefined || title === "") {
+            title = "Created with MapComplete"
         }
-
-        // The strategy:
-        // 1. Index _all_ edges from _every_ linestring. Index them by starting key, gather which relations run over them
-        // 2. Join these edges back together - as long as their membership groups are the same
-        // 3. Convert to results
-
-        const allEdgesByKey = new Map<string, edge>()
-
-        for (let index = 0; index < coordinatess.length; index++) {
-            const coordinates = coordinatess[index]
-            for (let i = 0; i < coordinates.length - 1; i++) {
-                const c0 = coordinates[i]
-                const c1 = coordinates[i + 1]
-                const isReversed = c0[0] > c1[0] || (c0[0] == c1[0] && c0[1] > c1[1])
-
-                let key: string
-                if (isReversed) {
-                    key = "" + c1 + ";" + c0
-                } else {
-                    key = "" + c0 + ";" + c1
+        title = Utils.EncodeXmlValue(title)
+        const trackPoints: string[] = []
+        for (const l of locations) {
+            let trkpt = `    <wpt lat="${l.geometry.coordinates[1]}" lon="${l.geometry.coordinates[0]}">`
+            for (const key in l.properties) {
+                const keyCleaned = key.replaceAll(":", "__")
+                trkpt += `        <${keyCleaned}>${l.properties[key]}</${keyCleaned}>\n`
+                if (key === "website") {
+                    trkpt += `        <link>${l.properties[key]}</link>\n`
                 }
-                const member = { index, isReversed }
-                if (allEdgesByKey.has(key)) {
-                    allEdgesByKey.get(key).members.push(member)
-                    continue
-                }
-
-                let edge: edge
-                if (!isReversed) {
-                    edge = {
-                        start: c0,
-                        end: c1,
-                        members: [member],
-                        intermediate: [],
-                    }
-                } else {
-                    edge = {
-                        start: c1,
-                        end: c0,
-                        members: [member],
-                        intermediate: [],
-                    }
-                }
-                allEdgesByKey.set(key, edge)
             }
+            trkpt += "    </wpt>\n"
+            trackPoints.push(trkpt)
         }
-
-        // Lets merge them back together!
-
-        let didMergeSomething = false
-        let allMergedEdges = Array.from(allEdgesByKey.values())
-        const allEdgesByStartPoint = new Map<string, edge[]>()
-        for (const edge of allMergedEdges) {
-            edge.members.sort((m0, m1) => m0.index - m1.index)
-
-            const kstart = edge.start + ""
-            if (!allEdgesByStartPoint.has(kstart)) {
-                allEdgesByStartPoint.set(kstart, [])
-            }
-            allEdgesByStartPoint.get(kstart).push(edge)
-        }
-
-        function membersAreCompatible(first: edge, second: edge): boolean {
-            // There must be an exact match between the members
-            if (first.members === second.members) {
-                return true
-            }
-
-            if (first.members.length !== second.members.length) {
-                return false
-            }
-
-            // Members are sorted and have the same length, so we can check quickly
-            for (let i = 0; i < first.members.length; i++) {
-                const m0 = first.members[i]
-                const m1 = second.members[i]
-                if (m0.index !== m1.index || m0.isReversed !== m1.isReversed) {
-                    return false
-                }
-            }
-
-            // Allrigth, they are the same, lets mark this permanently
-            second.members = first.members
-            return true
-        }
-
-        do {
-            didMergeSomething = false
-            // We use 'allMergedEdges' as our running list
-            const consumed = new Set<edge>()
-            for (const edge of allMergedEdges) {
-                // Can we make this edge longer at the end?
-                if (consumed.has(edge)) {
-                    continue
-                }
-
-                console.log("Considering edge", edge)
-                const matchingEndEdges = allEdgesByStartPoint.get(edge.end + "")
-                console.log("Matchign endpoints:", matchingEndEdges)
-                if (matchingEndEdges === undefined) {
-                    continue
-                }
-
-                for (let i = 0; i < matchingEndEdges.length; i++) {
-                    const endEdge = matchingEndEdges[i]
-
-                    if (consumed.has(endEdge)) {
-                        continue
-                    }
-
-                    if (!membersAreCompatible(edge, endEdge)) {
-                        continue
-                    }
-
-                    // We can make the segment longer!
-                    didMergeSomething = true
-                    console.log("Merging ", edge, "with ", endEdge)
-                    edge.intermediate.push(edge.end)
-                    edge.end = endEdge.end
-                    consumed.add(endEdge)
-                    matchingEndEdges.splice(i, 1)
-                    break
-                }
-            }
-
-            allMergedEdges = allMergedEdges.filter((edge) => !consumed.has(edge))
-        } while (didMergeSomething)
-
-        return []
+        const header =
+            '<gpx version="1.1" creator="mapcomplete.org" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">'
+        return (
+            header +
+            "\n<name>" +
+            title +
+            "</name>\n<trk><trkseg>\n" +
+            trackPoints.join("\n") +
+            "\n</trkseg></trk></gpx>"
+        )
     }
 
     /**
@@ -771,7 +716,25 @@ export class GeoOperations {
             const splitup = turf.lineSplit(<Feature<LineString>>toSplit, boundary)
             const kept = []
             for (const f of splitup.features) {
-                const ls = <Feature<LineString>>f
+                if (!GeoOperations.inside(GeoOperations.centerpointCoordinates(f), boundary)) {
+                    continue
+                }
+                f.properties = { ...toSplit.properties }
+                kept.push(f)
+            }
+            return kept
+        }
+
+        if (toSplit.geometry.type === "MultiLineString") {
+            const lines: Feature<LineString>[][] = toSplit.geometry.coordinates.map(
+                (coordinates) =>
+                    turf.lineSplit(<LineString>{ type: "LineString", coordinates }, boundary)
+                        .features
+            )
+            const splitted: Feature<LineString>[] = [].concat(...lines)
+            const kept: Feature<LineString>[] = []
+            for (const f of splitted) {
+                console.log("Checking", f)
                 if (!GeoOperations.inside(GeoOperations.centerpointCoordinates(f), boundary)) {
                     continue
                 }
@@ -805,7 +768,14 @@ export class GeoOperations {
      */
     public static featureToCoordinateWithRenderingType(
         feature: Feature,
-        location: "point" | "centroid" | "start" | "end" | "projected_centerpoint" | string
+        location:
+            | "point"
+            | "centroid"
+            | "start"
+            | "end"
+            | "projected_centerpoint"
+            | "polygon_centerpoint"
+            | string
     ): [number, number] | undefined {
         switch (location) {
             case "point":
@@ -818,6 +788,11 @@ export class GeoOperations {
                     return undefined
                 }
                 return GeoOperations.centerpointCoordinates(feature)
+            case "polygon_centroid":
+                if (feature.geometry.type === "Polygon") {
+                    return GeoOperations.centerpointCoordinates(feature)
+                }
+                return undefined
             case "projected_centerpoint":
                 if (
                     feature.geometry.type === "LineString" ||
@@ -842,7 +817,7 @@ export class GeoOperations {
                 }
                 return undefined
             default:
-                throw "Unkown location type: " + location
+                throw "Unkown location type: " + location + " for feature " + feature.properties.id
         }
     }
 
@@ -895,6 +870,219 @@ export class GeoOperations {
     static centerpointCoordinatesObj(geojson: Feature) {
         const [lon, lat] = GeoOperations.centerpointCoordinates(geojson)
         return { lon, lat }
+    }
+
+    public static SplitSelfIntersectingWays(features: Feature[]): Feature[] {
+        const result: Feature[] = []
+
+        for (const feature of features) {
+            if (feature.geometry.type === "LineString") {
+                let coors = feature.geometry.coordinates
+                for (let i = coors.length - 1; i >= 0; i--) {
+                    // Go back, to nick of the back when needed
+                    const ci = coors[i]
+                    for (let j = i + 1; j < coors.length; j++) {
+                        const cj = coors[j]
+                        if (
+                            Math.abs(ci[0] - cj[0]) <= 0.000001 &&
+                            Math.abs(ci[1] - cj[1]) <= 0.0000001
+                        ) {
+                            // Found a self-intersecting way!
+                            console.debug("SPlitting way", feature.properties.id)
+                            result.push({
+                                ...feature,
+                                geometry: { ...feature.geometry, coordinates: coors.slice(i + 1) },
+                            })
+                            coors = coors.slice(0, i + 1)
+                            break
+                        }
+                    }
+                }
+                result.push({
+                    ...feature,
+                    geometry: { ...feature.geometry, coordinates: coors },
+                })
+            }
+        }
+
+        return result
+    }
+
+    /**
+     * GeoOperations.distanceToHuman(52.8) // => "53m"
+     * GeoOperations.distanceToHuman(2800) // => "2.8km"
+     * GeoOperations.distanceToHuman(12800) // => "13km"
+     *
+     * @param meters
+     */
+    public static distanceToHuman(meters: number): string {
+        if (meters === undefined) {
+            return ""
+        }
+        meters = Math.round(meters)
+        if (meters < 1000) {
+            return meters + "m"
+        }
+
+        if (meters >= 10000) {
+            const km = Math.round(meters / 1000)
+            return km + "km"
+        }
+
+        meters = Math.round(meters / 100)
+        const kmStr = "" + meters
+
+        return kmStr.substring(0, kmStr.length - 1) + "." + kmStr.substring(kmStr.length - 1) + "km"
+    }
+
+    /**
+     * GeoOperations.parseBearing("N") // => 0
+     * GeoOperations.parseBearing("E") // => 90
+     * GeoOperations.parseBearing("NE") // => 45
+     * GeoOperations.parseBearing("NNE") // => 22.5
+     *
+     * GeoOperations.parseBearing("90") // => 90
+     * GeoOperations.parseBearing("-90°") // => 270
+     * GeoOperations.parseBearing("180 °") // => 180
+     *
+     * GeoOperations.parseBearing(180) // => 180
+     * GeoOperations.parseBearing(-270) // => 90
+     *
+     */
+    public static parseBearing(str: string | number) {
+        let n: number
+        if (typeof str === "string") {
+            str = str.trim()
+            if (str.endsWith("°")) {
+                str = str.substring(0, str.length - 1).trim()
+            }
+            n = Number(str)
+        } else {
+            n = str
+        }
+        if (!isNaN(n)) {
+            while (n < 0) {
+                n += 360
+            }
+            return n % 360
+        }
+        return GeoOperations.reverseBearing[str]
+    }
+
+    /**
+     * GeoOperations.bearingToHuman(0) // => "N"
+     * GeoOperations.bearingToHuman(-9) // => "N"
+     * GeoOperations.bearingToHuman(-10) // => "N"
+     * GeoOperations.bearingToHuman(-180) // => "S"
+     * GeoOperations.bearingToHuman(181) // => "S"
+     * GeoOperations.bearingToHuman(46) // => "NE"
+     */
+    public static bearingToHuman(
+        bearing: number
+    ): "N" | "NE" | "E" | "SE" | "S" | "SW" | "W" | "NW" {
+        while (bearing < 0) {
+            bearing += 360
+        }
+        bearing %= 360
+        bearing += 22.5
+        const segment = Math.floor(bearing / 45) % GeoOperations.directions.length
+        return GeoOperations.directions[segment]
+    }
+
+    /**
+     * GeoOperations.bearingToHumanRelative(-207) // => "sharp_right"
+     * GeoOperations.bearingToHumanRelative(-199) // => "behind"
+     * GeoOperations.bearingToHumanRelative(-180) // => "behind"
+     * GeoOperations.bearingToHumanRelative(-10) // => "straight"
+     * GeoOperations.bearingToHumanRelative(0) // => "straight"
+     * GeoOperations.bearingToHumanRelative(181) // => "behind"
+     * GeoOperations.bearingToHumanRelative(40) // => "slight_right"
+     * GeoOperations.bearingToHumanRelative(46) // => "slight_right"
+     * GeoOperations.bearingToHumanRelative(95) // => "right"
+     * GeoOperations.bearingToHumanRelative(140) // => "sharp_right"
+     * GeoOperations.bearingToHumanRelative(158) // => "behind"
+     *
+     */
+    public static bearingToHumanRelative(
+        bearing: number
+    ):
+        | "straight"
+        | "slight_right"
+        | "right"
+        | "sharp_right"
+        | "behind"
+        | "sharp_left"
+        | "left"
+        | "slight_left" {
+        while (bearing < 0) {
+            bearing += 360
+        }
+        bearing %= 360
+        bearing += 22.5
+        const segment = Math.floor(bearing / 45) % GeoOperations.directionsRelative.length
+        return GeoOperations.directionsRelative[segment]
+    }
+
+    /**
+     * const coors = [[[3.217198532946432,51.218067],[3.216807134449482,51.21849812105347],[3.2164304037883706,51.2189272]],[[3.2176208,51.21760169669458],[3.217198560167068,51.218067]]]
+     * const f = <any> {geometry: {coordinates: coors}}
+     * const merged = GeoOperations.attemptLinearize(f)
+     * merged.geometry.coordinates // => [[3.2176208,51.21760169669458],[3.217198532946432,51.218067], [3.216807134449482,51.21849812105347],[3.2164304037883706,51.2189272]]
+     */
+    static attemptLinearize(
+        multiLineStringFeature: Feature<MultiLineString>
+    ): Feature<LineString | MultiLineString> {
+        const coors = multiLineStringFeature.geometry.coordinates
+        if (coors.length === 0) {
+            console.error(multiLineStringFeature.geometry)
+            throw "Error: got degenerate multilinestring"
+        }
+        outer: for (let i = coors.length - 1; i >= 0; i--) {
+            // We try to match the first element of 'i' with another, earlier list `j`
+            // If a match is found with `j`, j is extended and `i` is scrapped
+            const iFirst = coors[i][0]
+            for (let j = 0; j < coors.length; j++) {
+                if (i == j) {
+                    continue
+                }
+
+                const jLast = coors[j].at(-1)
+                if (
+                    !(
+                        Math.abs(iFirst[0] - jLast[0]) < 0.000001 &&
+                        Math.abs(iFirst[1] - jLast[1]) < 0.0000001
+                    )
+                ) {
+                    continue
+                }
+                coors[j].splice(coors.length - 1, 1)
+                coors[j].push(...coors[i])
+                coors.splice(i, 1)
+                continue outer
+            }
+        }
+        if (coors.length === 0) {
+            throw "No more coordinates found"
+        }
+
+        if (coors.length === 1) {
+            return {
+                type: "Feature",
+                properties: multiLineStringFeature.properties,
+                geometry: {
+                    type: "LineString",
+                    coordinates: coors[0],
+                },
+            }
+        }
+        return {
+            type: "Feature",
+            properties: multiLineStringFeature.properties,
+            geometry: {
+                type: "MultiLineString",
+                coordinates: coors,
+            },
+        }
     }
 
     /**
@@ -951,7 +1139,7 @@ export class GeoOperations {
      * Returns 0 if both are linestrings
      * Returns null if the features are not intersecting
      */
-    private static calculateInstersection(
+    private static calculateIntersection(
         feature,
         otherFeature,
         featureBBox: BBox,
@@ -1021,7 +1209,7 @@ export class GeoOperations {
                 return null
             }
             if (otherFeature.geometry.type === "LineString") {
-                return this.calculateInstersection(
+                return this.calculateIntersection(
                     otherFeature,
                     feature,
                     otherFeatureBBox,
@@ -1041,6 +1229,19 @@ export class GeoOperations {
                     // See https://github.com/Turfjs/turf/pull/2238
                     return null
                 }
+                if (e.message.indexOf("SweepLine tree") >= 0) {
+                    console.log("Applying fallback intersection...")
+                    const intersection = turf.intersect(
+                        turf.truncate(feature),
+                        turf.truncate(otherFeature)
+                    )
+                    if (intersection == null) {
+                        return null
+                    }
+                    return turf.area(intersection) // in m²
+                    // Another workaround: https://github.com/Turfjs/turf/issues/2258
+                }
+
                 throw e
             }
         }

@@ -20,6 +20,7 @@
         "cancel": "Abbrechen",
         "cannotBeDeleted": "Dieses Element kann nicht gelöscht werden",
         "delete": "Löschen",
+        "deletedTitle": "Gelöschtes Objekt",
         "explanations": {
             "hardDelete": "Dieses Objekt wird in OpenStreetMap gelöscht. Es kann von einem erfahrenen Mitwirkenden wiederhergestellt werden",
             "retagNoOtherThemes": "Dieses Objekt wird neu klassifiziert und aus dieser Anwendung ausgeblendet",
@@ -27,6 +28,7 @@
             "selectReason": "Bitte auswählen, warum dieses Element gelöscht werden soll",
             "softDelete": "Dieses Element wird aktualisiert und in dieser Anwendung ausgeblendet. <span class=\"subtle\">{reason}</span>"
         },
+        "isChanged": "Dieses Merkmal wurde geändert und passt nicht mehr zu dieser Ebene",
         "isDeleted": "Dieses Element wurde gelöscht",
         "isntAPoint": "Es können nur Punkte gelöscht werden. Das ausgewählte Objekt ist ein Weg, eine Fläche oder eine Relation.",
         "loading": "Eigenschaften untersuchen, um festzustellen, ob das Element gelöscht werden kann.",
@@ -45,14 +47,47 @@
         "useSomethingElse": "Zum Löschen kann stattdessen ein anderer OpenStreetMap-Editor verwendet werden",
         "whyDelete": "Warum soll dieses Objekt gelöscht werden?"
     },
+    "external": {
+        "allAreApplied": "Alle fehlenden, externen Werte wurden in OpenStreetMap kopiert",
+        "apply": "Übernehmen",
+        "applyAll": "Alle fehlenden Werte übernehmen",
+        "conflicting": {
+            "intro": "OpenStreetMap hat für die folgenden Werte einen anderen Wert als die Quell-Website.",
+            "title": "Konflikte zwischen Elementen"
+        },
+        "currentInOsmIs": "Momentan hat OpenStreetMap den folgenden Wert erfasst:",
+        "done": "Fertig",
+        "error": "Fehler",
+        "loadedFrom": "Die folgenden Daten werden von <a href={url}>{source}</a> unter Verwendung des eingebetteten JSON-LD geladen",
+        "noDataLoaded": "Die externe Website hat keine verlinkten Daten, die geladen werden könnten",
+        "overwrite": "In OpenStreetMap überschreiben"
+    },
     "favourite": {
         "loginNeeded": "<h3>Anmelden</h3>Ein persönliches Layout ist nur für OpenStreetMap-Benutzer verfügbar",
         "panelIntro": "<h3>Ihr persönliches Thema</h3>Aktivieren Sie Ihre Lieblingsebenen aus allen offiziellen Themen",
         "reload": "Daten neu laden"
     },
+    "favouritePoi": {
+        "button": {
+            "isFavourite": "Der Standort ist derzeit als Favorit markiert und wird auf allen thematischen Karten von MapComplete angezeigt, die Sie besuchen.",
+            "isMarkedShort": "Als bevorzugter Standort markiert",
+            "isNotMarkedShort": "Nicht als Favorit markiert",
+            "markAsFavouriteTitle": "Diesen Standort als Favorit markieren",
+            "markDescription": "Diesen Standort zur persönlichen Liste bevorzugter Standorte hinzufügen",
+            "unmark": "Standort von Favoritenliste entfernen",
+            "unmarkNotDeleted": "Dieser Punkt wird nicht gelöscht und ist weiterhin auf der entsprechenden Karte für dich und andere sichtbar"
+        },
+        "downloadGeojson": "Favoriten als geojson herunterladen",
+        "downloadGpx": "Favoriten als GPX herunterladen",
+        "intro": "Du hast {length} Orte als Favorit markiert.",
+        "introPrivacy": "Diese Liste ist nur für dich sichtbar",
+        "loginToSeeList": "Melde dich an, um die Liste der Orte zu sehen, die du als Favoriten markiert hast",
+        "tab": "Deine Favoriten und Bewertungen",
+        "title": "Ausgewählte Orte"
+    },
     "flyer": {
         "aerial": "Diese Karte verwendet einen anderen Hintergrund, nämlich Luftaufnahmen der Agentschap Informatie Vlaanderen",
-        "callToAction": "Testen Sie es auf mapcomplete.osm.be",
+        "callToAction": "Testen Sie es auf mapcomplete.org",
         "cyclofix": "Fahrradpumpen, Reparaturstationen, Trinkwasserstellen und Fahrradgeschäfte sind auf CycloFix",
         "description": "Ein Flyer im A4-Querformat zur Werbung von MapComplete",
         "editing": {
@@ -60,7 +95,7 @@
             "intro": "Der Benutzer wird von einer Karte mit Objekten begrüßt. Wenn er eines auswählt, werden Informationen über das Objekt angezeigt.",
             "title": "Wie sieht die Benutzeroberfläche aus?"
         },
-        "examples": "Es gibt viele thematische Karten, von denen hier einige dargestellt sind.\n\nEs gibt noch viele weitere thematische Karten online: über das Gesundheitswesen, Indoor-Navigation, Zugänglichkeit für Rollstuhlfahrer, Abfallentsorgungsanlagen, öffentliche Bücherschränke, Fußgängerüberwege mit Regenbogenmalerei,… Entdecken Sie sie alle auf mapcomplete.osm.be",
+        "examples": "Es gibt viele thematische Karten, von denen hier einige dargestellt sind.\n\nEs gibt noch viele weitere thematische Karten online: über das Gesundheitswesen, Indoor-Navigation, Zugänglichkeit für Rollstuhlfahrer, Abfallentsorgungsanlagen, öffentliche Bücherschränke, Fußgängerüberwege mit Regenbogenmalerei,… Entdecken Sie sie alle auf mapcomplete.org",
         "fakeui": {
             "add_images": "Bilder mit ein paar Klicks hinzufügen",
             "attributes": "Zeigt Attribute in einer freundlichen Art und Weise",
@@ -87,7 +122,7 @@
         "onwheels": "Indoor-Karten für Rollstuhlfahrer sind ebenfalls erhältlich.",
         "osm": "OpenStreetMap ist eine Online-Karte, die von jedermann für jeden Zweck bearbeitet und weiterverwendet werden kann, solange die Daten offengelegt werden und die Namensnennung erfolgt.\n\nEs ist die größte Geodatenbank der Welt und wird von Tausenden von Anwendungen und Websites weiterverwendet.",
         "tagline": "Erfassen Sie Geodaten mit OpenStreetMap",
-        "title": "MapComplete.osm.be",
+        "title": "mapcomplete.org",
         "toerisme_vlaanderen": "Für ein gemeinsames Projekt mit Visit Flanders wurde 'Pin your point' geschaffen. Über 160 Mitwirkende fügten einige tausend Bänke und Picknicktische hinzu und entdeckten 100 Ladestationen für Fahrräder.",
         "whatIsOsm": "Was ist OpenStreetMap?"
     },
@@ -95,7 +130,7 @@
         "404": "Diese Seite existiert nicht",
         "about": "OpenStreetMap für ein bestimmtes Thema einfach bearbeiten und hinzufügen",
         "aboutMapComplete": {
-            "intro": "Nutze MapComplete, um Daten zu <b>einem bestimmten Thema</b> auf OpenStreetMap einzutragen. Beantworte Frage, und in wenigen Minuten sind die Beiträge überall verfügbar. In den meisten Themen kannst Du Bilder hinzufügen oder sogar eine Bewertung hinterlassen. Die <b>Themen-Ersteller*innen</b> definieren Objekte, Fragen und Begriffe für das jeweilige Thema."
+            "intro": "Nutze MapComplete, um Daten zu <b>einem bestimmten Thema</b> auf OpenStreetMap einzutragen. Beantworte Fragen, und in wenigen Minuten sind deine Beiträge überall verfügbar. In den meisten Themen kannst Du Bilder hinzufügen oder sogar eine Bewertung hinterlassen. Die <b>Themen-Verwalter</b> definieren Objekte, Fragen und Begriffe für das jeweilige Thema."
         },
         "add": {
             "addNew": "{category} hinzufügen",
@@ -104,6 +139,7 @@
             "confirmLocation": "Diesen Standort bestätigen",
             "confirmTitle": "{title} hinzufügen?",
             "confirmWarning": "Das von Dir eingetragene Objekt wird <b>für alle sichtbar sein</b>. Bitte füge nur Objekte hinzu, die wirklich existieren. Viele Anwendungen nutzen diese Daten.",
+            "creating": "Einen neuen Punkt zu erstellen...",
             "disableFilters": "Alle Filter deaktivieren",
             "disableFiltersExplanation": "Einige Elemente können durch einen Filter ausgeblendet sein",
             "enableLayer": "Ebene {name} einblenden",
@@ -124,10 +160,10 @@
             "pleaseLogin": "Bitte anmelden, um ein neues Objekt hinzuzufügen",
             "presetInfo": "Der neue POI hat {tags}",
             "stillLoading": "Die Daten werden noch geladen. Bitte warten Sie, bevor Sie ein neues Objekt hinzufügen.",
-            "title": "Neues Objekt hinzufügen?",
+            "title": "Neues Objekt hinzufügen",
             "warnVisibleForEveryone": "Ihre Ergänzung wird für alle sichtbar sein",
             "wrongType": "Dieses Objekt ist weder ein Punkt noch ein Weg und kann nicht importiert werden",
-            "zoomInFurther": "Ausschnitt vergrößern, um ein Objekt hinzuzufügen.",
+            "zoomInFurther": "Ausschnitt vergrößern, um ein Objekt hinzuzufügen",
             "zoomInMore": "Ansicht vergrößern, um dieses Element zu importieren"
         },
         "apply_button": {
@@ -155,25 +191,37 @@
             "mapillaryHelp": "<b>Mapillary</b> ist ein Online-Dienst, der Straßenbilder sammelt und sie unter einer freien Lizenz anbietet. Mitwirkende dürfen diese Bilder verwenden, um OpenStreetMap zu verbessern",
             "openIssueTracker": "Fehler melden",
             "openMapillary": "Mapillary öffnen",
-            "openOsmcha": "Letzte Bearbeitungen zum Thema {theme} ansehen",
+            "openOsmcha": "Neueste Bearbeitungen mit {theme} ansehen",
+            "seeOnMapillary": "Dieses Bild auf Mapillary ansehen",
             "themeBy": "Dieses Thema wurde erstellt von {author}",
             "title": "Copyright und Urheberrechtsangabe",
             "translatedBy": "MapComplete wurde übersetzt von {contributors} und <a href='https://github.com/pietervdvn/MapComplete/graphs/contributors' target='_blank'>{hiddenCount} weiteren Personen</a>"
         },
         "back": "Zurück",
-        "backToIndex": "Zurück zur Übersicht aller thematischen Karten",
+        "backToIndex": "Zur Übersicht aller Themenkarten",
+        "backToMap": "Zurück zur Karte",
         "backgroundMap": "Hintergrundkarte auswählen",
         "backgroundSwitch": "Hintergrund wechseln",
         "cancel": "Abbrechen",
         "confirm": "Bestätigen",
-        "customThemeIntro": "<h3>Benutzerdefinierte Themen</h3>Dies sind zuvor angesehene nutzergenerierte Themen.",
+        "customThemeIntro": "Bereits angesehene nutzergenerierte Themen.",
+        "customThemeTitle": "Benutzerdefinierte Themen",
         "download": {
+            "custom": {
+                "download": "Lade PNG herunter, das {width}mm breit und {height}mm hoch ist",
+                "downloadHelper": "Das ist für den Druck gedacht",
+                "height": "Bildhöhe (in mm):",
+                "title": "Download eines Bildes mit einer benutzerdefinierten Breite und Höhe",
+                "width": "Bildbreite (in mm): "
+            },
             "downloadAsPdf": "Aktuelle Karte als PDF herunterladen",
             "downloadAsPdfHelper": "Ideal zum Drucken der aktuellen Karte",
             "downloadAsPng": "Als Bild herunterladen",
             "downloadAsPngHelper": "Am besten geeignet, um in Berichten zu verwenden",
             "downloadAsSvg": "Aktuelle Karte als SVG herunterladen",
             "downloadAsSvgHelper": "Kompatibel mit Inkscape oder Adobe Illustrator; Weiterbearbeitung erforderlich",
+            "downloadAsSvgLinesOnly": "SVG der aktuellen Karte als Liniendarstellung herunterladen",
+            "downloadAsSvgLinesOnlyHelper": "Selbstüberschneidende Linien werden geteilt und können mit geeigneter 3D-Software verwendet werden",
             "downloadCSV": "Sichtbare Daten als CSV herunterladen",
             "downloadCSVHelper": "Kompatibel mit LibreOffice Calc, Excel, …",
             "downloadFeatureAsGeojson": "GeoJSON Datei herunterladen",
@@ -187,21 +235,37 @@
             "licenseInfo": "<h3>Copyright-Hinweis</h3>Die bereitgestellten Daten sind unter ODbL verfügbar. Die Wiederverwendung ist für jeden Zweck frei, aber <ul><li>die Namensnennung <b>© OpenStreetMap contributors</b> ist darzustellen</li><li>Jede Änderung muss unter der gleichen Lizenz veröffentlicht werden</li></ul> Bitte lesen Sie den vollständigen <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">Copyright-Hinweis</a> für weitere Details.",
             "noDataLoaded": "Noch keine Daten geladen. Download in Kürze verfügbar",
             "pdf": {
-                "current_view_a3": "PDF (A3, Hochformat) der aktuellen Ansicht exportieren",
-                "current_view_a4": "PDF (A4, Querformat) der aktuellen Ansicht exportieren"
+                "current_view_generic": "Exportiere eine PDF-Ansicht im aktuellen Modus für {paper_size} im {orientation} Modus"
             },
             "title": "Download",
+            "toMuch": "Es gibt zu viele Funktionen, um sie alle herunterzuladen",
             "uploadGpx": "Einen Track auf OpenStreetMap hochladen"
         },
+        "enableGeolocationForSafari": "Hast du das Popup zur Abfrage der Geo-Berechtigung nicht erhalten?",
+        "enableGeolocationForSafariLink": "Erfahre, wie du die Geo-Berechtigung in den Einstellungen aktivieren kannst",
+        "eraseValue": "Wert löschen",
         "error": "Etwas ist schief gelaufen",
         "example": "Beispiel",
         "examples": "Beispiele",
         "fewChangesBefore": "Bitte beantworten Sie einige Fragen zu bestehenden Objekten, bevor Sie ein neues Objekt hinzufügen.",
+        "filterPanel": {
+            "disableAll": "Alle deaktivieren",
+            "enableAll": "Alle aktivieren"
+        },
+        "geopermissionDenied": "Die Verwendung der Standortbestimmung wurde verweigert",
         "getStartedLogin": "Bei OpenStreetMap anmelden, um loszulegen",
         "getStartedNewAccount": " oder <a href=\"https://www.openstreetmap.org/user/new\" target=\"_blank\">ein neues Konto anlegen</a>",
         "goToInbox": "Posteingang öffnen",
         "histogram": {
             "error_loading": "Das Histogramm konnte nicht geladen werden"
+        },
+        "labels": {
+            "background": "Hintergrund ändern",
+            "filter": "Daten filtern",
+            "jumpToLocation": "Eigenen Standort anzeigen",
+            "menu": "Menü",
+            "zoomIn": "Hineinzoomen",
+            "zoomOut": "Herauszoomen"
         },
         "layerSelection": {
             "title": "Ebenen auswählen",
@@ -248,11 +312,17 @@
         "openTheMap": "Karte öffnen",
         "openTheMapAtGeolocation": "Zum eigenen Standort zoomen",
         "opening_hours": {
+            "all_days_from": "Geöffnet täglich {ranges}",
             "closed_permanently": "Geschlossen auf unbestimmte Zeit",
             "closed_until": "Geschlossen bis {date}",
+            "error": "Öffnungszeiten können nicht ausgewertet werden",
             "error_loading": "Fehler: Diese Öffnungszeiten können nicht angezeigt werden.",
+            "friday": "Am Freitag {ranges}",
             "loadingCountry": "Land ermitteln…",
+            "monday": "Am Montag {ranges}",
             "not_all_rules_parsed": "Die Öffnungszeiten sind kompliziert. Folgenden Regeln werden im Eingabefenster ignoriert:",
+            "on_weekdays": "Geöffnet werktags {ranges}",
+            "on_weekends": "Geöffnet am Wochenende {ranges}",
             "openTill": "bis",
             "open_24_7": "Durchgehend geöffnet",
             "open_during_ph": "An Feiertagen ist hier",
@@ -260,16 +330,24 @@
             "ph_closed": "geschlossen",
             "ph_not_known": " ",
             "ph_open": "geöffnet",
-            "ph_open_as_usual": "geöffnet wie üblich"
+            "ph_open_as_usual": "geöffnet wie üblich",
+            "ranges": "von {starttime} bis {endtime}",
+            "rangescombined": "{range0} und {range1}",
+            "saturday": "Am Samstag {ranges}",
+            "sunday": "Am Sonntag {ranges}",
+            "thursday": "Am Donnerstag {ranges}",
+            "tuesday": "Am Dienstag {ranges}",
+            "unknown": "Die Öffnungszeiten sind unbekannt",
+            "wednesday": "Am Mittwoch {ranges}"
         },
         "osmLinkTooltip": "Dieses Element auf OpenStreetMap öffnen, um Verlauf und Bearbeitungsmöglichkeiten anzuzeigen",
         "pdf": {
             "attr": "Kartendaten © OpenStreetMap Contributors, wiederverwendbar unter ODbL",
             "attrBackground": "Hintergrund: {background}",
-            "generatedWith": "Erstellt mit MapComplete.osm.be/{layoutid}",
+            "generatedWith": "Erstellt mit mapcomplete.org/{layoutid}",
             "versionInfo": "v{version} - erstellt am {date}"
         },
-        "pickLanguage": "Sprache auswählen: ",
+        "pickLanguage": "Sprache auswählen",
         "poweredByOsm": "Unterstützt von OpenStreetMap",
         "questionBox": {
             "answeredMultiple": "Du hast {answered} Fragen beantwortet",
@@ -303,8 +381,11 @@
             "searchShort": "Suche…",
             "searching": "Suchen …"
         },
+        "searchAnswer": "Option suchen…",
+        "share": "Teilen",
         "sharescreen": {
             "copiedToClipboard": "Verknüpfung in Zwischenablage kopiert",
+            "documentation": "Für weitere Informationen über verfügbare URL-Parameter, <a href='https://github.com/pietervdvn/MapComplete/blob/develop/Docs/URL_Parameters.md' target='_blank'>siehe Dokumentation</a>",
             "embedIntro": "<h3>Karte in Webseiten einbetten</h3>Betten Sie diese Karte in Ihre Webseite ein. <br/>Wir ermutigen Sie gern dazu - Sie müssen nicht mal um Erlaubnis fragen.<br/> Die Karte ist kostenlos und wird es immer sein. Je mehr Leute die Karte benutzen, desto wertvoller wird sie.",
             "fsUserbadge": "Anmeldefeld aktivieren",
             "fsWelcomeMessage": "Begrüßung und Registerkarten anzeigen",
@@ -314,8 +395,9 @@
         },
         "skip": "Frage überspringen",
         "testing": "Testen - Änderungen werden nicht gespeichert",
+        "uploadError": "Fehler beim Hochladen von Änderungen: {error}",
         "uploadGpx": {
-            "choosePermission": "Wählen Sie unten, ob Ihre Strecke geteilt werden soll:",
+            "choosePermission": "Wählen Sie unten, wie Ihre Strecke geteilt werden soll:",
             "confirm": "Hochladen bestätigen",
             "gpxServiceOffline": "Der GPX-Dienst ist derzeit offline - ein Hochladen ist derzeit nicht möglich. Versuchen Sie es später noch einmal.",
             "intro0": "Wenn Sie Ihre Strecke hochladen, behält OpenStreetMap.org eine vollständige Kopie der Strecke.",
@@ -341,8 +423,51 @@
             "uploadFinished": "Ihre Strecke wurde hochgeladen!",
             "uploading": "Hochladen Ihrer Strecke…"
         },
-        "useSearch": "Verwenden Sie die Suche oben, um Voreinstellungen anzuzeigen",
-        "useSearchForMore": "Verwenden Sie die Suchfunktion, um innerhalb von {total} weitere Werte zu suchen…",
+        "uploadPending": "{count} Änderungen ausstehend",
+        "uploadPendingSingle": "Eine Änderung ausstehend",
+        "uploadingChanges": "Änderungen werden hochgeladen…",
+        "useSearch": "Suche oben verwenden für weitere Optionen",
+        "visualFeedback": {
+            "closestFeaturesAre": "{n} Objekte im Anzeigebereich.",
+            "directionsAbsolute": {
+                "E": "Ost",
+                "N": "Nord",
+                "NE": "Nordost",
+                "NW": "Nordwest",
+                "S": "Süd",
+                "SE": "Südost",
+                "SW": "Südwest",
+                "W": "West"
+            },
+            "directionsRelative": {
+                "behind": "in deinem Rücken",
+                "left": "links",
+                "right": "rechts",
+                "sharp_left": "scharf links",
+                "sharp_right": "scharf rechts",
+                "slight_left": "leicht links",
+                "slight_right": "leicht rechts",
+                "straight": "geradeaus"
+            },
+            "east": "Nach Osten bewegen",
+            "fromGps": "{distance} {direction} von deinem Standort",
+            "fromMapCenter": "{distance} {direction} von der Kartenmitte",
+            "in": "Hineinzoomen auf Stufe {z}",
+            "islocked": "Die Ansicht ist an Ihren GPS-Standort gebunden, Bewegen ist deaktiviert. Drücken Sie zum Entsperren die Geolocation-Taste.",
+            "locked": "Die Ansicht ist jetzt an Ihren GPS-Standort gebunden, Bewegen ist deaktiviert.",
+            "navigation": "Verwenden Sie die Pfeiltasten, um die Karte zu bewegen, drücken Sie die Leertaste, um das nächstgelegene Objekt auszuwählen. Drücken Sie eine Zahl, um weiter entfernte Objekte auszuwählen.",
+            "noCloseFeatures": "Keine Objekte im Anzeigebereich.",
+            "north": "Nach Norden bewegen",
+            "oneFeatureInView": "Ein Objekt im Anzeigebereich.",
+            "out": "Herauszoomen auf Stufe {z}",
+            "south": "Nach Süden bewegen",
+            "unlocked": "Bewegen aktiviert.",
+            "viewportCenterCloseToGps": "Die Karte wird um Ihren Standort zentriert.",
+            "viewportCenterDetails": "Die Kartenmitte ist {distance} und {bearing} von Ihrem Standort entfernt.",
+            "west": "Nach Westen bewegen"
+        },
+        "waitingForGeopermission": "Warten auf Ihre Erlaubnis, Standortdaten zu verwenden…",
+        "waitingForLocation": "Ihr Standort wird gesucht…",
         "weekdays": {
             "abbreviations": {
                 "friday": "Fr",
@@ -379,6 +504,7 @@
                 "born": "Geboren am: {value}",
                 "died": "Gestorben am: {value}"
             },
+            "readMore": "Weiterlesen",
             "searchToShort": "Ihre Suchanfrage ist zu kurz, geben Sie einen längeren Text ein",
             "searchWikidata": "Wikidata durchsuchen",
             "wikipediaboxTitle": "Wikipedia"
@@ -387,16 +513,25 @@
     "hotkeyDocumentation": {
         "action": "Aktion",
         "closeSidebar": "Seitenleiste schließen",
-        "geolocate": "Verschieben Sie die Karte auf den aktuellen Standort oder zoomen Sie die Karte auf den aktuellen Standort. Beantragt Standortberechtigung",
+        "geolocate": "Karte auf aktuellen Standort verschieben oder zoomen. Erfordert Standortberechtigung",
         "intro": "MapComplete unterstützt folgende Tastaturbefehle:",
         "key": "Tastenkombination",
-        "openLayersPanel": "Öffnet das Menü für Ebenen und Filter",
+        "openFilterPanel": "Panel für POI-Ebenen und Filter öffnen",
+        "openLayersPanel": "Auswahl für Hintergrundebenen öffnen",
+        "queryCurrentLocation": "Adresse anzeigen, die der Kartenmitte am nächsten liegt",
         "selectAerial": "Hintergrund als Luftbild oder Satellitenbild einstellen. Wechselt zwischen den zwei besten verfügbaren Ebenen",
+        "selectFavourites": "Favoriten anzeigen",
+        "selectItem": "Objekt auswählen, das dem Kartenmittelpunkt (Fadenkreuz) am nächsten liegt. Nur wenn die Tastaturnavigation verwendet wird",
+        "selectItem2": "Objekt auswählen, das dem Kartenmittelpunkt (Fadenkreuz) am zweitnächsten liegt. Nur wenn die Tastaturnavigation verwendet wird",
+        "selectItem3": "Objekt auswählen, das dem Kartenmittelpunkt (Fadenkreuz) am drittnächsten liegt. Nur wenn die Tastaturnavigation verwendet wird",
+        "selectItemI": "Objekt auswählen, das dem Kartenmittelpunkt (Fadenkreuz) am {i} nächsten liegt. Nur wenn die Tastaturnavigation verwendet wird",
         "selectMap": "Karte aus externer Quelle als Hintergrund wählen. Wechselt zwischen den zwei besten verfügbaren Ebenen",
         "selectMapnik": "OpenStreetMap-carto als Hintergrundebene wählen",
         "selectOsmbasedmap": "OpenStreetMap-basierte Karte als Hintergrund auswählen (oder Hintergrundebene deaktivieren)",
         "selectSearch": "Suchleiste auswählen, um nach Orten zu suchen",
-        "title": "Tastaturbefehle"
+        "shakePhone": "Telefon schütteln",
+        "title": "Tastaturbefehle",
+        "translationMode": "Übersetzungsmodus ein- oder ausschalten"
     },
     "image": {
         "addPicture": "Bild hinzufügen",
@@ -404,23 +539,32 @@
         "doDelete": "Bild entfernen",
         "dontDelete": "Abbrechen",
         "isDeleted": "Gelöscht",
-        "nearbyPictures": {
-            "allFiltered": "Keine Bilder passen zu Ihrem Filter",
-            "browseNearby": "Bilder in der Nähe suchen…",
-            "confirm": "Das ausgewählte Bild zeigt {title()}",
-            "hasMatchingPicture": "Passt ein Bild zum Objekt? Wählen Sie es unten aus",
-            "loadMore": "Weitere Bilder laden",
-            "loading": "Bilder in der Nähe laden…",
-            "noImageSelected": "Wählen Sie ein Bild aus, um es mit dem Objekt zu verknüpfen",
-            "nothingFound": "Keine Bilder in der Nähe gefunden…",
-            "onlyTowards": "Nur Bilder anzeigen, die in Richtung dieses Objekts aufgenommen wurden",
-            "removeFilters": "Hier klicken, um die Filter zu entfernen",
-            "title": "Bilder in der Nähe",
-            "withinRadius": "Nur Bilder anzeigen, die im Umkreis von {radius} Metern um dieses Objekt aufgenommen wurden"
+        "nearby": {
+            "close": "Übersicht mit nahegelegenen Bildern ausklappen",
+            "link": "Dieses Bild zeigt das Objekt",
+            "noNearbyImages": "Keine nahegelegenen Bilder gefunden",
+            "seeNearby": "Bilder in der Nähe durchsuchen und verlinken",
+            "title": "Straßenbilder in der Nähe"
         },
         "pleaseLogin": "Bitte anmelden, um ein Bild hinzuzufügen",
         "respectPrivacy": "Bitte respektieren Sie die Privatsphäre. Fotografieren Sie weder Personen noch Nummernschilder. Benutzen Sie keine urheberrechtlich geschützten Quellen wie z.B. Google Maps oder Google Streetview.",
         "toBig": "Ihr Bild ist mit {actual_size} zu groß. Die maximale Bildgröße ist {max_size}",
+        "upload": {
+            "failReasons": "Keine Internetverbindung",
+            "failReasonsAdvanced": "Alternativ dazu können Sie einstellen, dass Ihr Browser und Ihre Erweiterungen die APIs von Drittanbietern nicht blockieren.",
+            "multiple": {
+                "done": "{count} Bilder erfolgreich hochgeladen. Vielen Dank!",
+                "partiallyDone": "{count} Bilder werden hochgeladen, {done} Bilder erledigt…",
+                "someFailed": "Entschuldigung, {count} Bilder konnten nicht hochgeladen werden",
+                "uploading": "{count} Bilder werden hochgeladen…"
+            },
+            "one": {
+                "done": "Bild erfolgreich hochgeladen. Vielen Dank!",
+                "failed": "Entschuldigung, das Bild konnte nicht hochgeladen werden",
+                "retrying": "Das Bild wird wiederholt hochgeladen…",
+                "uploading": "Das Bild wird hochgeladen…"
+            }
+        },
         "uploadDone": "Ihr Bild wurde hinzugefügt. Vielen Dank für Ihre Hilfe!",
         "uploadFailed": "Das Bild konnte nicht hochladen werden. Haben Sie eine aktive Internetverbindung und sind APIs von Dritten erlaubt? Der Brave Browser oder UMatrix blockieren diese eventuell.",
         "uploadMultipleDone": "{count} Bilder wurden hinzugefügt. Vielen Dank für die Hilfe!",
@@ -453,7 +597,7 @@
         "cannotBeMoved": "Dieses Element kann nicht verschoben werden.",
         "confirmMove": "Hierhin verschieben",
         "inviteToMove": {
-            "generic": "Diesen Punkt verschieben",
+            "generic": "Objekt verschieben",
             "reasonInaccurate": "Lagegenauigkeit dieses Objekts verbessern",
             "reasonRelocation": "Dieses Element an einen anderen Ort verschieben, weil es sich verlagert hat"
         },
@@ -506,7 +650,9 @@
     },
     "plantDetection": {
         "back": "Zurück zur Artenübersicht",
+        "button": "Automatische Erkennung der Pflanzenart durch die KI von Plantnet.org",
         "confirm": "Arten auswählen",
+        "done": "Die Art wurde übernommen",
         "error": "Bei der Erkennung der Baumart ist ein Fehler aufgetreten: {error}",
         "howTo": {
             "intro": "Für optimale Ergebnisse,",
@@ -523,17 +669,27 @@
         "poweredByPlantnet": "Bereitgestellt von <a href='https://plantnet.org' target='_blank'>plantnet.org</a>",
         "querying": "Abfrage bei plantnet.org mit {length} Fotos",
         "seeInfo": "Weitere Informationen über diese Art",
-        "takeImages": "Machen Sie Fotos vom Baum, um die Baumart automatisch zu erkennen"
+        "takeImages": "Machen Sie Fotos vom Baum, um die Baumart automatisch zu erkennen",
+        "tryAgain": "Wähle eine andere Art"
     },
     "privacy": {
-        "editing": "Ihre Änderungen werden auf OpenStreetMap gespeichert und sind öffentlich zugänglich. Ein mit MapComplete erstellter Änderungssatz enthält folgende Daten: <ul><li>Ihre Änderungen</li><li>Ihren Benutzernamen</li><li>Den Zeitpunkt Ihrer Änderungen</li><li>Das bei Ihren Änderungen verwendete MapComplete-Thema</li><li>Die Sprache Ihrer Benutzeroberfläche</li><li>Ihre Entfernung zu den geänderten Objekten. Dadurch kann festgestellt werden, ob die Änderungen vor Ort gespeichert wurden</li></ul> Ausführliche Informationen finden Sie in <a href=\"https://wiki.osmfoundation.org/wiki/Privacy_Policy\" target=\"_blank\">den Datenschutzbestimmungen auf OpenStreetMap.org</a>. Wir möchten Sie daran erinnern, dass Sie zur Anmeldung einen fiktiven Namen verwenden können.",
+        "editingIntro": "Ihre Änderungen werden auf OpenStreetMap gespeichert und sind öffentlich zugänglich. Ein mit MapComplete erstellter Änderungssatz enthält folgende Daten:",
+        "editingOutro": "Ausführliche Informationen finden Sie in <a href=\"https://wiki.osmfoundation.org/wiki/Privacy_Policy\" target=\"_blank\">den Datenschutzbestimmungen auf OpenStreetMap.org</a>. Wir möchten Sie daran erinnern, dass Sie zur Anmeldung einen fiktiven Namen verwenden können.",
         "editingTitle": "Ihre Änderungen",
         "geodata": "Wenn MapComplete Ihren aktuellen Standort ermittelt, verbleibt dieser wie auch zuvor ermittelte Standorte auf Ihrem Gerät. Ihre Standortdaten werden niemals automatisch an eine andere Stelle gesendet - es sei denn, eine Funktion gibt eindeutig etwas anderes an.",
         "geodataTitle": "Standortdaten",
         "intro": "Privatsphäre ist wichtig - sowohl für den Einzelnen als auch für die Gesellschaft. MapComplete versucht, Ihre Privatsphäre so weit wie möglich zu respektieren - bis zu dem Punkt, an dem kein lästiger Cookie-Banner mehr nötig ist. Dennoch möchten wir Sie darüber informieren, welche Informationen gesammelt und weitergegeben werden, unter welchen Umständen und warum diese Kompromisse gemacht werden.",
+        "items": {
+            "changesYouMake": "Ihre Änderungen",
+            "username": "Ihren Benutzernamen",
+            "date": "Den Zeitpunkt Ihrer Änderungen",
+            "theme": "Das bei Ihren Änderungen verwendete MapComplete-Thema",
+            "language": "Die Sprache Ihrer Benutzeroberfläche",
+            "distanceIndicator": "Ihre Entfernung zu den geänderten Objekten. Dadurch kann festgestellt werden, ob die Änderungen vor Ort gespeichert wurden"
+        },
         "miscCookies": "MapComplete integriert weitere Dienste, insbesondere um Bilder von Objekten zu laden. Diese Bilder werden auf Servern von Drittanbietern gehostet, die möglicherweise eigene Cookies setzen.",
         "miscCookiesTitle": "Andere Cookies",
-        "surveillance": "Da Sie die Datenschutzbestimmungen lesen, ist Ihnen der Datenschutz wahrscheinlich wichtig - uns auch! Wir haben sogar <a href=\"https://mapcomplete.osm.be/surveillance\">ein Thema erstellt, das Überwachungskameras zeigt.</a> Zögern Sie nicht, sie alle zu mappen!",
+        "surveillance": "Da Sie die Datenschutzbestimmungen lesen, ist Ihnen der Datenschutz wahrscheinlich wichtig - uns auch! Wir haben sogar <a href=\"https://mapcomplete.org/surveillance\">ein Thema erstellt, das Überwachungskameras zeigt.</a> Zögern Sie nicht, sie alle zu mappen!",
         "title": "Datenschutzbestimmungen",
         "tracking": "Um zu erfahren, wer unsere Webseite besucht, werden technische Informationen gesammelt. Dazu gehören das Land, aus dem Sie die Webseite besucht haben, die Webseite, die Sie auf MapComplete verwiesen hat, der Typ Ihres Geräts und die Bildschirmgröße. Ein Cookie wird auf Ihrem Gerät gespeichert, um anzuzeigen, dass Sie MapComplete heute bereits besucht haben. Diese Daten sind nicht detailliert genug, um Sie persönlich zu identifizieren. Diese Statistiken sind nur in aggregierter Form <a href=\"https://pietervdvn.goatcounter.com\" target=\"_blank\">öffentlich zugänglich</a>",
         "trackingTitle": "Statistische Daten",
@@ -541,27 +697,40 @@
     },
     "reviews": {
         "affiliated_reviewer_warning": "(Partner-Rezension)",
-        "attribution": "Rezensionen werden bereitgestellt von <a href=\"https://mangrove.reviews/\" target=\"_blank\">Mangrove Reviews</a> und sind unter <a href=\"https://mangrove.reviews/terms#8-licensing-of-content\" target=\"_blank\">CC-BY 4.0</a> verfügbar.",
-        "i_am_affiliated": "<span>Ich bin an diesem Objekt beteiligt</span><br/><span class='subtle'>Auswählen, wenn Sie Eigentümer, Ersteller, Angestellter … sind</span>",
+        "attribution": "Rezensionen von <a href=\"https://mangrove.reviews/\" target=\"_blank\">Mangrove Reviews</a> sind unter <a href=\"https://mangrove.reviews/terms#8-licensing-of-content\" target=\"_blank\">CC-BY 4.0</a> verfügbar.",
+        "averageRating": "Mittlere Bewertung von {n} Sternen",
+        "i_am_affiliated": "Ich bin mit diesem Objekt vertraut",
+        "i_am_affiliated_explanation": "Prüfung, ob Sie der Eigentümer, Ersteller, Angestellter, … sind",
         "name_required": "Der Name des Objekts ist erforderlich, um Bewertungen zu erstellen und anzuzeigen",
-        "no_rating": "Vor dem Absenden eine Bewertung abgeben…",
         "no_reviews_yet": "Es gibt noch keine Bewertungen. Hilf mit der ersten Bewertung dem Geschäft und der Open Data Bewegung!",
-        "plz_login": "Anmelden, um eine Bewertung abzugeben",
-        "posting_as": "Veröffentlichen als",
-        "save": "Speichern",
-        "saved": "<span class=\"thanks\">Bewertung gespeichert. Danke fürs Teilen!</span>",
+        "non_place_review": "Eine Bewertung geht nicht um einen Ort und wird hier nicht angezeigt.",
+        "non_place_reviews": "{n} Bewertungen sind nicht über einen Ort und werden hier nicht angezeigt.",
+        "question": "Wie bewerten Sie {title()}?",
+        "question_opinion": "Wie war Ihre Erfahrung?",
+        "rate": "Mit {n} Sternen bewerten",
+        "rated": "Mit {n} Sternen bewertet",
+        "reviewPlaceholder": "Beschreibe deine Erfahrung…",
+        "reviewing_as": "Als {nickname} bewerten",
+        "reviewing_as_anonymous": "Anonym bewerten",
+        "reviews_bug": "Mehr Bewertungen erwartet? Einige Bewertungen werden aufgrund eines Fehlers nicht angezeigt.",
+        "save": "Bewertung speichern",
+        "saved": "Bewertung gespeichert. Danke fürs Teilen!",
         "saving_review": "Speichern…",
+        "see_all": "Seh alle deine Bewertungen auf Mangrove Reviews",
         "title": "{count} Rezensionen",
         "title_singular": "Eine Rezension",
+        "too_long": "Maximal {max} Zeichen sind erlaubt. Ihre Bewertung hat {amount} Zeichen.",
         "tos": "Mit der Bewertung stimmen Sie den <a href=\"https://mangrove.reviews/terms\" target=\"_blank\">AGB und den Datenschutzrichtlinien von Mangrove.reviews zu</a>",
-        "write_a_comment": "Bewertung schreiben…"
+        "write_a_comment": "Bewertung schreiben…",
+        "your_reviews": "Deine vorherigen Bewertungen",
+        "your_reviews_empty": "Wir konnten keine deiner vorherigen Bewertungen finden"
     },
     "split": {
         "cancel": "Abbrechen",
         "hasBeenSplit": "Dieser Weg wurde geteilt",
         "inviteToSplit": "Die Straße in Abschnitte teilen. Dadurch können je Abschnitt unterschiedliche Eigenschaften angegeben werden.",
         "loginToSplit": "Anmeldung erforderlich, um Straßen zu teilen",
-        "split": "Teilen",
+        "split": "Aufteilen",
         "splitAgain": "Diese Straße erneut teilen",
         "splitTitle": "Wähle auf der Karte aus, wo sich die Eigenschaften dieser Straße ändern"
     },
@@ -575,7 +744,7 @@
         "editDescription": "Eigene Profilbeschreibung bearbeiten",
         "gotoInbox": "Deinen Posteingang öffnen",
         "gotoSettings": "Einstellungen auf OpenStreetMap.org öffnen",
-        "noDescription": "Sie haben noch keine Profilbeschreibung",
+        "noDescription": "Noch keine Profilbeschreibung vorhanden",
         "noDescriptionCallToAction": "Profilbeschreibung hinzufügen",
         "notLoggedIn": "Du hast Dich abgemeldet"
     },
@@ -597,9 +766,20 @@
             "feedback": "Dies ist keine gültige E-Mail Adresse",
             "noAt": "Eine E-Mail-Adresse muss ein @ enthalten"
         },
+        "fediverse": {
+            "description": "Eine Fediverse Adresse, häufig @username@server.tld",
+            "feedback": "Eine Fediverse Adresse besteht aus @username@server.tld oder ist ein Direktlink zu einem Profil",
+            "invalidHost": "{host} ist kein gültiger hostname",
+            "onYourServer": "Siehe und folge auf deinem Server"
+        },
         "float": {
             "description": "eine Zahl",
             "feedback": "Dies ist keine Zahl"
+        },
+        "id": {
+            "description": "Ein Identifikator",
+            "invalidCharacter": "Eine ID darf nur Buchstaben, Ziffern und Unterstriche enthalten",
+            "shouldBeLonger": "Eine ID sollte mindestens 3 Zeichen lang sein"
         },
         "int": {
             "description": "eine ganze Zahl"
@@ -619,11 +799,15 @@
         "phone": {
             "description": "eine Telefonnummer",
             "feedback": "Dies ist keine gültige Telefonnummer",
-            "feedbackCountry": "Dies ist keine gültige Telefonnummer (in {country})"
+            "feedbackCountry": "Telefonnummer ungültig (in {country})"
         },
         "pnat": {
             "description": "eine positive, ganze Zahl",
             "noZero": "Null ist nicht erlaubt"
+        },
+        "slope": {
+            "inputExplanation": "Legen Sie Ihr Telefon so auf den Boden, dass die Oberseite des Telefons zum oberen Ende des Hangs zeigt.",
+            "inputIncorrect": "Für korrekte Messungen achten Sie darauf, dass sich der Pfeil in der grünen Fläche befindet."
         },
         "string": {
             "description": "ein Stück Text"
@@ -634,10 +818,12 @@
         "tooLong": "Der Text ist zu lang, es sind maximal 255 Zeichen erlaubt. Sie haben bereits {count} Zeichen.",
         "url": {
             "description": "Link zu einer Website",
-            "feedback": "Dies ist keine gültige Webadresse"
+            "feedback": "Webadresse ungültig"
         },
         "wikidata": {
-            "description": "Eine Wikidata-Kennung"
+            "description": "Eine Wikidata-Kennung",
+            "empty": "Bitte gib einige Wikidata-Einträge ein",
+            "startsWithQ": "Ein Wikidata-Identifikator beginnt mit Q und wird von einer Zahl gefolgt"
         }
     }
 }

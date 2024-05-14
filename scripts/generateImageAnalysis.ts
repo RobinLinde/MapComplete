@@ -4,6 +4,7 @@ import { RegexTag } from "../src/Logic/Tags/RegexTag"
 import { ImmutableStore } from "../src/Logic/UIEventSource"
 import { BBox } from "../src/Logic/BBox"
 import * as fs from "fs"
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs"
 import { Feature } from "geojson"
 import ScriptUtils from "./ScriptUtils"
 import { Imgur } from "../src/Logic/ImageProviders/Imgur"
@@ -12,9 +13,20 @@ import { Utils } from "../src/Utils"
 import Constants from "../src/Models/Constants"
 
 export default class GenerateImageAnalysis extends Script {
+    /**
+     * Max N in `image:N`-keys and `imageN` keys
+     * @private
+     */
+    private static readonly maxImageIndex = 31
     constructor() {
         super(
-            "Downloads (from overpass) all tags which have an imgur-image; then analyses the licenses"
+            [
+                "Downloads (from overpass) all tags which have an imgur-image; then analyses the licenses and downloads all the images",
+                "",
+                "Arguments:",
+                "Path to download the images to",
+                "Path to save the overview to",
+            ].join("\n")
         )
     }
 
@@ -30,7 +42,6 @@ export default class GenerateImageAnalysis extends Script {
             [],
             Constants.defaultOverpassUrls[0], //"https://overpass.kumi.systems/api/interpreter",
             new ImmutableStore(500),
-            undefined,
             false
         )
         console.log("Starting query...")
@@ -51,8 +62,9 @@ export default class GenerateImageAnalysis extends Script {
         }
         await this.fetchImages("image", datapath, refresh)
         await this.fetchImages("image:streetsign", datapath, refresh)
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < GenerateImageAnalysis.maxImageIndex; i++) {
             await this.fetchImages("image:" + i, datapath, refresh)
+            await this.fetchImages("image" + i, datapath, refresh)
         }
     }
 
@@ -83,7 +95,7 @@ export default class GenerateImageAnalysis extends Script {
         if (fs.existsSync(targetPath)) {
             return false
         }
-        const attribution = await Imgur.singleton.DownloadAttribution(image)
+        const attribution = await Imgur.singleton.DownloadAttribution({ url: image })
 
         if ((attribution.artist ?? "") === "") {
             // This is an invalid attribution. We save the raw response as well
@@ -114,11 +126,16 @@ export default class GenerateImageAnalysis extends Script {
             imageSource[feature.properties["image:streetsign"]] =
                 feature.properties.id + " (streetsign)"
 
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < GenerateImageAnalysis.maxImageIndex; i++) {
                 allImages.add(feature.properties["image:" + i])
                 imageSource[
                     feature.properties["image:" + i]
                 ] = `${feature.properties.id} (image:${i})`
+
+                allImages.add(feature.properties["image" + i])
+                imageSource[
+                    feature.properties["image" + i]
+                ] = `${feature.properties.id} (image${i})`
             }
         }
         allImages.delete(undefined)
@@ -173,6 +190,58 @@ export default class GenerateImageAnalysis extends Script {
                 f++
             }
         }
+    }
+
+    async downloadViews(datapath: string): Promise<void> {
+        const { allImages, imageSource } = this.loadImageUrls(datapath)
+        console.log("Detected", allImages.size, "images")
+        const results: [string, number][] = []
+        const today = new Date().toISOString().substring(0, "YYYY-MM-DD".length)
+        const viewDir = datapath + "/views_" + today
+        if (!existsSync(viewDir)) {
+            mkdirSync(viewDir)
+        }
+        const targetpath = datapath + "/views.csv"
+
+        const total = allImages.size
+        let dloaded = 0
+        let skipped = 0
+        let err = 0
+        for (const image of Array.from(allImages)) {
+            const cachedView = viewDir + "/" + image.replace(/\//g, "_")
+            let attribution: LicenseInfo
+            if (existsSync(cachedView)) {
+                attribution = JSON.parse(readFileSync(cachedView, "utf8"))
+                skipped++
+            } else {
+                try {
+                    attribution = await Imgur.singleton.DownloadAttribution({ url: image })
+                    await ScriptUtils.sleep(500)
+                    writeFileSync(cachedView, JSON.stringify(attribution))
+                    dloaded++
+                } catch (e) {
+                    err++
+                    continue
+                }
+            }
+            results.push([image, attribution.views])
+            if (dloaded % 50 === 0) {
+                console.log({
+                    dloaded,
+                    skipped,
+                    total,
+                    err,
+                    progress: Math.round(dloaded + skipped + err),
+                })
+            }
+
+            if ((dloaded + skipped + err) % 100 === 0) {
+                console.log("Writing views to", targetpath)
+                fs.writeFileSync(targetpath, results.map((r) => r.join(",")).join("\n"))
+            }
+        }
+        console.log("Writing views to", targetpath)
+        fs.writeFileSync(targetpath, results.map((r) => r.join(",")).join("\n"))
     }
 
     async downloadImage(url: string, imagePath: string): Promise<boolean> {
@@ -291,6 +360,11 @@ export default class GenerateImageAnalysis extends Script {
         console.log(countsPerAuthor)
         countsPerAuthor.sort()
         const median = countsPerAuthor[Math.floor(countsPerAuthor.length / 2)]
+        const json: {
+            leaderboard: { rank: number; account: string; name: string; nrOfImages: number }[]
+        } = {
+            leaderboard: [],
+        }
         for (let i = 0; i < 100; i++) {
             let maxAuthor: string = undefined
             let maxCount = 0
@@ -301,6 +375,12 @@ export default class GenerateImageAnalysis extends Script {
                     maxCount = count
                 }
             }
+            json.leaderboard.push({
+                rank: i + 1,
+                name: maxAuthor,
+                account: "https://openstreetmap.org/user/" + maxAuthor.replace(/ /g, "%20"),
+                nrOfImages: maxCount,
+            })
             console.log(
                 "|",
                 i + 1,
@@ -315,9 +395,11 @@ export default class GenerateImageAnalysis extends Script {
 
         const totalAuthors = byAuthor.size
         let totalLicensedImages = 0
+        json["totalAuthors"] = totalAuthors
         for (const license in byLicenseCount) {
             totalLicensedImages += byLicenseCount[license]
         }
+        json["byLicense"] = {}
         for (const license in byLicenseCount) {
             const total = byLicenseCount[license]
             const authors = licenseByAuthorCount[license]
@@ -328,6 +410,11 @@ export default class GenerateImageAnalysis extends Script {
                     Math.floor((1000 * authors) / totalAuthors) / 10
                 }%), ${Math.floor(total / authors)} images/author`
             )
+            json["byLicense"] = {
+                license,
+                total,
+                authors,
+            }
         }
 
         const nonDefaultAuthors = [
@@ -348,6 +435,13 @@ export default class GenerateImageAnalysis extends Script {
             nonDefaultAuthors.length
         )
         console.log("Median contributions per author:", median)
+        json["median"] = median
+        json["date"] = new Date().toISOString()
+        writeFileSync(
+            "../../git/MapComplete-data/picture-leaderboard.json",
+            JSON.stringify(json),
+            "utf8"
+        )
     }
 
     async main(args: string[]): Promise<void> {
@@ -355,11 +449,16 @@ export default class GenerateImageAnalysis extends Script {
         console.log("Args are", args)
         const cached = args.indexOf("--cached") < 0
         args = args.filter((a) => a !== "--cached")
-        const datapath = args[0] ?? "../../git/MapComplete-data/ImageLicenseInfo"
+        const datapath = args[1] ?? "../../git/MapComplete-data/ImageLicenseInfo"
+        const imageBackupPath = args[0]
+        if (imageBackupPath === "" || imageBackupPath === undefined) {
+            throw "No imageBackup path specified"
+        }
         await this.downloadData(datapath, cached)
 
+        // await this.downloadViews(datapath)
         await this.downloadMetadata(datapath)
-        await this.downloadAllImages(datapath, "/home/pietervdvn/data/imgur-image-backup")
+        await this.downloadAllImages(datapath, imageBackupPath)
         this.analyze(datapath)
     }
 }

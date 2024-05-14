@@ -56,13 +56,21 @@ export default class Locale {
             if (typeof navigator !== "undefined") {
                 browserLanguage = navigator.languages?.[0] ?? navigator.language ?? "en"
                 console.log("Browser language is", browserLanguage)
+                if (browserLanguage === "en-US") {
+                    browserLanguage = "en"
+                }
             }
             source = LocalStorageSource.Get("language", browserLanguage)
         }
 
+        if (!Utils.runningFromConsole && typeof document !== undefined) {
+            source.addCallbackAndRun((l) => {
+                document.documentElement.setAttribute("lang", l)
+            })
+        }
+
         if (!Utils.runningFromConsole) {
-            // @ts-ignore
-            window.setLanguage = function (language: string) {
+            window["setLanguage"] = function (language: string) {
                 source.setData(language)
             }
         }

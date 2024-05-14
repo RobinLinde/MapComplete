@@ -13,6 +13,13 @@ import { ChangesetHandler, ChangesetTag } from "./ChangesetHandler"
 import { OsmConnection } from "./OsmConnection"
 import FeaturePropertiesStore from "../FeatureSource/Actors/FeaturePropertiesStore"
 import OsmObjectDownloader from "./OsmObjectDownloader"
+import Combine from "../../UI/Base/Combine"
+import BaseUIElement from "../../UI/BaseUIElement"
+import Title from "../../UI/Base/Title"
+import Table from "../../UI/Base/Table"
+import ChangeLocationAction from "./Actions/ChangeLocationAction"
+import ChangeTagAction from "./Actions/ChangeTagAction"
+import FeatureSwitchState from "../State/FeatureSwitchState"
 
 /**
  * Handles all changes made to OSM.
@@ -22,10 +29,11 @@ export class Changes {
     public readonly pendingChanges: UIEventSource<ChangeDescription[]> =
         LocalStorageSource.GetParsed<ChangeDescription[]>("pending-changes", [])
     public readonly allChanges = new UIEventSource<ChangeDescription[]>(undefined)
-    public readonly state: { allElements?: IndexedFeatureSource; osmConnection: OsmConnection }
+    public readonly state: { allElements?: IndexedFeatureSource; osmConnection: OsmConnection, featureSwitches?: FeatureSwitchState }
     public readonly extraComment: UIEventSource<string> = new UIEventSource(undefined)
     public readonly backend: string
     public readonly isUploading = new UIEventSource(false)
+    public readonly errors = new UIEventSource<string[]>([], "upload-errors")
     private readonly historicalUserLocations?: FeatureSource
     private _nextId: number = -1 // Newly assigned ID's are negative
     private readonly previouslyCreated: OsmObject[] = []
@@ -38,7 +46,8 @@ export class Changes {
             allElements?: IndexedFeatureSource
             featurePropertiesStore?: FeaturePropertiesStore
             osmConnection: OsmConnection
-            historicalUserLocations?: FeatureSource
+            historicalUserLocations?: FeatureSource,
+            featureSwitches?: FeatureSwitchState
         },
         leftRightSensitive: boolean = false
     ) {
@@ -98,6 +107,97 @@ export class Changes {
         return changes
     }
 
+    public static getDocs(): BaseUIElement {
+        function addSource(items: any[], src: string) {
+            items.forEach((i) => {
+                i["source"] = src
+            })
+            return items
+        }
+        const metatagsDocs: {
+            key?: string
+            value?: string
+            docs: string
+            changeType?: string[]
+            specialMotivation?: boolean
+            source?: string
+        }[] = [
+            ...addSource(
+                [
+                    {
+                        key: "comment",
+                        docs: "The changeset comment. Will be a fixed string, mentioning the theme",
+                    },
+                    {
+                        key: "theme",
+                        docs: "The name of the theme that was used to create this change. ",
+                    },
+                    {
+                        key: "source",
+                        value: "survey",
+                        docs: "The contributor had their geolocation enabled while making changes",
+                    },
+                    {
+                        key: "change_within_{distance}",
+                        docs: "If the contributor enabled their geolocation, this will hint how far away they were from the objects they edited. This gives an indication of proximity and if they truly surveyed or were armchair-mapping",
+                    },
+                    {
+                        key: "change_over_{distance}",
+                        docs: "If the contributor enabled their geolocation, this will hint how far away they were from the objects they edited. If they were over 5000m away, the might have been armchair-mapping",
+                    },
+                    {
+                        key: "created_by",
+                        value: "MapComplete <version>",
+                        docs: "The piece of software used to create this changeset; will always start with MapComplete, followed by the version number",
+                    },
+                    {
+                        key: "locale",
+                        value: "en|nl|de|...",
+                        docs: "The code of the language that the contributor used MapComplete in. Hints what language the user speaks.",
+                    },
+                    {
+                        key: "host",
+                        value: "https://mapcomplete.org/<theme>",
+                        docs: "The URL that the contributor used to make changes. One can see the used instance with this",
+                    },
+                    {
+                        key: "imagery",
+                        docs: "The identifier of the used background layer, this will probably be an identifier from the [editor layer index](https://github.com/osmlab/editor-layer-index)",
+                    },
+                ],
+                "default"
+            ),
+            ...addSource(ChangeTagAction.metatags, "ChangeTag"),
+            ...addSource(ChangeLocationAction.metatags, "ChangeLocation"),
+            // TODO
+            /*
+            ...DeleteAction.metatags,
+            ...LinkImageAction.metatags,
+            ...OsmChangeAction.metatags,
+            ...RelationSplitHandler.metatags,
+            ...ReplaceGeometryAction.metatags,
+            ...SplitAction.metatags,*/
+        ]
+        return new Combine([
+            new Title("Metatags on a changeset", 1),
+            "You might encounter the following metatags on a changeset:",
+            new Table(
+                ["key", "value", "explanation", "source"],
+                metatagsDocs.map(({ key, value, docs, source, changeType, specialMotivation }) => [
+                    key ?? changeType?.join(", ") ?? "",
+                    value,
+                    new Combine([
+                        docs,
+                        specialMotivation
+                            ? "This might give a reason per modified node or way"
+                            : "",
+                    ]),
+                    source,
+                ])
+            ),
+        ])
+    }
+
     private static GetNeededIds(changes: ChangeDescription[]) {
         return Utils.Dedup(changes.filter((c) => c.id >= 0).map((c) => c.type + "/" + c.id))
     }
@@ -128,8 +228,11 @@ export class Changes {
             const csNumber = await this.flushChangesAsync()
             this.isUploading.setData(false)
             console.log("Changes flushed. Your changeset is " + csNumber)
+            this.errors.setData([])
         } catch (e) {
             this.isUploading.setData(false)
+            this.errors.data.push(e)
+            this.errors.ping()
             console.error("Flushing changes failed due to", e)
         }
     }
@@ -144,7 +247,6 @@ export class Changes {
     }
 
     public applyChanges(changes: ChangeDescription[]) {
-        console.log("Received changes:", changes)
         this.pendingChanges.data.push(...changes)
         this.pendingChanges.ping()
         this.allChanges.data.push(...changes)
@@ -187,7 +289,6 @@ export class Changes {
                 }
                 // This is a new object that should be created
                 states.set(id, "created")
-                console.log("Creating object for changeDescription", change)
                 let osmObj: OsmObject = undefined
                 switch (change.type) {
                     case "node":
@@ -251,7 +352,6 @@ export class Changes {
                         const nlon = Utils.Round7(change.changes.lon)
                         const n = <OsmNode>obj
                         if (n.lat !== nlat || n.lon !== nlon) {
-                            console.log("Node moved:", n.lat, nlat, n.lon, nlon)
                             n.lat = nlat
                             n.lon = nlon
                             changed = true
@@ -333,6 +433,9 @@ export class Changes {
             // Probably irrelevant, such as a new helper node
             return
         }
+        if(this.state.featureSwitches.featureSwitchMorePrivacy?.data){
+            return
+        }
 
         const now = new Date()
         const recentLocationPoints = locations
@@ -407,7 +510,8 @@ export class Changes {
         let osmObjects = await Promise.all<{ id: string; osmObj: OsmObject | "deleted" }>(
             neededIds.map(async (id) => {
                 try {
-                    const osmObj = await downloader.DownloadObjectAsync(id)
+                    // Important: we do **not** cache this request, we _always_ need a fresh version!
+                    const osmObj = await downloader.DownloadObjectAsync(id, 0)
                     return { id, osmObj }
                 } catch (e) {
                     console.error(
@@ -415,6 +519,8 @@ export class Changes {
                         id,
                         " dropping it from the changes (" + e + ")"
                     )
+                    this.errors.data.push(e)
+                    this.errors.ping()
                     return undefined
                 }
             })
@@ -436,7 +542,6 @@ export class Changes {
             objects.forEach((obj) => SimpleMetaTagger.removeBothTagging(obj.tags))
         }
 
-        console.log("Got the fresh objects!", objects, "pending: ", pending)
         if (pending.length == 0) {
             console.log("No pending changes...")
             return true
@@ -521,22 +626,22 @@ export class Changes {
         await this._changesetHandler.UploadChangeset(
             (csId, remappings) => {
                 if (remappings.size > 0) {
-                    console.log("Rewriting pending changes from", pending, "with", remappings)
                     pending = pending.map((ch) => ChangeDescriptionTools.rewriteIds(ch, remappings))
-                    console.log("Result is", pending)
                 }
+
                 const changes: {
                     newObjects: OsmObject[]
                     modifiedObjects: OsmObject[]
                     deletedObjects: OsmObject[]
                 } = self.CreateChangesetObjects(pending, objects)
+
                 return Changes.createChangesetFor("" + csId, changes)
             },
             metatags,
             openChangeset
         )
 
-        console.log("Upload successfull!")
+        console.log("Upload successful!")
         return true
     }
 
@@ -558,19 +663,11 @@ export class Changes {
             const successes = await Promise.all(
                 Array.from(pendingPerTheme, async ([theme, pendingChanges]) => {
                     try {
-                        const openChangeset = this.state.osmConnection
-                            .GetPreference("current-open-changeset-" + theme)
-                            .sync(
-                                (str) => {
-                                    const n = Number(str)
-                                    if (isNaN(n)) {
-                                        return undefined
-                                    }
-                                    return n
-                                },
-                                [],
-                                (n) => "" + n
+                        const openChangeset = UIEventSource.asInt(
+                            this.state.osmConnection.GetPreference(
+                                "current-open-changeset-" + theme
                             )
+                        )
                         console.log(
                             "Using current-open-changeset-" +
                                 theme +
@@ -578,9 +675,15 @@ export class Changes {
                                 openChangeset.data
                         )
 
-                        return await self.flushSelectChanges(pendingChanges, openChangeset)
+                        const result = await self.flushSelectChanges(pendingChanges, openChangeset)
+                        if (result) {
+                            this.errors.setData([])
+                        }
+                        return result
                     } catch (e) {
                         console.error("Could not upload some changes:", e)
+                        this.errors.data.push(e)
+                        this.errors.ping()
                         return false
                     }
                 })
@@ -595,6 +698,8 @@ export class Changes {
                 "Could not handle changes - probably an old, pending changeset in localstorage with an invalid format; erasing those",
                 e
             )
+            this.errors.data.push(e)
+            this.errors.ping()
             self.pendingChanges.setData([])
         } finally {
             self.isUploading.setData(false)

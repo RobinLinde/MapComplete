@@ -1,43 +1,52 @@
 <script lang="ts">
   import TagRenderingConfig from "../../../Models/ThemeConfig/TagRenderingConfig"
-  import { UIEventSource } from "../../../Logic/UIEventSource"
+  import { Store, UIEventSource } from "../../../Logic/UIEventSource"
   import type { Feature } from "geojson"
   import type { SpecialVisualizationState } from "../../SpecialVisualization"
   import TagRenderingAnswer from "./TagRenderingAnswer.svelte"
-  import { PencilAltIcon, XCircleIcon } from "@rgossiaux/svelte-heroicons/solid"
+  import { PencilAltIcon } from "@rgossiaux/svelte-heroicons/solid"
   import TagRenderingQuestion from "./TagRenderingQuestion.svelte"
   import { onDestroy } from "svelte"
   import Tr from "../../Base/Tr.svelte"
   import Translations from "../../i18n/Translations.js"
   import LayerConfig from "../../../Models/ThemeConfig/LayerConfig"
   import { Utils } from "../../../Utils"
+  import { twMerge } from "tailwind-merge"
+  import { ariaLabel } from "../../../Utils/ariaLabel"
+  import EditButton from "./EditButton.svelte"
+  import EditItemButton from "../../Studio/EditItemButton.svelte"
 
   export let config: TagRenderingConfig
   export let tags: UIEventSource<Record<string, string>>
-  export let selectedElement: Feature
+  export let selectedElement: Feature | undefined
   export let state: SpecialVisualizationState
-  export let layer: LayerConfig
+  export let layer: LayerConfig = undefined
 
-  export let editingEnabled = state.featureSwitchUserbadge
+  export let editingEnabled: Store<boolean> | undefined = state?.featureSwitchUserbadge
 
   export let highlightedRendering: UIEventSource<string> = undefined
-  export let showQuestionIfUnknown: boolean = false
-  let editMode = false
-  onDestroy(
-    tags.addCallbackAndRunD((tags) => {
-      editMode = showQuestionIfUnknown && !config.IsKnown(tags)
-    })
-  )
+  export let clss = undefined
+  /**
+   * Indicates if this tagRendering currently shows the attribute or asks the question to _change_ the property
+   */
+  export let editMode = !config.IsKnown(tags.data)
+  if (tags) {
+    onDestroy(
+      tags.addCallbackD((tags) => {
+        editMode = !config.IsKnown(tags)
+      })
+    )
+  }
 
-  let htmlElem: HTMLBaseElement
+  let htmlElem: HTMLDivElement
   $: {
-    if (editMode && htmlElem !== undefined) {
-      // EditMode switched to true, so the person wants to make a change
+    if (editMode && htmlElem !== undefined && config.IsKnown($tags)) {
+      // EditMode switched to true yet the answer is already known, so the person wants to make a change
       // Make sure that the question is in the scrollview!
 
       // Some delay is applied to give Svelte the time to render the _question_
       window.setTimeout(() => {
-        Utils.scrollIntoView(htmlElem)
+        Utils.scrollIntoView(<any>htmlElem)
       }, 50)
     }
   }
@@ -55,6 +64,9 @@
     const highlighted = highlightedRendering.data
     if (config.id === highlighted) {
       htmlElem.classList.add("glowing-shadow")
+      htmlElem.tabIndex = -1
+      htmlElem.scrollIntoView({ behavior: "smooth" })
+      Utils.focusOnFocusableChild(htmlElem)
     } else {
       htmlElem.classList.remove("glowing-shadow")
     }
@@ -64,12 +76,21 @@
     onDestroy(highlightedRendering?.addCallbackAndRun(() => setHighlighting()))
     onDestroy(_htmlElement.addCallbackAndRun(() => setHighlighting()))
   }
+  let answerId = "answer-" + Utils.randomString(5)
 </script>
 
-<div bind:this={htmlElem} class="">
-  {#if config.question && $editingEnabled}
+<div bind:this={htmlElem} class={twMerge(clss, "tr-" + config.id)}>
+  {#if config.question && (!editingEnabled || $editingEnabled)}
     {#if editMode}
-      <TagRenderingQuestion {config} {tags} {selectedElement} {state} {layer}>
+      <TagRenderingQuestion
+        {config}
+        {tags}
+        {selectedElement}
+        {state}
+        {layer}
+        on:saved={() => (editMode = false)}
+        allowDeleteOfFreeform={true}
+      >
         <button
           slot="cancel"
           class="secondary"
@@ -79,29 +100,21 @@
         >
           <Tr t={Translations.t.general.cancel} />
         </button>
-        <XCircleIcon
-          slot="upper-right"
-          class="h-8 w-8 cursor-pointer"
-          on:click={() => {
-            editMode = false
-          }}
-        />
       </TagRenderingQuestion>
     {:else}
       <div class="low-interaction flex items-center justify-between overflow-hidden rounded px-2">
-        <TagRenderingAnswer {config} {tags} {selectedElement} {state} {layer} />
-        <button
+        <TagRenderingAnswer id={answerId} {config} {tags} {selectedElement} {state} {layer} />
+        <EditButton
+          arialabel={config.editButtonAriaLabel}
+          ariaLabelledBy={answerId}
           on:click={() => {
             editMode = true
           }}
-          class="secondary h-8 w-8 shrink-0 self-start rounded-full p-1"
-        >
-          <PencilAltIcon />
-        </button>
+        />
       </div>
     {/if}
   {:else}
-    <div class="overflow-hidden p-2">
+    <div class="h-full w-full overflow-hidden">
       <TagRenderingAnswer {config} {tags} {selectedElement} {state} {layer} />
     </div>
   {/if}

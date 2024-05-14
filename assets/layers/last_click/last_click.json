@@ -1,6 +1,7 @@
 {
   "id": "last_click",
-  "description": "This layer defines how to render the 'last click'-location. By default, it will show a marker with the possibility to add a new point (if there are some presets) and/or to add a new note (if the 'note' layer attribute is set). If none are possible, this layer won't show up",
+  "name": null,
+  "description": "This 'layer' is not really a layer, but contains part of the code how the popup to 'add a new marker' is displayed",
   "source": "special",
   "isShown": {
     "or": [
@@ -8,9 +9,6 @@
       "has_note_layer=yes"
     ]
   },
-  "name": null,
-  "titleIcons": [],
-  "popupInFloatover": true,
   "title": {
     "mappings": [
       {
@@ -23,7 +21,11 @@
         "then": {
           "en": "Add a new point or add a note",
           "nl": "Voeg een nieuw punt of een nieuwe kaartnota toe",
-          "de": "Objekt oder Hinweis auf der Karte hinzufügen"
+          "de": "Objekt oder Hinweis auf der Karte hinzufügen",
+          "ca": "Afegeix un nou punt o nota",
+          "fr": "Ajouter un nouveau point ou ajouter une note",
+          "pl": "Dodaj nowy punkt lub dodaj notatkę",
+          "cs": "Přidání nového bodu nebo přidání poznámky"
         }
       },
       {
@@ -31,7 +33,11 @@
         "then": {
           "en": "Add a new note",
           "nl": "Voeg een nieuwe kaartnota toe",
-          "de": "Hinweis hinzufügen"
+          "de": "Hinweis hinzufügen",
+          "ca": "Afegeix una nova nota",
+          "fr": "Ajouter une nouvelle note",
+          "pl": "Dodaj nową notatkę",
+          "cs": "Přidání nové poznámky"
         }
       },
       {
@@ -39,47 +45,41 @@
         "then": {
           "en": "Add a new point",
           "nl": "Voeg een nieuw punt toe",
-          "de": "Objekt hinzufügen"
+          "de": "Objekt hinzufügen",
+          "ca": "Afegeix un nou punt",
+          "fr": "Ajouter un nouveau point",
+          "pl": "Dodaj nowy punkt",
+          "cs": "Přidání nového bodu"
         }
       }
     ]
   },
-  "tagRenderings": [
+  "popupInFloatover": true,
+  "titleIcons": [],
+  "pointRendering": [
     {
-      "id": "add_new",
-      "condition": "has_presets=yes",
-      "render": {
-        "*": "{add_new_point()}"
-      }
-    },
-    {
-      "id": "add_note",
-      "condition": "has_note_layer=yes",
-      "render": {
-        "*": "{open_note()}"
-      }
-    }
-  ],
-  "mapRendering": [
-    {
-      "icon": {
-        "mappings": [
-          {
-            "if": {
-              "and": [
-                "has_note_layer=yes",
-                "has_presets=no"
-              ]
-            },
-            "then": "./assets/svg/note.svg"
-          },
-          {
-            "if": "number_of_presets=1",
-            "then": "{first_preset}"
+      "marker": [
+        {
+          "icon": {
+            "mappings": [
+              {
+                "if": {
+                  "and": [
+                    "has_note_layer=yes",
+                    "has_presets=no"
+                  ]
+                },
+                "then": "./assets/svg/note.svg"
+              },
+              {
+                "if": "number_of_presets=1",
+                "then": "{first_preset}"
+              }
+            ],
+            "render": "<div class='relative'> <img src='./assets/svg/add_pin.svg' class='absolute' style='height: 50px'> <div class='absolute top-0 left-0 rounded-full overflow-hidden noselect' style='width: 40px; height: 40px'><div class='flex slide min-w-min' style='animation: slide linear {number_of_presets}s infinite; width: calc( (1 + {number_of_presets}) * 40px ); height: 40px'>{renderings}{first_preset}</div></div></div>"
           }
-        ],
-        "render": "<div class='relative'> <img src='./assets/svg/add_pin.svg' class='absolute' style='height: 50px'> <div class='absolute top-0 left-0 rounded-full overflow-hidden noselect' style='width: 40px; height: 40px'><div class='flex slide min-w-min' style='animation: slide linear {number_of_presets}s infinite; width: calc( (1 + {number_of_presets}) * 40px ); height: 40px'>{renderings}{first_preset}</div></div></div>"
-      },
+        }
+      ],
       "labelCssClasses": "text-sm min-w-min px-2 rounded-full text-white opacity-65 whitespace-nowrap block-ruby",
       "labelCss": "background: #00000088",
       "label": {
@@ -98,7 +98,8 @@
           "nb_NO": "Legg til nytt element",
           "nl": "Klik hier om een item toe te voegen",
           "pt": "Adicionar novo item",
-          "zh_Hant": "點這邊新增新項目"
+          "zh_Hant": "點這邊新增新項目",
+          "pl": "Kliknij tutaj, aby dodać nowy obiekt"
         },
         "mappings": [
           {
@@ -111,7 +112,11 @@
             "then": {
               "en": "Create a new map note",
               "nl": "Maak een nieuwe kaartnotitie",
-              "de": "Hinweis auf der Karte hinzufügen"
+              "de": "Hinweis auf der Karte hinzufügen",
+              "ca": "Crea una nova nota del mapa",
+              "fr": "Créer une nouvelle note de carte",
+              "pl": "Utwórz nową notatkę na mapie",
+              "cs": "Vytvoření nové mapové poznámky"
             }
           }
         ]
@@ -144,6 +149,24 @@
           }
         ],
         "render": "40,50"
+      }
+    }
+  ],
+  "lineRendering": [],
+  "tagRenderings": [
+    {
+      "id": "add_new",
+      "classes": "h-full flex",
+      "condition": "has_presets=yes",
+      "render": {
+        "*": "{add_new_point()}"
+      }
+    },
+    {
+      "id": "add_note",
+      "condition": "has_note_layer=yes",
+      "render": {
+        "*": "{open_note()}"
       }
     }
   ],

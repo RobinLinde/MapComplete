@@ -63,30 +63,37 @@
       })
     )
   }
+  function apply() {
+    mapproperties.rasterLayer.setData(rasterLayer.data)
+    dispatch("appliedLayer")
+  }
+
+  function handleKeyPress(e: KeyboardEvent) {
+    if (e.key === "Enter") {
+      apply()
+    }
+  }
 </script>
 
 {#if hasLayers}
-  <div class="flex h-full w-full flex-col">
-    <button
-      on:click={() => {
-        mapproperties.rasterLayer.setData(rasterLayer.data)
-        dispatch("appliedLayer")
-      }}
-      class="m-0 h-full w-full p-0"
-    >
-      <OverlayMap
-        rasterLayer={rasterLayerOnMap}
-        placedOverMap={map}
-        placedOverMapProperties={mapproperties}
-        {visible}
-      />
+  <form class="flex h-full w-full flex-col" on:submit|preventDefault={() => {}}>
+    <button tabindex="-1" on:click={() => apply()} class="m-0 h-full w-full cursor-pointer p-1">
+      <span class="pointer-events-none relative h-full w-full">
+        <OverlayMap
+          interactive={false}
+          rasterLayer={rasterLayerOnMap}
+          placedOverMap={map}
+          placedOverMapProperties={mapproperties}
+          {visible}
+        />
+      </span>
     </button>
-    <select bind:value={$rasterLayer} class="w-full">
+    <select bind:value={$rasterLayer} class="w-full" on:keydown={handleKeyPress}>
       {#each $availableLayers as availableLayer}
         <option value={availableLayer}>
           {availableLayer.properties.name}
         </option>
       {/each}
     </select>
-  </div>
+  </form>
 {/if}

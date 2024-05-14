@@ -8,9 +8,21 @@
     "it": "Videocamere di sorveglianza",
     "de": "Überwachungskameras",
     "ca": "Càmeres de videovigilància",
-    "es": "Cámaras de vigilancia"
+    "es": "Cámaras de vigilancia",
+    "cs": "Bezpečnostní kamery",
+    "sl": "Nadzorne kamere"
   },
-  "minzoom": 12,
+  "description": {
+    "en": "This layer shows surveillance cameras and allows a contributor to update information and add new cameras",
+    "nl": "Deze laag toont bewakingscamera's en laat toe om de informatie te verrijken en om nieuwe camera\"s toe te voegen",
+    "de": "Diese Ebene zeigt die Überwachungskameras an und ermöglicht es, Informationen zu aktualisieren und neue Kameras hinzuzufügen",
+    "es": "Esta capa muestra las cámaras de vigilancia y permite a quien colabora, actualizar la información y agregar nuevas cámaras",
+    "fr": "Cette couche affiche les caméras de surveillance et permet au contributeur de mettre à jour les informations et ajouter de nouvelles caméras",
+    "ca": "Aquesta capa mostra les càmeres de vigilància i permet a qui col·labora, actualitzar la informació i afegir noves càmeres",
+    "cs": "Tato vrstva zobrazuje sledovací kamery a umožňuje přispěvateli aktualizovat informace a přidávat nové kamery",
+    "sl": "Ta sloj prikazuje nadzorne kamere in urednikom omogoča posodabljanje informacij obstoječih in dodajanje novih kamer"
+  },
+  "enableMorePrivacy": true,
   "source": {
     "osmTags": {
       "and": [
@@ -25,6 +37,7 @@
       ]
     }
   },
+  "minzoom": 12,
   "title": {
     "render": {
       "en": "Surveillance Camera",
@@ -35,11 +48,218 @@
       "de": "Überwachungskamera",
       "ca": "Càmera de videovigilància",
       "da": "Overvågningskamera",
-      "es": "Cámara de vigilancia"
+      "es": "Cámara de vigilancia",
+      "cs": "Bezpečnostní kamera",
+      "sl": "Nadzorna kamera"
     }
   },
+  "pointRendering": [
+    {
+      "marker": [
+        {
+          "icon": {
+            "render": "./assets/themes/surveillance/logo.svg",
+            "mappings": [
+              {
+                "if": "surveillance:type=ALPR",
+                "then": "./assets/layers/surveillance_camera/ALPR.svg"
+              },
+              {
+                "if": "camera:type=dome",
+                "then": "./assets/themes/surveillance/dome.svg"
+              },
+              {
+                "if": "_direction:leftright=right",
+                "then": "./assets/themes/surveillance/cam_right.svg"
+              },
+              {
+                "if": "_direction:leftright=left",
+                "then": "./assets/themes/surveillance/cam_left.svg"
+              }
+            ]
+          }
+        }
+      ],
+      "iconSize": {
+        "mappings": [
+          {
+            "if": {
+              "and": [
+                "camera:type=fixed",
+                "surveillance:type=camera",
+                "_direction:leftright~*"
+              ]
+            },
+            "then": "50,35,center"
+          }
+        ],
+        "render": "35,35,center"
+      },
+      "location": [
+        "point",
+        "centroid"
+      ],
+      "rotation": {
+        "#": "Note: {camera:direction} is substituted by a number, giving the string 'calc(123deg + 90deg)'  ; it is this string that is used as css property, which interprets the calc",
+        "render": "calc({_direction:numerical}deg + 90deg)",
+        "mappings": [
+          {
+            "if": {
+              "or": [
+                "camera:type=dome",
+                "surveillance:type=ALPR"
+              ]
+            },
+            "then": "0"
+          },
+          {
+            "if": "_direction:leftright=right",
+            "then": "calc({_direction:numerical}deg - 90deg)"
+          }
+        ]
+      }
+    }
+  ],
+  "lineRendering": [
+    {
+      "color": "#f00",
+      "width": "8"
+    }
+  ],
+  "presets": [
+    {
+      "tags": [
+        "man_made=surveillance",
+        "surveillance:type=camera"
+      ],
+      "title": {
+        "en": "a surveillance camera",
+        "nl": "een bewakingscamera",
+        "de": "eine Überwachungskamera",
+        "es": "una cámara de vigilancia",
+        "fr": "une caméra de surveillance",
+        "ca": "una càmera de vigilància",
+        "cs": "bezpečnostní kamera",
+        "sl": "nadzorna kamera"
+      }
+    },
+    {
+      "tags": [
+        "man_made=surveillance",
+        "surveillance:type=camera",
+        "camera:mount=wall"
+      ],
+      "title": {
+        "en": "a surveillance camera mounted on a wall",
+        "nl": "een bewakingscamera gemonteerd op een muur",
+        "de": "eine an einer Wand montierte Überwachungskamera",
+        "es": "una cámara de vigilancia montada en una pared",
+        "fr": "une caméra de surveillance fixée au mur",
+        "ca": "una càmera de vigilància muntada en una paret",
+        "cs": "sledovací kamera namontovaná na zdi",
+        "sl": "nadzorna kamera pritrjena na steno"
+      },
+      "snapToLayer": [
+        "walls_and_buildings"
+      ]
+    },
+    {
+      "tags": [
+        "man_made=surveillance",
+        "surveillance:type=ALPR"
+      ],
+      "title": {
+        "en": "an ALPR camera (Automatic Number Plate Reader)",
+        "ca": "una càmera ALPR (lector automàtic de matrícules, per les seves sigles en anglès)",
+        "de": "Eine Kamera zur automatischen Nummernschilderkennung",
+        "cs": "kamera ALPR (automatická čtečka registračních značek)",
+        "sl": "kamera za prepoznavo registrskih tablic"
+      },
+      "description": {
+        "en": "An ALPR typically has two lenses and an array of infrared lights.",
+        "ca": "Un ALPR normalment té dues lents i una sèrie de llums infrarojes.",
+        "de": "Eine automatische Nummernschilderkennung hat üblicherweise zwei Linsen und ein Reihe aus Infrarotlichtern.",
+        "cs": "ALPR má obvykle dvě čočky a pole infračervených světel.",
+        "sl": "Kamera za prepoznavo registrskih tablic ima običajno dve leči in polje infrardečih lučk."
+      },
+      "exampleImages": [
+        "./assets/layers/surveillance_camera/ALPR_Example.jpg",
+        "./assets/layers/surveillance_camera/ALPR_Example2.jpg"
+      ]
+    },
+    {
+      "tags": [
+        "man_made=surveillance",
+        "surveillance:type=ALPR",
+        "camera:mount=wall"
+      ],
+      "title": {
+        "en": "an ALPR camera (Automatic Number Plate Reader) mounted on a wall",
+        "ca": "una càmera ALPR (lector automàtic de matrícules) muntada a la paret",
+        "de": "eine Kamera zur Nummernschilderkennung, die an einer Wand befestigt ist",
+        "cs": "kamera ALPR (Automatická čtečka registračních značek) namontovaná na zdi",
+        "sl": "na steno pritrjena kamera za prepoznavo registrskih tablic"
+      },
+      "description": {
+        "en": "An ALPR typically has two lenses and an array of infrared lights.",
+        "ca": "Un ALPR normalment té dues lents i una sèrie de llums infrarojes.",
+        "de": "Eine automatische Nummernschilderkennung hat üblicherweise zwei Linsen und ein Reihe aus Infrarotlichtern.",
+        "cs": "ALPR má obvykle dvě čočky a pole infračervených světel.",
+        "sl": "Kamera za prepoznavo registrskih tablic ima običajno dve leči in polje infrardečih lučk."
+      },
+      "exampleImages": [
+        "./assets/layers/surveillance_camera/ALPR_Example.jpg",
+        "./assets/layers/surveillance_camera/ALPR_Example2.jpg"
+      ],
+      "snapToLayer": [
+        "walls_and_buildings"
+      ]
+    }
+  ],
   "tagRenderings": [
     "images",
+    {
+      "id": "has_alpr",
+      "question": {
+        "en": "Can this camera automatically detect license plates?",
+        "ca": "Aquesta càmera pot detectar matrícules automàticament?",
+        "de": "Dient diese Kamera der Nummernschilderkennung?",
+        "cs": "Dokáže tato kamera automaticky rozpoznat registrační značky?",
+        "sl": "Ali ta kamera lahko samodejno prepoznava registrske tablice?"
+      },
+      "questionHint": {
+        "en": "An <b>ALPR</b> (Automatic License Plate Reader) typically has two lenses and an array of infrared LEDS in between.",
+        "ca": "Un <b>ALPR</b> (lector automàtic de matrícules, per les seves sigles en anglès) normalment té dues lents i una sèrie de LEDs infrarojos entremig.",
+        "de": "Eine Kamera zur <b>Nummernschilderkennung</b> hat üblicherweise zwei Linsen mit dazwischenliegenden Infrarot-LEDs.",
+        "cs": "Automatická čtečka registračních značek (<b>ALPR</b>) má obvykle dvě čočky a mezi nimi soustavu infračervených diod LED.",
+        "sl": "Kamera za <b>prepoznavo registrskih tablic</b> ima običajno dve leči in med njima polje infrardečih LED svetil."
+      },
+      "mappings": [
+        {
+          "if": "surveillance:type=camera",
+          "then": {
+            "en": "This is a camera without number plate recognition.",
+            "ca": "Es tracta d'una càmera sense reconeixement de matrícules.",
+            "de": "Dies ist eine Kamera ohne Nummernschilderkennung.",
+            "cs": "Jedná se o kameru bez rozpoznání SPZ.",
+            "sl": "To je kamera brez prepoznave registrskih tablic."
+          }
+        },
+        {
+          "if": "surveillance:type=ALPR",
+          "then": {
+            "en": "This is an ALPR (Automatic License Plate Reader)",
+            "ca": "Açò és un ALPR (lector automàtic de matrícules, per les seves sigles en anglès)",
+            "de": "Dies ist eine Kamera mit Nummernschilderkennung",
+            "cs": "Jedná se o zařízení ALPR (automatické čtení registračních značek)",
+            "sl": "To je kamera s prepoznavo registrskih tablic"
+          },
+          "icon": {
+            "path": "./assets/layers/surveillance_camera/ALPR.svg"
+          }
+        }
+      ]
+    },
     {
       "question": {
         "en": "What kind of camera is this?",
@@ -49,15 +269,13 @@
         "ru": "Какая это камера?",
         "de": "Um welchen Kameratyp handelt es sich?",
         "ca": "Quin tipus de càmera és aquesta?",
-        "es": "¿Qué tipo de cámara es?"
+        "es": "¿Qué tipo de cámara es?",
+        "cs": "Jaká je to kamera?",
+        "sl": "Kakšne vrste kamera je to?"
       },
       "mappings": [
         {
-          "if": {
-            "and": [
-              "camera:type=fixed"
-            ]
-          },
+          "if": "camera:type=fixed",
           "then": {
             "en": "A fixed (non-moving) camera",
             "nl": "Een vaste camera",
@@ -65,15 +283,14 @@
             "it": "Una videocamera fissa (non semovente)",
             "de": "Eine fest montierte (nicht bewegliche) Kamera",
             "ca": "Una càmera fixa (no movible)",
-            "es": "Cámara fija (no móvil)"
-          }
+            "es": "Cámara fija (no móvil)",
+            "cs": "Pevná (nepohyblivá) kamera",
+            "sl": "Fiksna (nepremična) kamera"
+          },
+          "icon": "./assets/themes/surveillance/cam_right.svg"
         },
         {
-          "if": {
-            "and": [
-              "camera:type=dome"
-            ]
-          },
+          "if": "camera:type=dome",
           "then": {
             "en": "A dome camera (which can turn)",
             "nl": "Een dome (bolvormige camera die kan draaien)",
@@ -82,8 +299,11 @@
             "ru": "Камера с поворотным механизмом",
             "de": "Eine Kuppelkamera (drehbar)",
             "ca": "Càmera de cúpula (que pot girar)",
-            "es": "Cámara con domo (que se puede girar)"
-          }
+            "es": "Cámara con domo (que se puede girar)",
+            "cs": "Kopulovitá (dome) kamera (která se může otáčet)",
+            "sl": "Kamera v kupoli (obračajoča)"
+          },
+          "icon": "./assets/themes/surveillance/dome.svg"
         },
         {
           "if": {
@@ -99,7 +319,8 @@
             "it": "Una videocamera panoramica",
             "de": "Eine bewegliche Kamera",
             "ca": "Una càmera panoràmica",
-            "es": "Cámara panorámica"
+            "es": "Cámara panorámica",
+            "cs": "Otáčecí kamera"
           }
         }
       ],
@@ -114,7 +335,9 @@
         "de": "In welche Himmelsrichtung filmt diese Kamera?",
         "da": "I hvilken geografisk retning filmer dette kamera?",
         "ca": "En quina direcció geogràfica apunta aquesta càmera?",
-        "es": "¿A qué dirección geográfica apunta esta cámara?"
+        "es": "¿A qué dirección geográfica apunta esta cámara?",
+        "cs": "Ve kterém geografickém směru tato kamera snímá?",
+        "sl": "V katero geografsko smer snema ta kamera?"
       },
       "render": {
         "en": "Films to a compass heading of {camera:direction}",
@@ -124,7 +347,9 @@
         "de": "filmt in Himmelsrichtung {camera:direction}",
         "da": "Filmer til en kompasretning af {camera:direction}",
         "ca": "Grava en direcció {camera:direction}",
-        "es": "Graba en dirección a {camera:direction}"
+        "es": "Graba en dirección a {camera:direction}",
+        "cs": "Snímané oblasti podle směru kompasu {camera:direction}",
+        "sl": "Snema v smeri kompasa {camera:direction}"
       },
       "condition": {
         "or": [
@@ -158,7 +383,10 @@
             "it": "Punta in direzione {direction}",
             "de": "filmt in Himmelsrichtung {direction}",
             "da": "Filmer til en kompasretning af {direction}",
-            "es": "Graba en dirección a {direction}"
+            "es": "Graba en dirección a {direction}",
+            "ca": "Grava en direcció {direction}",
+            "cs": "Snímaná oblast podle směru kompasu {direction}",
+            "sl": "Snema v smeri kompasa {direction}"
           },
           "hideInAnswer": true
         }
@@ -176,7 +404,9 @@
         "it": "Chi gestisce questa videocamera a circuito chiuso?",
         "de": "Wer betreibt diese Kamera?",
         "ca": "Qui opera aquest circuit de televisió tancat?",
-        "es": "¿Quién opera el sistema de esta cámara?"
+        "es": "¿Quién opera el sistema de esta cámara?",
+        "cs": "Kdo provozuje tento kamerový systém?",
+        "sl": "Kdo upravlja s to kamero?"
       },
       "render": {
         "en": "Operated by {operator}",
@@ -185,7 +415,10 @@
         "it": "È gestita da {operator}",
         "de": "Betrieben von {operator}",
         "ca": "Operat per {operator}",
-        "es": "Operado por {operator}"
+        "es": "Operado por {operator}",
+        "cs": "Provozuje {operator}",
+        "pt": "Operado por {operator}",
+        "sl": "Upravlja jo {operator}"
       },
       "id": "Operator"
     },
@@ -198,7 +431,9 @@
         "de": "Was überwacht diese Kamera?",
         "da": "Hvilken form for overvågning er dette kamera?",
         "ca": "Què vigila aquesta càmera?",
-        "es": "¿Qué tipo de vigilancia aplica a esta cámara?"
+        "es": "¿Qué tipo de vigilancia aplica a esta cámara?",
+        "cs": "Co sleduje tato kamera?",
+        "sl": "Kaj nadzoruje ta kamera?"
       },
       "mappings": [
         {
@@ -209,13 +444,15 @@
           },
           "then": {
             "en": "A public area is surveilled, such as a street, a bridge, a square, a park, a train station, a public corridor or tunnel, …",
-            "nl": "Bewaking van de publieke ruilmte, dus een straat, een brug, een park, een plein, een stationsgebouw, een publiek toegankelijke gang of tunnel…",
+            "nl": "Bewaking van de publieke ruimte, dus een straat, een brug, een park, een plein, een stationsgebouw, een publiek toegankelijke gang of tunnel…",
             "fr": "Une zone publique est surveillée, telle qu'une rue, un pont, une place, un parc, une gare, un couloir, un tunnel public…",
             "it": "Sorveglia un'area pubblica, come una strada, un ponte, una piazza, un parco, una stazione, un passaggio o un sottopasso pubblico, ...",
             "de": "Die Kamera überwacht einen öffentlichen Bereich, z. B. Straßen, Brücken, Plätze, Parks, Bahnhöfe, öffentliche Gänge oder Tunnel, …",
             "da": "Et offentligt område overvåges, f.eks. en gade, en bro, et torv, en park, en togstation, en offentlig korridor eller en tunnel, …",
             "ca": "Es vigila una àrea pública, com un carrer, un pont, una plaça, un parc, una estació de tren, un túnel públic, …",
-            "es": "Es un área pública, como una calle, un puente, una plaza, un parque, una estación de tren, un corredor público o túnel, ..."
+            "es": "Es un área pública, como una calle, un puente, una plaza, un parque, una estación de tren, un corredor público o túnel, …",
+            "cs": "Sleduje se veřejný prostor, například ulice, most, náměstí, park, nádraží, veřejný koridor nebo tunel, …",
+            "sl": "Nadzoruje javno površino kot je ulica, most, trg, park, postaja, javni hodnik, tunel…"
           }
         },
         {
@@ -232,7 +469,9 @@
             "de": "Die Kamera überwacht einen privaten Außenbereich (z.B. Parkplätze, Tankstellen, Innenhöfe, Eingänge, private Einfahrten, …)",
             "da": "Et udendørs, men privat område overvåges (f.eks. en parkeringsplads, en tankstation, en gårdsplads, en indgang, en privat indkørsel, ...)",
             "ca": "Es vigila una àrea exterior, encara que privada (p.e. una plaça d'aparcament, una estació de servei, pati, entrada, via d'accés privada, …)",
-            "es": "Es un área exterior pero privada (ej: estacionamiento, gasolinera, patio, entrada, camino privado, ...)"
+            "es": "Es un área exterior pero privada (ej: estacionamiento, gasolinera, patio, entrada, camino privado, ...)",
+            "cs": "Sleduje se venkovní, ale soukromý prostor (např. parkoviště, čerpací stanice, dvůr, vchod, soukromá příjezdová cesta, ...)",
+            "sl": "Nadzoruje zunanjo, a zasebno površino (npr. parkirišče, bencinsko črpalko, dvorišče, vhod v stavbo, zasebni dovoz…)"
           }
         },
         {
@@ -249,7 +488,9 @@
             "de": "Die Kamera überwacht einen privaten Innenbereich, z. B. Geschäfte, private Tiefgaragen, …",
             "da": "Et privat indendørs område overvåges, f.eks. en butik, en privat parkeringskælder, …",
             "ca": "Es vigila una àrea interior privada, p.e. una botiga, un parking subterrani privat, …",
-            "es": "La vigilancia ocurre en un lugar interior privado, por ejemplo una tienda, un estacionamiento privado subterráneo, …"
+            "es": "La vigilancia ocurre en un lugar interior privado, por ejemplo una tienda, un estacionamiento privado subterráneo, …",
+            "cs": "Soukromý vnitřní prostor je sledován, např. obchod, soukromé podzemní parkoviště, …",
+            "sl": "Nadzoruje zasebno notranjo površino, npr. trgovino, zasebno podzemno parkirišče…"
           }
         }
       ],
@@ -263,7 +504,10 @@
         "it": "Lo spazio pubblico sorvegliato da questa videocamera è all'aperto o al chiuso?",
         "de": "Handelt es sich bei dem von dieser Kamera überwachten öffentlichen Raum um einen Innen- oder Außenbereich?",
         "da": "Er det offentlige rum, der overvåges af dette kamera, et indendørs eller udendørs rum?",
-        "es": "¿El espacio público vigilado por esta cámara es un espacio interior o exterior?"
+        "es": "¿El espacio público vigilado por esta cámara es un espacio interior o exterior?",
+        "ca": "L'espai públic vigilat per aquesta càmera és un espai interior o exterior?",
+        "cs": "Je veřejný prostor sledovaný touto kamerou vnitřní nebo venkovní prostor?",
+        "sl": "Ali je javni prostor, ki ga nadzoruje ta kamera, notranji ali zunanji?"
       },
       "condition": {
         "and": [
@@ -280,7 +524,10 @@
             "it": "Questa videocamera si trova al chiuso",
             "de": "Diese Kamera befindet sich im Innenraum",
             "da": "Dette kamera er placeret indendørs",
-            "es": "Esta cámara está ubicada en un lugar interior"
+            "es": "Esta cámara está ubicada en un lugar interior",
+            "ca": "Aquesta càmera es troba a l'interior",
+            "cs": "Tato kamera je umístěna ve vnitřním prostoru",
+            "sl": "Ta kamera je znotraj"
           }
         },
         {
@@ -293,7 +540,10 @@
             "ru": "Эта камера расположена снаружи",
             "de": "Diese Kamera befindet sich im Freien",
             "da": "Dette kamera er placeret udendørs",
-            "es": "Esta cámara está ubicada en un lugar exterior"
+            "es": "Esta cámara está ubicada en un lugar exterior",
+            "ca": "Aquesta càmera es troba a l'exterior",
+            "cs": "Tato kamera je umístěna ve venkovním prostoru",
+            "sl": "Ta kamera je zunaj"
           }
         },
         {
@@ -306,7 +556,10 @@
             "ru": "Возможно, эта камера расположена снаружи",
             "de": "Diese Kamera ist möglicherweise im Freien",
             "da": "Dette kamera er sandsynligvis placeret udendørs",
-            "es": "Esta cámara está probablemente colocada en el exterior"
+            "es": "Esta cámara está probablemente colocada en el exterior",
+            "ca": "Aquesta càmera probablement es troba a l'exterior",
+            "cs": "Tato kamera je pravděpodobně umístěna venku",
+            "sl": "Ta kamera je verjetno zunaj"
           },
           "hideInAnswer": true
         }
@@ -320,7 +573,10 @@
         "fr": "À quel niveau se trouve cette caméra ?",
         "it": "A che piano si trova questa videocamera?",
         "de": "Auf welcher Ebene befindet sich diese Kamera?",
-        "es": "¿A qué nivel está colocada esta cámara?"
+        "es": "¿A qué nivel está colocada esta cámara?",
+        "ca": "A quina planta es troba aquesta càmera?",
+        "cs": "Ve kterém podlaží se nachází tato kamera?",
+        "sl": "V katerem nadstropju je ta kamera?"
       },
       "render": {
         "en": "Located on level {level}",
@@ -328,7 +584,10 @@
         "fr": "Situé au niveau {level}",
         "it": "Si trova al piano {level}",
         "de": "Befindet sich auf Ebene {level}",
-        "es": "Está colocada a nivel {level}"
+        "es": "Ubicado en la planta {level}",
+        "ca": "Ubicat a la planta {level}",
+        "cs": "Nachází se v patře {level}",
+        "sl": "Se nahaja v {level}. nadstropju"
       },
       "freeform": {
         "key": "level",
@@ -351,7 +610,9 @@
         "de": "Was genau wird hier überwacht?",
         "da": "Hvad er det præcist, der overvåges her?",
         "ca": "Que vigilen exactament aquí?",
-        "es": "¿Qué se vigila aquí exactamente?"
+        "es": "¿Qué se vigila aquí exactamente?",
+        "cs": "Co přesně se zde sleduje?",
+        "sl": "Kaj točno je nadzorovano tu?"
       },
       "freeform": {
         "key": "surveillance:zone"
@@ -364,7 +625,9 @@
         "de": "Überwacht ein/e {surveillance:zone}",
         "da": "Overvåger en {surveillance:zone}",
         "ca": "Vigila un/a {surveillance:zone}",
-        "es": "Vigila un/a {surveillance:zone}"
+        "es": "Vigila un/a {surveillance:zone}",
+        "cs": "Sleduje {surveillance:zone}",
+        "sl": "Nadzoruje {surveillance:zone}"
       },
       "mappings": [
         {
@@ -381,7 +644,9 @@
             "de": "Überwacht einen Parkplatz",
             "da": "Overvåger en parkeringsplads",
             "ca": "Vigilen un aparcament",
-            "es": "Vigila un estacionamiento"
+            "es": "Vigila un estacionamiento",
+            "cs": "Hlídá parkoviště",
+            "sl": "Nadzoruje parkirišče"
           }
         },
         {
@@ -398,7 +663,9 @@
             "de": "Überwacht den Verkehr",
             "da": "Overvåger trafikken",
             "ca": "Vigilen el trànsit",
-            "es": "Vigila el tránsito"
+            "es": "Vigila el tránsito",
+            "cs": "Sleduje provoz",
+            "sl": "Nadzoruje promet"
           }
         },
         {
@@ -415,7 +682,9 @@
             "de": "Überwacht einen Eingang",
             "da": "Overvåger en indgang",
             "ca": "Vigilen una entrada",
-            "es": "Vigila una entrada"
+            "es": "Vigila una entrada",
+            "cs": "Hlídá vchod",
+            "sl": "Nadzoruje vhod"
           }
         },
         {
@@ -432,7 +701,9 @@
             "de": "Überwacht einen Gang",
             "da": "Overvåger en korridor",
             "ca": "Vigilen un corredor",
-            "es": "Vigila un corredor"
+            "es": "Vigila un corredor",
+            "cs": "Sleduje chodbu",
+            "sl": "Nadzoruje hodnik"
           }
         },
         {
@@ -449,7 +720,9 @@
             "de": "Überwacht eine Haltestelle",
             "da": "Overvejer en offentlig transportplatform",
             "ca": "Vigilen una parada de transport públic",
-            "es": "Vigila una parada de transporte público"
+            "es": "Vigila una parada de transporte público",
+            "cs": "Sleduje zastávku veřejné dopravy",
+            "sl": "Nadzoruje peron javnega prevoza"
           }
         },
         {
@@ -466,7 +739,9 @@
             "de": "Überwacht ein Geschäft",
             "da": "Overvåger en butik",
             "ca": "Vigilen una botiga",
-            "es": "Vigila una tienda"
+            "es": "Vigila una tienda",
+            "cs": "Dohlíží na obchod",
+            "sl": "Nadzoruje trgovino"
           }
         }
       ],
@@ -482,7 +757,9 @@
         "de": "Woran ist diese Kamera befestigt?",
         "da": "Hvordan er dette kamera placeret?",
         "ca": "Com està posicionada aquesta càmera?",
-        "es": "¿Cómo está colocada la cámara?"
+        "es": "¿Cómo está colocada la cámara?",
+        "cs": "Jak je tato kamera umístěna?",
+        "sl": "Kako je postavljena ta kamera?"
       },
       "render": {
         "en": "Mounting method: {camera:mount}",
@@ -492,7 +769,9 @@
         "de": "Montageart: {camera:mount}",
         "da": "Monteringsmetode: {camera:mount}",
         "ca": "Mètode de muntatge: {camera:mount}",
-        "es": "Método de montaje: {camera:mount}"
+        "es": "Método de montaje: {camera:mount}",
+        "cs": "Způsob montáže: {camera:mount}",
+        "sl": "Način namestitve: {camera:mount}"
       },
       "freeform": {
         "key": "camera:mount"
@@ -508,7 +787,9 @@
             "de": "Diese Kamera ist an einer Wand befestigt",
             "da": "Dette kamera er placeret op ad en væg",
             "ca": "Aquesta càmera està ubicada contra un mur",
-            "es": "Está cámara está colocada sobre una pared"
+            "es": "Está cámara está colocada sobre una pared",
+            "cs": "Tato kamera je umístěna na zdi",
+            "sl": "Ta kamera je pritrjena na steno"
           }
         },
         {
@@ -521,7 +802,9 @@
             "de": "Diese Kamera ist an einer Stange befestigt",
             "da": "Dette kamera er placeret på en stang",
             "ca": "Aquesta càmera està posicionada a un pal",
-            "es": "Esta cámara está colocada en un poste"
+            "es": "Esta cámara está colocada en un poste",
+            "cs": "Tato kamera je umístěna na sloupu",
+            "sl": "Ta kamera je nameščena na drog"
           }
         },
         {
@@ -534,7 +817,9 @@
             "de": "Diese Kamera ist an der Decke befestigt",
             "da": "Dette kamera er placeret i loftet",
             "ca": "Aquesta càmera està posicionada al sostre",
-            "es": "Esta cámara está colocada en un techo"
+            "es": "Esta cámara está colocada en un techo",
+            "cs": "Tato kamera je umístěna na stropě",
+            "sl": "Ta kamera je pritrjena na strop"
           }
         },
         {
@@ -547,7 +832,9 @@
             "de": "Diese Kamera ist an einer Laterne befestigt",
             "da": "Dette kamera er placeret på en gadelampe",
             "ca": "Aquesta càmera està posicionada a un fanal",
-            "es": "Esta cámara está colocada sobre una farola"
+            "es": "Esta cámara está colocada sobre una farola",
+            "cs": "Tato kamera je umístěna na pouličním osvětlení",
+            "sl": "Ta kamera je nameščena na ulično svetilko"
           }
         },
         {
@@ -560,102 +847,14 @@
             "de": "Diese Kamera ist an einem Baum befestigt",
             "da": "Dette kamera er placeret på et træ",
             "ca": "Aquesta càmera està posicionada a un arbre",
-            "es": "Esta cámara está colocada en un árbol"
+            "es": "Esta cámara está colocada en un árbol",
+            "cs": "Tato kamera je umístěna na stromě",
+            "sl": "Ta kamera je nameščena na drevo"
           }
         }
       ],
       "id": "camera:mount"
     }
   ],
-  "presets": [
-    {
-      "tags": [
-        "man_made=surveillance",
-        "surveillance:type=camera"
-      ],
-      "title": {
-        "en": "a surveillance camera",
-        "nl": "een bewakingscamera",
-        "de": "eine Überwachungskamera",
-        "es": "una cámara de vigilancia"
-      }
-    },
-    {
-      "tags": [
-        "man_made=surveillance",
-        "surveillance:type=camera",
-        "camera:mount=wall"
-      ],
-      "title": {
-        "en": "a surveillance camera mounted on a wall",
-        "nl": "een bewakingscamera gemonteerd op een muur",
-        "de": "eine an einer Wand montierte Überwachungskamera",
-        "es": "una cámara de vigilancia montada en una pared"
-      },
-      "snapToLayer": "walls_and_buildings"
-    }
-  ],
-  "mapRendering": [
-    {
-      "icon": {
-        "render": "./assets/themes/surveillance/logo.svg",
-        "mappings": [
-          {
-            "if": "camera:type=dome",
-            "then": "./assets/themes/surveillance/dome.svg"
-          },
-          {
-            "if": "_direction:leftright=right",
-            "then": "./assets/themes/surveillance/cam_right.svg"
-          },
-          {
-            "if": "_direction:leftright=left",
-            "then": "./assets/themes/surveillance/cam_left.svg"
-          }
-        ]
-      },
-      "iconSize": {
-        "mappings": [
-          {
-            "if": "camera:type=dome",
-            "then": "50,50,center"
-          },
-          {
-            "if": "_direction:leftright~*",
-            "then": "100,35,center"
-          }
-        ],
-        "render": "50,50,center"
-      },
-      "location": [
-        "point",
-        "centroid"
-      ],
-      "rotation": {
-        "#": "Note: {camera:direction} is substituted by a number, giving the string 'calc(123deg + 90deg)'  ; it is this string that is used as css property, which interprets the calc",
-        "render": "calc({_direction:numerical}deg + 90deg)",
-        "mappings": [
-          {
-            "if": "camera:type=dome",
-            "then": "0"
-          },
-          {
-            "if": "_direction:leftright=right",
-            "then": "calc({_direction:numerical}deg - 90deg)"
-          }
-        ]
-      }
-    },
-    {
-      "color": "#f00",
-      "width": "8"
-    }
-  ],
-  "deletion": true,
-  "description": {
-    "en": "This layer shows surveillance cameras and allows a contributor to update information and add new cameras",
-    "nl": "Deze laag toont bewakingscamera's en laat toe om de informatie te verrijken en om nieuwe camera\"s toe te voegen",
-    "de": "Diese Ebene zeigt die Überwachungskameras an und ermöglicht es, Informationen zu aktualisieren und neue Kameras hinzuzufügen",
-    "es": "Esta capa muestra las cámaras de vigilancia y permite a quien colabora, actualizar la información y agregar nuevas cámaras"
-  }
+  "deletion": true
 }

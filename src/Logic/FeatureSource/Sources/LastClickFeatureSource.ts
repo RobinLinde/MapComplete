@@ -5,56 +5,64 @@ import { Feature, Point } from "geojson"
 import { TagUtils } from "../../Tags/TagUtils"
 import BaseUIElement from "../../../UI/BaseUIElement"
 import { Utils } from "../../../Utils"
+import { OsmTags } from "../../../Models/OsmFeature"
 
 /**
  * Highly specialized feature source.
  * Based on a lon/lat UIEVentSource, will generate the corresponding feature with the correct properties
  */
-export class LastClickFeatureSource implements WritableFeatureSource {
-    public readonly features: UIEventSource<Feature[]> = new UIEventSource<Feature[]>([])
+export class LastClickFeatureSource {
+    public readonly renderings: string[]
+    private i: number = 0
+    private readonly hasPresets: boolean
+    private readonly hasNoteLayer: boolean
+    public static readonly newPointElementId=  "new_point_dialog"
 
-    constructor(location: Store<{ lon: number; lat: number }>, layout: LayoutConfig) {
+    constructor(layout: LayoutConfig) {
+        this.hasNoteLayer = layout.hasNoteLayer()
+        this.hasPresets = layout.hasPresets()
         const allPresets: BaseUIElement[] = []
         for (const layer of layout.layers)
             for (let i = 0; i < (layer.presets ?? []).length; i++) {
                 const preset = layer.presets[i]
                 const tags = new ImmutableStore(TagUtils.KVtoProperties(preset.tags))
-                const { html } = layer.mapRendering[0].RenderIcon(tags, false, {
+                const rendering = layer.mapRendering[0]
+                if (!rendering) {
+                    console.error("NO rendering for preset", layer.id)
+                    continue
+                }
+                const { html } = rendering.RenderIcon(tags, {
                     noSize: true,
                     includeBadges: false,
                 })
                 allPresets.push(html)
             }
 
-        const renderings = Utils.Dedup(
+        this.renderings = Utils.Dedup(
             allPresets.map((uiElem) =>
                 Utils.runningFromConsole ? "" : uiElem.ConstructElement().innerHTML
             )
         )
+    }
 
-        let i = 0
+    public createFeature(lon: number, lat: number): Feature<Point, OsmTags> {
+        const properties: OsmTags = {
+            id: LastClickFeatureSource.newPointElementId,
+            has_note_layer: this.hasNoteLayer ? "yes" : "no",
+            has_presets: this.hasPresets ? "yes" : "no",
+            renderings: this.renderings.join(""),
+            number_of_presets: "" + this.renderings.length,
+            first_preset: this.renderings[0],
+        }
+        this.i++
 
-        location.addCallbackAndRunD(({ lon, lat }) => {
-            const properties = {
-                lastclick: "yes",
-                id: "last_click_" + i,
-                has_note_layer: layout.layers.some((l) => l.id === "note") ? "yes" : "no",
-                has_presets: layout.layers.some((l) => l.presets?.length > 0) ? "yes" : "no",
-                renderings: renderings.join(""),
-                number_of_presets: "" + renderings.length,
-                first_preset: renderings[0],
-            }
-            i++
-
-            const point = <Feature<Point>>{
-                type: "Feature",
-                properties,
-                geometry: {
-                    type: "Point",
-                    coordinates: [lon, lat],
-                },
-            }
-            this.features.setData([point])
-        })
+        return <Feature<Point, OsmTags>>{
+            type: "Feature",
+            properties,
+            geometry: {
+                type: "Point",
+                coordinates: [lon, lat],
+            },
+        }
     }
 }

@@ -1,3 +1,6 @@
+import { TagConfigJson } from "../../Models/ThemeConfig/Json/TagConfigJson"
+import { ExpressionSpecification } from "maplibre-gl"
+
 export abstract class TagsFilter {
     abstract asOverpass(): string[]
 
@@ -12,10 +15,12 @@ export abstract class TagsFilter {
     abstract matchesProperties(properties: Record<string, string>): boolean
 
     abstract asHumanString(
-        linkToWiki: boolean,
-        shorten: boolean,
-        properties: Record<string, string>
+        linkToWiki?: boolean,
+        shorten?: boolean,
+        properties?: Record<string, string>
     ): string
+
+    abstract asJson(): TagConfigJson
 
     abstract usedKeys(): string[]
 
@@ -29,9 +34,18 @@ export abstract class TagsFilter {
      * Converts the tagsFilter into a list of key-values that should be uploaded to OSM.
      * Throws an error if not applicable.
      *
-     * Note: properties are the already existing tags-object. It is only used in the substituting tag
+     * @param properties are the already existing tags-object. It is only used in the substituting tag and will not be changed
      */
-    abstract asChange(properties: Record<string, string>): { k: string; v: string }[]
+    abstract asChange(properties: Readonly<Record<string, string>>): { k: string; v: string }[]
+
+    public applyOn(properties: Readonly<Record<string, string>>): Record<string, string> {
+        const copy = { ...properties }
+        const changes = this.asChange(properties)
+        for (const { k, v } of changes) {
+            copy[k] = v
+        }
+        return copy
+    }
 
     /**
      * Returns an optimized version (or self) of this tagsFilter
@@ -59,4 +73,6 @@ export abstract class TagsFilter {
      * Walks the entire tree, every tagsFilter will be passed into the function once
      */
     abstract visit(f: (tagsFilter: TagsFilter) => void)
+
+    abstract asMapboxExpression(): ExpressionSpecification
 }

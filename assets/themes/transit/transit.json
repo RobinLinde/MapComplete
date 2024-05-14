@@ -11,7 +11,8 @@
     "nl": "Busroutes",
     "es": "Rutas de autobús",
     "cs": "Autobusové linky",
-    "zh_Hant": "公車路線"
+    "zh_Hant": "公車路線",
+    "pl": "Trasy autobusowe"
   },
   "description": {
     "en": "Plan your trip with the help of the public transport system.",
@@ -23,34 +24,36 @@
     "ca": "Planifica el teu viatge amb l'ajuda del sistema públic de transport.",
     "es": "Planifique su viaje con ayuda del sistema de transporte público.",
     "cs": "Naplánujte si cestu pomocí systému veřejné dopravy.",
-    "zh_Hant": "藉由大眾運輸系統來計畫你的旅程。"
+    "zh_Hant": "藉由大眾運輸系統來計畫你的旅程。",
+    "pl": "Zaplanuj swoją podróż korzystając z systemu transportu publicznego."
   },
   "icon": "./assets/layers/transit_stops/bus_stop.svg",
   "startZoom": 20,
   "startLat": 53.21333,
   "startLon": 6.56963,
+  "credits": [
+    "Robin van der Linde"
+  ],
   "layers": [
     "transit_stops",
     "transit_routes",
     {
       "builtin": "bike_parking",
       "override": {
-        "minzoom": 19,
-        "minzoomVisible": 19
+        "minzoom": 18
       }
     },
     {
       "builtin": "parking",
       "override": {
-        "minzoom": 19,
-        "minzoomVisible": 19
+        "minzoom": 18
       }
     },
     {
       "builtin": "shelter",
       "override": {
-        "minzoom": 19,
-        "minzoomVisible": 19,
+        "minzoom": 18,
+        "id": "pt_shelter",
         "source": {
           "osmTags": {
             "and": [
@@ -64,6 +67,5 @@
         "shelter-type"
       ]
     }
-  ],
-  "credits": "Robin van der Linde"
+  ]
 }

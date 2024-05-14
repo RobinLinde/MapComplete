@@ -1,6 +1,6 @@
-import BaseUIElement from "../BaseUIElement";
-import { Translation } from "../i18n/Translation";
-import Translations from "../i18n/Translations";
+import BaseUIElement from "../BaseUIElement"
+import { Translation } from "../i18n/Translation"
+import Translations from "../i18n/Translations"
 
 /**
  * A 'TextFieldValidator' contains various methods to check and cleanup an entered value or to give feedback.
@@ -16,13 +16,23 @@ export abstract class Validator {
     /**
      * What HTML-inputmode to use
      */
-    public readonly inputmode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search'
+    public readonly inputmode?:
+        | "none"
+        | "text"
+        | "tel"
+        | "url"
+        | "email"
+        | "numeric"
+        | "decimal"
+        | "search"
     public readonly textArea: boolean
+
+    public readonly isMeta?: boolean
 
     constructor(
         name: string,
         explanation: string | BaseUIElement,
-        inputmode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search',
+        inputmode?: "none" | "text" | "tel" | "url" | "email" | "numeric" | "decimal" | "search",
         textArea?: false | boolean
     ) {
         this.name = name
@@ -47,8 +57,8 @@ export abstract class Validator {
      *
      * Returns 'undefined' if the element is valid
      */
-    public getFeedback(s: string, _?: () => string): Translation | undefined {
-        if (this.isValid(s)) {
+    public getFeedback(s: string, getCountry?: () => string): Translation | undefined {
+        if (this.isValid(s, getCountry)) {
             return undefined
         }
         const tr = Translations.t.validation[this.name]
@@ -61,7 +71,7 @@ export abstract class Validator {
         return Translations.t.validation[this.name].description
     }
 
-    public isValid(_: string, __?: () => string): boolean {
+    public isValid(_: string, getCountry?: () => string): boolean {
         return true
     }
 
